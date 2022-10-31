@@ -1,0 +1,4 @@
+# Files that must not be synced by git, sensitive info
+secrets.yaml
+.unused/
+.esphome/

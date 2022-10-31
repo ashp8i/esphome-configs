@@ -1,0 +1,20 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  on_message:
+    - topic: $lonsonho1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${main_device_id}
+    # on_message:
+    # - topic: bedford/ota_mode
+    #   payload: 'ON'
+    #   then:
+    #     - deep_sleep.prevent: deep_sleep_1
+    # - topic: bedford/sleep_mode
+    #   payload: 'ON'
+    #   then:
+    #     - deep_sleep.enter: deep_sleep_1

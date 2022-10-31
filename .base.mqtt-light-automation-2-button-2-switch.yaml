@@ -1,0 +1,122 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: false
+  on_message:
+    # Switch 1 - Button 1
+    # Short Click - Toggle
+    - topic: $switch1b1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${main_device_id}
+    # Hold - Brighten
+    - topic: $switch1b1_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Increase the brightness by 5%
+        - light.dim_relative:
+            id: ${main_device_id}
+            relative_brightness: 5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Increase Colour Temperature
+    - topic: $switch1b1_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${main_device_id}).current_values.get_color_temperature();
+            auto call = id(${main_device_id}).turn_on();
+            call.set_color_temperature(current_temp + 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();
+    # Switch 1 - Button 2
+    # Short Click - Toggle
+    - topic: $switch1b2_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${main_device_id}
+    # Hold - Dim
+    - topic: $switch1b2_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Decreases the brightness by 5%
+        - light.dim_relative:
+            id: ${main_device_id}
+            relative_brightness: -5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Decrease Colour Temperature
+    - topic: $switch1b2_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${main_device_id}).current_values.get_color_temperature();
+            auto call = id(${main_device_id}).turn_on();
+            call.set_color_temperature(current_temp - 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();
+    # Switch 2 - Button 1
+    # Short Click - Toggle
+    - topic: $switch2b1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${main_device_id}
+    # Hold - Brighten
+    - topic: $switch2b1_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Increase the brightness by 5%
+        - light.dim_relative:
+            id: ${main_device_id}
+            relative_brightness: 5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Increase Colour Temperature
+    - topic: $switch2b1_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${main_device_id}).current_values.get_color_temperature();
+            auto call = id(${main_device_id}).turn_on();
+            call.set_color_temperature(current_temp + 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();
+    # Switch 2 - Button 2
+    # Short Click - Toggle
+    - topic: $switch2b2_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${main_device_id}
+    # Hold - Dim
+    - topic: $switch2b2_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Decreases the brightness by 5%
+        - light.dim_relative:
+            id: ${main_device_id}
+            relative_brightness: -5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Decrease Colour Temperature
+    - topic: $switch2b2_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${main_device_id}).current_values.get_color_temperature();
+            auto call = id(${main_device_id}).turn_on();
+            call.set_color_temperature(current_temp - 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();

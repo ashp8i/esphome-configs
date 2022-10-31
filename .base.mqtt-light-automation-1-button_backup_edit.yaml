@@ -1,0 +1,73 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  on_message:
+    # Switch 1 - Button 1
+    # Short Click - Toggle
+    - topic: $switch1b1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${main_device_id}
+    # Hold - Two Way Dimming
+    - topic: $switch1b1_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        - light.dim_relative: 
+            id: ${main_device_id}
+            # This lambda will dim up or down depending on the dim direction
+            # if dim = up, it will keep increasing brightness with global var 'step' (so we can easily change this in a central place) as long as the button keeps being pressed until max_brightness would be exceed
+            # in the case it will set it to max brightness,
+            # if dim = down, it will keep decreasing brightness with global var 'step' (so we can easily change this in a central place) as long as the button keeps being pressed until min_brightness would be exceed
+            # in the case it will set it to min brightness, 
+            relative_brightness: !lambda |-
+                  float brightness;
+                  float gamma;
+                  id(${main_device_id}).current_values_as_brightness(&brightness);
+                  // this is the gamma corrected value - we need to 'un'compensate for gamma to get a lineair %value
+                  gamma = id(${main_device_id}).get_gamma_correct();
+                  brightness = powf(brightness,1/gamma);
+                  //id(${main_device_id}).dump_config();
+                  ESP_LOGD("main", "while loop, dim=%d, brightness=%6.4lf, step=%6.4lf, max=%6.4lf, gamma=%6.4lf", id(${main_device_id}_dim_direction), brightness,id(step),id(${main_device_id}_max_brightness),gamma);
+                  if (brightness >= id(${main_device_id}_max_brightness)) {
+                    // if we are at max already, no point in dimming up - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+                    id(${main_device_id}_dim_direction) = '0';
+                  }
+                  else if (brightness <= id(${main_device_id}_min_brightness)) {
+                    // if we are at min already, no point in dimming down - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+                    id(${main_device_id}_dim_direction = '1';
+                  }
+                  if (id(${main_device_id}_dim_direction) == '1') {
+                    if ((id(step) + brightness) <= id(${main_device_id}_max_brightness)) { 
+                        return(id(step));
+                    }
+                    else {
+                        return(id(${main_device_id}_max_brightness)- brightness);
+                    }
+                  }
+                  else if (id(${main_device_id}_dim_direction) != '1') {
+                    if ((brightness - id(step)) >= id(${main_device_id}_min_brightness)) { 
+                      return(-id(step));
+                    }
+                    else {
+                      return(id(${main_device_id}_min_brightness)- brightness);
+                    }  
+                  }
+                  // the else is strictly speaking not needed as the loop should break before this condition is true but if for whatever reason that would not happen at least we are returning something
+                  else {
+                    return(0);
+                  }
+            transition_length: 0.05s
+        - delay: 0.04s
+        # now toggle the dim up/down direction so next time we do the opposite action
+        - globals.set:
+            id: ${main_device_id}_dim_direction
+            value: !lambda |-
+              if (id(${main_device_id}_dim_direction) == '1') {
+                  return('0');
+              } else {
+                return('1');
+              }

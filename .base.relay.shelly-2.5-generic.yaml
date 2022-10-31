@@ -1,0 +1,48 @@
+esphome:
+  name: "${device_name}"
+  # name_add_mac_suffix: true
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+# globals:
+#   - id: last_light_on
+#     type: int
+#     restore_value: no
+#     initial_value: '1'
+
+# Device Specific Config
+i2c:
+  sda: GPIO12
+  scl: GPIO14
+
+output:
+  - platform: gpio
+    pin: GPIO4
+    id: shelly_25_relay_1
+  - platform: gpio
+    pin: GPIO15
+    id: shelly_25_relay_2
+
+switch:
+  - platform: output
+    name: "${device_name} Switch 1"
+    output: shelly_25_relay_1
+    id: switchid1
+  - platform: output
+    name: "${device_name} Switch 2"
+    output: shelly_25_relay_2
+    id: switchid2

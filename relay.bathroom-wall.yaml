@@ -1,0 +1,26 @@
+substitutions:
+  device_ssid: "Bathroom Wall"
+  device_name: bathroomwallrelay
+  device_main_description: "Shelly 1 Exposed as light"
+  device_description: Bathroom Wall Light
+  friendly_name: "Bathroom Wall" # Put the name that you want to see in Home Assistant.
+  main_device_id: "bathroomwallrelay"    # Put the name that you want to see in Home Assistant.
+  lonsonho1_topic: ashishswitch2/button/1/command
+  light_icon: "mdi:wall-sconce-flat-outline"
+  project_name: "shelly.shelly1-relay-light"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret bathroomwallrelay_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.relay.shelly-1-light.yaml
+<<: !include .base.mqtt-light-automation-1-lonsonho.yaml
+<<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-shelly-1-edge-switch.yaml

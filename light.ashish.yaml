@@ -1,0 +1,27 @@
+substitutions:
+  device_ssid: "Ashish"
+  device_name: ashish
+  device_description: "MiBoxer WB5 Tuya ESP32-C3 LED Controller."
+  friendly_name: "Ashish" # Put the name that you want to see in Home Assistant.
+  main_device_id: "ashish" # Put the name that you want to see in Home Assistant.
+  switch1b1_topic: ashishswitch1/button/1/command
+  switch1b2_topic: ashishswitch1/button/2/command
+  light_icon: "hue:ceiling-aurelle"
+  project_name: "miboxer.wb5-cct"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret ashish_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.light.miboxer-wb5-esp32-c3-ashish-arduino.yaml
+<<: !include .base.mqtt-light-automation-2-button.yaml
+<<: !include .base.sensor-common-die-temp.yaml
+# <<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

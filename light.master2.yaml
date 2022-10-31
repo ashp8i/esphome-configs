@@ -1,0 +1,26 @@
+substitutions:
+  device_ssid: "Master 2"
+  device_name: masterbedroom2
+  device_description: "MiBoxer FUT035W Tuya ESP32-C3 LED Controller."
+  friendly_name: "Master Bedroom 2" # Put the name that you want to see in Home Assistant.
+  main_device_id: "masterbedroom2" # Put the name that you want to see in Home Assistant.
+  switch1b1_topic: masterswitch/button/1/command
+  project_name: "miboxer.fut035w-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret masterbedroom2_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.light.miboxer-fut-035w-esp32-c3-arduino.yaml
+<<: !include .base.global-rgbcct.yaml
+<<: !include .base.mqtt-light-automation-1-button.yaml
+<<: !include .base.sensor-common-die-temp.yaml
+# <<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

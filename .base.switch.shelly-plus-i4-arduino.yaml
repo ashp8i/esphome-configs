@@ -1,0 +1,28 @@
+# Device Specific Config
+  esphome:
+    name: ${device_name}
+    comment: ${device_description}
+    platformio_options:
+      platform_packages:
+      - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
+      board_build.f_cpu: 160000000L
+    project:
+      name: "${project_name}"
+      version: "${project_version}"
+  
+  esp32:
+    board: esp32doit-devkit-v1
+    variant: esp32
+    framework:
+      type: arduino
+      platform_version: 5.2.0
+
+  captive_portal:
+
+  web_server:
+    port: 80
+    auth:
+      username: admin
+      password: !secret web_server_password
+    include_internal: true
+    # local: true

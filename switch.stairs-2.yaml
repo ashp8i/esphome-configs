@@ -1,0 +1,24 @@
+substitutions:
+  device_ssid: "Stairs Switch 2"
+  device_name: stairsswitch2
+  device_description: "Shelly Plus i4 Switch Module"
+  friendly_name: "Stairs Switch 2"
+  main_device_id: "stairsswitch2" # Put the name that you want to see in Home Assistant.
+  project_name: "shelly.plusi4-esp32-solo-arduino"
+  project_version: "1.0"
+
+<<: !include .base-debug.yaml
+<<: !include .base.switch.shelly-plus-i4-arduino.yaml
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret stairsswitch2_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base.mqtt-common.yaml
+<<: !include .base.sensor-common-die-temp.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-shelly-i4-4-buttons-fallback.yaml

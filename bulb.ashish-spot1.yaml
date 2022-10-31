@@ -1,0 +1,35 @@
+substitutions:
+  name: "ashishspot1"
+  device_ssid: "Ashish Spot 1"
+  device_description: "Athom GU10 RGBCW LB10-5W-ESP-1"
+  friendly_name: "Ashish Spot 1"    # Put the name that you want to see in Home Assistant.
+  device_name_rgb: ashishspot1rgb
+  device_description_rgb: "Ashish Spot 1 RGB."    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Ashish Spot 1 RGB"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "ashishspot1"    # Put the name that you want to see in Home Assistant.
+  switch1b1_topic: ashishswitch2/button/1/command
+  switch1b2_topic: ashishswitch2/button/2/command
+  switch1b3_topic: ashishswitch2/button/3/command
+  switch1b4_topic: ashishswitch2/button/4/command
+  light_icon: "hue:bulb-spot-hung"
+  light_icon_2: "hue:bulb-spot-hung"
+  project_name: "athom.rgbww-light"
+  project_version: "1.0"
+  # frequency_rgb: 250 Hz
+  frequency_cw: 1000 Hz
+  frequency_ww: 1000 Hz
+  
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret ashishbulb1_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.bulb.athom-gu10.yaml
+<<: !include .base.mqtt-light-automation-4-button-rgbcct.yaml
+<<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

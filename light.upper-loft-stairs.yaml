@@ -1,0 +1,31 @@
+substitutions:
+  device_ssid: "Upper Loft"
+  device_name: upperloftstairs
+  device_description: "Lumary 18W RGBCW Slim Downlight"
+  friendly_name: "Upper Loft Stairs"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Upper Loft Stairs RGB"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "upperloftstairs"    # Put the name that you want to see in Home Assistant.
+  rgb_device_id: "upperloftstairsrgb" # Put the name that you want to see in Home Assistant.
+  switch1b1_topic: loftswitch/button/3/command
+  switch1b2_topic: loftswitch/button/4/command
+  switch2b1_topic: stairsswitch2/button/3/command
+  switch2b2_topic: stairsswitch2/button/4/command
+  project_name: "lumary.18w-rgbcw-slim-downlight-esp32-c3-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret upperloftstairs_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.light-lumary-18w-downlight-esp32-c3-arduino.yaml
+<<: !include .base.global-mqtt-automation.yaml
+<<: !include .base.mqtt-light-automation-2-button-2-switch.yaml
+<<: !include .base.sensor-common-die-temp.yaml
+# <<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

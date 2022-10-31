@@ -1,0 +1,33 @@
+button:
+  - platform: template
+    name: Web Button
+    id: my_button
+    icon: "mdi:emoticon-outline"
+    # ...
+    on_press:
+      then:
+        # http request post
+        # - http_request.post: http://${remote_node}/light/${remote_light_id}/toggle
+        - http_request.post: 
+            url: http://ashishspot1.local/light/ashish_spot_1/toggle
+            #headers: 
+            #  Content-Type: application/json
+            #  Authentication: Basic YWRtaW46UDAhczBuQHJyMHcyMDE5IQ==
+            # verify_ssl: False
+    internal: true
+  - platform: template
+    name: Web Button 2
+    id: my_button_2
+    icon: "mdi:emoticon-outline"
+    # ...
+    on_press:
+      then:
+        # http request post
+        # - http_request.post: http://${remote_node}/light/${remote_light_id}/toggle
+        - http_request.post: 
+            url: http://ashishspot2.local/light/ashish_spot_2/toggle
+            headers:
+              Content-Type: application/json
+              Authentication: Digest 266f79b56339df95494c3622f8006f2d
+            verify_ssl: False
+    internal: true

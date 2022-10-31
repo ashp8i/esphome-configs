@@ -1,0 +1,72 @@
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+    use_address: passagelight.local
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid}
+      password: !secret ap_password
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+output:
+  - platform: esp8266_pwm
+    id: output_red
+    pin: GPIO4 # D2
+  - platform: esp8266_pwm
+    id: output_green
+    pin: GPIO12 # D6
+  - platform: esp8266_pwm
+    id: output_blue
+    pin: GPIO14 # D5
+  - platform: esp8266_pwm
+    id: output_cold_white
+    pin: GPIO5 # D1
+  - platform: esp8266_pwm
+    id: output_warm_white
+    pin: GPIO13 # D7
+
+light:
+  - platform: cwww
+    name: ${friendly_name}    # Put the name that you want to see in Home Assistant.
+    id: ${device_name}    # id used in esphome.
+    cold_white: output_cold_white
+    warm_white: output_warm_white
+    cold_white_color_temperature: 6536 K
+    warm_white_color_temperature: 2000 K
+    constant_brightness: false
+    gamma_correct: 0
+    default_transition_length: 1s
+    on_turn_on:
+    - globals.set:
+        id: last_light_on
+        value: '1'
+    icon: "hue:ceiling-aurelle-circle"
+  - platform: rgb
+    name: ${friendly_name_rgb}
+    id: ${device_name_rgb}
+    red: output_red
+    green: output_green
+    blue: output_blue
+    default_transition_length: 0.5s
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+    - globals.set:
+        id: last_light_on
+        value: '2'
+    icon: "hue:ceiling-aurelle-circle"

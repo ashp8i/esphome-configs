@@ -1,0 +1,84 @@
+# Hold - Brighten
+- topic: $switch1b1_topic
+  payload: 'HOLD'
+  qos: 0
+  then:
+    - logger.log: "hold"
+    # we need this delay (and then to look for binary_sensor.is_on) to ensure it's not a multi-click
+    - delay: 0.75s
+    - if:
+        condition: 
+          and:
+              - light.is_off: light_PV
+              - binary_sensor.is_on: light_pv_button
+        then:
+            # if the light was off we also want the long press to turn it on and then start dimming
+            - light.toggle: light_PV
+        #- delay: 0.75s
+    #
+    # this sets the globales variable that will stop the while loop from needlessly running if the buttons keeps being pressed but ar are already at max or min value
+    # it's also needed to ensure the buzzer only buzzes once and doesn't keep buzzing when the max/min is reached
+    - lambda: |-
+          id(PV_loop_stop) = false;
+    - while:
+        # keep on going as long as the button is pressed and when the max/min threshold is not exceeded yet (indicated by the global var of type bool)
+        condition:
+          and:
+              - binary_sensor.is_on: light_pv_button
+              - lambda: |-
+                  return(!id(PV_loop_stop));
+        then:
+          - light.dim_relative: 
+                id: light_PV
+                # This lambda will dim up or down depending on the dim direction
+                # if dim = up, it will keep increasing brightness with global var 'step' (so we can easily change this in a central place) as long as the button keeps being pressed until max_brightness would be exceed
+                # in the case it will set it to max brightness, beep the buzzer once (the buzzer is defined as a light with effect "beeponce") and then stop the loop - this both prevent further needless loops as well as ensures the buzzer only buzzes once
+                # if dim = down, it will keep decreasing brightness with global var 'step' (so we can easily change this in a central place) as long as the button keeps being pressed until min_brightness would be exceed
+                # in the case it will set it to min brightness, beep the buzzer once (the buzzer is defined as a light with effect "beeponce") and then stop the loop - this both prevent further needless loops as well as ensures the buzzer only buzzes once
+                relative_brightness: !lambda |-
+                      float brightness;
+                      float gamma;
+                      id(light_PV).current_values_as_brightness(&brightness);
+                      // this is the gamma corrected value - we need to 'un'compensate for gamma to get a lineair %value
+                      gamma = id(light_PV).get_gamma_correct();
+                      brightness = powf(brightness,1/gamma);
+                      //id(light_PV).dump_config();
+                      ESP_LOGD("main", "while loop, dim=%d, brightness=%6.4lf, step=%6.4lf, max=%6.4lf, gamma=%6.4lf", id(dim_direction_pv), brightness,id(step),id(light_pv_max_brightness),gamma);
+                      if (brightness >= id(light_pv_max_brightness)) {
+                          // if we are at max already, no point in dimming up - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+                          id(dim_direction_pv) = '0';
+                      }
+                      else if (brightness <= id(light_pv_min_brightness)) {
+                          // if we are at min already, no point in dimming down - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+                          id(dim_direction_pv) = '1';
+                      }
+                      if (id(dim_direction_pv) == '1') {
+                          if ((id(step) + brightness) <= id(light_pv_max_brightness)) { 
+                            return(id(step));
+                          }
+                          else {
+                            auto call = id(light_buzzer).turn_on();
+                            call.set_effect("beeponce");
+                            call.perform();
+                            id(PV_loop_stop) = true;
+                            return(id(light_pv_max_brightness)- brightness);
+                          }
+                      }
+                      else if (id(dim_direction_pv) != '1') {
+                          if ((brightness - id(step)) >= id(light_pv_min_brightness)) { 
+                          return(-id(step));
+                          }
+                          else {
+                            auto call = id(light_buzzer).turn_on();
+                            call.set_effect("beeponce");
+                            call.perform();
+                            id(PV_loop_stop) = true;                          
+                            return(id(light_pv_min_brightness)- brightness);
+                          }  
+                      }
+                      // the else is strictly speaking not needed as the loop should break before this condition is true but if for whatever reason that would not happen at least we are returning something
+                      else {
+                        return(0);
+                      }
+                  transition_length: 0.05s
+            - delay: 0.04s

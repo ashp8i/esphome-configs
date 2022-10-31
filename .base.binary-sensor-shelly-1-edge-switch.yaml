@@ -1,0 +1,14 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    pin:
+      number: GPIO5
+      #mode: INPUT_PULLUP
+      #inverted: True
+    name: "Switch Shelly 1"
+    on_state:
+      then:
+        - light.toggle: ${main_device_id}
+    internal: true
+    id: ${main_device_id}_switch

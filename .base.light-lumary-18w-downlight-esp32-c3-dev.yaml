@@ -1,0 +1,81 @@
+# Device Specific Config
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platformio_options:
+    board_build.flash_mode: dio
+    upload_speed: 921600
+    platform: espressif32@5.2.0
+  # includes:
+  #   - .esp32-internal-temperature.h
+    
+esp32:
+  board: esp32-c3-devkitm-1
+  framework: 
+    type: arduino
+    version: 2.0.5
+# framework:
+#   type: esp-idf
+
+captive_portal:
+
+web_server:
+  port: 80
+
+output:
+  - platform: ledc
+    id: output_red
+    pin: GPIO3
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_green
+    pin: GPIO10
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_blue
+    pin: GPIO6
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_cold_white
+    max_power: 100%
+    # frequency: ${frequency_cw}
+    pin: GPIO4
+  - platform: ledc
+    id: output_warm_white
+    pin: GPIO5
+    max_power: 100%
+    # frequency: ${frequency_ww}
+
+light:
+  - platform: cwww
+    name: ${friendly_name}
+    id: ${main_device_id}
+    cold_white: output_cold_white
+    warm_white: output_warm_white
+    cold_white_color_temperature: 6536 K
+    warm_white_color_temperature: 2000 K
+    constant_brightness: false
+    gamma_correct: 0
+    default_transition_length: 1s
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+    - globals.set:
+        id: last_light_on
+        value: '1'
+    icon: "hue:ceiling-aurelle-circle"
+  - platform: rgb
+    name: ${friendly_name_rgb}
+    id: ${rgb_device_id}
+    red: output_red
+    green: output_green
+    blue: output_blue
+    default_transition_length: 0.5s
+    restore_mode: RESTORE_DEFAULT_OFF
+    on_turn_on:
+    - globals.set:
+        id: last_light_on
+        value: '2'
+    icon: "hue:ceiling-aurelle-circle"

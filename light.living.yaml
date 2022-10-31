@@ -1,0 +1,34 @@
+substitutions:
+  device_ssid: "Living Light"
+  device_name: livingroomlight
+  device_description: "Ceiling LED light with IR remote located in Ashish Room with discreet Tunable White & RGB Front Light (shows up as separate lights)."
+  friendly_name: "Living Room Light"    # Put the name that you want to see in Home Assistant.
+  device_name_rgb: livingroomlightrgb
+  device_description_rgb: Lliving Room Light RGB."    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Living Room Light RGB"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "livingroomlight"    # Put the name that you want to see in Home Assistant.
+  switch1b1_topic: ashishswitch2/button/1/command
+  switch1b2_topic: ashishswitch2/button/2/command
+  switch1b3_topic: ashishswitch2/button/3/command
+  switch1b4_topic: ashishswitch2/button/4/command
+  frequency_rgb: 250 Hz
+  frequency_cw: 1000 Hz
+  frequency_ww: 1000 Hz
+  project_name: "offdarks.lxd-xg68-68w-rgbcw-ceiling-esp32-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret living_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml
+<<: !include .base.global-rgbcct.yaml
+<<: !include .base.mqtt-light-automation-4-button-rgbcct.yaml
+<<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-offdarks-remote.yaml

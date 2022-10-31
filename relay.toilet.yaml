@@ -1,0 +1,27 @@
+substitutions:
+  device_ssid: "Toilet Relay"
+  device_name: toiletrelay
+  device_main_description: "Shelly 2.5 Toilet Relay Exposed as Light & Fan"
+  device_description: Toilet Relay
+  friendly_name: "Toilet" # Put the name that you want to see in Home Assistant.
+  main_device_id: "toiletrelay"    # Put the name that you want to see in Home Assistant.
+  lonsonho1_topic: ashishswitch22/button/1/command
+  lonsonho2_topic: ashishswitch22/button/1/command
+  light_icon: "hue:bulb-spot-hung"
+  project_name: "shelly.shelly25-relay-light-fan"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret toiletrelay_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.relay.shelly-2.5-toilet.yaml
+<<: !include .base.mqtt-light-automation-2-lonsonho.yaml
+<<: !include .base.sensor-shelly2.5.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-shelly-2.5-edge-switch-light.yaml

@@ -1,0 +1,30 @@
+substitutions:
+  device_ssid: "Front Porch"
+  device_name: frontporch
+  device_description: "Lumary 18W RGBCW Slim Downlight"
+  friendly_name: "Front Porch"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Front Porch RGB"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "frontporch"    # Put the name that you want to see in Home Assistant.
+  rgb_device_id: "frontporchrgb" # Put the name that you want to see in Home Assistant.
+  switch1b1_topic: frontswitch/button/3/command
+  switch2b1_topic: passageswitch2/button/1/command
+  switch2b2_topic: passageswitch2/button/2/command
+  project_name: "lumary.18w-rgbcw-slim-downlight-esp32-c3-esp-idf"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret front_porch_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.light-lumary-18w-downlight-esp32-c3-arduino.yaml
+<<: !include .base.global-mqtt-automation.yaml
+<<: !include .base.mqtt-light-automation-1-button-plus-2-button-switch.yaml
+<<: !include .base.sensor-common-die-temp.yaml
+# <<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

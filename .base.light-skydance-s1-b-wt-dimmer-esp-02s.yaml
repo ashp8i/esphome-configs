@@ -1,0 +1,60 @@
+# Device Specific Config
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: modwifi
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+uart:
+  - id: softwareforce
+    rx_pin: 13
+    tx_pin: 15
+    baud_rate: 9600
+    stop_bits: 1
+    debug:
+      direction: BOTH
+  # - id: mcu_0
+  #   rx_pin: TX
+  #   tx_pin: RX
+  #   baud_rate: 9600
+  #   stop_bits: 1
+  #   debug:
+  #     direction: BOTH
+  - id: mcu
+    rx_pin: RX
+    tx_pin: TX
+    baud_rate: 115200
+    stop_bits: 1
+
+# Register the Tuya MCU connection
+tuya:
+  uart_id: mcu
+
+light:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    dimmer_datapoint: 22
+    # min_value_datapoint: 26
+    switch_datapoint: 20
+    min_value: 25
+    max_value: 1000
+    icon: "hue:bulb-group-spot-hung"
+# Datapoint 20: switch (value: ON)
+# Datapoint 21: enum (value: 0)
+# Datapoint 22: int value (value: 878)
+# Datapoint 26: int value (value: 0)
+# Product: '{"p":"vhqbpwy6a5ke1nig","
+# Backlog TuyaMCU 11,20; TuyaMCU 21,22; DimmerRange 10,1000

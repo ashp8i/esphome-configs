@@ -5,44 +5,225 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 ## Config Groups
 
 - [Common](common)
-- [Nitebird Light Strip](nitebird_light_strip)
-- [OpenGarage](opengarage)
-- [Uplift Desk](uplift_desk)
+- [Device Specific Config](device_specific_config)
+- [MQTT](mqtt)
+- [MQTT Automation](mqtt_automation)
+- [Sensor](sensor)
+- [Text Sensor](text_sensor)
+- [Switch](common)
+- [Binary Sensor](common)
+
+## Device Groups
+
+- [Athom 5W GU10](athom_5w_gu10)
+- [MiBoxer WB5](miboxer_wb5)
+- [Lusunt 36W Ceiling Light](lusunt_36w_ceiling_light)
+- [OffDarks 68W Ceiling Light](offdarks_68w_ceiling_light)
+- [Lumary 18W Recessed Panel Light](lumary_18w_recessed_panel_light)
+- [Iralan 42W Ceiling Light ESP32-C3](iralan_42w_ceiling_light_esp32_c3)
+- [Iralan 42W Ceiling Light ESP32-S2](iralan_42w_ceiling_light_esp32_s2)
+- [MiBoxer FUT035W](miboxer_fut035w)
+- [MiBoxer FUT039W](miboxer_fut039w)
+- [Offdarks 28W Ceiling Light](offdarks_28w_ceiling_light)
+- [Shelly 1](shelly_1)
+- [Shelly 2.5](shelly_2.5)
+- [Shelly Plus i4](shelly_plus_i4)
 
 # Common
 
-This is the common config that I include in all of my other configs. It includes:
+.base-debug.yaml
 
-- Secret-based Wifi configuration
-- Wifi RSSI sensor
-- API with password
+This is the common config is present in all configs. It includes:
+
 - Logger
 - OTA with password
-- Device status binary sensor
+- Secret-based Wifi configuration
+- Fallback AP with secret password
+
+# Device Specific Config
+
+.base.devicetype-*.yaml
+
+This is a device specific config that will compile correctly for the esp chip used with that device, includes the following:
+
+- ESPHome Template, name, comment platform, board project name and version*, any platformio options including any special platform packages and framework version and platform version
+- Captive Portal
+- Web Server for Web API
+- Globals required by the device
+- Output pins defined
+- Components like Tuya, Light, WLED, E1.31
+- External Components like PR for ledc when using ESP32-C3 with arduino framework
+- UART pins if needed by TuyaMCU
+- i2c needed by some Shelly devices
+- device specific switches**
+
+*this will vary by device and helps to show correct data in Home Assistant and ensure firmware compiles correctly. Name, Comment, Project Name and Project Version values are definable in substitutions.
+
+**be sure not to include .base.switch*.yaml files as esphome will complain duplicate switch: has been defined.
+
+# MQTT
+
+.base.mqtt-common.yaml
+
+This is the mqtt broker connection config is present in most configs. It includes:
+
+- Broker Hostname/IP in secrets.yaml
+- Broker Hostname/IP in secrets.yaml
+- Broker Hostname/IP in secrets.yaml
+- Discovery to allow Home Assistant to setup device***
+
+***MQTT Discovery helps to ensure messages are picked up correctly but results in duplicate devices, I have kept this enabled but mannually disable the device in Home Assistant cleaning up and double numbering ensuring the MQTT device has *_2 entity id and has been disabled
+
+# MQTT Automation
+
+.base.mqtt-*-automation-*.yaml
+
+This is a fallback mechanism in case Home Assistant becomes Offline. It mainly caters for Shelly Plus i4 includes:
+
+- Short Click
+- Hold
+- Double Click
+
+Supports 4 buttons and multiple devices depending on .base.mqtt-*-automation-*.yaml file chosen
+
+Device topics are templated in substitutions
+
+# Sensor
+
+.base.sensor-common.yaml
+
+Sensors in Home Assistant. It includes:
+
+- WiFi Signal
+- Uptime
+
+.base.sensor-common-die-temp.yaml
+
+Includes the above plus:
+
+- ESP32 Variants CPU Temperature
+
+# Text Sensor
+
+.base.text-sensor-common.yaml
+
+This is the text sensor common config is present in all configs. It includes:
+
+- IP
+- SSID
+- BSSID
+- Human Readable Uptime
+
+# Switch
+
+.base.switch-common.yaml
+
+This is the common switch config is present in all configs. It includes:
+
+- Restart Switch
+- Restart Switch (Safe Mode)
+
+# Binary Sensor
+
+.base.binary-sensor-common.yaml
+
+This is the binary common config is present in all configs. It includes:
+
+- Status
 
 ## Setup
 
-1. Copy `packages/` into your local ESPHome directory.
+1. Copy the required .*.yaml into your local ESPHome directory.
 1. Open `secrets.yaml` and enter your Wifi connection info.
 
-# Nitebird Light Strip
+# Athom 5W GU10
 
-A configuration for Nitebird Light Strips. Configuration includes ADC mic config and has an audio sync mode which attempts to change brightness along with the ambient room sound.
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# MiBoxer WB5
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Lusunt 36W Ceiling Light
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# OffDarks 68W Ceiling Light
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Lumary 18W Recessed Panel Light
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Iralan 42W Ceiling Light ESP32-C3
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Iralan 42W Ceiling Light ESP32-S2
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# MiBoxer FUT035W
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# MiBoxer FUT039W
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Offdarks 28W Ceiling Light
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Shelly 1
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Shelly 2.5
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed 
+
+# Shelly Plus i4
+
+.base.bulb.athom-gu10.yaml
+
+these bulbs come with either tasmota or esphome installed
 
 # Setup
 
 1. Copy the [common config](../common) into your local ESPHome configurations.
 1. Copy `light_strip.yaml` and `packages/nitebird.yaml` into your local ESPHome configurations.
-1. Copy the relevant lines from `secrets.yaml` and fill in random API and OTA passwords.
-1. Open `light_strip.yaml` and tweak the substitution values accordingly. The comments will explain each option.
-1. Device will show up in ESPHome and be ready to build!
-1. You will have to flash your device to Tasmota using [tuya-convert](https://github.com/ct-Open-Source/tuya-convert), then upload your ESPHome build on Tasmota's update page.
 
 # Uplift Desk
 
 <img src="../../assets/uplift_desk/home-assistant.png?raw=true" width="50%">
 
-A configuration for [Uplift Desk](https://www.upliftdesk.com/) desks. Uses the RJ12 port labeled `F`. This is the same port that the official (and unfortunately discontinued) Uplift Connect dongle uses.
+A configuration for [Uplift Desk](https://www.upliftdesk.com/) dongle uses.
 
 ## Supported Features
 
@@ -50,14 +231,6 @@ Currently, this integration supports the following:
 
 - Commands
   - Move up
-  - Move down
-  - Stop
-  - Save preset 1-4
-  - Recall preset 1-4
-  - Request an updated height reading (I decided to name it Sync)
-  - Set a maximum height limit
-  - Set a minimum height limit
-  - Clear any height limit
 - Sensors
   - Current height reading
 
@@ -67,47 +240,35 @@ Currently, this integration supports the following:
 
 I found the Uplift Connect dongle pinout via the [FCC filing](https://fccid.io/2ANKDJCP35NBLT/Internal-Photos/Internal-Photos-3727739) (Thanks to deadman96385 for sending that my way)
 
-There are 6 PINs on the desk's RJ12 port. The first and sixth PIN are not needed. All communication occurs over UART and the ESP chip can be powered off of the 5v and GND PINs.
-The port's pinout from left to right is as follows:
+There are 6 PINs follows:
 
 1. ? (Not known but not necessary)
 1. GND
-1. Tx
-1. 5v
-1. Rx
-1. ? (Not known but not necessary)
 
 ## Hardware Setup
 
 <img src="../../assets/uplift_desk/esp-wiring.jpg?raw=true" style="width: 25%">
 
-My current hardware could use a little polish, but I mounted it under my desk and never have to see it so I don't mind for the moment!  
-I use a NodeMCU in my setup. They can be powered off of 5v, so I directly power the ESP from the desk's 5v output.
+My coment.
 
 ## Software Setup
 
 1. Copy the [common config](../common) into your local ESPHome configurations.
 1. Copy `uplift_desk.yaml` and `packages/uplift_desk.yaml` into your local ESPHome configurations.
-1. Copy the relevant lines from `secrets.yaml` and fill in random API and OTA passwords.
-1. Open `uplift_desk.yaml` and tweak the substitution values accordingly. The comments will explain each option.
-1. Device will show up in ESPHome and be ready to build!
 
-## Planned Features
+## Misc - Template
 
 ### Commands
 
-I noticed a lot of the Uplift Desk UART commands correspond to the commands documented for a Jarvis desk in [phord/Jarvis](https://github.com/phord/Jarvis). I am still testing out some of these commands. Namely:
+comment reference[phord/Jarvis](https://github.com/phord/Jarvis). I am still testing out some of these commands. Namely:
 
 - Setting units (in, cm)
-- Setting anti-collision sensitivity (high, medium, low)
-- Reset
-- Height calibration
 
-I have implemented a "go to height" action locally, but it always ends up one or two inches off due to the speed of the desk. Slows down as it approaches a preset value. I would like to be able to do this when calling the "go to height" action, but I have not come across any indication that the desk supports speed values over UART. If it is not possible then I may be able to hone in the action by stopping it early, but so far it seems to be pretty inconsistent.
+I have implemented a "go to height" action locally.
 
 ### Responses
 
-- Sending a sync command makes the desk send its current height along with the saved heights of all 4 presets. I have not been able to decipher the preset heights. The values seem to be more precise than inches, with the second value as a decimal, but so far I have been unable to correlate them to actual height values or find any helpful calibration output. I will post a table of observed values below.
+- Sending a sync command makes the desk send its current
 
 <details>
   <summary>Click to view observed prefix values</summary>
@@ -116,25 +277,7 @@ I have implemented a "go to height" action locally, but it always ends up one or
 |--------|------------|
 | 25.3   | `20, 5`    |
 | 25.3   | `20, 8`    |
-| 25.3   | `20, 11`   |
-| 25.3   | `20, 54`   |
-| 28.3   | `25, 62`   |
-| 28.3   | `25, 67`   |
-| 28.3   | `25, 82`   |
-| 35.1   | `37, 36`   |
-| 37.8   | `41, 234`  |
-| 37.9   | `42, 14`   |
-| 39.9   | `45, 153`  |
-| 39.9   | `45, 156`  |
-| 40.0   | `45, 168`  |
-| 42.4   | `50, 7`    |
-| 42.8   | `50, 188`  |
-| 42.9   | `50, 231`  |
-| 43.0   | `51, 8`    |
-| 43.1   | `51, 27`   |
-| 43.2   | `51, 104`  |
-| 50.8   | `64, 161`  |
-| 50.8   | `64, 162`  |
+
 </details>
 
 ## Sources

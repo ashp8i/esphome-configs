@@ -1,0 +1,26 @@
+substitutions:
+  device_ssid: "Device SSID"
+  device_name: devicename
+  device_description: "devicedescription"
+  friendly_name: "Friendly Home Assistant Name"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "id_used_internally"    # Put the name that you want to see in Home Assistant.
+  project_name: "projectname" # Put the name that you want to see in Home Assistant.
+  project_version: "1.0" # Put value that you want to see in Home Assistant.
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret devicename_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml  # base common config
+<<: !include .base.device.yaml  # base device config
+# <<: !include .base.global-mqtt-automation.yaml  # base mqtt control + global variable
+<<: !include .base.mqtt-common.yaml  # base mqtt broker connection
+<<: !include .base.mqtt-automation.yaml  # base mqtt control
+<<: !include .base.sensor-common-die-temp.yaml  # base common sensors incl. esp32 temp
+# <<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml  # base text sensors
+<<: !include .base.switch-common.yaml  # base common switch incl. restart/safe mode
+<<: !include .base.binary-sensor-common.yaml  # base common binary sensors

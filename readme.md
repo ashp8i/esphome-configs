@@ -78,7 +78,7 @@ This is the mqtt broker connection config is present in most configs. It include
 
 .base.mqtt-\*-automation-\*.yaml
 
-This is a fallback mechanism in case Home Assistant becomes Offline. It mainly caters for Shelly Plus i4 includes:
+This is a fallback mechanism in case Home Assistant becomes Offline. It mainly caters for Shelly Plus i4 and includes:
 
 - Short Click
 - Hold

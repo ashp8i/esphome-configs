@@ -42,11 +42,11 @@ This is the common config is present in all configs. It includes:
 
 # Device Specific Config
 
-.base.devicetype-*.yaml
+.base.devicetype-\*.yaml
 
 This is a device specific config that will compile correctly for the esp chip used with that device, includes the following:
 
-- ESPHome Template, name, comment platform, board project name and version*, any platformio options including any special platform packages and framework version and platform version
+- ESPHome Template, name, comment platform, board project name and version\*, any platformio options including any special platform packages and framework version and platform version
 - Captive Portal
 - Web Server for Web API
 - Globals required by the device
@@ -55,11 +55,11 @@ This is a device specific config that will compile correctly for the esp chip us
 - External Components like PR for ledc when using ESP32-C3 with arduino framework
 - UART pins if needed by TuyaMCU
 - i2c needed by some Shelly devices
-- device specific switches**
+- device specific switches\*\*
 
-*this will vary by device and helps to show correct data in Home Assistant and ensure firmware compiles correctly. Name, Comment, Project Name and Project Version values are definable in substitutions.
+\*this will vary by device and helps to show correct data in Home Assistant and ensure firmware compiles correctly. Name, Comment, Project Name and Project Version values are definable in substitutions.
 
-**be sure not to include .base.switch*.yaml files as esphome will complain duplicate switch: has been defined.
+\*\*be sure not to include .base.switch\*.yaml files as esphome will complain duplicate switch: has been defined.
 
 # MQTT
 
@@ -70,13 +70,13 @@ This is the mqtt broker connection config is present in most configs. It include
 - Broker Hostname/IP in secrets.yaml
 - Broker Hostname/IP in secrets.yaml
 - Broker Hostname/IP in secrets.yaml
-- Discovery to allow Home Assistant to setup device***
+- Discovery to allow Home Assistant to setup device\*\*\*
 
-***MQTT Discovery helps to ensure messages are picked up correctly but results in duplicate devices, I have kept this enabled but mannually disable the device in Home Assistant cleaning up and double numbering ensuring the MQTT device has *_2 entity id and has been disabled
+\*\*\*MQTT Discovery helps to ensure messages are picked up correctly but results in duplicate devices, I have kept this enabled but manually disable the device in Home Assistant cleaning up and double numbering ensuring the MQTT device has \*_2 entity id and has been disabled
 
 # MQTT Automation
 
-.base.mqtt-*-automation-*.yaml
+.base.mqtt-\*-automation-\*.yaml
 
 This is a fallback mechanism in case Home Assistant becomes Offline. It mainly caters for Shelly Plus i4 includes:
 
@@ -84,7 +84,7 @@ This is a fallback mechanism in case Home Assistant becomes Offline. It mainly c
 - Hold
 - Double Click
 
-Supports 4 buttons and multiple devices depending on .base.mqtt-*-automation-*.yaml file chosen
+Supports 4 buttons and multiple devices depending on .base.mqtt-\*-automation-\*.yaml file chosen
 
 Device topics are templated in substitutions
 
@@ -133,7 +133,7 @@ This is the binary common config is present in all configs. It includes:
 
 ## Setup
 
-1. Copy the required .*.yaml into your local ESPHome directory.
+1. Copy the required .\*.yaml into your local ESPHome directory.
 1. Open `secrets.yaml` and enter your Wifi connection info.
 
 # Athom 5W GU10

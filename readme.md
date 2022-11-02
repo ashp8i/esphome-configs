@@ -67,9 +67,9 @@ This is a device specific config that will compile correctly for the esp chip us
 
 This is the mqtt broker connection config is present in most configs. It includes:
 
-- Broker Hostname/IP in secrets.yaml
-- Broker Hostname/IP in secrets.yaml
-- Broker Hostname/IP in secrets.yaml
+- MQTT Broker Hostname/IP in secrets.yaml
+- MQTT Username in secrets.yaml
+- MQTT Password in secrets.yaml
 - Discovery to allow Home Assistant to setup device\*\*\*
 
 \*\*\*MQTT Discovery helps to ensure messages are picked up correctly but results in duplicate devices, I have kept this enabled but manually disable the device in Home Assistant cleaning up and double numbering ensuring the MQTT device has \*_2 entity id and has been disabled

@@ -4,30 +4,30 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 ## Config Groups
 
-- [Common](common)
-- [Device Specific Config](device_specific_config)
-- [MQTT](mqtt)
-- [MQTT Automation](mqtt_automation)
-- [Sensor](sensor)
-- [Text Sensor](text_sensor)
-- [Switch](common)
-- [Binary Sensor](common)
+- [Common](#common)
+- [Device Specific Config](#device-specific-config)
+- [MQTT](#mqtt)
+- [MQTT Automation](#mqtt-automation)
+- [Sensor](#sensor)
+- [Text Sensor](#text-sensor)
+- [Switch](#switch)
+- [Binary Sensor](#binary-sensor)
 
 ## Device Groups
 
-- [Athom 5W GU10](athom_5w_gu10)
-- [MiBoxer WB5](miboxer_wb5)
-- [Lusunt 36W Ceiling Light](lusunt_36w_ceiling_light)
-- [OffDarks 68W Ceiling Light](offdarks_68w_ceiling_light)
-- [Lumary 18W Recessed Panel Light](lumary_18w_recessed_panel_light)
-- [Iralan 42W Ceiling Light ESP32-C3](iralan_42w_ceiling_light_esp32_c3)
-- [Iralan 42W Ceiling Light ESP32-S2](iralan_42w_ceiling_light_esp32_s2)
-- [MiBoxer FUT035W](miboxer_fut035w)
-- [MiBoxer FUT039W](miboxer_fut039w)
-- [Offdarks 28W Ceiling Light](offdarks_28w_ceiling_light)
-- [Shelly 1](shelly_1)
-- [Shelly 2.5](shelly_2.5)
-- [Shelly Plus i4](shelly_plus_i4)
+- [Athom 5W GU10](#athom-5w-gu10)
+- [MiBoxer WB5](#miboxer-wb5)
+- [Lusunt 36W Ceiling Light](#lusunt-36w-ceiling-light)
+- [OffDarks 68W Ceiling Light](#offdarks-68w-ceiling-light)
+- [Offdarks 28W Ceiling Light](#offdarks-28w-ceiling-light)
+- [Lumary 18W Recessed Panel Light](#lumary-18w-recessed-panel-light)
+- [Iralan 42W Ceiling Light ESP32-C3](#iralan-42w-ceiling-light-esp32-c3)
+- [Iralan 42W Ceiling Light ESP32-S2](#iralan-42w-ceiling-light-esp32-s2)
+- [MiBoxer FUT035W](#miboxer-fut035w)
+- [MiBoxer FUT039W](#miboxer-fut039w)
+- [Shelly 1](#shelly-1)
+- [Shelly 2.5](#shelly-25)
+- [Shelly Plus i4](#shelly-plus-i4)
 
 # Common
 

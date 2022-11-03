@@ -194,145 +194,6 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP
 
-# MiBoxer WB5
-
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
-
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
-
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
-
-# Setup
-
-the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
-
-[`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
-
-Optional\
-.base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
-
-This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
-
-- ESP8285 based 2MB Flash
-- Captive Portal
-- Web Server
-- WLED
-- E1.31
-- DDP
-
-# Lusunt 36W Ceiling Light
-
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
-
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
-
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
-
-# Setup
-
-the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
-
-[`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
-
-This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
-
-- ESP8285 based 2MB Flash
-- Captive Portal
-- Web Server
-- WLED
-- E1.31
-- DDP 
-
-# OffDarks 68W Ceiling Light
-
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
-
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
-
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
-
-# Setup
-
-the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
-
-[`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
-
-This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
-
-- ESP8285 based 2MB Flash
-- Captive Portal
-- Web Server
-- WLED
-- E1.31
-- DDP 
-
-# Lumary 18W Recessed Panel Light
-
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
-
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
-
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
-
-# Setup
-
-the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
-
-[`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
-
-This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
-
-- ESP8285 based 2MB Flash
-- Captive Portal
-- Web Server
-- WLED
-- E1.31
-- DDP 
-
 # Iralan 42W Ceiling Light ESP32-C3
 
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
@@ -401,6 +262,74 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP 
 
+# Lumary 18W Recessed Panel Light
+
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+
+[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
+
+the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
+see bulb.ashish-spot1.yaml for example
+
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+
+I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+
+This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
+
+- ESP8285 based 2MB Flash
+- Captive Portal
+- Web Server
+- WLED
+- E1.31
+- DDP 
+
+# Lusunt 36W Ceiling Light
+
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+
+[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
+
+the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
+see bulb.ashish-spot1.yaml for example
+
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+
+I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+
+This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
+
+- ESP8285 based 2MB Flash
+- Captive Portal
+- Web Server
+- WLED
+- E1.31
+- DDP 
+
 # MiBoxer FUT035W
 
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
@@ -436,6 +365,77 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - DDP 
 
 # MiBoxer FUT039W
+
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+
+[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
+
+the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
+see bulb.ashish-spot1.yaml for example
+
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+
+I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+
+This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
+
+- ESP8285 based 2MB Flash
+- Captive Portal
+- Web Server
+- WLED
+- E1.31
+- DDP 
+
+# MiBoxer WB5
+
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+
+[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
+
+the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
+see bulb.ashish-spot1.yaml for example
+
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+
+Optional\
+.base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
+
+I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+
+This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
+
+- ESP8285 based 2MB Flash
+- Captive Portal
+- Web Server
+- WLED
+- E1.31
+- DDP
+
+# OffDarks 68W Ceiling Light
 
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 

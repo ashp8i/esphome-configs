@@ -148,7 +148,7 @@ This is the binary sensor common config is present in all configs. It includes:
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 these bulbs come with either tasmota or esphome installed
@@ -186,7 +186,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -221,7 +221,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -253,7 +253,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -285,7 +285,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -317,7 +317,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -349,7 +349,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -381,7 +381,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -413,7 +413,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -445,7 +445,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -477,7 +477,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -509,7 +509,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
@@ -536,13 +536,16 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Shelly Plus i4
 
-`.base.bulb.athom-gu10.yaml`
+`.base.switch.shelly-plus-i4-arduino.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+[![Shelly Plus i4](https://www.shelly.cloud/wp-content/uploads/2021/12/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Shelly Plus i4](https://shelly.cloud/wp-content/uploads/2021/12/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+[Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
+[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
+[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4/)\
+[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example

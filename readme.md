@@ -143,7 +143,7 @@ This is the binary sensor common config is present in all configs. It includes:
 
 # Athom 5W GU10
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.bulb.athom-gu--10.yaml`](.base.bulb.athom-gu--10.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -183,7 +183,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer WB5
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -220,7 +220,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lusunt 36W Ceiling Light
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -254,7 +254,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # OffDarks 68W Ceiling Light
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -288,7 +288,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lumary 18W Recessed Panel Light
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -322,7 +322,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-C3
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -356,7 +356,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-S2
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -390,7 +390,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer FUT035W
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -424,7 +424,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer FUT039W
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -458,7 +458,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Offdarks 28W Ceiling Light
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -492,7 +492,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Shelly 1
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -526,7 +526,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Shelly 2.5
 
-`.base.bulb.athom-gu10.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -560,7 +560,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Shelly Plus i4
 
-`.base.switch.shelly-plus-i4-arduino.yaml`
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />

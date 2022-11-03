@@ -30,8 +30,9 @@ output:
     pin: GPIO4
     id: shelly_1_relay
 
-switch:
-  - platform: output
-    name: "Shelly 1 Switch"
-    output: shelly_1_relay
-    id: ${main_device_id}
+# Commented out to avoid duplicates keys in config see .base.switch-shelly-1-generic.yaml
+# switch:
+#   - platform: output
+#     name: "Shelly 1 Switch"
+#     output: shelly_1_relay
+#     id: ${main_device_id}

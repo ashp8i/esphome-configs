@@ -207,15 +207,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -241,15 +241,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -275,15 +275,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -309,15 +309,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -343,15 +343,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -377,15 +377,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -411,18 +411,18 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 Optional\
-.base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
+.base.mqtt-light-automation-4-button-rgbcct.yaml - if controlled by a Shelly Plus i4
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -448,15 +448,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -473,24 +473,28 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+[![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+
+[Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
+[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
+[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4/)\
+[Amazon UK](https://)\
+[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
 # Setup
 
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
-
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -499,77 +503,76 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - ESP8285 based 2MB Flash
 - Captive Portal
 - Web Server
-- WLED
-- E1.31
-- DDP 
 
 # Shelly 1
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.relay.shelly-1-generic.yaml`](.base.relay.shelly-2.5-generic.yaml)
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+[![Shelly 1](./.images/shelly1.png)](https://www.shelly.cloud/products/shelly-1-smart-home-automation-relay)<br />
 
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+[Shelly 1](https://www.shelly.cloud/products/shelly-1-smart-home-automation-relay)\
+[Shelly Store Europe](https://shop.shelly.cloud/shelly-1-wifi-smart-home-automation)\
+[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4/https://shellystore.co.uk/product/shelly-1)\
+[Amazon UK](https://www.amazon.co.uk/Shelly-Automation-Wi-Fi-Compatible-Google/dp/B082626S4S)\
+[AliExpress](https://www.aliexpress.com/item/1005002716450669.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+
+Shelly Plus i4 is a Wall Mounted Controller/Assignable buttons powered by mains.
 
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`relay.bath-entrance.yaml`](relay.bath-entrance.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.relay.shelly-1-generic`](.base.relay.shelly-1-generic)\
+[`.base.mqtt-light-automation-1-lonsonho.yaml`](.base.mqtt-light-automation-1-lonsonho.yaml) - if controlled by a Zigbee Button\
+[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
+[`.base.switch-shelly-2.5-generic.yaml`](.base.switch-shelly-2.5-generic.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
-
-This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
+This device incorporates the following features in addition to MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
 - ESP8285 based 2MB Flash
 - Captive Portal
 - Web Server
-- WLED
-- E1.31
-- DDP 
 
 # Shelly 2.5
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.relay.shelly-2.5-generic.yaml`](.base.relay.shelly-2.5-generic.yaml)
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+[![Shelly 2.5](./.images/shelly25.jpeg)](https://www.shelly.cloud/products/shelly-25-smart-home-automation-relay)<br />
+[![Shelly 2.5](./.images/shelly25-3-1000x1000.jpg)](https://www.shelly.cloud/products/shelly-25-smart-home-automation-relay)<br />
+[![Shelly 2.5](./.images/shelly_25pm_dc_wiring.jpg)](https://www.shelly.cloud/products/shelly-25-smart-home-automation-relay)<br />
 
-[Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+[Shelly 2.5](https://www.shelly.cloud/products/shelly-25-smart-home-automation-relay)\
+[Shelly Store Europe](https://shop.shelly.cloud/shelly-2.5-ce-ul-wifi-smart-home-automation)\
+[Shelly Store UK](https://shellystore.co.uk/product/shelly-25)\
+[Amazon UK](https://www.amazon.co.uk/Shelly-Controlling-Electrical-Circuits-Compatible/dp/B07Q9M2Y1S)\
+[AliExpress](https://www.aliexpress.com/item/1005002789235469.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+
+Shelly Plus i4 is a Wall Mounted Controller/Assignable buttons powered by mains.
 
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`relay.bathroom.yaml`](relay.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.relay.shelly-2.5-generic.yaml`](.base.relay.shelly-2.5-generic.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-2-lonsonho.yaml) - if controlled by a Zigbee Button\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+[`.base.switch-shelly-2.5-generic.yaml`](.base.switch-shelly-2.5-generic.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
 - ESP8285 based 2MB Flash
 - Captive Portal
 - Web Server
-- WLED
-- E1.31
-- DDP
 
 # Shelly Plus i4
 
@@ -580,7 +583,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4/)\
+[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
+[Amazon UK](https://www.amazon.co.uk/Shelly-Bluetooth-monitor-compatible-Assistant/dp/B09SWYGBZK)\
 [AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 

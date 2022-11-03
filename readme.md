@@ -19,6 +19,10 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 ## Device Groups
 
+Curtain Motor
+
+- [Zemismart BCM500DS-TYW](zemismart-bcm500ds-tyw) - `Comming Soon`
+
 Light / LED Strip
 
 - [Athom 5W GU10](#athom-5w-gu10)
@@ -40,10 +44,6 @@ Relay
 Switch
 
 - [Shelly Plus i4](#shelly-plus-i4)
-
-Curtain Motor
-
-- [Zemismart BCM500DS-TYW](zemismart-bcm500ds-tyw) - `Comming Soon`
 
 # Common
 

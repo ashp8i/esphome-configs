@@ -141,9 +141,9 @@ This is the binary sensor common config is present in all configs. It includes:
 1. Open `secrets.yaml` and enter your Wifi connection info.
 1. Ensure 
 
-# Athom 5W GU10\
+# Athom 5W GU10
 
-`.base.bulb.athom-gu10.yaml`\
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 
@@ -163,7 +163,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 optional\
 `.base.mqtt-light-automation-4-button-rgbcct.yaml` - if controlled by a Shelly Plus i4
@@ -179,9 +179,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP
 
-# MiBoxer WB5\
+# MiBoxer WB5
 
-`.base.bulb.athom-gu10.yaml`\
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 
@@ -198,7 +198,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 Optional
 .base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
@@ -214,9 +214,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP
 
-# Lusunt 36W Ceiling Light\
+# Lusunt 36W Ceiling Light
 
-`.base.bulb.athom-gu10.yaml`\
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 
@@ -233,7 +233,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -246,9 +246,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP 
 
-# OffDarks 68W Ceiling Light\
+# OffDarks 68W Ceiling Light
 
-`.base.bulb.athom-gu10.yaml`\
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 
@@ -265,7 +265,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -278,9 +278,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP 
 
-# Lumary 18W Recessed Panel Light\
+# Lumary 18W Recessed Panel Light
 
-`.base.bulb.athom-gu10.yaml`\
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 
@@ -297,7 +297,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -310,9 +310,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP 
 
-# Iralan 42W Ceiling Light ESP32-C3\
+# Iralan 42W Ceiling Light ESP32-C3
 
-`.base.bulb.athom-gu10.yaml`\
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 
@@ -329,7 +329,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -342,9 +342,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - E1.31
 - DDP 
 
-# Iralan 42W Ceiling Light ESP32-S2\
+# Iralan 42W Ceiling Light ESP32-S2
 
-`.base.bulb.athom-gu10.yaml`\
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 
@@ -361,7 +361,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -393,7 +393,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -425,7 +425,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -457,7 +457,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -489,7 +489,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -521,7 +521,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -553,7 +553,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.sensor-common.yaml`\
 `.base.text-sensor-common.yaml`\
 `.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`\
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 

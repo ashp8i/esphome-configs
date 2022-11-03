@@ -145,8 +145,8 @@ This is the binary sensor common config is present in all configs. It includes:
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -183,8 +183,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -218,8 +218,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -250,8 +250,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -282,8 +282,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -314,8 +314,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -346,8 +346,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -378,8 +378,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -410,8 +410,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -442,8 +442,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -474,8 +474,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -506,8 +506,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
@@ -538,8 +538,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.bulb.athom-gu10.yaml`
 
-[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw).
-
+[![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
+\
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [Aliexpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)

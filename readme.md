@@ -158,7 +158,7 @@ device comes from factory setup with initial setup Captive Portal and an ESPHome
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+see [`bulb.ashish-spot1.yaml`](bulb.ashish-spot1.yaml) for example
 
 `.base-debug.yaml`\
 `.base.bulb.athom-gu10.yaml`\

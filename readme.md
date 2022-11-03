@@ -41,6 +41,10 @@ Switch
 
 - [Shelly Plus i4](#shelly-plus-i4)
 
+Curtain Motor
+
+- [Zemismart BCM500DS-TYW](zemismart-bcm500ds-tyw) - `Comming Soon`
+
 # Common
 
 [`.base-debug.yaml`](.base-debug.yaml)

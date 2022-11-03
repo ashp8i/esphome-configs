@@ -196,13 +196,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 Optional\
 .base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
@@ -233,13 +233,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -267,13 +267,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -301,13 +301,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -335,13 +335,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -369,13 +369,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -403,13 +403,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -437,13 +437,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -471,13 +471,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -505,13 +505,13 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-common.yaml)
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 

@@ -19,6 +19,8 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 ## Device Groups
 
+1. Light / LED Strip
+
 - [Athom 5W GU10](#athom-5w-gu10)
 - [MiBoxer WB5](#miboxer-wb5)
 - [Lusunt 36W Ceiling Light](#lusunt-36w-ceiling-light)
@@ -29,8 +31,14 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 - [Iralan 42W Ceiling Light ESP32-S2](#iralan-42w-ceiling-light-esp32-s2)
 - [MiBoxer FUT035W](#miboxer-fut035w)
 - [MiBoxer FUT039W](#miboxer-fut039w)
+
+1. Relay
+
 - [Shelly 1](#shelly-1)
 - [Shelly 2.5](#shelly-25)
+
+1. Switch
+
 - [Shelly Plus i4](#shelly-plus-i4)
 
 # Common

@@ -35,7 +35,7 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 # Common
 
-`.base-debug.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)
 
 This is the common config is present in all configs. It includes:
 
@@ -67,7 +67,7 @@ This is a device specific config that will compile correctly for the esp chip us
 
 # MQTT
 
-`.base.mqtt-common.yaml`
+[`.base.mqtt-common.yaml`](.base.mqtt-common.yaml)
 
 This is the mqtt broker connection config is present in most configs. It includes:
 
@@ -94,14 +94,14 @@ Device topics are templated in substitutions
 
 # Sensor
 
-`.base.sensor-common.yaml`
+[`.base.sensor-common.yaml`](.base.sensor-common.yaml)
 
 Sensors in Home Assistant. It includes:
 
 - WiFi Signal
 - Uptime
 
-`.base.sensor-common-die-temp.yaml`
+[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)
 
 Includes the above plus:
 
@@ -109,7 +109,7 @@ Includes the above plus:
 
 # Text Sensor
 
-`.base.text-sensor-common.yaml`
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)
 
 This is the text sensor common config is present in all configs. It includes:
 
@@ -120,7 +120,7 @@ This is the text sensor common config is present in all configs. It includes:
 
 # Switch
 
-`.base.switch-common.yaml`
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)
 
 This is the common switch config is present in all configs. It includes:
 
@@ -129,7 +129,7 @@ This is the common switch config is present in all configs. It includes:
 
 # Binary Sensor
 
-`.base.binary-sensor-common.yaml`
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 This is the binary sensor common config is present in all configs. It includes:
 

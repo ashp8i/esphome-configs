@@ -35,7 +35,7 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 # Common
 
-.base-debug.yaml
+`.base-debug.yaml`
 
 This is the common config is present in all configs. It includes:
 
@@ -46,7 +46,7 @@ This is the common config is present in all configs. It includes:
 
 # Device Specific Config
 
-.base.devicetype-\*.yaml
+`.base.devicetype-\*.yaml`
 
 This is a device specific config that will compile correctly for the esp chip used with that device, includes the following:
 
@@ -67,13 +67,13 @@ This is a device specific config that will compile correctly for the esp chip us
 
 # MQTT
 
-.base.mqtt-common.yaml
+`.base.mqtt-common.yaml`
 
 This is the mqtt broker connection config is present in most configs. It includes:
 
-- MQTT Broker Hostname/IP in secrets.yaml
-- MQTT Username in secrets.yaml
-- MQTT Password in secrets.yaml
+- MQTT Broker Hostname/IP in `secrets.yaml`
+- MQTT Username in `secrets.yaml`
+- MQTT Password in `secrets.yaml`
 - Discovery to allow Home Assistant to setup device\*\*\*
 
 \*\*\*MQTT Discovery helps to ensure messages are picked up correctly but results in duplicate devices, I have kept this enabled but manually disable the device in Home Assistant cleaning up and double numbering ensuring the MQTT device has \*_2 entity id and has been disabled
@@ -94,14 +94,14 @@ Device topics are templated in substitutions
 
 # Sensor
 
-.base.sensor-common.yaml
+`.base.sensor-common.yaml`
 
 Sensors in Home Assistant. It includes:
 
 - WiFi Signal
 - Uptime
 
-.base.sensor-common-die-temp.yaml
+`.base.sensor-common-die-temp.yaml`
 
 Includes the above plus:
 
@@ -109,7 +109,7 @@ Includes the above plus:
 
 # Text Sensor
 
-.base.text-sensor-common.yaml
+`.base.text-sensor-common.yaml`
 
 This is the text sensor common config is present in all configs. It includes:
 
@@ -120,7 +120,7 @@ This is the text sensor common config is present in all configs. It includes:
 
 # Switch
 
-.base.switch-common.yaml
+`.base.switch-common.yaml`
 
 This is the common switch config is present in all configs. It includes:
 
@@ -129,9 +129,9 @@ This is the common switch config is present in all configs. It includes:
 
 # Binary Sensor
 
-.base.binary-sensor-common.yaml
+`.base.binary-sensor-common.yaml`
 
-This is the binary common config is present in all configs. It includes:
+This is the binary sensor common config is present in all configs. It includes:
 
 - Status
 
@@ -139,10 +139,11 @@ This is the binary common config is present in all configs. It includes:
 
 1. Copy the required .\*.yaml into your local ESPHome directory.
 1. Open `secrets.yaml` and enter your Wifi connection info.
+1. Ensure 
 
 # Athom 5W GU10
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)
 
@@ -157,13 +158,13 @@ device comes from factory setup with initial setup Captive Portal and an ESPHome
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
-.base-debug.yaml
-.base.bulb.athom-gu10.yaml
-.base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
-.base.sensor-common.yaml
-.base.text-sensor-common.yaml
-.base.switch-common.yaml
-.base.binary-sensor-common.yaml
+`.base-debug.yaml`
+`.base.bulb.athom-gu10.yaml`
+`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if controlled by a Shelly Plus i4
+`.base.sensor-common.yaml`
+`.base.text-sensor-common.yaml`
+`.base.switch-common.yaml`
+`.base.binary-sensor-common.yaml`
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and it is a personal preference
 
@@ -178,7 +179,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer WB5
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -204,7 +205,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lusunt 36W Ceiling Light
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -230,7 +231,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # OffDarks 68W Ceiling Light
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -256,7 +257,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lumary 18W Recessed Panel Light
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -282,7 +283,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-C3
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -308,7 +309,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-S2
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -334,7 +335,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer FUT035W
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -360,7 +361,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer FUT039W
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -386,7 +387,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Offdarks 28W Ceiling Light
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -412,7 +413,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Shelly 1
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -438,7 +439,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Shelly 2.5
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -464,7 +465,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Shelly Plus i4
 
-.base.bulb.athom-gu10.yaml
+`.base.bulb.athom-gu10.yaml`
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example

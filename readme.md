@@ -139,7 +139,7 @@ This is the binary sensor common config is present in all configs. It includes:
 
 1. Copy the required .\*.yaml into your local ESPHome directory.
 1. Open `secrets.yaml` and enter your Wifi connection info.
-1. Ensure 
+1. Ensure there ar no duplicate sections like double switch sections via the use of include, validate all configs before building to troubleshoot. 
 
 # Athom 5W GU10
 
@@ -154,6 +154,8 @@ This is the binary sensor common config is present in all configs. It includes:
 these bulbs come with either tasmota or esphome installed
 
 device comes from factory setup with initial setup Captive Portal and an ESPHome adopt url setup in the default config
+
+# Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -189,6 +191,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
+# Setup
+
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
@@ -200,7 +204,7 @@ see bulb.ashish-spot1.yaml for example
 `.base.switch-common.yaml`\
 `.base.binary-sensor-common.yaml`
 
-Optional
+Optional\
 .base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
@@ -223,6 +227,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -256,6 +262,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
+# Setup
+
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
@@ -287,6 +295,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -320,6 +330,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
+# Setup
+
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
@@ -351,6 +363,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -384,6 +398,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
+# Setup
+
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
@@ -416,6 +432,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
+# Setup
+
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
@@ -443,6 +461,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 `.base.bulb.athom-gu10.yaml`
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+
+# Setup
 
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
@@ -480,6 +500,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
+# Setup
+
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
 
@@ -511,6 +533,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [Athom GU10 RGBCW for ESPHome](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+# Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see bulb.ashish-spot1.yaml for example
@@ -547,78 +571,59 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
-the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see bulb.ashish-spot1.yaml for example
+Shelly Plus i4 is a Wall Mounted Controller/Assignable buttons powered by mains.
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.mqtt-light-automation-4-button-rgbcct.yaml` - if contreolled by a Shelly Plus i4\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+In my configuration I'm using the Arduino Framework which is not the recommended framework for new ESP32 variants, however Core Legacy Non-Ported ESPHome Componenents are more abundant than the newer ported ones, i.e the Web Server and Captive Portal are yet to be ported over to ESP-IDF, thus I prefer to use Arduino Framework.
 
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+I achieve Arduino compatibility using the below, as the chip used is basically a Single Core Regular ESP32 with a disabled core. We have to use a version of the espressif platform for Arduino IDE with the correct sdkconfig `#define CONFIG_FREERTOS_UNICORE 1`
 
-This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
+Thanks to the contributors at @ [arendst / Tasmota](https://github.com/arendst/Tasmota) specifically [Jason2866 / platform-espressif32](https://github.com/Jason2866/platform-espressif32) who kindly provides releases of the Arduino IDE platform-espressif32 [framework-arduinoespressif32-solo1 2.0.5](https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip) that support ESP32-U4WDH I am able to compile ESPHOME for the Shelly Plus i4.
 
-- ESP8285 based 2MB Flash
-- Captive Portal
-- Web Server
-- WLED
-- E1.31
-- DDP
+see [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml) for reference
+
+```yaml
+  esphome:
+    name: ${device_name}
+    comment: ${device_description}
+    platformio_options:
+      platform_packages:
+      - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
+      board_build.f_cpu: 160000000L
+    project:
+      name: "${project_name}"
+      version: "${project_version}"
+  
+  esp32:
+    board: esp32doit-devkit-v1
+    variant: esp32
+    framework:
+      type: arduino
+      platform_version: 5.2.0
+```
+
+My Config Offers regular Home Assistant API connectivity as well as mqtt and http**** fallback, each button has three functions:
+
+- Short Click
+- Double Click
+- Hold
+
+****provided a password for the web server has not been enabled
 
 # Setup
 
-1. Copy the [common config](../common) into your local ESPHome configurations.
-1. Copy `` and `` into your local ESPHome configurations.
+the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
+see [`switch.dining.yaml`](switch.dining.yaml) for example
 
-## Misc - Template
+`.base-debug.yaml`\
+`.base.switch.shelly-plus-i4-arduino.yaml`\
+`.base.mqtt-common.yaml`
+`.base.sensor-common-die-temp.yaml`\
+`.base.text-sensor-common.yaml`\
+`.base.switch-common.yaml`\
+`.base.binary-sensor-shelly-i4-4-buttons-fallback.yaml`
 
-### Commands
+This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-comment reference[phord/Jarvis](https://github.com/phord/Jarvis). I am still testing out some of these commands. Namely:
-
-- Setting units (in, cm)
-
-I have implemented a "go to height" action locally.
-
-### Responses
-
-- Sending a sync command makes the desk send its current
-
-<details>
-  <summary>Click to view observed prefix values</summary>
-
-| Height | Response   |
-|--------|------------|
-| 25.3   | `20, 5`    |
-| 25.3   | `20, 8`    |
-
-</details>
-
-## Sources
-
-### Hardware
-
-1.  ["2ANKDJCP35NBLT Bluetooth Box by ZHEJIANG JIECANG LINEAR MOTION TECHNOLOGY CO., LTD"](https://fccid.io/2ANKDJCP35NBLT). (2018, January 25). FCC ID. Retrieved January 19, 2021.
-2.  [Jiecang Bluetooth Dongle Product Listing](https://en.jiecang.com/product/131.html). Retrieved January 19, 2021.
-
-#### Images from deadman96385
-
-1.  <https://imgur.com/a/MUbXwnM>
-2.  <https://i.imgur.com/DyMf3Ee.jpg>
-3.  <https://i.imgur.com/KtsWpVQ.jpg>
-4.  <https://i.imgur.com/BS62C1E.jpg>
-5.  <https://i.imgur.com/woWoQMe.jpg>
-6.  <https://i.imgur.com/Lta5Nab.jpg>
-
-### Software
-
-1.  Justintout. (2020, April 16). GitHub - ["justintout/uplift-reconnect: A Flutter app to control Uplift desks with Uplift Connect BLE modules installed"](https://github.com/justintout/uplift-reconnect). GitHub. Retrieved January 19, 2021.
-2.  Deadman96385. (2020, March 6). ["uplift_desk_controller_app/BluetoothHandler.java at a58bcadfb77ac993751758465f1cf20f71d6d8fd - deadman96385/uplift_desk_controller_app"](https://github.com/deadman96385/uplift_desk_controller_app/blob/a58bcadfb77ac993751758465f1cf20f71d6d8fd/app/src/main/java/com/deadman/uplift/BluetoothHandler.java). GitHub. Retrieved January 23, 2021.
-3.  Phord. (2021, August 12). ["phord/Jarvis: Hacking the Jarvis standup desk from fully.com for home automation using an ESP8266 arduino interface"](https://github.com/phord/Jarvis). GitHub. Retrieved December 5, 2021.
-4.  Ramot, Y. (2015, February 4). ["UpLift Desk wifi link"](https://hackaday.io/project/4173-uplift-desk-wifi-link). Hackaday.io.
-5.  Horacek, L. (2019, April 14). ["Standing desk remote control"](https://hackaday.io/project/164931-standing-desk-remote-control). Hackaday.io.
-6.  Hunleth, F. (2019, January 18). ["Nerves At Home: Controlling a Desk"](https://embedded-elixir.com/post/2019-01-18-nerves-at-home-desk-controller/). Embedded Elixir. Retrieved January 2021.
+- ESP32-U4WDH based 4MB Flash
+- Captive Portal
+- Web Server

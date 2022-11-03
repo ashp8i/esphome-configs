@@ -167,7 +167,8 @@ see [`bulb.ashish-spot1.yaml`](bulb.ashish-spot1.yaml) for example
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-optional\
+optional
+\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and it is a personal preference

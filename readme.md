@@ -19,7 +19,7 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 ## Device Groups
 
-1. Light / LED Strip
+Light / LED Strip
 
 - [Athom 5W GU10](#athom-5w-gu10)
 - [MiBoxer WB5](#miboxer-wb5)
@@ -32,12 +32,12 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 - [MiBoxer FUT035W](#miboxer-fut035w)
 - [MiBoxer FUT039W](#miboxer-fut039w)
 
-1. Relay
+Relay
 
 - [Shelly 1](#shelly-1)
 - [Shelly 2.5](#shelly-25)
 
-1. Switch
+Switch
 
 - [Shelly Plus i4](#shelly-plus-i4)
 

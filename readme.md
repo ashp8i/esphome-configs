@@ -210,7 +210,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -244,7 +244,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -312,7 +312,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -346,7 +346,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -380,7 +380,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -414,7 +414,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -451,7 +451,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -485,7 +485,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
@@ -519,7 +519,7 @@ the following files are required and all following substitutions should be set: 
 see bulb.ashish-spot1.yaml for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml]`(.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if contreolled by a Shelly Plus i4\\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\

@@ -160,12 +160,12 @@ device comes from factory setup with initial setup Captive Portal and an ESPHome
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see [`bulb.ashish-spot1.yaml`](bulb.ashish-spot1.yaml) for example
 
-`.base-debug.yaml`\
-`.base.bulb.athom-gu10.yaml`\
-`.base.sensor-common.yaml`\
-`.base.text-sensor-common.yaml`\
-`.base.switch-common.yaml`\
-`.base.binary-sensor-common.yaml`
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.bulb.athom-gu10.yaml`](.base.bulb.athom-gu10.yaml)\
+[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 optional\
 `.base.mqtt-light-automation-4-button-rgbcct.yaml` - if controlled by a Shelly Plus i4

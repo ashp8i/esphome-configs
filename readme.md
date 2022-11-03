@@ -186,11 +186,13 @@ see bulb.ashish-spot1.yaml for example
 
 .base-debug.yaml
 .base.bulb.athom-gu10.yaml
-.base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
 .base.sensor-common.yaml
 .base.text-sensor-common.yaml
 .base.switch-common.yaml
 .base.binary-sensor-common.yaml
+
+Optional
+.base.mqtt-light-automation-4-button-rgbcct.yaml - if contreolled by a Shelly Plus i4
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 

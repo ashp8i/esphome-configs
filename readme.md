@@ -26,15 +26,15 @@ Curtain Motor
 Light / LED Strip
 
 - [Athom 5W GU10](#athom-5w-gu10)
-- [MiBoxer WB5](#miboxer-wb5)
-- [Lusunt 36W Ceiling Light](#lusunt-36w-ceiling-light)
-- [OffDarks 68W Ceiling Light](#offdarks-68w-ceiling-light)
-- [Offdarks 28W Ceiling Light](#offdarks-28w-ceiling-light)
 - [Lumary 18W Recessed Panel Light](#lumary-18w-recessed-panel-light)
+- [Lusunt 36W Ceiling Light](#lusunt-36w-ceiling-light)
 - [Iralan 42W Ceiling Light ESP32-C3](#iralan-42w-ceiling-light-esp32-c3)
 - [Iralan 42W Ceiling Light ESP32-S2](#iralan-42w-ceiling-light-esp32-s2)
 - [MiBoxer FUT035W](#miboxer-fut035w)
 - [MiBoxer FUT039W](#miboxer-fut039w)
+- [MiBoxer WB5](#miboxer-wb5)
+- [OffDarks 68W Ceiling Light](#offdarks-68w-ceiling-light)
+- [Offdarks 28W Ceiling Light](#offdarks-28w-ceiling-light)
 
 Relay
 

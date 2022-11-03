@@ -538,10 +538,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 `.base.switch.shelly-plus-i4-arduino.yaml`
 
-[![Shelly Plus i4](https://www.shelly.cloud/wp-content/uploads/2021/12/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-<img src="https://www.shelly.cloud/wp-content/uploads/2021/12/i4-device.png" alt="Shelly Plus i4" title="Shelly Plus i4"/>
-[![Shelly Plus i4](https://shelly.cloud/wp-content/uploads/2021/12/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-<img src="https://www.shelly.cloud/wp-content/uploads/2021/12/i4-device.png" alt="Shelly Plus i4" title="Shelly Plus i4" width="150"/>
+[![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\

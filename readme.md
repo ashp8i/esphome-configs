@@ -143,7 +143,7 @@ This is the binary sensor common config is present in all configs. It includes:
 
 # Athom 5W GU10
 
-[`.base.bulb.athom-gu--10.yaml`](.base.bulb.athom-gu--10.yaml)
+[`.base.bulb.athom-gu10.yaml`](.base.bulb.athom-gu10.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/ATHOM-Pre-Flashed-ESPHome-Smart-Bulb-ESP8285-Works-With-Home-Assistant-GU10.jpeg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 

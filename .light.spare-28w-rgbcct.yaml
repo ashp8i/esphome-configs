@@ -1,0 +1,33 @@
+substitutions:
+  device_ssid: "Spare 28W RGB-CCT"
+  device_name: spare-28w-rgbcct
+  device_generic_name: "spare-28w-rgbcct Light"
+  device_main_description: "OffDarks LXD-XGP 28W RGBWW Ceiling LED light located in spare-28w-rgbcct Bedroom with discreet Tunable White & RGB Rear Light (shows up as separate lights)."
+  device_description: Spare 28W RGB-CCT Light - Main Light
+  friendly_name: "Spare 28W RGB-CCT Light - Tunable White"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "spare-28w-rgbcct" # Put the name that you want to see in Home Assistant.
+  device_name_rgb: spare-28w-rgbcctlightrgb
+  device_description_rgb: "Spare 28W RGB-CCT Light - RGB."    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Spare 28W RGB-CCT Light RGB"
+  frequency_rgb: 100 Hz
+  frequency_cw: 1000 Hz
+  frequency_ww: 1000 Hz
+  switch1b1_topic: masterswitch/button/0/command
+  project_name: "offdarks.lxd-xgp-28w-rgbcw-ceiling-light-esp8266-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret spare-28w-rgbcct_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml
+<<: !include .base.global-mqtt-automation.yaml
+<<: !include .base.mqtt-light-automation-1-button.yaml
+<<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

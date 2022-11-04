@@ -202,8 +202,6 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Iralan 42W Ceiling Light](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
 [Amazon UK](https:/)\
 [AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
@@ -241,8 +239,6 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
 [Amazon UK](https:/)\
 [AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
@@ -279,12 +275,10 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Lumary 18W Recessed Panel Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Lumary 18W Recessed Panel Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
-[Lumary 18W Recessed Panel Light](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
-[Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[Lumary 18W Recessed Panel Light](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)\
+[Amazon UK](https://www.amazon.co.uk/Recessed-Lumary-Downlight-Integrated-Assistant/dp/B08P57CDCQ)\
+[AliExpress](https://www.aliexpress.com/item/1005003149889822.html)\
+[Blakadder - Tasmota Supported Devices Repository](https://templates.blakadder.com/lumary_LK19080012.html)
 
 # Setup
 
@@ -319,11 +313,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Lusunt 36W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Lusunt 36W Ceiling Light](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
 [Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)
 
 # Setup
 
@@ -354,20 +345,64 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT035W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![MiBoxer FUT035W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![MiBoxer FUT035W](./.images/.png)](https://miboxer.com/light/xqy/fut035w.html)<br />
+[![MiBoxer FUT035W](./.images/.png)](https://miboxer.com/light/xqy/fut035w.html)<br />
 
-[MiBoxer FUT035W](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
+[MiBoxer FUT035W](https://miboxer.com/light/xqy/fut035w.html)\
 [Amazon UK](https:/)\
 [AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
+The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
+initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+
+I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
+
+This controller talks to an STM based TuyaMCU that performs PWM Control
+
+see below table for dpid's
+
+CCT
+
+Tasmota Command
+
+```
+Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 23,23; TuyaMCU 99,24; TuyaMCU 12,34; DimmerRange 10,1000
+```
+
+| DPID    |  DPID Type    |  Value  |
+|---------|:-------------:|---------|
+| DPID 20 |        Switch |      ON |
+| DPID 21 |          Enum |       0 |
+| DPID 22 |     int value |    1000 |
+| DPID 26 |     int value |       0 |
+
+ESPHome YAML
+
+```
+light:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    id: ${main_device_id}
+    dimmer_datapoint: 22
+    color_temperature_datapoint: 23
+    color_temperature_max_value: 1000
+    color_temperature_invert: true
+    switch_datapoint: 20
+    min_value: 10
+    max_value: 1000
+    gamma_correct: 1.0 
+    default_transition_length: 0s
+    cold_white_color_temperature: 153 mireds
+    warm_white_color_temperature: 500 mireds
+    icon: "${light_icon}"
+```
+
+In my setting this is used for a ceiling light that is powered by a 24V LED Strip 
+
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)\
@@ -376,16 +411,12 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP32-C3 based 4MB Flash
 - Captive Portal
 - Web Server
 
@@ -403,10 +434,56 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
+The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
+initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+
+I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
+
+This controller talks to an STM based TuyaMCU that performs PWM Control
+
+see below table for dpid's
+
+CCT
+
+Tasmota Command
+
+```
+Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 23,23; TuyaMCU 99,24; TuyaMCU 12,34; DimmerRange 10,1000
+```
+
+| DPID    |  DPID Type    |  Value  |
+|---------|:-------------:|---------|
+| DPID 20 |        Switch |      ON |
+| DPID 21 |          Enum |       0 |
+| DPID 22 |     int value |    1000 |
+| DPID 26 |     int value |       0 |
+
+ESPHome YAML
+
+```
+light:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    id: ${main_device_id}
+    dimmer_datapoint: 22
+    color_temperature_datapoint: 23
+    color_temperature_max_value: 1000
+    color_temperature_invert: true
+    switch_datapoint: 20
+    min_value: 10
+    max_value: 1000
+    gamma_correct: 1.0 
+    default_transition_length: 0s
+    cold_white_color_temperature: 153 mireds
+    warm_white_color_temperature: 500 mireds
+    icon: "${light_icon}"
+```
+
+In my setting this is used for a ceiling light that is powered by a 24V LED Strip 
+
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)\
@@ -415,16 +492,12 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP32-C3 based 4MB Flash
 - Captive Portal
 - Web Server
 
@@ -461,13 +534,41 @@ This controller talks to an STM based TuyaMCU that performs PWM Control
 
 see below table for dpid's
 
-| Pin      |  LED Colour   |
-|----------|:-------------:|
-| GPIO5    |           Red |
-| GPIO14   |         Green |
-| GPIO16   |          Blue |
-| GPIO17   |    Cold White |
-| GPIO18   |    Warm White |
+CCT
+
+Tasmota Command
+
+```
+Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 23,23; TuyaMCU 99,24; TuyaMCU 12,34; DimmerRange 10,1000
+```
+
+| DPID    |  DPID Type    |  Value  |
+|---------|:-------------:|---------|
+| DPID 20 |        Switch |      ON |
+| DPID 21 |          Enum |       0 |
+| DPID 22 |     int value |    1000 |
+| DPID 26 |     int value |       0 |
+
+ESPHome YAML
+
+```
+light:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    id: ${main_device_id}
+    dimmer_datapoint: 22
+    color_temperature_datapoint: 23
+    color_temperature_max_value: 1000
+    color_temperature_invert: true
+    switch_datapoint: 20
+    min_value: 10
+    max_value: 1000
+    gamma_correct: 1.0 
+    default_transition_length: 0s
+    cold_white_color_temperature: 153 mireds
+    warm_white_color_temperature: 500 mireds
+    icon: "${light_icon}"
+```
 
 In my setting this is used for a ceiling light that is powered by a 24V LED Strip 
 
@@ -485,8 +586,6 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 Optional\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 

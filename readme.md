@@ -453,11 +453,21 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 This device is identical to the Miboxer WL5 (link posted above), supporting various analog PWM RGB LED strip types. The nice feature of this is chaining of controller and supports the popular Milight Remotes and Wall Remotes.
 
 The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
-initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I know longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
 
-I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip
+I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
 
-TuyaMCU
+This controller talks to an STM based TuyaMCU that performs PWM Control
+
+see below table for dpid's
+
+| Pin      |  LED Colour   |
+|----------|:-------------:|
+| GPIO5    |           Red |
+| GPIO14   |         Green |
+| GPIO16   |          Blue |
+| GPIO17   |    Cold White |
+| GPIO18   |    Warm White |
 
 In my setting this is used for a ceiling light that is powered by a 24V LED Strip 
 

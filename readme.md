@@ -432,17 +432,17 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-wb5-esp32-c3-arduino.yaml`](.base.light.miboxer-wb5-esp32-c3-arduino.yaml)
 
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-001.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-002.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-003.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-004.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-008.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-015.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-016.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-017.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-023.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-026.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-027.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-001.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-002.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-003.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-004.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-008.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-015.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-016.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-017.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-023.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-026.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-027.jpg)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
 
 [BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](https://www.btf-lighting.com/products/rgbcct-controller)\
 [MiBoxer WL5](https://www.futlight.com/light/xqy/wl5.html)\

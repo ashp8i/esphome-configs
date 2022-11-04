@@ -483,10 +483,8 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -590,7 +588,7 @@ see [`.light.spare-28w-rgbcct.yaml`](.light.spare-28w-rgbcct.yaml) for example
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-1-button.yaml`](.base.mqtt-light-automation-1-button.yaml) - if controlled by a Zigbee or WiFi Button Controller\
+[`.base.mqtt-light-automation-1-button.yaml`](.base.mqtt-light-automation-1-button.yaml) - if controlled by a Zigbee or WiFi Button Controller
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 

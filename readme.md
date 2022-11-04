@@ -196,7 +196,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-C3
 
-[`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
+[`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />

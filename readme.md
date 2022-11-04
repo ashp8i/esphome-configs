@@ -432,16 +432,34 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-wb5-esp32-c3-arduino.yaml`](.base.light.miboxer-wb5-esp32-c3-arduino.yaml)
 
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
-[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-001.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-002.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-003.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-004.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-008.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-015.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-016.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-017.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-023.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-026.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/wb5-027.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
 
 [BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](https://www.btf-lighting.com/products/rgbcct-controller)\
 [MiBoxer WL5](https://www.futlight.com/light/xqy/wl5.html)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
 [Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[AliExpress](https://www.aliexpress.com/item/33017144148.html)\
+[Blakadder - Tasmota Supported Devices Repository](https://templates.blakadder.com/WB5.html)
+
+This device is identical to the Miboxer WL5 (link posted above), supporting various analog PWM RGB LED strip types. The nice feature of this is chaining of controller and supports the popular Milight Remotes and Wall Remotes.
+
+The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
+initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I know longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+
+I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip
+
+TuyaMCU
+
+In my setting this is used for a ceiling light that is powered by a 24V LED Strip 
 
 # Setup
 

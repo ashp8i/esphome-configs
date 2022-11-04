@@ -463,36 +463,54 @@ I have split the CT & RGB Channels to avoid overloading the bulb however that sh
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP32 based 4MB Flash
 - Captive Portal
 - Web Server
 
 # OffDarks 68W Ceiling Light
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml`](.base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml)
 
-[![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![OffDarks LXD-XG68 68W RGB-CCT Ceiling Light](./images/offdarks-68w-001.jpg)](https://www.aliexpress.com/item/1005001470388839.html)<br />
+[![OffDarks LXD-XG68 68W RGB-CCT Ceiling Light](./images/offdarks-68w-002.jpg)](https://www.aliexpress.com/item/1005001470388839.html)<br />
+[![OffDarks LXD-XG68 68W RGB-CCT Ceiling Light](./images/offdarks-68w-003.jpg)](https://www.aliexpress.com/item/1005001470388839.html)<br />
+[![OffDarks LXD-XG68 68W RGB-CCT Ceiling Light](./images/offdarks-68w-004.jpg)](https://www.aliexpress.com/item/1005001470388839.html)<br />
+[![OffDarks LXD-XG68 68W RGB-CCT Ceiling Light](./images/offdarks-68w-005.jpg)](https://www.aliexpress.com/item/1005001470388839.html)<br />
+[![OffDarks LXD-XG68 68W RGB-CCT Ceiling Light](./images/offdarks-68w-010.jpg)](https://www.aliexpress.com/item/1005001470388839.html)<br />
 
-[Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
-[Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[AliExpress](https://www.aliexpress.com/item/1005001470388839.html)\
+[OffDarks.net - Dead Website - Wayback Machine](https://web.archive.org/web/20211220002828/http://offdarks.net)
+
+This is an Excellent Ceiling Light Fixture, very small amount of quirks with minimal brightness setting, however it is no longer available for purchase see AliExpress Link above, however I do find the rear light useless and the RGB LED beads are not saturated enough and do not produce equivilent light to the highly unproportional amount of LED beads on the front that have amazing output.
+
+Originally the light is sold in AliExpress as a MagicHome App Controlled Light with remote control, but what I find is the 2.4GHz RF chip and the Original ESP-M2 Module interfere alot thus I decided to hook up an [MH-ET Live ESP32 Module](https://forum.mhetlive.com/topic/8/mh-et-live-minikit-for-esp32). I had to solder to the pads of the ESP-M2 Module Footprint as I do not have the skills or the equipment to re-design the board and include the RF chip as I could not find the original from th markings printed on the chip and I am unable to remove and resolder this chip to a newly designed board without killing woring components. thus I had to make sure no contacts are shorting and I do not rip any pads off. 
+
+the board has been adapted to the following pin layout on the ESP32:
+
+| Pin      |  LED Colour   |
+|----------|:-------------:|
+| GPIO5    |           Red |
+| GPIO14   |         Green |
+| GPIO16   |          Blue |
+| GPIO17   |    Cold White |
+| GPIO18   |    Warm White |
+
+All RF Codes and functions can be found here:
+
+[`.base.binary-sensor-offdarks-remote.yaml`](.base.binary-sensor-offdarks-remote.yaml)
 
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see [`light.bathroom.yaml`](light.bathroom.yaml) for example
+see [`light.living.yaml`](light.living.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml`](.base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml)\
+[`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
+[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.binary-sensor-offdarks-remote.yaml`](.base.binary-sensor-offdarks-remote.yaml)
 
 Optional\
 [`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
@@ -509,10 +527,10 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml`](.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml)
 
-[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](https://ae01.alicdn.com/kf/H75abb0a4961a4c5aae84356d3fb1247eM/OFFDARKS-Modern-LED-Smart-Ceiling-Lights-28W-Dimmable-Home-Lighting-WiFi-APP-Artificial-Intelligence-Voice-Control.jpg)]<br />
-[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](https://ae01.alicdn.com/kf/H6c6f7656f15443839ab7d4b3f1b96377j/OFFDARKS-Modern-LED-Smart-Ceiling-Lights-28W-Dimmable-Home-Lighting-WiFi-APP-Artificial-Intelligence-Voice-Control.jpg)](https://www.aliexpress.com/item/1005003118910800.html)<br />
+[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](./images/offdarks-28w-001.jpg)](https://www.aliexpress.com/item/1005003118910800.html)<br />
+[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](./images/offdarks-28w-006.jpg)](https://www.aliexpress.com/item/1005003118910800.html)<br />
 
-[AliExpress](https://www.aliexpress.com/item/1005003118910800.html)
+[AliExpress](https://www.aliexpress.com/item/1005003118910800.html)\
 [OffDarks.net - Dead Website - Wayback Machine](https://web.archive.org/web/20211220002828/http://offdarks.net)
 
 This is a Spare Light not in use but pre-flashed using ESPHome ready for install if needed, Originally the light is sold in AliExpress as a MagicHome App Controlled Light with remote control, I have removed the original BL602 Module as it is incompatible with ESPHome but might gain compatability with the help of this project: [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome), a side effect was the remote control no longer works, thus the light can only be controlled via Home Assistant or a Zigbee/WiFi Button.
@@ -534,31 +552,22 @@ uses the following pin layout:
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see [`.light.spare-28w-rgbcct.yaml`](.light.spare-28w-rgbcct.yaml) for example
 
-<<: !include .base-debug.yaml
-<<: !include .base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml
-<<: !include .base.global-mqtt-automation.yaml
-<<: !include .base.mqtt-light-automation-1-button.yaml
-<<: !include .base.sensor-common.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
-<<: !include .base.binary-sensor-common.yaml
-
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
+[`.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml`](.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml)\
+[`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
+[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-1-button.yaml`](.base.mqtt-light-automation-1-button.yaml) - if controlled by a Zigbee or WiFi Button Controller\
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP8266 based 4MB Flash
 - Captive Portal
 - Web Server
 

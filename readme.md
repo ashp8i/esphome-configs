@@ -198,8 +198,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
-[![Iralan 42W Ceiling Light](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Iralan 42W Ceiling Light](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Iralan 42W Ceiling Light](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
@@ -237,8 +237,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)
 
-[![Iralan 42W Ceiling Light](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Iralan 42W Ceiling Light](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
@@ -276,8 +276,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
 
-[![Lumary 18W Recessed Panel Light](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Lumary 18W Recessed Panel Light](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Lumary 18W Recessed Panel Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Lumary 18W Recessed Panel Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Lumary 18W Recessed Panel Light](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
@@ -315,8 +315,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)
 
-[![Lusunt 36W Ceiling Light](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Lusunt 36W Ceiling Light](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Lusunt 36W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Lusunt 36W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [Lusunt 36W Ceiling Light](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
@@ -354,8 +354,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT035W](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![MiBoxer FUT035W](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![MiBoxer FUT035W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![MiBoxer FUT035W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [MiBoxer FUT035W](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
@@ -393,8 +393,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT039W](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![MiBoxer FUT039W](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![MiBoxer FUT039W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![MiBoxer FUT039W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 
 [MiBoxer FUT039W](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
@@ -428,14 +428,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 - Captive Portal
 - Web Server
 
-# MiBoxer WB5
+# BTF-LIGHTING WB5
 
 [`.base.light.miboxer-wb5-esp32-c3-arduino.yaml`](.base.light.miboxer-wb5-esp32-c3-arduino.yaml)
 
-[![MiBoxer WB5](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![MiBoxer WB5](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
+[![BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](./.images/.png)](https://www.btf-lighting.com/products/rgbcct-controller)<br />
 
-[MiBoxer WB5](https://www.shelly.cloud/shelly-plus-i4)\
+[BTF-LIGHTING WB5 WiFi 5 in 1 LED Strip Controller](https://www.btf-lighting.com/products/rgbcct-controller)\
+[MiBoxer WL5](https://www.futlight.com/light/xqy/wl5.html)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
 [Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
 [Amazon UK](https:/)\

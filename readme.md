@@ -196,7 +196,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-C3
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
@@ -214,7 +214,7 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
@@ -235,7 +235,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-S2
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
@@ -253,7 +253,7 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
@@ -274,7 +274,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lumary 18W Recessed Panel Light
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
@@ -292,7 +292,7 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
@@ -313,7 +313,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lusunt 36W Ceiling Light
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
@@ -331,7 +331,7 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
@@ -352,7 +352,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer FUT035W
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
@@ -370,7 +370,7 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
@@ -391,7 +391,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer FUT039W
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
@@ -409,7 +409,7 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
@@ -430,7 +430,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # MiBoxer WB5
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light.miboxer-wb5-esp32-c3-arduino.yaml`](.base.light.miboxer-wb5-esp32-c3-arduino.yaml)
 
 [![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
 [![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
@@ -448,7 +448,7 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
+[`.base.light.miboxer-wb5-esp32-c3-arduino.yaml`](.base.light.miboxer-wb5-esp32-c3-arduino.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
@@ -463,7 +463,7 @@ I have split the CT & RGB Channels to avoid overloading the bulb however that sh
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP32 based 4MB Flash
+- ESP32-C3 based 4MB Flash
 - Captive Portal
 - Web Server
 
@@ -483,9 +483,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 This is an Excellent Ceiling Light Fixture, very small amount of quirks with minimal brightness setting, however it is no longer available for purchase see AliExpress Link above, however I do find the rear light useless and the RGB LED beads are not saturated enough and do not produce equivilent light to the highly unproportional amount of LED beads on the front that have amazing output.
 
-Originally the light is sold in AliExpress as a MagicHome App Controlled Light with remote control, but what I find is the 2.4GHz RF chip and the Original ESP-M2 Module interfere alot thus I decided to hook up an [MH-ET Live ESP32 Module](https://forum.mhetlive.com/topic/8/mh-et-live-minikit-for-esp32). I had to solder to the pads of the ESP-M2 Module Footprint as I do not have the skills or the equipment to re-design the board and include the RF chip as I could not find the original from th markings printed on the chip and I am unable to remove and resolder this chip to a newly designed board without killing woring components. thus I had to make sure no contacts are shorting and I do not rip any pads off. 
+Originally the light is sold in AliExpress as a MagicHome App Controlled Light with remote control, but what I find is the 2.4GHz RF chip and the Original ESP-M2 Module interfere alot thus I decided to hook up an [MH-ET Live ESP32 Module](https://forum.mhetlive.com/topic/8/mh-et-live-minikit-for-esp32). I had to solder to the pads of the ESP-M2 Module Footprint as I do not have the skills or the equipment to re-design the board and include the RF chip as I could not find the original from the markings printed on the chip and I am unable to remove and resolder this chip to a newly designed board without killing woring components. thus I had to make sure no contacts are shorting and I do not rip any pads off. All silicone hookup leads are 10cm long approx providing good separation between the ESP32 and the RF chip.
 
-the board has been adapted to the following pin layout on the ESP32:
+The board has been adapted to the following pin layout on the ESP32:
 
 | Pin      |  LED Colour   |
 |----------|:-------------:|
@@ -519,7 +519,7 @@ I have split the CT & RGB Channels to avoid overloading the bulb however that sh
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP32 based 4MB Flash
 - Captive Portal
 - Web Server
 

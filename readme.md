@@ -507,19 +507,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Offdarks 28W Ceiling Light
 
-[`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)
+[`.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml`](.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml)
 
-[![Shelly Plus i4](./.images/i4-device.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Shelly Plus i4](./.images/plus-series-http.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](https://ae01.alicdn.com/kf/H75abb0a4961a4c5aae84356d3fb1247eM/OFFDARKS-Modern-LED-Smart-Ceiling-Lights-28W-Dimmable-Home-Lighting-WiFi-APP-Artificial-Intelligence-Voice-Control.jpg)]<br />
+[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](https://ae01.alicdn.com/kf/H6c6f7656f15443839ab7d4b3f1b96377j/OFFDARKS-Modern-LED-Smart-Ceiling-Lights-28W-Dimmable-Home-Lighting-WiFi-APP-Artificial-Intelligence-Voice-Control.jpg)](https://www.aliexpress.com/item/1005003118910800.html)<br />
 
-[Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
-[Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[AliExpress](https://www.aliexpress.com/item/1005003118910800.html)
+[OffDarks.net - Dead Website - Wayback Machine](https://web.archive.org/web/20211220002828/http://offdarks.net)
 
-This is a Spare Light not in use but pre-flashed using ESPHome ready for install if needed, Originally the light is sold in AliExpress as a MagicHome Pro App Controlled Light with remote control, I have removed the original BL602 Module as it is incompatible with ESPHome but might gain compatability with the help of this project: [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome), a side effect was the remote control no longer works, thus the light can only be controlled via Home Assistant or a Zigbee/WiFi Button.
+This is a Spare Light not in use but pre-flashed using ESPHome ready for install if needed, Originally the light is sold in AliExpress as a MagicHome App Controlled Light with remote control, I have removed the original BL602 Module as it is incompatible with ESPHome but might gain compatability with the help of this project: [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome), a side effect was the remote control no longer works, thus the light can only be controlled via Home Assistant or a Zigbee/WiFi Button.
 
 the BL602 module is the same footpint as a ESP-M2 Module and is pin compatible, see [PiHut - ESP8285 SMT Module - ESP8266 with 1MB FLASH (ESP-M2)](https://thepihut.com/products/esp8285-smt-module-esp8266-with-1mb-flash) due to lack of flash space I preferred to wire this up to a wemos d1 mini, by soldering directly on to the pads with the correct guage wire 28 guage should do the trick, I had to be careful I do not rip any pads and no neighbouring pads are shorting.
 
@@ -538,7 +534,14 @@ uses the following pin layout:
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
 see [`.light.spare-28w-rgbcct.yaml`](.light.spare-28w-rgbcct.yaml) for example
 
-
+<<: !include .base-debug.yaml
+<<: !include .base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml
+<<: !include .base.global-mqtt-automation.yaml
+<<: !include .base.mqtt-light-automation-1-button.yaml
+<<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\

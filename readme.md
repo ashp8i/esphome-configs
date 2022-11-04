@@ -557,7 +557,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [`.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml`](.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml)
 
 [![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](./.images/offdarks-28w-001.jpg)](https://www.aliexpress.com/item/1005003118910800.html)<br />
-[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](./.mages/offdarks-28w-006.jpg)](https://www.aliexpress.com/item/1005003118910800.html)<br />
+[![OffDarks LXD-XGP 28W RGB-CCT Ceiling Light](./.images/offdarks-28w-006.jpg)](https://www.aliexpress.com/item/1005003118910800.html)<br />
 
 [AliExpress](https://www.aliexpress.com/item/1005003118910800.html)\
 [OffDarks.net - Dead Website - Wayback Machine](https://web.archive.org/web/20211220002828/http://offdarks.net)

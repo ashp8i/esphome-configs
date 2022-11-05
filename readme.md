@@ -198,13 +198,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
-[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-001.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-002.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-003.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-005.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-006.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-007.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-008.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 
-[Iralan 42W Ceiling Light](https://www.shelly.cloud/shelly-plus-i4)\
-[Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)
 
 # Setup
 
@@ -227,7 +229,7 @@ I have split the CT & RGB Channels to avoid overloading the bulb however that sh
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP32-C3 based 4MB Flash
 - Captive Portal
 - Web Server
 
@@ -235,13 +237,15 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)
 
-[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Iralan 42W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-001.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-002.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-003.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-005.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-006.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-007.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Iralan 42W Ceiling Light](./.images/iralan-42w-008.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 
-[Shelly Plus i4](https://www.shelly.cloud/shelly-plus-i4)\
-[Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)
 
 # Setup
 
@@ -264,7 +268,7 @@ I have split the CT & RGB Channels to avoid overloading the bulb however that sh
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP32-C3 based 4MB Flash
 - Captive Portal
 - Web Server
 
@@ -272,8 +276,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
 
-[![Lumary 18W Recessed Panel Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Lumary 18W Recessed Panel Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Lumary 18W Recessed Panel Light](./.images/iralan-42w-008.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Lumary 18W Recessed Panel Light](./.images/iralan-42w-008.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 
 [Lumary 18W Recessed Panel Light](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)\
 [Amazon UK](https://www.amazon.co.uk/Recessed-Lumary-Downlight-Integrated-Assistant/dp/B08P57CDCQ)\
@@ -309,8 +313,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)
 
-[![Lusunt 36W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![Lusunt 36W Ceiling Light](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![Lusunt 36W Ceiling Light](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Lusunt 36W Ceiling Light](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 
 [Lusunt 36W Ceiling Light](https://www.shelly.cloud/shelly-plus-i4)\
 [Amazon UK](https:/)\
@@ -424,8 +428,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT039W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
-[![MiBoxer FUT039W](./.images/.png)](https://www.shelly.cloud/shelly-plus-i4)<br />
+[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 
 [MiBoxer FUT039W](https://www.shelly.cloud/shelly-plus-i4)\
 [Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\

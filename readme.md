@@ -223,44 +223,47 @@ Pin layout of Tuya CBU Module
 
 [![Tuya CBU Pinout](./.images/tuya_cbu_back_pinout.png)](#iralan-42w-ceiling-light-esp32-c3)<br />
 
-I had to preflashed new chip ESP-C3-12F using USB Programmer with spring module clips and with my prepared firmware, I hooked up the wires as follows
-
 | Pin      |  Description  |
 |----------|:-------------:|
 | 3V3      |           Vin |
 | GND      |        Ground |
-| TX       | Not Connected |
-| RX       | Not Connected |
-| GPIO4    |    Cold White |
-| GPI05    |    Warm White |
+| P24      | Not Connected |
+| P26      | Not Connected |
+| P6       | Not Connected |
+| P7       |    Cold White |
+| P8       |    Warm White |
 
-As with the ESP32-C3 initial support was poor until ESP-IDF support came out but lacks a webserver or captive portal thus I stuck with tasmota, now that platform-espressif32 is version 5.2.0 and Arduino IDE version 2.0.5 is out, Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+I had to preflashed new chip ESP-C3-12F using USB Programmer with spring module clips and with my prepared firmware, I hooked up the wires as follows:
 
 | Pin      |  LED Colour   |
 |----------|:-------------:|
+| 3V3      |           3V3 |
+| GND      |           GND |
 | GPIO4    |    Cold White |
 | GPIO5    |    Warm White |
 
-This controller talks to an STM based TuyaMCU that performs PWM Control
+As with the ESP32-C3 initial support was poor until ESP-IDF support came out but lacks a webserver or captive portal thus I stuck with tasmota, now that platform-espressif32 is version 5.2.0 and Arduino IDE version 2.0.5 is out, Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+
+Please not as you read this ledc is broken in the Arduino IDE for new ESP32 variants and requires a PR for an issue that is still open, that I use in the config below:
+
+[LEDC not working with ESP32-C3 and Arduino framework (but with ESP-IDF) #3128](https://github.com/esphome/issues/issues/3128)
+see PR appied in the file [`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see [`light.bathroom.yaml`](light.bathroom.yaml) for example
+see [`light.master1.yaml`](light.master1.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)\
+[`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+[`.base.mqtt-light-automation-1-button.yaml`](.base.mqtt-light-automation-1-button.yaml) - if controlled by a Shelly Plus i4 using 1 button allocated for this light fixture\
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -272,33 +275,32 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)
 
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-001.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-003.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-005.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-006.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-007.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-008.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+Same as above however I have selected to use Unexpected Maker's TinyS2 as the WiFi Chip based on ESP32-S2.
 
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)
+To keep this simple I chose to hookup the same connections as above:
+
+| Pin      |  LED Colour   |
+|----------|:-------------:|
+| 3V3      |           3V3 |
+| GND      |           GND |
+| GPIO4    |    Cold White |
+| GPIO5    |    Warm White |
 
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see [`light.bathroom.yaml`](light.bathroom.yaml) for example
+see [`light.stairs.yaml`](light.stairs.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)\
+[`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+[`.base.mqtt-light-automation-2-button.yaml`](.base.mqtt-light-automation-2-button.yaml) - if controlled by a Shelly Plus i4 using 2 buttons allocated for this light fixture\
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -311,12 +313,51 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
 
 [![Lumary 18W Recessed Panel Light](./.images/lumary-18w-001.jpg)](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)<br />
-[![Lumary 18W Recessed Panel Light](./.images/lumary-18w-001.jpg)](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)<br />
+[![Lumary 18W Recessed Panel Light](./.images/lumary-18w-006.jpg)](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)<br />
 
 [Lumary 18W Recessed Panel Light](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)\
 [Amazon UK](https://www.amazon.co.uk/Recessed-Lumary-Downlight-Integrated-Assistant/dp/B08P57CDCQ)\
 [AliExpress](https://www.aliexpress.com/item/1005003149889822.html)\
 [Blakadder - Tasmota Supported Devices Repository](https://templates.blakadder.com/lumary_LK19080012.html)
+
+The device ships with a Tuya WB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). 
+
+[Wireless Tag WT32C3-01N Module (WT32C3-01N)](https://templates.blakadder.com/WT32C3-01N.html) is a drop in replacement for a Tuya WB3S
+
+for Further Flexibility I have created an adaptor that allows a [Ai-Thinker ESP32-C3 Module (ESP-C3-01M)](https://templates.blakadder.com/ESP-C3-01M.html) to be connected to the main PCB Tuya WB3S module slot giving access to a higher number of GPIO's vs [Wireless Tag WT32C3-01N Module (WT32C3-01N)](https://templates.blakadder.com/WT32C3-01N.html).
+
+see [Adaptor Board PCB](https://oshwlab.com/ashp/esp-02s-debug-extension-adaptor_copy_copy_copy_copy) requires soldering a 2 x 9-pin JST SH headers for flashing and hooking up devices directly to ESP32-C3
+
+This LED fixture does not sport a TuyaMCU and the WWB3S chip talks directly to the Chip that controls brightness via PWM.
+
+Pin layout of Tuya WB3S Module
+
+| Pin      |  Description  |
+|----------|:-------------:|
+| 3V3      |           Vin |
+| GND      |        Ground |
+| P24      | Not Connected |
+| P26      | Not Connected |
+| P6       | Not Connected |
+| P7       |    Cold White |
+| P8       |    Warm White |
+
+I had to preflashed new chip ESP-C3-12F using USB Programmer with spring module clips and with my prepared firmware, I hooked up the wires as follows:
+
+| Pin      |  LED Colour   |
+|----------|:-------------:|
+| 3V3      |           3V3 |
+| GND      |           GND |
+| GPIO4    |    Cold White |
+| GPIO5    |    Warm White |
+
+As with the ESP32-C3 initial support was poor until ESP-IDF support came out but lacks a webserver or captive portal thus I stuck with tasmota, now that platform-espressif32 is version 5.2.0 and Arduino IDE version 2.0.5 is out, Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+
+Please not as you read this ledc is broken in the Arduino IDE for new ESP32 variants and requires a PR for an issue that is still open, that I use in the config below:
+
+[LEDC not working with ESP32-C3 and Arduino framework (but with ESP-IDF) #3128](https://github.com/esphome/issues/issues/3128)
+see PR appied in the file [`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
+
 
 # Setup
 
@@ -325,17 +366,16 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)\
+[`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
+[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4 using 4 button for separate CT and RGB lights\
 
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
+I have split the CT & RGB Channels, even though they are wired on a single High Output LED Strip and is a personal preference
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -363,17 +403,11 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)\
+[`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
-
-Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4\
-
-I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -392,7 +426,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [Amazon UK](https:/)\
 [Blakadder - Tasmota Supported Devices Repository](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
-The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
+The device ships with a Tuya WBR3 Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
 initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
 
 I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.

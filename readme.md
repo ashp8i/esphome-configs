@@ -213,6 +213,8 @@ below is a reference to original chip
 
 [![PCB Board / Tuya CBU](./.images/iralan-42w-board.png)](#iralan-42w-ceiling-light-esp32-c3)<br />
 
+[![PCB Board / Tuya CBU](./.images/iralan-42w-board-2.png)](#iralan-42w-ceiling-light-esp32-c3)<br />
+
 Tuya CBU Datasheet
 
 [Tuya CBU Module Datasheet](https://developer.tuya.com/en/docs/iot/cbu-module-datasheet?id=Ka07pykl5dk4u)

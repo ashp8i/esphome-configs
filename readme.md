@@ -199,7 +199,6 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-001.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-002.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-003.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-005.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-006.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
@@ -238,7 +237,6 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)
 
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-001.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Iralan 42W Ceiling Light](./.images/iralan-42w-002.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-003.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-005.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-006.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
@@ -268,7 +266,7 @@ I have split the CT & RGB Channels to avoid overloading the bulb however that sh
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP32-C3 based 4MB Flash
+- ESP32-S2 based 4MB Flash
 - Captive Portal
 - Web Server
 
@@ -276,8 +274,8 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
 
-[![Lumary 18W Recessed Panel Light](./.images/iralan-42w-008.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Lumary 18W Recessed Panel Light](./.images/iralan-42w-008.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Lumary 18W Recessed Panel Light](./.images/lumary-18w-001.jpg)](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)<br />
+[![Lumary 18W Recessed Panel Light](./.images/lumary-18w-001.jpg)](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)<br />
 
 [Lumary 18W Recessed Panel Light](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)\
 [Amazon UK](https://www.amazon.co.uk/Recessed-Lumary-Downlight-Integrated-Assistant/dp/B08P57CDCQ)\
@@ -316,9 +314,11 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![Lusunt 36W Ceiling Light](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Lusunt 36W Ceiling Light](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 
-[Lusunt 36W Ceiling Light](https://www.shelly.cloud/shelly-plus-i4)\
-[Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)
+[Amazon UK](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)
+
+Driver Replacement
+
+[Amazon UK](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)
 
 # Setup
 
@@ -354,8 +354,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [MiBoxer FUT035W](https://miboxer.com/light/xqy/fut035w.html)\
 [Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[Blakadder - Tasmota Supported Devices Repository](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
 The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
 initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
@@ -428,15 +427,12 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://futlight.com/light/xqy/fut039w.html)<br />
+[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://futlight.com/light/xqy/fut039w.html)<br />
 
-[MiBoxer FUT039W](https://www.shelly.cloud/shelly-plus-i4)\
-[Shelly Store Europe](https://shop.shelly.cloud/shelly-plus-i4-wifi-smart-home-automation)\
-[Shelly Store UK](https://shellystore.co.uk/product/shelly-plus-i4)\
+[MiBoxer FUT039W](https://futlight.com/light/xqy/fut039w.html)\
 [Amazon UK](https:/)\
-[AliExpress](https://www.aliexpress.com/item/1005003774487679.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[Blakadder - Tasmota Supported Devices Repository](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
 The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
 initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.

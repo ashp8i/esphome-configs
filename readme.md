@@ -207,6 +207,40 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [AliExpress](https://www.aliexpress.com/item/1005003774487679.html)
 
+The device ships with a Tuya CBU Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP32-C3 Module (ESP-C3-01M)](https://templates.blakadder.com/ESP-C3-01M.html), as this module is not the same Footprint as the CBU care must be while desoldering and using low melt solder and hot air reworking station to ensure I did not lift any pads, however I had lifted traces and had to follow them to their destination for hooking up to that broken trace. This LED fixture does not sport a TuyaMCU and the CBU chip talks directly to the Chip that controls brightness via PWM.
+
+below is a reference to original chip
+
+[![PCB Board / Tuya CBU](./.images/iralan-42w-board.png)](#iralan-42w-ceiling-light-esp32-c3)<br />
+
+Tuya CBU Datasheet
+
+[Tuya CBU Module Datasheet](https://developer.tuya.com/en/docs/iot/cbu-module-datasheet?id=Ka07pykl5dk4u)
+
+Pin layout of Tuya CBU Module
+
+[![Tuya CBU Pinout](./.images/tuya_cbu_back_pinout.png)](#iralan-42w-ceiling-light-esp32-c3)<br />
+
+I had to preflashed new chip ESP-C3-12F using USB Programmer with spring module clips and with my prepared firmware, I hooked up the wires as follows
+
+| Pin      |  Description  |
+|----------|:-------------:|
+| 3V3      |           Vin |
+| GND      |        Ground |
+| TX       | Not Connected |
+| RX       | Not Connected |
+| GPIO4    |    Cold White |
+| GPI05    |    Warm White |
+
+As with the ESP32-C3 initial support was poor until ESP-IDF support came out but lacks a webserver or captive portal thus I stuck with tasmota, now that platform-espressif32 is version 5.2.0 and Arduino IDE version 2.0.5 is out, Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
+
+| Pin      |  LED Colour   |
+|----------|:-------------:|
+| GPIO4    |    Cold White |
+| GPIO5    |    Warm White |
+
+This controller talks to an STM based TuyaMCU that performs PWM Control
+
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version

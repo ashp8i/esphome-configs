@@ -328,7 +328,7 @@ for Further Flexibility I have created an adaptor that allows a [Ai-Thinker ESP3
 
 see [Adaptor Board PCB](https://oshwlab.com/ashp/esp-02s-debug-extension-adaptor_copy_copy_copy_copy) requires soldering a 2 x 9-pin JST SH headers for flashing and hooking up devices directly to ESP32-C3
 
-This LED fixture does not sport a TuyaMCU and the WWB3S chip talks directly to the Chip that controls brightness via PWM.
+This LED fixture does not sport a TuyaMCU and the WB3S chip talks directly to the Chip that controls brightness via PWM.
 
 Pin layout of Tuya WB3S Module
 

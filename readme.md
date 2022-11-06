@@ -417,14 +417,33 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)
 
-[![Lusunt 36W Ceiling Light](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
-[![Lusunt 36W Ceiling Light](./.images/iralan-42w-0-8.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
+[![Lusunt 36W Ceiling Light](./.images/lusunt-26w-001.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
+[![Lusunt 36W Ceiling Light](./.images/lusunt-26w-003.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
+[![Lusunt 36W Ceiling Light](./.images/lusunt-26w-004.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
+[![Lusunt 36W Ceiling Light](./.images/lusunt-26w-005.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
+[![Lusunt 36W Ceiling Light](./.images/lusunt-26w-006.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
+[![Lusunt 36W Ceiling Light](./.images/lusunt-26w-007.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
 
 [Amazon UK](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)
 
 Driver Replacement
 
-[Amazon UK](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)
+Original Driver in this product is an RF based, with no GPIO's exposed or WiFi Connecticity thus had to find a drop in replacemnt, the original replacement found no longer exists therefore I cannot guarantee modifiability/compatability but the principle is the same. These type of drivers are hard to find required trawling thru aliexpress/alibaba.
+
+My Replacement Driver used a W600 winner micro based chip to connect to the Tuya Platform, I replaced that for a Pin Identical ESP-12F.
+
+Alternative Driver (not guaranteed to work assuming they are exposing GPIO's or using a ESP-12F style form factor)
+
+[Amazon UK](https://www.aliexpress.com/i/33045160922.html)
+
+I had to preflashed new chip ESP-C3-12F using USB Programmer with spring module clips and with my prepared firmware, I hooked up the wires as follows:
+
+| Pin      |  LED Colour   |
+|----------|:-------------:|
+| 3V3      |           3V3 |
+| GND      |           GND |
+| GPIO4    |    Cold White |
+| GPIO5    |    Warm White |
 
 # Setup
 
@@ -441,7 +460,7 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
-- ESP8285 based 2MB Flash
+- ESP8266 based 2MB Flash
 - Captive Portal
 - Web Server
 
@@ -449,17 +468,27 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT035W](./.images/.png)](https://miboxer.com/light/xqy/fut035w.html)<br />
-[![MiBoxer FUT035W](./.images/.png)](https://miboxer.com/light/xqy/fut035w.html)<br />
+[![MiBoxer FUT035W](./.images/miboxer-fut035w-001.jpg)](https://miboxer.com/light/xqy/fut035w.html)<br />
+[![MiBoxer FUT035W](./.images/miboxer-fut035w-002.png)](https://miboxer.com/light/xqy/fut035w.html)<br />
+[![MiBoxer FUT035W](./.images/miboxer-fut035w-003.jpg)](https://miboxer.com/light/xqy/fut035w.html)<br />
+[![MiBoxer FUT035W](./.images/miboxer-fut035w-005.png)](https://miboxer.com/light/xqy/fut035w.html)<br />
 
 [MiBoxer FUT035W](https://miboxer.com/light/xqy/fut035w.html)\
-[Amazon UK](https:/)\
-[Blakadder - Tasmota Supported Devices Repository](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[Amazon UK](https://www.amazon.co.uk/LIGHTEU%C2%AE-Milight-Controller-WiFi-Box-Bluetooth/dp/B09HCY1M1X)\
+[Blakadder - Tasmota Supported Devices Repository](https://templates.blakadder.com/miboxer_FUT035W.html)
+
+This is a very good small LED strip/light fixture controller great for 12/24V LED strips like FCOB high density strips, of long length no longer that the rating on the controller or PSU capability. This one offers 12A a channel provided the correct guage wires and decent amount of copper used in the LED strip to allow for that current to travel is eqivalent to 288W (24V) a total of 576W thats approx 25m run with hardly any voltage drop, 12V is more limited as voltage drops are more visible but should do 15m easily.
+
+The thing that is most attractive about this controller is wired push dimmer and miboxer RF remootes support and finally TuyaMCU and WiFI connectivity.
 
 The device ships with a Tuya WBR3 Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
 initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
 
-I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
+I had to desolder the Original WBR3, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
+
+[![MiBoxer FUT035W](./.images/miboxer-fut035w-pcb.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
+
+[![MiBoxer FUT035W](./.images/miboxer-fut035w-after-transplant.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
 
 This controller talks to an STM based TuyaMCU that performs PWM Control
 
@@ -527,22 +556,31 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://futlight.com/light/xqy/fut039w.html)<br />
-[![MiBoxer FUT039W](./.images/iralan-42w-0-8.jpg)](https://futlight.com/light/xqy/fut039w.html)<br />
+[![MiBoxer FUT039W](./.images/miboxer-fut035w-001.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
+[![MiBoxer FUT039W](./.images/miboxer-fut035w-005.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
+[![MiBoxer FUT039W](./.images/miboxer-fut035w-009.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
 
-[MiBoxer FUT039W](https://futlight.com/light/xqy/fut039w.html)\
-[Amazon UK](https:/)\
-[Blakadder - Tasmota Supported Devices Repository](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
+[MiBoxer FUT035W](https://miboxer.com/light/xqy/fut039w.html)\
+[Amazon UK](https://www.amazon.co.uk/LIGHTEU%C2%AE-Milight-Controller-WiFi-Box-Bluetooth/dp/B09HCYFM73)\
+[Blakadder - Tasmota Supported Devices Repository](https://templates.blakadder.com/miboxer_FUT039W.html)
+
+This is a similar device as the above but supports 5CH LED strip RGBCW, process is the same as above see brief below:
 
 The device ships with a Tuya WBR3 Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
 initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
 
 I had to desolder the Original WBR3, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
 
+[![MiBoxer FUT039W](./.images/miboxer-fut039w-pcb.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
+
+[![MiBoxer FUT039W](./.images/miboxer-fut035w-after-transplant.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
+
 This controller talks to an STM based TuyaMCU that performs PWM Control
 
 see below table for dpid's
 
+
+**WIP**
 CCT
 
 Tasmota Command

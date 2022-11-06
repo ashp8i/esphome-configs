@@ -157,23 +157,21 @@ This is the binary sensor common config is present in all configs. It includes:
 
 [`.base.curtain-zemismart-bcm500ds-tyw.yaml`](.base.curtain-zemismart-bcm500ds-tyw.yaml)
 
-[![Zemismart WiFi Curtain](./.images/athom-gu10.jpg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+[![Zemismart WiFi Curtain](./.images/zemismart-bcm500ds-tyw-001.jpg)](https://www.zemismart.com/products/bcm500ds-tyw)<br />
+[![Zemismart WiFi Curtain](./.images/zemismart-bcm500ds-tyw-005.jpg)](https://www.zemismart.com/products/bcm500ds-tyw)<br />
 
-[Zemismart WiFi Curtain](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
-[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)\
-[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+[Zemismart WiFi Curtain](https://www.zemismart.com/products/bcm500ds-tyw)\
+[AliExpress](https://www.aliexpress.com/item/4000151759561.html)
 
 This device uses a TYWE1S chip which is a ESP8285
 
 # Setup
 
 the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
-see [`relay.bath-entrance.yaml`](relay.bath-entrance.yaml) for example
+see [`cover.living.yaml`](cover.living.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.relay.shelly-1-generic`](.base.relay.shelly-1-generic)\
-[`.base.mqtt-light-automation-1-lonsonho.yaml`](.base.mqtt-light-automation-1-lonsonho.yaml) - if controlled by a Zigbee Button\
+[`.base.curtain-zemismart-bcm500ds-tyw.yam`](.base.relay.shelly-1-generic)\
 [`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
 [`.base.switch-shelly-1-generic.yaml`](.base.switch-shelly-1-generic.yaml)\

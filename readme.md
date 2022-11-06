@@ -488,7 +488,7 @@ I had to desolder the Original WBR3, using low melt solder and a hot air station
 
 [![MiBoxer FUT035W](./.images/miboxer-fut035w-pcb.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
 
-[![MiBoxer FUT035W](./.images/miboxer-fut035w-after-transplant.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
+[![MiBoxer FUT035W](./.images/miboxer_after_transplant.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
 
 This controller talks to an STM based TuyaMCU that performs PWM Control
 
@@ -573,7 +573,7 @@ I had to desolder the Original WBR3, using low melt solder and a hot air station
 
 [![MiBoxer FUT039W](./.images/miboxer-fut039w-pcb.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
 
-[![MiBoxer FUT039W](./.images/miboxer-fut035w-after-transplant.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
+[![MiBoxer FUT039W](./.images/miboxer_after_transplant.jpg)](https://templates.blakadder.com/miboxer_FUT035W.html)<br />
 
 This controller talks to an STM based TuyaMCU that performs PWM Control
 

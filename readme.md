@@ -21,7 +21,7 @@ A collection of my personal [ESPHome](https://esphome.io) configs and packages.
 
 Curtain Motor
 
-- [Zemismart BCM500DS-TYW](zemismart-bcm500ds-tyw) - `Comming Soon`
+- [Zemismart BCM500DS-TYW](#zemismart-bcm500ds-tyw) - `Comming Soon`
 
 Light / LED Strip
 
@@ -152,6 +152,17 @@ This is the binary sensor common config is present in all configs. It includes:
 1. Copy the required .\*.yaml into your local ESPHome directory.
 1. Open `secrets.yaml` and enter your Wifi connection info.
 1. Ensure there ar no duplicate sections like double switch sections via the use of include, validate all configs before building to troubleshoot. 
+
+# Zemismart BCM500DS-TYW
+
+[`.base.curtain-zemismart-bcm500ds-tyw-esp32-c3-arduino.yaml`](.base.curtain-zemismart-bcm500ds-tyw-esp32-c3-arduino.yaml)
+
+[![Zemismart WiFi Curtain](./.images/athom-gu10.jpg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
+
+[Zemismart WiFi Curtain](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)\
+[AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)\
+[ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
 
 # Athom 5W GU10
 

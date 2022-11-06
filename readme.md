@@ -479,7 +479,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 This is a very good small LED strip/light fixture controller great for 12/24V LED strips like FCOB high density strips, of long length no longer that the rating on the controller or PSU capability. This one offers 12A a channel provided the correct guage wires and decent amount of copper used in the LED strip to allow for that current to travel is equivalent to 288W (24V) a total of 576W thats approx 25m run with hardly any voltage drop, 12V is more limited as voltage drops are more visible but should do 15m easily.
 
-The thing that is most attractive about this controller is wired push dimmer and miboxer RF remootes support and finally TuyaMCU and WiFI connectivity.
+The thing that is most attractive about this controller is wired push dimmer and miboxer RF remotes support and finally TuyaMCU and WiFI connectivity.
 
 The device ships with a Tuya WBR3 Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
 initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
@@ -556,9 +556,9 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)
 
-[![MiBoxer FUT039W](./.images/miboxer-fut035w-001.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
-[![MiBoxer FUT039W](./.images/miboxer-fut035w-005.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
-[![MiBoxer FUT039W](./.images/miboxer-fut035w-009.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
+[![MiBoxer FUT039W](./.images/miboxer-fut039w-001.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
+[![MiBoxer FUT039W](./.images/miboxer-fut039w-005.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
+[![MiBoxer FUT039W](./.images/miboxer-fut039w-009.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
 
 [MiBoxer FUT035W](https://miboxer.com/light/xqy/fut039w.html)\
 [Amazon UK](https://www.amazon.co.uk/LIGHTEU%C2%AE-Milight-Controller-WiFi-Box-Bluetooth/dp/B09HCYFM73)\

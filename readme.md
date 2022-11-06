@@ -436,7 +436,7 @@ Alternative Driver (not guaranteed to work assuming they are exposing GPIO's or 
 
 [Amazon UK](https://www.aliexpress.com/i/33045160922.html)
 
-I had to preflashed new chip ESP-C3-12F using USB Programmer with spring module clips and with my prepared firmware, I hooked up the wires as follows:
+I had to preflashed new chip ESP-12F using USB Programmer with spring module clips and with my prepared firmware, I hooked up the wires as follows:
 
 | Pin      |  LED Colour   |
 |----------|:-------------:|
@@ -477,7 +477,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [Amazon UK](https://www.amazon.co.uk/LIGHTEU%C2%AE-Milight-Controller-WiFi-Box-Bluetooth/dp/B09HCY1M1X)\
 [Blakadder - Tasmota Supported Devices Repository](https://templates.blakadder.com/miboxer_FUT035W.html)
 
-This is a very good small LED strip/light fixture controller great for 12/24V LED strips like FCOB high density strips, of long length no longer that the rating on the controller or PSU capability. This one offers 12A a channel provided the correct guage wires and decent amount of copper used in the LED strip to allow for that current to travel is eqivalent to 288W (24V) a total of 576W thats approx 25m run with hardly any voltage drop, 12V is more limited as voltage drops are more visible but should do 15m easily.
+This is a very good small LED strip/light fixture controller great for 12/24V LED strips like FCOB high density strips, of long length no longer that the rating on the controller or PSU capability. This one offers 12A a channel provided the correct guage wires and decent amount of copper used in the LED strip to allow for that current to travel is equivalent to 288W (24V) a total of 576W thats approx 25m run with hardly any voltage drop, 12V is more limited as voltage drops are more visible but should do 15m easily.
 
 The thing that is most attractive about this controller is wired push dimmer and miboxer RF remootes support and finally TuyaMCU and WiFI connectivity.
 

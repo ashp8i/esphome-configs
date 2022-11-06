@@ -1,0 +1,24 @@
+substitutions:
+  device_ssid: "Living Curtain"
+  device_name: livingcurtain
+  device_description: "Zemismart BCM500DS-TYW Curtain Motor."
+  friendly_name: "Living Curtain" # Put the name that you want to see in Home Assistant.
+  main_device_id: "livingcurtain" # Put the name that you want to see in Home Assistant.
+  cover_name: "Living Curtain"
+  # switch1b1_topic: masterswitch/button/1/command
+  project_name: "zemismart.bcm500ds-tyw"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret livingcurtain_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.curtain-zemismart-bcm500ds-tyw.yaml
+<<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

@@ -4,7 +4,7 @@ esphome:
   # name_add_mac_suffix: true
   comment: ${device_description}
   platform: ESP8266
-  board: esp01_1m
+  board: esp_wroom_02
   project:
     name: "${project_name}"
     version: "${project_version}"
@@ -30,3 +30,13 @@ tuya:
   uart_id: mcu
 
 cover:
+  - platform: "tuya"
+    id: "${main_device_id}"
+    name: "${cover_name}"
+    control_datapoint: 65
+    position_datapoint: 66
+    position_report_datapoint: 67
+    direction_datapoint: 68
+    min_value: 0
+    max_value: 255
+    invert_position: false

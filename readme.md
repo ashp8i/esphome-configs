@@ -174,7 +174,7 @@ see [`cover.living.yaml`](cover.living.yaml) for example
 [`.base.curtain-zemismart-bcm500ds-tyw.yam`](.base.relay.shelly-1-generic)\
 [`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
 [`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-shelly-1-generic.yaml`](.base.switch-shelly-1-generic.yaml)\
+[`.base.switch-common.yaml`](.base.switch-common.yaml)\
 [`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
 
 This device incorporates the following features in addition to MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:

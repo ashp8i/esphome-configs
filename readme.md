@@ -155,7 +155,7 @@ This is the binary sensor common config is present in all configs. It includes:
 
 # Zemismart BCM500DS-TYW
 
-[`.base.curtain-zemismart-bcm500ds-tyw-esp32-c3-arduino.yaml`](.base.curtain-zemismart-bcm500ds-tyw-esp32-c3-arduino.yaml)
+[`.base.curtain-zemismart-bcm500ds-tyw.yaml`](.base.curtain-zemismart-bcm500ds-tyw.yaml)
 
 [![Zemismart WiFi Curtain](./.images/athom-gu10.jpg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -163,6 +163,27 @@ This is the binary sensor common config is present in all configs. It includes:
 [AliExpress](https://www.aliexpress.com/item/1005003124769590.html)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)\
 [ESPHome Devices Page](https://www.esphome-devices.com/devices/Athom-GU10-Bulb)
+
+This device uses a TYWE1S chip which is a ESP8285
+
+# Setup
+
+the following files are required and all following substitutions should be set: - name, ssid, description, friendly name, projectname and project version
+see [`relay.bath-entrance.yaml`](relay.bath-entrance.yaml) for example
+
+[`.base-debug.yaml`](.base-debug.yaml)\
+[`.base.relay.shelly-1-generic`](.base.relay.shelly-1-generic)\
+[`.base.mqtt-light-automation-1-lonsonho.yaml`](.base.mqtt-light-automation-1-lonsonho.yaml) - if controlled by a Zigbee Button\
+[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
+[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.switch-shelly-1-generic.yaml`](.base.switch-shelly-1-generic.yaml)\
+[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+
+This device incorporates the following features in addition to MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
+
+- TYWE1S (ESP8285 based 1MB Flash)
+- Captive Portal
+- Web Server
 
 # Athom 5W GU10
 

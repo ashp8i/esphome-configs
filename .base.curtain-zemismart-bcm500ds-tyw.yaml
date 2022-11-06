@@ -1,0 +1,32 @@
+# Device Specific Config
+esphome:
+  name: "${device_name}"
+  # name_add_mac_suffix: true
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+uart:
+  - id: mcu
+    rx_pin: GPIO13
+    tx_pin: GPIO15
+    baud_rate: 9600
+
+# Register the Tuya MCU connection
+tuya:
+  uart_id: mcu
+
+cover:

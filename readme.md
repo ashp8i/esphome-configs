@@ -560,7 +560,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [![MiBoxer FUT039W](./.images/miboxer-fut039w-005.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
 [![MiBoxer FUT039W](./.images/miboxer-fut039w-009.jpg)](https://miboxer.com/light/xqy/fut039w.html)<br />
 
-[MiBoxer FUT035W](https://miboxer.com/light/xqy/fut039w.html)\
+[MiBoxer FUT039W](https://miboxer.com/light/xqy/fut039w.html)\
 [Amazon UK](https://www.amazon.co.uk/LIGHTEU%C2%AE-Milight-Controller-WiFi-Box-Bluetooth/dp/B09HCYFM73)\
 [Blakadder - Tasmota Supported Devices Repository](https://templates.blakadder.com/miboxer_FUT039W.html)
 

@@ -504,10 +504,10 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 [Amazon UK](https:/)\
 [Blakadder - Tasmota Supported Devices Repository](https://www.esphome-devices.com/devices/Shelly-Plus-i4)
 
-The device ships with a Tuya CB3S Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
+The device ships with a Tuya WBR3 Module that may be possible to flash if supported by [kuba2k2 / libretuya-esphome](https://github.com/kuba2k2/libretuya-esphome). In my case I replaced the module for a [Ai-Thinker ESP-C3-12F](https://templates.blakadder.com/ESP-C3-12F.html)
 initial support was poor thus I stuck to tasmota, now that platform-espressif32 version 5.2.0 and Arduino IDE version 2.0.5 is out Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
 
-I had to desolder the Original CB3S, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
+I had to desolder the Original WBR3, using low melt solder and a hot air station, preflashed new chip ESP-C3-12F using USB Programmer with spring module clips.
 
 This controller talks to an STM based TuyaMCU that performs PWM Control
 

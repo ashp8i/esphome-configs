@@ -8,6 +8,8 @@ esphome:
   project:
     name: "${project_name}"
     version: "${project_version}"
+  # includes:
+  #   - .zemismart_curtain.h
 
 captive_portal:
 
@@ -19,24 +21,46 @@ web_server:
   include_internal: true
   # local: true
 
+# status_led:
+#   pin:
+#     number: D4
+#     inverted: True
+
 uart:
-  - id: mcu
+  # - id: mcu
     rx_pin: GPIO13
     tx_pin: GPIO15
+    # rx_pin: GPIO1
+    # tx_pin: GPIO3
     baud_rate: 9600
+    # baud_rate: 115200
 
 # Register the Tuya MCU connection
-tuya:
-  uart_id: mcu
+# tuya:
+#   # uart_id: mcu
 
-cover:
-  - platform: "tuya"
-    id: "${main_device_id}"
-    name: "${cover_name}"
-    control_datapoint: 65
-    position_datapoint: 66
-    position_report_datapoint: 67
-    direction_datapoint: 68
-    min_value: 0
-    max_value: 255
-    invert_position: false
+# cover:
+#   - platform: "tuya"
+#     id: "${main_device_id}"
+#     name: "${cover_name}"
+#     control_datapoint: 1
+#     position_datapoint: 2
+#     position_report_datapoint: 3
+#     direction_datapoint: 5
+#     min_value: 0
+#     max_value: 255
+#     invert_position: false
+
+# cover:
+#   - platform: custom
+#     lambda: |-
+#       auto curtain = new CustomCurtain();
+#       App.register_component(curtain);
+#       return {curtain};
+#     covers:
+#       - name: ${cover_name}
+#         device_class: blind
+
+# custom_component:
+#   - lambda: |-
+#       return { new CustomAPI() };

@@ -1,10 +1,10 @@
 substitutions:
-  device_ssid: "Living Curtain"
-  device_name: livingcurtain
+  device_ssid: "Dining Curtain"
+  device_name: diningcurtain
   device_description: "Zemismart BCM500DS-TYW Curtain Motor"
-  friendly_name: "Living Curtain" # Put the name that you want to see in Home Assistant.
-  main_device_id: "livingcurtain" # Put the name that you want to see in Home Assistant.
-  cover_name: "Living Curtain"
+  friendly_name: "Dining Curtain" # Put the name that you want to see in Home Assistant.
+  main_device_id: "diningcurtain" # Put the name that you want to see in Home Assistant.
+  cover_name: "Dining Curtain"
   # switch1b1_topic: masterswitch/button/1/command
   project_name: "zemismart.bcm500ds-tyw"
   project_version: "1.0"
@@ -13,7 +13,7 @@ substitutions:
 api:
   password: !secret api_password
   encryption:
-    key: !secret livingcurtain_noise_key
+    key: !secret diningcurtain_noise_key
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml

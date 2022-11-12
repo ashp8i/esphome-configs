@@ -8,8 +8,23 @@ esphome:
   project:
     name: "${project_name}"
     version: "${project_version}"
-  # includes:
+  includes:
   #   - .zemismart_curtain.h
+    - .curtain.h
+
+globals:
+  - id: cover_open
+    type: bool
+    restore_value: yes
+    initial_value: "false"
+  - id: cover_reversed
+    type: bool
+    restore_value: yes
+    initial_value: "false"
+  - id: cover_position
+    type: float
+    restore_value: yes
+    initial_value: "0"
 
 captive_portal:
 
@@ -64,3 +79,18 @@ uart:
 # custom_component:
 #   - lambda: |-
 #       return { new CustomAPI() };
+
+cover:
+  - platform: custom
+    lambda: |-
+      auto curtain = new CustomCurtain();
+      App.register_component(curtain);
+      return {curtain};
+    covers:
+      - name: ${cover_name}
+        device_class: blind
+
+custom_component:
+  - lambda: |-
+      return { new CustomAPI() };
+

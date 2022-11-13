@@ -10,21 +10,21 @@ esphome:
     version: "${project_version}"
   includes:
   #   - .zemismart_curtain.h
-    - .curtain.h
+    - .tuya_cover.h
 
-globals:
-  - id: cover_open
-    type: bool
-    restore_value: yes
-    initial_value: "false"
-  - id: cover_reversed
-    type: bool
-    restore_value: yes
-    initial_value: "false"
-  - id: cover_position
-    type: float
-    restore_value: yes
-    initial_value: "0"
+# globals:
+#   - id: cover_open
+#     type: bool
+#     restore_value: yes
+#     initial_value: "false"
+#   - id: cover_reversed
+#     type: bool
+#     restore_value: yes
+#     initial_value: "false"
+#   - id: cover_position
+#     type: float
+#     restore_value: yes
+#     initial_value: "0"
 
 captive_portal:
 
@@ -49,9 +49,16 @@ uart:
     # tx_pin: GPIO3
     baud_rate: 9600
     # baud_rate: 115200
+    # debug:
+      # direction: BOTH
+      # dummy_receiver: false
+      # after:
+      #   delimiter: "\n"
+      # sequence:
+      #   - lambda: UARTDebug::log_string(direction, bytes);
 
 # Register the Tuya MCU connection
-# tuya:
+tuya:
 #   # uart_id: mcu
 
 # cover:
@@ -88,7 +95,25 @@ cover:
       return {curtain};
     covers:
       - name: ${cover_name}
-        device_class: blind
+      # - name: ${cover_name}_internal
+        device_class: curtain
+        # icon: ${cover_icon}
+        # internal: true
+  # - platform: template
+  #   name: "Template Cover"
+  #   lambda: |-
+  #     if (id(top_end_stop).state) {
+  #       return COVER_OPEN;
+  #     } else {
+  #       return COVER_CLOSED;
+  #     }
+  #   open_action:
+  #     - switch.turn_on: open_cover_switch
+  #   close_action:
+  #     - switch.turn_on: close_cover_switch
+  #   stop_action:
+  #     - switch.turn_on: stop_cover_switch
+  #   optimistic: true
 
 custom_component:
   - lambda: |-

@@ -1,77 +1,81 @@
 #include "esphome.h"
 
 // protocol
-// #define ZM79EDT_MAX_LEN 256  // Max length of message value
-#define ZM79EDT_BUFFER_LEN 6 // Length of serial buffer for header + type + length
-#define ZM79EDT_HEADER_LEN 2 // Length of fixed header
+#define TUYA_COVER_MAX_LEN 256  // Max length of message value
+#define TUYA_COVER_BUFFER_LEN 6 // Length of serial buffer for header + type + length
+#define TUYA_COVER_HEADER_LEN 2 // Length of fixed header
 
 // enable/disable reversed motor direction
-#define ZM79EDT_ENABLE_REVERSING { 0x05, 0x01, 0x00, 0x01, 0x01 } //dpid = 5, type = bool, len = 1, value = enable
-#define ZM79EDT_DISABLE_REVERSING { 0x05, 0x01, 0x00, 0x01, 0x00 } //dpid = 5, type = bool, len = 1, value = disable
+// Normal = header (55AA) + (00060005) + 050100010011 "(55AA00060005050100010011)
+// Reversed = header (55AA) + (00060005) + 050100010112 "(55AA00060005050100010112)"
+#define TUYA_COVER_DISABLE_REVERSING { 0x05, 0x01, 0x00, 0x01, 0x00 } //dpid = 5, type = bool, len = 1, value = disable
+#define TUYA_COVER_ENABLE_REVERSING { 0x05, 0x01, 0x00, 0x01, 0x01 } //dpid = 5, type = bool, len = 1, value = enable
 // Curtain commands
-#define ZM79EDT_OPEN { 0x01, 0x04, 0x00, 0x01, 0x02 } //dpid = 1, type = enum, len = 1, value = CLOSE
-#define ZM79EDT_CLOSE { 0x01, 0x04, 0x00, 0x01, 0x00 } //dpid = 1, type = enum, len = 1, value = OPEN
-#define ZM79EDT_STOP { 0x01, 0x04, 0x00, 0x01, 0x01 } //dpid = 1, type = enum, len = 1, value = STOP
+// Close = header (55AA) + (00060005) + 6604000100 "(55aa000600056604000100)"
+//  Open = header (55AA) + (00060005) + 6604000101 "(55aa000600056604000101)"
+//  Stop = header (55AA) + (00060005) + 6604000102 "(55AA000600056604000102)"
+#define TUYA_COVER_CLOSE { 0x66, 0x04, 0x00, 0x01, 0x00 } //dpid = 1, type = enum, len = 1, value = CLOSE
+#define TUYA_COVER_OPEN { 0x66, 0x04, 0x00, 0x01, 0x01 } //dpid = 1, type = enum, len = 1, value = OPEN
+#define TUYA_COVER_STOP { 0x66, 0x04, 0x00, 0x01, 0x02 } //dpid = 1, type = enum, len = 1, value = STOP
 
-// set position percentage
-#define ZM79EDT_SET_POSITION { 0x02, 0x02, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 } //"02020004000000" //dpid = 2, type = value, len = 4,  value = 0x000000 + 1 byte (0x00-0x64)
+#define TUYA_COVER_SET_POSITION { 0x65, 0x02, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 } //"65020004000000" //dpid = 2, type = value, len = 4,  value = 0x000000 + 1 byte (0x00-0x64)
 
-static const char *TAG = "ZM79EDT";
-static const uint16_t ZM79EDT_HEADER = 0x55AA;
-//static const uint16_t ZM79EDT_VERSION = 0x03;
-static const uint16_t ZM79EDT_VERSION = 0x00;
+static const char *TAG = "TUYACOVER";
+static const uint16_t TUYA_COVER_HEADER = 0x55AA;
+//static const uint16_t TUYA_COVER_VERSION = 0x03;
+static const uint16_t TUYA_COVER_VERSION = 0x00;
 
-const uint8_t zm79edt_enable_reversing[] = ZM79EDT_ENABLE_REVERSING;
-const uint8_t zm79edt_disable_reversing[] = ZM79EDT_DISABLE_REVERSING;
-const uint8_t zm79edt_open[] = ZM79EDT_OPEN;
-const uint8_t zm79edt_close[] = ZM79EDT_CLOSE;
-const uint8_t zm79edt_stop[] = ZM79EDT_STOP;
-static uint8_t zm79edt_pos[] = ZM79EDT_SET_POSITION;
+const uint8_t tuya_cover_enable_reversing[] = TUYA_COVER_ENABLE_REVERSING;
+const uint8_t tuya_cover_disable_reversing[] = TUYA_COVER_DISABLE_REVERSING;
+const uint8_t tuya_cover_open[] = TUYA_COVER_OPEN;
+const uint8_t tuya_cover_close[] = TUYA_COVER_CLOSE;
+const uint8_t tuya_cover_stop[] = TUYA_COVER_STOP;
+static uint8_t tuya_cover_pos[] = TUYA_COVER_SET_POSITION;
 
 #define HEARTBEAT_INTERVAL_MS 10000
 unsigned long previousHeartbeatMillis = 0;
 
-struct ZM79EDTCommand
+struct TUYACOVERCommand
 {
     uint16_t header;
     uint8_t version;
     uint8_t command;
     uint16_t length;
-    uint8_t value[ZM79EDT_MAX_LEN];
+    uint8_t value[TUYA_COVER_MAX_LEN];
     uint8_t checksum;
 };
 
-struct ZM79EDTMessage
+struct TUYACOVERMessage
 {
     uint8_t dpid;
     uint8_t type;
     uint16_t len;
-    uint8_t value[ZM79EDT_MAX_LEN - 4]; //Subtract dpid, type, len
+    uint8_t value[TUYA_COVER_MAX_LEN - 4]; //Subtract dpid, type, len
 };
 
-enum ZM79EDTCommandType
+enum TUYACOVERCommandType
 {
-    ZM79EDT_HEARTBEAT = 0x00,
-    ZM79EDT_COMMAND = 0x06,
-    ZM79EDT_RESPONSE = 0x07,
-    ZM79EDT_QUERY_STATUS = 0x08
+    TUYA_COVER_HEARTBEAT = 0x00,
+    TUYA_COVER_COMMAND = 0x06,
+    TUYA_COVER_RESPONSE = 0x07,
+    TUYA_COVER_QUERY_STATUS = 0x08
 };
 
-enum ZM79EDTdpidType
+enum TUYACOVERdpidType
 {
-    ZM79EDT_DPID_POSITION= 0x03,
-    ZM79EDT_DPID_DIRECTION = 0x05,
-    ZM79EDT_DPID_UNKNOWN = 0x07,
-    ZM79EDT_DPID_ERROR = 0x0A
+    TUYA_COVER_DPID_POSITION= 0x03,
+    TUYA_COVER_DPID_DIRECTION = 0x05,
+    TUYA_COVER_DPID_UNKNOWN = 0x07,
+    TUYA_COVER_DPID_ERROR = 0x0A
 };
 
 // Variables
-ZM79EDTCommand command_{ZM79EDT_HEADER, ZM79EDT_VERSION, 0, 0, {}, 0};
-uint8_t uart_buffer_[ZM79EDT_BUFFER_LEN]{0};
+TUYACOVERCommand command_{TUYA_COVER_HEADER, TUYA_COVER_VERSION, 0, 0, {}, 0};
+uint8_t uart_buffer_[TUYA_COVER_BUFFER_LEN]{0};
 
 // Forward declarations
 bool read_command();
-void write_command(ZM79EDTCommandType command, const uint8_t *value, uint16_t length);
+void write_command(TUYACOVERCommandType command, const uint8_t *value, uint16_t length);
 uint8_t checksum();
 
 /*
@@ -90,7 +94,7 @@ bool read_command()
         uart_buffer_[0] = uart_buffer_[1];
         uart_buffer_[1] = Serial.read();
         command_.header = (uart_buffer_[0] << 8) + uart_buffer_[1];
-        if (command_.header == ZM79EDT_HEADER)
+        if (command_.header == TUYA_COVER_HEADER)
         {
             valid_header = true;
             break;
@@ -102,13 +106,13 @@ bool read_command()
     // Read the checksum byte
     if (valid_header)
     {
-        Serial.readBytes(uart_buffer_ + ZM79EDT_HEADER_LEN, ZM79EDT_BUFFER_LEN - ZM79EDT_HEADER_LEN);
+        Serial.readBytes(uart_buffer_ + TUYA_COVER_HEADER_LEN, TUYA_COVER_BUFFER_LEN - TUYA_COVER_HEADER_LEN);
         command_.version = uart_buffer_[2];
         command_.command = uart_buffer_[3];
         command_.length = (uart_buffer_[4] << 8) + uart_buffer_[5];
         ESP_LOGV(TAG, "RX: Header = 0x%04X, Version = 0x%02X, Command = 0x%02X, Data length = 0x%04X", command_.header, command_.version, command_.command, command_.length);
 
-        if (command_.length < ZM79EDT_MAX_LEN)
+        if (command_.length < TUYA_COVER_MAX_LEN)
         {
             Serial.readBytes(command_.value, command_.length);
             ESP_LOGV(TAG, "RX_RAW:");
@@ -127,19 +131,19 @@ bool read_command()
             if (calc_checksum == command_.checksum)
             {
                 // Clear buffer contents to start with beginning of next command
-                memset(uart_buffer_, 0, ZM79EDT_BUFFER_LEN);
+                memset(uart_buffer_, 0, TUYA_COVER_BUFFER_LEN);
                 return true;
             }
             else
             {
-                memset(uart_buffer_, 0, ZM79EDT_BUFFER_LEN);
+                memset(uart_buffer_, 0, TUYA_COVER_BUFFER_LEN);
                 ESP_LOGE(TAG, "Checksum error: Read = 0x%02X != Calculated = 0x%02X", command_.checksum, calc_checksum);
             }
         }
         else
         {
-            memset(uart_buffer_, 0, ZM79EDT_BUFFER_LEN);
-            ESP_LOGE(TAG, "Command length exceeds limit: %d >= %d", command_.length, ZM79EDT_MAX_LEN);
+            memset(uart_buffer_, 0, TUYA_COVER_BUFFER_LEN);
+            ESP_LOGE(TAG, "Command length exceeds limit: %d >= %d", command_.length, TUYA_COVER_MAX_LEN);
         }
     }
 
@@ -151,11 +155,11 @@ bool read_command()
      * Store the given type, value, and length into the command struct and send
      * it out the serial port. Automatically calculates the checksum as well.
      */
-void write_command(ZM79EDTCommandType command, const uint8_t *value, uint16_t length)
+void write_command(TUYACOVERCommandType command, const uint8_t *value, uint16_t length)
 {
     // Copy params into command struct
-    command_.header = ZM79EDT_HEADER;
-    command_.version = ZM79EDT_VERSION;
+    command_.header = TUYA_COVER_HEADER;
+    command_.version = TUYA_COVER_VERSION;
     command_.command = command;
     command_.length = length;
     ESP_LOGV(TAG, "TX: Header = 0x%04X, Version = 0x%02X, Command = 0x%02X, Data length = 0x%04X", command_.header, command_.version, command_.command, command_.length);
@@ -175,11 +179,11 @@ void write_command(ZM79EDTCommandType command, const uint8_t *value, uint16_t le
     command_.checksum = checksum();
     ESP_LOGV(TAG, "TX_CHK: 0x%02X", command_.checksum);
     // Send buffer out via UART
-    Serial.write(uart_buffer_, ZM79EDT_BUFFER_LEN);
+    Serial.write(uart_buffer_, TUYA_COVER_BUFFER_LEN);
     Serial.write(command_.value, command_.length);
     Serial.write(command_.checksum);
     // Clear buffer contents to avoid re-reading our own payload
-    memset(uart_buffer_, 0, ZM79EDT_BUFFER_LEN);
+    memset(uart_buffer_, 0, TUYA_COVER_BUFFER_LEN);
 }
 
 /*
@@ -188,7 +192,7 @@ void write_command(ZM79EDTCommandType command, const uint8_t *value, uint16_t le
 uint8_t checksum()
 {
     uint8_t checksum = 0;
-    for (size_t i = 0; i < ZM79EDT_BUFFER_LEN; i++)
+    for (size_t i = 0; i < TUYA_COVER_BUFFER_LEN; i++)
     {
         checksum += uart_buffer_[i];
     }
@@ -207,8 +211,8 @@ protected:
 public:
     void setup() override
     {
-        ESP_LOGI(TAG, "ZM79EDT_COMMAND = QUERY_STATUS");
-        write_command(ZM79EDT_QUERY_STATUS, 0, 0);
+        ESP_LOGI(TAG, "TUYA_COVER_COMMAND = QUERY_STATUS");
+        write_command(TUYA_COVER_QUERY_STATUS, 0, 0);
     }
 
     CoverTraits get_traits() override
@@ -232,17 +236,17 @@ public:
             switch (pos)
             {
             case 0:
-                ESP_LOGI(TAG, "ZM79EDT_COMMAND = CLOSE");
-                write_command(ZM79EDT_COMMAND, zm79edt_close, sizeof(zm79edt_close));
+                ESP_LOGI(TAG, "TUYA_COVER_COMMAND = CLOSE");
+                write_command(TUYA_COVER_COMMAND, tuya_cover_close, sizeof(tuya_cover_close));
                 break;
             case 100:
-                ESP_LOGI(TAG, "ZM79EDT_COMMAND = OPEN");
-                write_command(ZM79EDT_COMMAND, zm79edt_open, sizeof(zm79edt_open));
+                ESP_LOGI(TAG, "TUYA_COVER_COMMAND = OPEN");
+                write_command(TUYA_COVER_COMMAND, tuya_cover_open, sizeof(tuya_cover_open));
                 break;
             default:
-                zm79edt_pos[7] = pos;
-                ESP_LOGI(TAG, "ZM79EDT_COMMAND = POS = %d%%", pos);
-                write_command(ZM79EDT_COMMAND, zm79edt_pos, sizeof(zm79edt_pos));
+                tuya_cover_pos[7] = pos;
+                ESP_LOGI(TAG, "TUYA_COVER_COMMAND = POS = %d%%", pos);
+                write_command(TUYA_COVER_COMMAND, tuya_cover_pos, sizeof(tuya_cover_pos));
                 break;
             }
             // publish_state only when position is confirmed in loop()
@@ -250,8 +254,8 @@ public:
         if (call.get_stop())
         {
             // User requested cover stop
-            ESP_LOGI(TAG, "ZM79EDT_COMMAND = STOP");
-            write_command(ZM79EDT_COMMAND, zm79edt_stop, sizeof(zm79edt_stop));
+            ESP_LOGI(TAG, "TUYA_COVER_COMMAND = STOP");
+            write_command(TUYA_COVER_COMMAND, tuya_cover_stop, sizeof(tuya_cover_stop));
         }
     }
 
@@ -261,33 +265,33 @@ public:
         if (currentHeartbeatMillis - previousHeartbeatMillis >= HEARTBEAT_INTERVAL_MS)
         {
             previousHeartbeatMillis += HEARTBEAT_INTERVAL_MS;
-            ESP_LOGI(TAG, "ZM79EDT_COMMAND = HEARTBEAT");
-            write_command(ZM79EDT_HEARTBEAT, 0, 0);
+            ESP_LOGI(TAG, "TUYA_COVER_COMMAND = HEARTBEAT");
+            write_command(TUYA_COVER_HEARTBEAT, 0, 0);
         }
 
         bool have_message = read_command();
 
-        if(have_message && command_.command == ZM79EDT_HEARTBEAT)
+        if(have_message && command_.command == TUYA_COVER_HEARTBEAT)
         {
-            ESP_LOGI(TAG, "ZM79EDT_RESPONSE = %s", (command_.value[0] == 0) ? "FIRST_HEARTBEAT" : "HEARTBEAT");  
+            ESP_LOGI(TAG, "TUYA_COVER_RESPONSE = %s", (command_.value[0] == 0) ? "FIRST_HEARTBEAT" : "HEARTBEAT");  
         }
-        else if (have_message && command_.command == ZM79EDT_RESPONSE)
+        else if (have_message && command_.command == TUYA_COVER_RESPONSE)
         {
             switch (command_.value[0])
             {
-            case ZM79EDT_DPID_POSITION:
-                ESP_LOGI(TAG, "ZM79EDT_DPID_POSITION = %d%%", command_.value[7]);
+            case TUYA_COVER_DPID_POSITION:
+                ESP_LOGI(TAG, "TUYA_COVER_DPID_POSITION = %d%%", command_.value[7]);
                 this->position = ((command_.value[7]) / 100.0f);
                 this->publish_state();
                 break;
-            case ZM79EDT_DPID_DIRECTION:
-                ESP_LOGI(TAG, "ZM79EDT_DPID_DIRECTION = 0x%02X", command_.value[4]);
+            case TUYA_COVER_DPID_DIRECTION:
+                ESP_LOGI(TAG, "TUYA_COVER_DPID_DIRECTION = 0x%02X", command_.value[4]);
                 break;
-            case ZM79EDT_DPID_UNKNOWN:
-                ESP_LOGI(TAG, "ZM79EDT_DPID_UNKNOWN ENUM = 0x%02X", command_.value[4]);
+            case TUYA_COVER_DPID_UNKNOWN:
+                ESP_LOGI(TAG, "TUYA_COVER_DPID_UNKNOWN ENUM = 0x%02X", command_.value[4]);
                 break;
-            case ZM79EDT_DPID_ERROR:
-                ESP_LOGI(TAG, "ZM79EDT_DPID_ERROR BITMAP = 0x%02X", command_.value[4]);
+            case TUYA_COVER_DPID_ERROR:
+                ESP_LOGI(TAG, "TUYA_COVER_DPID_ERROR BITMAP = 0x%02X", command_.value[4]);
                 break;
             default:
                 break;
@@ -310,20 +314,20 @@ public:
 
     void setStatusReport()
     {
-        ESP_LOGI(TAG, "ZM79EDT_COMMAND = QUERY_STATUS");
-        write_command(ZM79EDT_QUERY_STATUS, 0, 0);
+        ESP_LOGI(TAG, "TUYA_COVER_COMMAND = QUERY_STATUS");
+        write_command(TUYA_COVER_QUERY_STATUS, 0, 0);
     }
 
     void setMotorNormal()
     {
-        ESP_LOGI(TAG, "ZM79EDT_COMMAND = ENABLE_REVERSING");
-        write_command(ZM79EDT_COMMAND, zm79edt_enable_reversing, sizeof(zm79edt_enable_reversing));
+        ESP_LOGI(TAG, "TUYA_COVER_COMMAND = ENABLE_REVERSING");
+        write_command(TUYA_COVER_COMMAND, tuya_cover_enable_reversing, sizeof(tuya_cover_enable_reversing));
     }
 
     void setMotorReversed()
     {
-        ESP_LOGI(TAG, "ZM79EDT_COMMAND = ENABLE_REVERSING");
-        write_command(ZM79EDT_COMMAND, zm79edt_disable_reversing, sizeof(zm79edt_disable_reversing));
+        ESP_LOGI(TAG, "TUYA_COVER_COMMAND = ENABLE_REVERSING");
+        write_command(TUYA_COVER_COMMAND, tuya_cover_disable_reversing, sizeof(tuya_cover_disable_reversing));
     }
 
     void sendCommand(std::string data)

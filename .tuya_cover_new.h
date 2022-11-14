@@ -1,24 +1,60 @@
 #include "esphome.h"
 
 // protocol
-#define TUYA_COVER_MAX_LEN 256  // Max length of message value
+#define TUYA_COVER_MAX_LEN 640  // Max length of message value
+// #define TUYA_COVER_MAX_LEN 256  // Max length of message value
 #define TUYA_COVER_BUFFER_LEN 6 // Length of serial buffer for header + type + length
 #define TUYA_COVER_HEADER_LEN 2 // Length of fixed header
 
 // enable/disable reversed motor direction
 // Normal = header (55AA) + (00060005) + 050100010011 "(55AA00060005050100010011)
 // Reversed = header (55AA) + (00060005) + 050100010112 "(55AA00060005050100010112)"
-#define TUYA_COVER_DISABLE_REVERSING { 0x05, 0x01, 0x00, 0x01, 0x00 } //dpid = 5, type = bool, len = 1, value = disable
-#define TUYA_COVER_ENABLE_REVERSING { 0x05, 0x01, 0x00, 0x01, 0x01 } //dpid = 5, type = bool, len = 1, value = enable
+#define TUYA_COVER_DISABLE_REVERSING { 0x69, 0x01, 0x00, 0x01, 0x00 } //dpid = 105, type = bool, len = 1, value = disable
+#define TUYA_COVER_ENABLE_REVERSING { 0x69, 0x01, 0x00, 0x01, 0x01 } //dpid = 105, type = bool, len = 1, value = enable
 // Curtain commands
-// Close = header (55AA) + (00060005) + 6604000100 "(55aa000600056604000100)"
-//  Open = header (55AA) + (00060005) + 6604000101 "(55aa000600056604000101)"
+//  Open = header (55AA) + (00060005) + 6604000100 "(55aa000600056604000100)"
+// Close = header (55AA) + (00060005) + 6604000101 "(55aa000600056604000101)"
 //  Stop = header (55AA) + (00060005) + 6604000102 "(55AA000600056604000102)"
-#define TUYA_COVER_CLOSE { 0x66, 0x04, 0x00, 0x01, 0x00 } //dpid = 1, type = enum, len = 1, value = CLOSE
-#define TUYA_COVER_OPEN { 0x66, 0x04, 0x00, 0x01, 0x01 } //dpid = 1, type = enum, len = 1, value = OPEN
-#define TUYA_COVER_STOP { 0x66, 0x04, 0x00, 0x01, 0x02 } //dpid = 1, type = enum, len = 1, value = STOP
+#define TUYA_COVER_OPEN { 0x66, 0x04, 0x00, 0x01, 0x00 } //dpid = 101, type = enum, len = 1, value = OPEN
+#define TUYA_COVER_CLOSE { 0x66, 0x04, 0x00, 0x01, 0x01 } //dpid = 101, type = enum, len = 1, value = CLOSE
+#define TUYA_COVER_STOP { 0x66, 0x04, 0x00, 0x01, 0x02 } //dpid = 101, type = enum, len = 1, value = STOP
 
 #define TUYA_COVER_SET_POSITION { 0x65, 0x02, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 } //"65020004000000" //dpid = 2, type = value, len = 4,  value = 0x000000 + 1 byte (0x00-0x64)
+
+float get_control_datapoint() const { return this->control_datapoint_; }
+void set_control_datapoint(float control_datapoint) { this->control_datapoint_ = control_datapoint; }
+float get_position_datapoint() const { return this->position_datapoint_; }
+void set_position_datapoint(float position_datapoint) { this->position_datapoint_ = position_datapoint; }
+float get_position_report_datapoint() const { return this->position_report_datapoint_; }
+void set_position_report_datapoint(float position_report_datapoint) { this->position_report_datapoint_ = position_report_datapoint; }
+float get_direction_datapoint() const { return this->direction_datapoint_; }
+void set_direction_datapoint(float direction_datapoint) { this->direction_datapoint_ = direction_datapoint; }
+float get_min_value() const { return this->min_value_; }
+void set_min_value(float min_value) { this->min_value_ = min_value; }
+float get_max_value() const { return this->max_value_; }
+void set_max_value(float max_value) { this->max_value_ = max_value; }
+void set_control_id(uint8_t control_id) { this->control_id_ = control_id; }
+void set_direction_id(uint8_t direction_id) { this->direction_id_ = direction_id; }
+void set_position_id(uint8_t position_id) { this->position_id_ = position_id; }
+void set_position_report_id(uint8_t position_report_id) { this->position_report_id_ = position_report_id; }
+void set_min_value(uint32_t min_value) { min_value_ = min_value; }
+void set_max_value(uint32_t max_value) { max_value_ = max_value; }
+void set_invert_position(bool invert_position) { invert_position_ = invert_position; }
+
+uint8_t report_id = *this->position_id_;
+if (this->position_report_id_.has_value()) {
+// A position report datapoint is configured; listen to that instead.
+report_id = *this->position_report_id_;
+}
+
+this->parent_->register_listener(report_id, [this](const TuyaDatapoint &datapoint) {
+if (datapoint.value_int == 123) {
+    ESP_LOGD(TAG, "Ignoring MCU position report - not calibrated");
+    return;
+}
+auto pos = float(datapoint.value_uint - this->min_value_) / this->value_range_;
+this->position = 1.0f - pos;
+this->publish_state();
 
 static const char *TAG = "TUYACOVER";
 static const uint16_t TUYA_COVER_HEADER = 0x55AA;
@@ -63,10 +99,10 @@ enum TUYACOVERCommandType
 
 enum TUYACOVERdpidType
 {
-    TUYA_COVER_DPID_POSITION= 0x03,
-    TUYA_COVER_DPID_DIRECTION = 0x05,
-    TUYA_COVER_DPID_UNKNOWN = 0x07,
-    TUYA_COVER_DPID_ERROR = 0x0A
+    TUYA_COVER_DPID_POSITION= 0x65,
+    TUYA_COVER_DPID_DIRECTION = 064,
+    TUYA_COVER_DPID_UNKNOWN = 0x67,
+    TUYA_COVER_DPID_ERROR = 0x6E
 };
 
 // Variables
@@ -230,7 +266,7 @@ public:
         {
             // Write pos (range 0-1) to cover
             // Cover pos (range 0x00-0x64) (closed - open)
-            uint8_t pos = (*call.get_position() * 100);
+            uint8_t pos = (100-(*call.get_position() * 100));
             ESP_LOGV(TAG, "POS = %d", pos);
 
             switch (pos)
@@ -281,7 +317,7 @@ public:
             {
             case TUYA_COVER_DPID_POSITION:
                 ESP_LOGI(TAG, "TUYA_COVER_DPID_POSITION = %d%%", command_.value[7]);
-                this->position = ((command_.value[7]) / 100.0f);
+                this->position = (1-((command_.value[7]) / 100.0f));
                 this->publish_state();
                 break;
             case TUYA_COVER_DPID_DIRECTION:

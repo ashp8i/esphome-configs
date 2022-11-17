@@ -1,11 +1,11 @@
 substitutions:
-  device_ssid: "Bathroom Light"
-  device_name: bathroomlight
-  device_description: "CWWW 36W Starry PMMA Square Ceiling LED light"
-  friendly_name: "Bathroom Light"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "bathroomlight"    # Put the name that you want to see in Home Assistant.
+  device_ssid: "Bathroom"
+  device_name: bathroom
+  device_description: "ZH United 30W CCT Slim Ceiling Light"
+  friendly_name: "Bathroom"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "bathroom"    # Put the name that you want to see in Home Assistant.
   tradfri_topic: ashishswitch-/button/1/command
-  project_name: "lusunt.36w-cct-starry-pmmma-ceiling-light-square-esp-12f"
+  project_name: "zhunited.30w-cw-slim-ceiling-light-esp32-c3-arduino-cct"
   project_version: "1.0"
 
 # Enable Home Assistant API
@@ -16,9 +16,10 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.light-lusunt-26w-esp12f.yaml
-<<: !include .base.mqtt-light-automation-tradfri.yaml
-<<: !include .base.sensor-common.yaml
+<<: !include .base.light-zhunited-40w-jl-02-ceiling-light-esp32-c3-arduino-cct.yaml
+<<: !include .base.global-mqtt-automation-cct.yaml
+# <<: !include .base.mqtt-light-automation-1-button-plus-2-button-switch.yaml
+<<: !include .base.sensor-common-die-temp.yaml
 <<: !include .base.text-sensor-common.yaml
 <<: !include .base.switch-common.yaml
 <<: !include .base.binary-sensor-common.yaml

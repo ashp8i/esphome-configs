@@ -1,0 +1,18 @@
+# Enable logging
+# Logger must be at least debug (default)
+logger:
+  level: debug
+
+ota:
+  safe_mode: true
+  password: !secret ota_password
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+    use_address: bathroomlight.local
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid} Fallback Hotspot
+      password: !secret ap_password

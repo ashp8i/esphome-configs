@@ -1,10 +1,10 @@
 substitutions:
-  device_ssid: "Dining Curtain"
-  device_name: diningcurtain
+  device_ssid: "Dining CurtainT"
+  device_name: diningcurtaintest
   device_description: "Zemismart BCM500DS-TYW Curtain Motor"
-  friendly_name: "Dining Curtain" # Put the name that you want to see in Home Assistant.
-  main_device_id: "diningcurtain" # Put the name that you want to see in Home Assistant.
-  cover_name: "Dining Curtain"
+  friendly_name: "Dining Curtain Test" # Put the name that you want to see in Home Assistant.
+  main_device_id: "diningcurtaintest" # Put the name that you want to see in Home Assistant.
+  cover_name: "Dining Curtain Test"
   # switch1b1_topic: masterswitch/button/1/command
   project_name: "zemismart.bcm500ds-tyw"
   project_version: "1.0"

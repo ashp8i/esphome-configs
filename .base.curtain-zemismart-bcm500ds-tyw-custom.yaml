@@ -8,9 +8,18 @@ esphome:
   project:
     name: "${project_name}"
     version: "${project_version}"
-  includes:
-  #   - .zemismart_curtain.h
-    - .tuya_cover.h
+  # includes:
+  # #   - .zemismart_curtain.h
+  #   - .tuya_cover.h
+  
+# use tuya from SSieb's ESPHome dev branch in GitHub
+# external_components:
+#   - source: github://ssieb/esphome@tuya
+#     components: [tuya]
+external_components:
+  - source:
+      type: local
+      path: .external_components/v0
 
 # globals:
 #   - id: cover_open
@@ -60,7 +69,7 @@ uart:
         - lambda: UARTDebug::log_hex(direction, bytes, ':');
 
 # Register the Tuya MCU connection
-# tuya:
+tuya:
 #   # uart_id: mcu
 
 # cover:
@@ -73,7 +82,7 @@ uart:
 #     direction_datapoint: 105
 #     min_value: 0
 #     max_value: 255
-#     invert_position: false
+#     invert_position: true
 #     device_class: curtain
 
 cover:
@@ -107,7 +116,7 @@ cover:
   #   optimistic: true
 
 # API Services & Commands
-custom_component:
-  - lambda: |-
-      return { new CustomAPI() };
+# custom_component:
+#   - lambda: |-
+#       return { new CustomAPI() };
 

@@ -8,8 +8,6 @@
 namespace esphome {
 namespace tuyacustom {
 
-unsigned long previousHeartbeatMillis = 0;
-
 static const char *const TAG = "tuyacustom";
 static const int COMMAND_DELAY = 10;
 static const int RECEIVE_TIMEOUT = 300;

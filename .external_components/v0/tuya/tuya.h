@@ -30,7 +30,7 @@ struct TuyaDatapoint {
     int value_int;
     uint32_t value_uint;
     uint8_t value_enum;
-    uint16_t value_bitmask;
+    uint32_t value_bitmask;
   };
   std::string value_string;
   std::vector<uint8_t> value_raw;
@@ -39,6 +39,12 @@ struct TuyaDatapoint {
 struct TuyaDatapointListener {
   uint8_t datapoint_id;
   std::function<void(TuyaDatapoint)> on_datapoint;
+};
+
+enum class WifiState : uint8_t {
+  DISCONNECTED = 1,
+  CONNECTED = 3,
+  CONNECTED_DATA = 4,
 };
 
 enum class TuyaCommandType : uint8_t {
@@ -95,7 +101,7 @@ class Tuya : public Component, public uart::UARTDevice {
   void loop() override;
   void dump_config() override;
   void register_listener(uint8_t datapoint_id, const std::function<void(TuyaDatapoint)> &func);
-  void set_datapoint_value(TuyaDatapoint datapoint);
+  // void set_datapoint_value(TuyaDatapoint datapoint);
   void set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value);
   void set_boolean_datapoint_value(uint8_t datapoint_id, bool value);
   void set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value);
@@ -127,15 +133,13 @@ class Tuya : public Component, public uart::UARTDevice {
   bool validate_message_();
 
   void handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len);
-    void handle_command_(TuyaCommandTypeV0 command, uint8_t version, const uint8_t *buffer, size_t len);
+  void handle_command_(TuyaCommandTypeV0 command, uint8_t version, const uint8_t *buffer, size_t len);
   void send_raw_command_(TuyaCommand command);
   void process_command_queue_();
   void send_command_(const TuyaCommand &command);
-    void send_command_(TuyaCommandTypeV0 command, const uint8_t *buffer, uint16_t len) {
-    this->send_command_((uint8_t) command, buffer, len);
-  }
+  void send_command_(const TuyaCommandTypeV0 &command);
   void send_empty_command_(TuyaCommandType command);
-    void send_empty_command_(TuyaCommandTypeV0 command) { this->send_command_(command, nullptr, 0); }
+  void send_empty_command_(TuyaCommandTypeV0 command);
   void set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, uint32_t value,
                                     uint8_t length, bool forced);
   void set_string_datapoint_value_(uint8_t datapoint_id, const std::string &value, bool forced);
@@ -149,7 +153,8 @@ class Tuya : public Component, public uart::UARTDevice {
   optional<time::RealTimeClock *> time_id_{};
 #endif
   TuyaInitState init_state_ = TuyaInitState::INIT_HEARTBEAT;
-    bool init_failed_{false};
+  WifiState wifi_state_ = WifiState::DISCONNECTED;
+  bool init_failed_{false};
   int init_retries_{0};
   uint8_t protocol_version_ = -1;
   optional<InternalGPIOPin *> status_pin_{};

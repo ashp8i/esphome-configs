@@ -5,19 +5,69 @@
 
 namespace esphome {
 namespace TuyaCoverCustom {
+public:
+    // TuyaCoverCustom(int control_datapoint);
+    // TuyaCoverCustom(int position_datapoint);
+    // TuyaCoverCustom(int position_report_datapoint);
+    // TuyaCoverCustom(int direction_datapoint);
+    // TuyaCoverCustom(int min_value);
+    // TuyaCoverCustom(int max_value);
+    // TuyaCoverCustom(bool invert_position);
+    // void register_service(TeleInfoListener *listener);
+    // register_service(&CustomAPI::setStatusReport, "get_status_report");
+    // register_service(&CustomAPI::setMotorNormal, "set_motor_normal");
+    // register_service(&CustomAPI::setMotorReversed, "set_motor_reversed");
+    // register_service(&CustomAPI::sendCommand, "send_command", {"data"});
+    void setup() override
+    {
+        register_service(&CustomAPI::setStatusReport, "get_status_report");
+        register_service(&CustomAPI::setMotorNormal, "set_motor_normal");
+        register_service(&CustomAPI::setMotorReversed, "set_motor_reversed");
+        register_service(&CustomAPI::sendCommand, "send_command", {"data"});
+    }
 
-class TuyaCoverCustom : public uart::UARTDevice, public Component {
-  public:
-    void setup() override;
-    void loop() override;
-    void dump_config() override;
+    void setStatusReport()
+    {
+        ESP_LOGI(TAG, "ZM79EDT_COMMAND = QUERY_STATUS");
+        write_command(ZM79EDT_QUERY_STATUS, 0, 0);
+    }
+
+    void setMotorNormal()
+    {
+        ESP_LOGI(TAG, "ZM79EDT_COMMAND = ENABLE_REVERSING");
+        write_command(ZM79EDT_COMMAND, zm79edt_enable_reversing, sizeof(zm79edt_enable_reversing));
+    }
+
+    void setMotorReversed()
+    {
+        ESP_LOGI(TAG, "ZM79EDT_COMMAND = ENABLE_REVERSING");
+        write_command(ZM79EDT_COMMAND, zm79edt_disable_reversing, sizeof(zm79edt_disable_reversing));
+    }
+
+    void sendCommand(std::string data)
+    {
+        int i = 0;
+        uint8_t sum = 0;
+        while (i < data.length())
+        {
+            const char hex[2] = {data[i++], data[i++]};
+            uint8_t d = strtoul(hex, NULL, 16);
+            sum += d;
+            writeByte(d);
+        }
+        writeByte(sum);
+    }
+
+    void writeByte(uint8_t data)
+    {
+        Serial.write(data);
+    }
 };
 
-class CustomCurtain : public Component, public Cover {
- 
-  protected:
+class TuyaCoverCustomCurtain : public Component, public Cover {
+protected:
 
-  public:
+public:
     void setup() override
     {
         ESP_LOGI(TAG, "ZM79EDT_COMMAND = QUERY_STATUS");
@@ -106,56 +156,6 @@ class CustomCurtain : public Component, public Cover {
                 break;
             }
         }
-    }
-};
-
-class CustomAPI : public Component, public CustomAPIDevice {
-  public:
-      void setup() override
-      {
-          register_service(&CustomAPI::setStatusReport, "get_status_report");
-          register_service(&CustomAPI::setMotorNormal, "set_motor_normal");
-          register_service(&CustomAPI::setMotorReversed, "set_motor_reversed");
-          register_service(&CustomAPI::sendCommand, "send_command", {"data"});
-      }
-
-      void setStatusReport()
-      {
-          ESP_LOGI(TAG, "ZM79EDT_COMMAND = QUERY_STATUS");
-          write_command(ZM79EDT_QUERY_STATUS, 0, 0);
-      }
-
-      void setMotorNormal()
-      {
-          ESP_LOGI(TAG, "ZM79EDT_COMMAND = ENABLE_REVERSING");
-          write_command(ZM79EDT_COMMAND, zm79edt_enable_reversing, sizeof(zm79edt_enable_reversing));
-      }
-
-      void setMotorReversed()
-      {
-          ESP_LOGI(TAG, "ZM79EDT_COMMAND = ENABLE_REVERSING");
-          write_command(ZM79EDT_COMMAND, zm79edt_disable_reversing, sizeof(zm79edt_disable_reversing));
-      }
-
-      void sendCommand(std::string data)
-      {
-          int i = 0;
-          uint8_t sum = 0;
-          while (i < data.length())
-          {
-              const char hex[2] = {data[i++], data[i++]};
-              uint8_t d = strtoul(hex, NULL, 16);
-              sum += d;
-              writeByte(d);
-          }
-          writeByte(sum);
-      }
-
-      void writeByte(uint8_t data)
-      {
-          Serial.write(data);
-      }
-};
-
-}  // namespace empty_uart_component
+    };
+}  // namespace tuyacovercustom
 }  // namespace esphome

@@ -6,18 +6,6 @@ namespace tuyacovercustom {
 
 static const char *TAG = "tuyacovercustom";
 
-void TuyaCoverCustom::setup() {
-
-}
-
-void TuyaCoverCustom::loop() {
-
-}
-
-void TuyaCoverCustom::dump_config(){
-    ESP_LOGCONFIG(TAG, "Empty UART component");
-}
-
 // protocol
 // #define ZM79EDT_MAX_LEN 256  // Max length of message value
 #define ZM79EDT_BUFFER_LEN 6 // Length of serial buffer for header + type + length

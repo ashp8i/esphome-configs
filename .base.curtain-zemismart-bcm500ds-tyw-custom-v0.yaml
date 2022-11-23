@@ -1,0 +1,122 @@
+# Device Specific Config
+esphome:
+  name: "${device_name}"
+  # name_add_mac_suffix: true
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp_wroom_02
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+  # includes:
+  # #   - .zemismart_curtain.h
+  #   - .tuya_cover.h
+  
+# use tuya from SSieb's ESPHome dev branch in GitHub
+# external_components:
+#   - source: github://ssieb/esphome@tuya
+#     components: [tuya]
+external_components:
+  - source:
+      type: local
+      path: .external_components/v0_only
+
+# globals:
+#   - id: cover_open
+#     type: bool
+#     restore_value: yes
+#     initial_value: "false"
+#   - id: cover_reversed
+#     type: bool
+#     restore_value: yes
+#     initial_value: "false"
+#   - id: cover_position
+#     type: float
+#     restore_value: yes
+#     initial_value: "0"
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+# status_led:
+#   pin:
+#     number: D4
+#     inverted: True
+
+uart:
+  # - id: mcu
+    rx_pin: GPIO13
+    tx_pin: GPIO15
+    # rx_pin: GPIO1
+    # tx_pin: GPIO3
+    baud_rate: 9600
+    # baud_rate: 115200
+    debug:
+      direction: BOTH
+      dummy_receiver: false
+      # after:
+      #   delimiter: "\n"
+      # after:
+      #   delimiter: "\n"
+      sequence:
+        - lambda: UARTDebug::log_hex(direction, bytes, ':');
+
+# Register the Tuya MCU connection
+tuya:
+#   # uart_id: mcu
+
+cover:
+  - platform: "tuya"
+    id: "${main_device_id}"
+    name: "${cover_name}"
+    control_datapoint: 101
+    position_datapoint: 102
+    position_report_datapoint: 103
+    direction_datapoint: 105
+    min_value: 0
+    max_value: 255
+    invert_position: true
+    device_class: curtain
+
+# cover:
+#   - platform: custom
+#     lambda: |-
+#       auto curtain = new CustomCurtain();
+#       App.register_component(curtain);
+#       return {curtain};
+#     covers:
+#       - name: ${cover_name}
+#       # - name: ${cover_name}_internal
+#         device_class: curtain
+#         # icon: ${cover_icon}
+#         # internal: true
+
+# Template Cover
+  # - platform: template
+  #   name: "Template Cover"
+  #   lambda: |-
+  #     if (id(top_end_stop).state) {
+  #       return COVER_OPEN;
+  #     } else {
+  #       return COVER_CLOSED;
+  #     }
+  #   open_action:
+  #     - switch.turn_on: open_cover_switch
+  #   close_action:
+  #     - switch.turn_on: close_cover_switch
+  #   stop_action:
+  #     - switch.turn_on: stop_cover_switch
+  #   optimistic: true
+
+# API Services & Commands
+# custom_component:
+#   - lambda: |-
+#       return { new CustomAPI() };
+

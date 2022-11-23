@@ -1,0 +1,24 @@
+substitutions:
+  device_ssid: "Dining CurtaT2"
+  device_name: diningcurtaintest2
+  device_description: "Zemismart BCM500DS-TYW Curtain Motor Test Tuya V0"
+  friendly_name: "Dining Curtain Test2" # Put the name that you want to see in Home Assistant.
+  main_device_id: "diningcurtaintest2" # Put the name that you want to see in Home Assistant.
+  cover_name: "Dining Curtain Test2"
+  # switch1b1_topic: masterswitch/button/1/command
+  project_name: "zemismart.bcm500ds-tyw-test"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret diningcurtain_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.curtain-zemismart-bcm500ds-tyw-custom-v0.yaml
+<<: !include .base.sensor-common.yaml
+<<: !include .base.text-sensor-common.yaml
+<<: !include .base.switch-common.yaml
+<<: !include .base.binary-sensor-common.yaml

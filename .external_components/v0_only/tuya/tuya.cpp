@@ -14,7 +14,7 @@ static const int RECEIVE_TIMEOUT = 300;
 static const int MAX_RETRIES = 5;
 
 void Tuya::setup() {
-    this->set_interval("heartbeat", 1000, [this] { this->send_empty_command_(TuyaCommandType::HEARTBEAT); });
+  this->set_interval("heartbeat", 1000, [this] { this->send_empty_command_(TuyaCommandType::HEARTBEAT); });
   if (this->status_pin_.has_value()) {
     this->status_pin_.value()->digital_write(false);
   }
@@ -48,6 +48,8 @@ void Tuya::dump_config() {
       ESP_LOGCONFIG(TAG, "  Datapoint %u: switch (value: %s)", info.id, ONOFF(info.value_bool));
     } else if (info.type == TuyaDatapointType::INTEGER) {
       ESP_LOGCONFIG(TAG, "  Datapoint %u: int value (value: %d)", info.id, info.value_int);
+    } else if (info.type == TuyaDatapointType::STRING) {
+      ESP_LOGCONFIG(TAG, "  Datapoint %u: string value (value: %s)", info.id, info.value_string.c_str());
     } else if (info.type == TuyaDatapointType::ENUM) {
       ESP_LOGCONFIG(TAG, "  Datapoint %u: enum (value: %d)", info.id, info.value_enum);
     } else if (info.type == TuyaDatapointType::BITMASK) {
@@ -170,11 +172,11 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       }
       if (this->init_state_ == TuyaInitState::INIT_PRODUCT) {
         this->init_state_ = TuyaInitState::INIT_CONF;
-        this->send_empty_command_(TuyaCommandType::CONF_QUERY);
+        this->send_empty_command_(TuyaCommandType::GET_DP_CACHE);
         }
       break;
     }
-    case TuyaCommandType::CONF_QUERY: {
+    case TuyaCommandType::GET_DP_CACHE: {
       if (len >= 2) {
         this->status_pin_reported_ = buffer[0];
         this->reset_pin_reported_ = buffer[1];
@@ -367,8 +369,8 @@ void Tuya::send_raw_command_(TuyaCommand command) {
     case TuyaCommandType::PRODUCT_QUERY:
       this->expected_response_ = TuyaCommandType::PRODUCT_QUERY;
       break;
-    case TuyaCommandType::CONF_QUERY:
-      this->expected_response_ = TuyaCommandType::CONF_QUERY;
+    case TuyaCommandType::GET_DP_CACHE:
+      this->expected_response_ = TuyaCommandType::GET_DP_CACHE;
       break;
     case TuyaCommandType::DATAPOINT_DELIVER:
     case TuyaCommandType::DATAPOINT_QUERY:
@@ -442,12 +444,9 @@ void Tuya::send_wifi_status_() {
     status = 0x03;
 
     // Protocol version 3 also supports specifying when connected to "the cloud"
-    if (this->protocol_version_ >= 0x00 && remote_is_connected()) {
+    if (this->protocol_version_ >= 0x03 && remote_is_connected()) {
       status = 0x04;
     }
-    // if (this->protocol_version_ >= 0x00 && remote_is_connected()) {
-    //   status = 0x04;
-    // }
   }
 
   if (status == this->wifi_status_) {

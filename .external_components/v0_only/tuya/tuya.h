@@ -41,12 +41,6 @@ struct TuyaDatapointListener {
   std::function<void(TuyaDatapoint)> on_datapoint;
 };
 
-enum class WifiState : uint8_t {
-  DISCONNECTED = 1,
-  CONNECTED = 3,
-  CONNECTED_DATA = 4,
-};
-
 enum class TuyaCommandType : uint8_t {
   HEARTBEAT = 0x00,
   PRODUCT_QUERY = 0x01,
@@ -87,7 +81,6 @@ class Tuya : public Component, public uart::UARTDevice {
   void loop() override;
   void dump_config() override;
   void register_listener(uint8_t datapoint_id, const std::function<void(TuyaDatapoint)> &func);
-  // void set_datapoint_value(TuyaDatapoint datapoint);
   void set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value);
   void set_boolean_datapoint_value(uint8_t datapoint_id, bool value);
   void set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value);
@@ -136,7 +129,6 @@ class Tuya : public Component, public uart::UARTDevice {
   optional<time::RealTimeClock *> time_id_{};
 #endif
   TuyaInitState init_state_ = TuyaInitState::INIT_HEARTBEAT;
-  WifiState wifi_state_ = WifiState::DISCONNECTED;
   bool init_failed_{false};
   int init_retries_{0};
   uint8_t protocol_version_ = -1;
@@ -146,7 +138,6 @@ class Tuya : public Component, public uart::UARTDevice {
   uint32_t last_command_timestamp_ = 0;
   uint32_t last_rx_char_timestamp_ = 0;
   std::string product_ = "";
-  int version_ = -1;
   std::vector<TuyaDatapointListener> listeners_;
   std::vector<TuyaDatapoint> datapoints_;
   std::vector<uint8_t> rx_message_;

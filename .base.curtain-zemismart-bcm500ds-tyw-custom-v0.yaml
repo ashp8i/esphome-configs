@@ -19,7 +19,7 @@ esphome:
 external_components:
   - source:
       type: local
-      path: .external_components/v0_only
+      path: .external_components/tuya_v0
 
 # globals:
 #   - id: cover_open
@@ -69,21 +69,21 @@ uart:
         - lambda: UARTDebug::log_hex(direction, bytes, ':');
 
 # Register the Tuya MCU connection
-tuya:
+tuya_v0:
 #   # uart_id: mcu
 
-cover:
-  - platform: "tuya"
-    id: "${main_device_id}"
-    name: "${cover_name}"
-    control_datapoint: 101
-    position_datapoint: 102
-    position_report_datapoint: 103
-    direction_datapoint: 105
-    min_value: 0
-    max_value: 255
-    invert_position: true
-    device_class: curtain
+# cover:
+#   - platform: "tuya"
+#     id: "${main_device_id}"
+#     name: "${cover_name}"
+#     control_datapoint: 101
+#     position_datapoint: 102
+#     position_report_datapoint: 103
+#     direction_datapoint: 105
+#     min_value: 0
+#     max_value: 255
+#     invert_position: true
+#     device_class: curtain
 
 # cover:
 #   - platform: custom

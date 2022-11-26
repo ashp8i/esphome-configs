@@ -9,7 +9,7 @@ from esphome.const import (
 )
 from .. import tuya_ns, CONF_TUYA_ID, Tuya
 
-DEPENDENCIES = ["tuya"]
+DEPENDENCIES = ["tuya_v0"]
 
 CONF_CONTROL_DATAPOINT = "control_datapoint"
 CONF_DIRECTION_DATAPOINT = "direction_datapoint"

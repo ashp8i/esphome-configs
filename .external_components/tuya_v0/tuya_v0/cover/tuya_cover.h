@@ -1,11 +1,11 @@
 #pragma once
 
 #include "esphome/core/component.h"
-#include "esphome/components/tuya/tuya.h"
+#include "esphome/components/tuya_v0/tuya_v0.h"
 #include "esphome/components/cover/cover.h"
 
 namespace esphome {
-namespace tuya {
+namespace tuya_v0 {
 
 enum TuyaCoverRestoreMode {
   COVER_NO_RESTORE,

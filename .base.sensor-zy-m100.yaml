@@ -1,0 +1,60 @@
+sensor:
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+  # Uptime Sensor
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    id: uptime_sensor
+    update_interval: 360s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
+  - platform: template
+    name: ${friendly_name} ESP32 Internal Temperature
+    id: temp
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    accuracy_decimals: 2
+# Light Sensor
+  - platform: tuya
+    name: Light Intensity
+    id: light_intensity
+    sensor_datapoint: 104
+    unit_of_measurement: "lux"
+    # icon: "mdi:brightness-5"
+    device_class: "illuminance"
+    state_class: "measurement"
+# TuyaMCU 99,1 | TuyaMCU 75,104"
+# Distance from Detected Object
+  - platform: "tuya"
+    name: "Target Distance"
+    id: target_distance
+    sensor_datapoint: 9
+    unit_of_measurement: "cm"
+    icon: "mdi:eye"
+    device_class: "distance"
+    state_class: "measurement"
+# Self Check Number
+  - platform: "tuya"
+    name: "Self Check Number"
+    id: selfcheck
+    sensor_datapoint: 6
+    internal: True

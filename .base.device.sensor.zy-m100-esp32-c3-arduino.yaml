@@ -1,0 +1,108 @@
+# Device Specific Config
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+    version: 2.0.5
+    platform_version: 5.2.0
+
+# external_components:
+#   - source: github://pr#3820
+#     components: [ ledc ]
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  local: true
+
+uart:
+  - id: mcu
+    rx_pin: GPIO20
+    tx_pin: GPIO21
+    # baud_rate: 9600
+    baud_rate: 115200
+
+
+# Register the Tuya MCU connection
+tuya:
+  uart_id: mcu
+
+number:
+  - platform: "tuya"
+    name: "Sensitivity"
+    number_datapoint: 2
+    min_value: 0
+    max_value: 9
+    step: 1
+    icon: "mdi:ray-vertex"
+  - platform: "tuya"
+    name: "Near Detection"
+    number_datapoint: 3
+    min_value: 0
+    max_value: 1000
+    step: 1
+    mode: slider
+    # filters:
+    #   - multiply: 0.01
+    unit_of_measurement: "cm"
+    icon: "mdi:signal-distance-variant"
+    # device_class: "distance"
+    # state_class: "measurement"
+  - platform: "tuya"
+    name: "Far Detection"
+    number_datapoint: 4
+    min_value: 0
+    max_value: 1000
+    step: 1
+    mode: slider
+    unit_of_measurement: "cm"
+    icon: "mdi:signal-distance-variant"
+    # device_class: "distance"
+    # state_class: "measurement"
+  # - platform: "tuya"
+  #   name: "Target Distance"
+  #   number_datapoint: 9
+  #   min_value: 0
+  #   max_value: 1000
+  #   step: 1
+  #   unit_of_measurement: "cm"
+  #   icon: "mdi:eye"
+    # device_class: "distance"
+    # state_class: "measurement"
+  - platform: "tuya"
+    name: "Detection Delay"
+    number_datapoint: 101
+    min_value: 0
+    max_value: 100
+    step: 1
+    unit_of_measurement: "s"
+    mode: slider
+    icon: "mdi:clock"
+    # device_class: "duration"
+    # state_class: "measurement"
+  - platform: "tuya"
+    name: "Fading Time"
+    number_datapoint: 102
+    min_value: 0
+    max_value: 1500
+    step: 1
+    unit_of_measurement: "s"
+    mode: slider
+    icon: "mdi:clock"
+    # device_class: "duration"
+    # state_class: "measurement"
+

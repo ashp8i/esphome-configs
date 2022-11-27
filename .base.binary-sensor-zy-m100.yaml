@@ -1,0 +1,7 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: "tuya"
+    name: "Presence State"
+    sensor_datapoint: 1
+    device_class: motion

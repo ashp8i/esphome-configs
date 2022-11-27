@@ -15,29 +15,29 @@ static const char *const TAG = "tuya.cover";
 void TuyaCover::setup() {
   this->value_range_ = this->max_value_ - this->min_value_;
 
-  this->parent_->add_on_initialized_callback([this]() {
-    // Set the direction (if configured/supported).
-    this->set_direction_(this->invert_position_);
+  // this->parent_->add_on_initialized_callback([this]() {
+  //   // Set the direction (if configured/supported).
+  //   this->set_direction_(this->invert_position_);
 
-    // Handle configured restore mode.
-    switch (this->restore_mode_) {
-      case COVER_NO_RESTORE:
-        break;
-      case COVER_RESTORE: {
-        auto restore = this->restore_state_();
-        if (restore.has_value())
-          restore->apply(this);
-        break;
-      }
-      case COVER_RESTORE_AND_CALL: {
-        auto restore = this->restore_state_();
-        if (restore.has_value()) {
-          restore->to_call(this).perform();
-        }
-        break;
-      }
-    }
-  });
+  //   // Handle configured restore mode.
+  //   switch (this->restore_mode_) {
+  //     case COVER_NO_RESTORE:
+  //       break;
+  //     case COVER_RESTORE: {
+  //       auto restore = this->restore_state_();
+  //       if (restore.has_value())
+  //         restore->apply(this);
+  //       break;
+  //     }
+  //     case COVER_RESTORE_AND_CALL: {
+  //       auto restore = this->restore_state_();
+  //       if (restore.has_value()) {
+  //         restore->to_call(this).perform();
+  //       }
+  //       break;
+  //     }
+  //   }
+  // });
 
   uint8_t report_id = *this->position_id_;
   if (this->position_report_id_.has_value()) {

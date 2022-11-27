@@ -19,7 +19,7 @@ api:
 
 <<: !include .base-debug-tuya.yaml
 <<: !include .base.device.sensor.zy-m100-esp32-c3-arduino.yaml
-<<: !include .base.sensor-zy-m100.yaml
-<<: !include .base.text-sensor-zy-m100.yaml
-<<: !include .base.common-switch.yaml
 <<: !include .base.binary-sensor-zy-m100.yaml
+<<: !include .base.sensor-zy-m100.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.text-sensor-zy-m100.yaml

@@ -79,7 +79,7 @@ This is a device specific config that will compile correctly for the esp chip us
 
 # MQTT
 
-[`.base.mqtt-common.yaml`](.base.mqtt-common.yaml)
+[`.base.common-mqtt.yaml`](.base.common-mqtt.yaml)
 
 This is the mqtt broker connection config is present in most configs. It includes:
 
@@ -92,7 +92,7 @@ This is the mqtt broker connection config is present in most configs. It include
 
 # MQTT Automation
 
-.base.mqtt-\*-automation-\*.yaml
+.base.automation-mqtt-\*.yaml
 
 This is a fallback mechanism in case Home Assistant becomes Offline. It mainly caters for Shelly Plus i4 and includes:
 
@@ -106,14 +106,14 @@ Device topics are templated in substitutions
 
 # Sensor
 
-[`.base.sensor-common.yaml`](.base.sensor-common.yaml)
+[`.base.common-sensor.yaml`](.base.common-sensor.yaml)
 
 Sensors in Home Assistant. It includes:
 
 - WiFi Signal
 - Uptime
 
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)
 
 Includes the above plus:
 
@@ -121,7 +121,7 @@ Includes the above plus:
 
 # Text Sensor
 
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)
 
 This is the text sensor common config is present in all configs. It includes:
 
@@ -132,7 +132,7 @@ This is the text sensor common config is present in all configs. It includes:
 
 # Switch
 
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)
+[`.base.common-switch.yaml`](.base.common-switch.yaml)
 
 This is the common switch config is present in all configs. It includes:
 
@@ -141,7 +141,7 @@ This is the common switch config is present in all configs. It includes:
 
 # Binary Sensor
 
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 This is the binary sensor common config is present in all configs. It includes:
 
@@ -155,7 +155,7 @@ This is the binary sensor common config is present in all configs. It includes:
 
 # Zemismart BCM500DS-TYW
 
-[`.base.curtain-zemismart-bcm500ds-tyw.yaml`](.base.curtain-zemismart-bcm500ds-tyw.yaml)
+[`.base.device.curtain.zemismart-bcm500ds-tyw.yaml`](.base.device.curtain.zemismart-bcm500ds-tyw.yaml)
 
 [![Zemismart WiFi Curtain](./.images/zemismart-bcm500ds-tyw-001.jpg)](https://www.zemismart.com/products/bcm500ds-tyw)<br />
 [![Zemismart WiFi Curtain](./.images/zemismart-bcm500ds-tyw-005.jpg)](https://www.zemismart.com/products/bcm500ds-tyw)<br />
@@ -171,11 +171,11 @@ the following files are required and all following substitutions should be set: 
 see [`cover.living.yaml`](cover.living.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.curtain-zemismart-bcm500ds-tyw.yam`](.base.relay.shelly-1-generic)\
-[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.device.curtain.zemismart-bcm500ds-tyw.yaml`](.base.device.curtain.zemismart-bcm500ds-tyw.yaml)\
+[`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 This device incorporates the following features in addition to MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -185,7 +185,7 @@ This device incorporates the following features in addition to MQTT Automation, 
 
 # Athom 5W GU10
 
-[`.base.bulb.athom-gu10.yaml`](.base.bulb.athom-gu10.yaml)
+[`.base.device.bulb.athom-gu10.yaml`](.base.device.bulb.athom-gu10.yaml)
 
 [![Athom GU10 RGBCW for ESPHome](./.images/athom-gu10.jpg)](https://www.athom.tech/blank-1/esphome-gu10-rgbcw)<br />
 
@@ -203,15 +203,15 @@ the following files are required and all following substitutions should be set: 
 see [`bulb.ashish-spot1.yaml`](bulb.ashish-spot1.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.bulb.athom-gu10.yaml`](.base.bulb.athom-gu10.yaml)\
-[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.device.bulb.athom-gu10.yaml`](.base.device.bulb.athom-gu10.yaml)\
+[`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 optional\
 \
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
+[`.base.automation.light-mqtt-4-button-rgbcct.yaml`](.base.automation.light-mqtt-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and it is a personal preference
 
@@ -226,7 +226,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-C3
 
-[`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
+[`.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-001.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
 [![Iralan 42W Ceiling Light](./.images/iralan-42w-003.jpg)](https://www.aliexpress.com/item/1005003774487679.html)<br />
@@ -277,7 +277,7 @@ As with the ESP32-C3 initial support was poor until ESP-IDF support came out but
 Please not as you read this ledc is broken in the Arduino IDE for new ESP32 variants and requires a PR for an issue that is still open, that I use in the config below:
 
 [LEDC not working with ESP32-C3 and Arduino framework (but with ESP-IDF) #3128](https://github.com/esphome/issues/issues/3128)
-see PR appied in the file [`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)
+see PR appied in the file [`.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml)
 
 # Setup
 
@@ -285,15 +285,15 @@ the following files are required and all following substitutions should be set: 
 see [`light.master1.yaml`](light.master1.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-c3-arduino.yaml)\
+[`.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml)\
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-1-button.yaml`](.base.mqtt-light-automation-1-button.yaml) - if controlled by a Shelly Plus i4 using 1 button allocated for this light fixture\
+[`.base.automation.light-mqtt-1-button.yaml`](.base.automation.light-mqtt-1-button.yaml) - if controlled by a Shelly Plus i4 using 1 button allocated for this light fixture\
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -303,7 +303,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Iralan 42W Ceiling Light ESP32-S2
 
-[`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)
+[`.base.device.light.iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.device.light.iralan-42w-anl400yl-esp32-s2-arduino.yaml)
 
 Same as above however I have selected to use Unexpected Maker's TinyS2 as the WiFi Chip based on ESP32-S2.
 
@@ -322,15 +322,15 @@ the following files are required and all following substitutions should be set: 
 see [`light.stairs.yaml`](light.stairs.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.light-iralan-42w-anl400yl-esp32-s2-arduino.yaml)\
+[`.base.device.light.iralan-42w-anl400yl-esp32-s2-arduino.yaml`](.base.device.light.iralan-42w-anl400yl-esp32-s2-arduino.yaml)\
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-2-button.yaml`](.base.mqtt-light-automation-2-button.yaml) - if controlled by a Shelly Plus i4 using 2 buttons allocated for this light fixture\
+[`.base.automation.light-mqtt-2-button.yaml`](.base.automation.light-mqtt-2-button.yaml) - if controlled by a Shelly Plus i4 using 2 buttons allocated for this light fixture\
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -340,7 +340,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lumary 18W Recessed Panel Light
 
-[`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
+[`.base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml)
 
 [![Lumary 18W Recessed Panel Light](./.images/lumary-18w-001.jpg)](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)<br />
 [![Lumary 18W Recessed Panel Light](./.images/lumary-18w-006.jpg)](https://uk.lumarysmart.com/products/ultra-slim-led-recessed-panel-downlight-18w-4-pack)<br />
@@ -386,7 +386,7 @@ As with the ESP32-C3 initial support was poor until ESP-IDF support came out but
 Please not as you read this ledc is broken in the Arduino IDE for new ESP32 variants and requires a PR for an issue that is still open, that I use in the config below:
 
 [LEDC not working with ESP32-C3 and Arduino framework (but with ESP-IDF) #3128](https://github.com/esphome/issues/issues/3128)
-see PR appied in the file [`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)
+see PR appied in the file [`.base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml)
 
 
 # Setup
@@ -395,15 +395,15 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.light-lumary-18w-downlight-esp32-c3-arduino.yaml)\
+[`.base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml`](.base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml)\
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4 using 4 button for separate CT and RGB lights\
+[`.base.automation.light-mqtt-4-button-rgbcct.yaml`](.base.automation.light-mqtt-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4 using 4 button for separate CT and RGB lights\
 
 I have split the CT & RGB Channels, even though they are wired on a single High Output LED Strip and is a personal preference
 
@@ -415,7 +415,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 # Lusunt 36W Ceiling Light
 
-[`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)
+[`.base.device.light.lusunt-26w-esp12f.yaml`](.base.device.light.lusunt-26w-esp12f.yaml)
 
 [![Lusunt 36W Ceiling Light](./.images/lusunt-26w-001.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
 [![Lusunt 36W Ceiling Light](./.images/lusunt-26w-003.jpg)](https://www.amazon.co.uk/Dimmable-Bathroom-Waterproof-Adjustable-LUSUNT/dp/B07PDN5Q4G)<br />
@@ -451,12 +451,12 @@ the following files are required and all following substitutions should be set: 
 see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
-[`.base.light-lusunt-26w-esp12f.yaml`](.base.light-lusunt-26w-esp12f.yaml)\
+[`.base.device.light.lusunt-26w-esp12f.yaml`](.base.device.light.lusunt-26w-esp12f.yaml)\
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -538,13 +538,13 @@ the following files are required and all following substitutions should be set: 
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
+[`.base.automation.light-mqtt-4-button-rgbcct.yaml`](.base.automation.light-mqtt-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -625,13 +625,13 @@ the following files are required and all following substitutions should be set: 
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
+[`.base.automation.light-mqtt-4-button-rgbcct.yaml`](.base.automation.light-mqtt-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -717,13 +717,13 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light.miboxer-wb5-esp32-c3-arduino.yaml`](.base.light.miboxer-wb5-esp32-c3-arduino.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
+[`.base.automation.light-mqtt-4-button-rgbcct.yaml`](.base.automation.light-mqtt-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -771,13 +771,13 @@ see [`light.living.yaml`](light.living.yaml) for example
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml`](.base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml)\
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
-[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
 [`.base.binary-sensor-offdarks-remote.yaml`](.base.binary-sensor-offdarks-remote.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
+[`.base.automation.light-mqtt-4-button-rgbcct.yaml`](.base.automation.light-mqtt-4-button-rgbcct.yaml) - if controlled by a Shelly Plus i4
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -819,13 +819,13 @@ see [`.light.spare-28w-rgbcct.yaml`](.light.spare-28w-rgbcct.yaml) for example
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml`](.base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml)\
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
-[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
-[`.base.mqtt-light-automation-1-button.yaml`](.base.mqtt-light-automation-1-button.yaml) - if controlled by a Zigbee or WiFi Button Controller
+[`.base.automation.light-mqtt-1-button.yaml`](.base.automation.light-mqtt-1-button.yaml) - if controlled by a Zigbee or WiFi Button Controller
 
 I have split the CT & RGB Channels to avoid overloading the bulb however that should not be an issue, and is a personal preference
 
@@ -871,11 +871,11 @@ see [`relay.bath-entrance.yaml`](relay.bath-entrance.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.relay.shelly-1-generic`](.base.relay.shelly-1-generic)\
-[`.base.mqtt-light-automation-1-lonsonho.yaml`](.base.mqtt-light-automation-1-lonsonho.yaml) - if controlled by a Zigbee Button\
-[`.base.sensor-common.yaml`](.base.sensor-common.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.automation.light-mqtt-1-lonsonho.yaml`](.base.automation.light-mqtt-1-lonsonho.yaml) - if controlled by a Zigbee Button\
+[`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
 [`.base.switch-shelly-1-generic.yaml`](.base.switch-shelly-1-generic.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 This device incorporates the following features in addition to MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -921,11 +921,11 @@ see [`relay.bathroom.yaml`](relay.bathroom.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.relay.shelly-2.5-generic.yaml`](.base.relay.shelly-2.5-generic.yaml)\
-[`.base.mqtt-light-automation-4-button-rgbcct.yaml`](.base.mqtt-light-automation-2-lonsonho.yaml) - if controlled by a Zigbee Button\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
+[`.base.automation.light-mqtt-4-button-rgbcct.yaml`](.base.automation.light-mqtt-2-lonsonho.yaml) - if controlled by a Zigbee Button\
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
 [`.base.switch-shelly-2.5-generic.yaml`](.base.switch-shelly-2.5-generic.yaml)\
-[`.base.binary-sensor-common.yaml`](.base.binary-sensor-common.yaml)
+[`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
 
@@ -996,10 +996,10 @@ see [`switch.dining.yaml`](switch.dining.yaml) for example
 
 [`.base-debug.yaml`](.base-debug.yaml)\
 [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-arduino.yaml)\
-[`.base.mqtt-common.yaml`](.base.mqtt-common.yaml)\
-[`.base.sensor-common-die-temp.yaml`](.base.sensor-common-die-temp.yaml)\
-[`.base.text-sensor-common.yaml`](.base.text-sensor-common.yaml)\
-[`.base.switch-common.yaml`](.base.switch-common.yaml)\
+[`.base.common-mqtt.yaml`](.base.common-mqtt.yaml)\
+[`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
+[`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
+[`.base.common-switch.yaml`](.base.common-switch.yaml)\
 [`.base.binary-sensor-shelly-i4-4-buttons-fallback.yaml`](.base.binary-sensor-shelly-i4-4-buttons-fallback.yaml)
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:

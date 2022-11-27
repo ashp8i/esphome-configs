@@ -16,10 +16,10 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.light-zhunited-40w-jl-02-ceiling-light-esp32-c3-arduino-cct.yaml
+<<: !include .base.device.light.zhunited-40w-jl-02-ceiling-light-esp32-c3-arduino-cct.yaml
 <<: !include .base.global-mqtt-automation-cct.yaml
-# <<: !include .base.mqtt-light-automation-1-button-plus-2-button-switch.yaml
-<<: !include .base.sensor-common-die-temp.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
-<<: !include .base.binary-sensor-common.yaml
+# <<: !include .base.automation.light-mqtt-1-button-plus-2-button-switch.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml
+<<: !include .base.common-binary-sensor.yaml

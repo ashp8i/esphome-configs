@@ -24,10 +24,10 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml
+<<: !include .base.device.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml
 <<: !include .base.global-mqtt-automation.yaml
-<<: !include .base.mqtt-light-automation-1-button.yaml
-<<: !include .base.sensor-common.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
-<<: !include .base.binary-sensor-common.yaml
+<<: !include .base.automation.light-mqtt-1-button.yaml
+<<: !include .base.common-binary-sensor.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml

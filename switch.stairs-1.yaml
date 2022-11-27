@@ -8,7 +8,7 @@ substitutions:
   project_version: "1.0"
 
 <<: !include .base-debug.yaml
-<<: !include .base.switch.shelly-plus-i4-arduino.yaml
+<<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
 
 # Enable Home Assistant API
 api:
@@ -17,8 +17,8 @@ api:
     key: !secret stairsswitch1_noise_key
   reboot_timeout: 0s
 
-<<: !include .base.mqtt-common.yaml
-<<: !include .base.sensor-common-die-temp.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
+<<: !include .base.common-mqtt.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-i4-4-buttons-fallback.yaml

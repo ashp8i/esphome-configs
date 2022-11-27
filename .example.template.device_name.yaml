@@ -17,10 +17,10 @@ api:
 <<: !include .base-debug.yaml  # base common config
 <<: !include .base.device.yaml  # base device config
 # <<: !include .base.global-mqtt-automation.yaml  # base mqtt control + global variable
-<<: !include .base.mqtt-common.yaml  # base mqtt broker connection
+<<: !include .base.common-mqtt.yaml  # base mqtt broker connection
 <<: !include .base.mqtt-automation.yaml  # base mqtt control
-<<: !include .base.sensor-common-die-temp.yaml  # base common sensors incl. esp32 temp
-# <<: !include .base.sensor-common.yaml
+<<: !include .base.common-sensor-die-temp.yaml  # base common sensors incl. esp32 temp
+
 <<: !include .base.text-sensor-common.yaml  # base text sensors
 <<: !include .base.switch-common.yaml  # base common switch incl. restart/safe mode
-<<: !include .base.binary-sensor-common.yaml  # base common binary sensors
+<<: !include .base.common-binary-sensor.yaml  # base common binary sensors

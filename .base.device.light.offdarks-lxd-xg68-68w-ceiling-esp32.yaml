@@ -87,4 +87,4 @@ light:
         id: last_light_on
         value: '2'
     icon: "hue:ceiling-muscari"
-    <<: !include .base.light-rgb-effects.yaml
+    <<: !include .base.automation.light-rgb-effects.yaml

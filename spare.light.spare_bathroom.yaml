@@ -16,9 +16,9 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.light-lusunt-26w-esp12f.yaml
-<<: !include .base.mqtt-light-automation-tradfri.yaml
-<<: !include .base.sensor-common.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
-<<: !include .base.binary-sensor-common.yaml
+<<: !include .base.device.light.lusunt-26w-esp12f.yaml
+<<: !include .base.automation.light-mqtt-tradfri.yaml
+<<: !include .base.common-binary-sensor.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml

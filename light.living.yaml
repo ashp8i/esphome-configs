@@ -25,10 +25,10 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml
+<<: !include .base.device.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml
 <<: !include .base.global-rgbcct.yaml
-<<: !include .base.mqtt-light-automation-4-button-rgbcct.yaml
-<<: !include .base.sensor-common.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
+<<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-offdarks-remote.yaml

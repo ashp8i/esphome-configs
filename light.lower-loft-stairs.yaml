@@ -21,11 +21,11 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.light-lumary-18w-downlight-esp32-c3-arduino.yaml
+<<: !include .base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml
 <<: !include .base.global-mqtt-automation.yaml
-<<: !include .base.mqtt-light-automation-2-button-2-switch.yaml
-<<: !include .base.sensor-common-die-temp.yaml
-# <<: !include .base.sensor-common.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
-<<: !include .base.binary-sensor-common.yaml
+<<: !include .base.automation.light-mqtt-2-button-2-switch.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+# <<: !include .base.common-binary-sensor.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml

@@ -18,9 +18,9 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.relay.shelly-1-light.yaml
-<<: !include .base.mqtt-light-automation-1-lonsonho.yaml
-<<: !include .base.sensor-common.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
+<<: !include .base.device.relay.shelly-1-light.yaml
+<<: !include .base.automation.light-mqtt-1-lonsonho.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-1-edge-switch.yaml

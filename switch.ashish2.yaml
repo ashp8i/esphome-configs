@@ -19,9 +19,9 @@ api:
     key: !secret ashishswitch2_noise_key
   reboot_timeout: 0s
 
-<<: !include .base.mqtt-common.yaml
-<<: !include .base.sensor-common-die-temp.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
+<<: !include .base.common-mqtt.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-i4-4-buttons-testing.yaml
 <<: !include .base.button-testing-internal.yaml

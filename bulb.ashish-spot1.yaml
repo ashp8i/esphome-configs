@@ -27,9 +27,9 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.bulb.athom-gu10.yaml
-<<: !include .base.mqtt-light-automation-4-button-rgbcct.yaml
-<<: !include .base.sensor-common.yaml
-<<: !include .base.text-sensor-common.yaml
-<<: !include .base.switch-common.yaml
-<<: !include .base.binary-sensor-common.yaml
+<<: !include .base.device.bulb.athom-gu10.yaml
+<<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
+<<: !include .base.common-binary-sensor.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml

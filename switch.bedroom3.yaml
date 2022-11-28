@@ -1,0 +1,24 @@
+substitutions:
+  device_ssid: "B'room 3 Switch"
+  device_name: bedroom3switch
+  device_description: "Shelly Plus i4 Switch Module"
+  friendly_name: "Bedroom 3 Switch"
+  main_device_id: "bedroom3switch" # Put the name that you want to see in Home Assistant.
+  project_name: "shelly.plusi4-esp32-solo-arduino"
+  project_version: "1.0"
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret bedroom3switch_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base.common-mqtt.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml
+<<: !include .base.binary-sensor-shelly-i4-4-buttons-fallback.yaml

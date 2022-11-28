@@ -35,7 +35,7 @@ sensor:
     accuracy_decimals: 2
 # Light Sensor
   - platform: tuya
-    name: Light Intensity
+    name: "${friendly_name} Light Intensity"
     id: light_intensity
     sensor_datapoint: 104
     unit_of_measurement: "lux"
@@ -45,7 +45,7 @@ sensor:
 # TuyaMCU 99,1 | TuyaMCU 75,104"
 # Distance from Detected Object
   - platform: "tuya"
-    name: "Target Distance"
+    name: "${friendly_name} Target Distance"
     id: target_distance
     sensor_datapoint: 9
     unit_of_measurement: "cm"

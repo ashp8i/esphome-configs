@@ -1,0 +1,25 @@
+substitutions:
+  device_ssid: "Passage Motion"
+  device_name: passagesensor
+  device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
+  friendly_name: "Passage Sensor" # Put the name that you want to see in Home Assistant.
+  main_device_id: "passagesensor" # Put the name that you want to see in Home Assistant.
+  # switch1b1_topic: ashishswitch1/button/1/command
+  # switch1b2_topic: ashishswitch1/button/2/command
+  sensor_icon: "hue:ceiling-aurelle"
+  project_name: "tuya.zy-m100-wifi"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret passagemotion_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug-tuya.yaml
+<<: !include .base.device.sensor.zy-m100-esp32-c3-arduino.yaml
+<<: !include .base.binary-sensor-zy-m100.yaml
+<<: !include .base.sensor-zy-m100.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.text-sensor-zy-m100.yaml

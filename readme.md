@@ -428,7 +428,7 @@ This device incorporates the following features in addition to MQTT, MQTT Automa
 
 Driver Replacement
 
-Original Driver in this product is an RF based, with no GPIO's exposed or WiFi Connecticity thus had to find a drop in replacemnt, the original replacement found no longer exists therefore I cannot guarantee modifiability/compatability but the principle is the same. These type of drivers are hard to find required trawling thru aliexpress/alibaba.
+Original Driver in this product is an RF based, with no GPIO's exposed or WiFi Connecticity thus had to find a drop in replacement, the original replacement found no longer exists therefore I cannot guarantee modifiability/compatability but the principle is the same. These type of drivers are hard to find required trawling thru aliexpress/alibaba.
 
 My Replacement Driver used a W600 winner micro based chip to connect to the Tuya Platform, I replaced that for a Pin Identical ESP-12F.
 

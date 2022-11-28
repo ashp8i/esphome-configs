@@ -25,7 +25,7 @@ text_sensor:
   #     - "4 -> Comm Fault"
   #     - "5 -> Radar Fault"
   - platform: template
-    name: "Self Check Result"
+    name: "${friendly_name} Self Check Result"
     icon: mdi:eye
     lambda: |-
       if (id(selfcheck).state = 0) {

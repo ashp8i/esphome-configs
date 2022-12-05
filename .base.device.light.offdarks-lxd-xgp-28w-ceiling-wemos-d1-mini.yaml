@@ -43,8 +43,8 @@ output:
 
 light:
   - platform: cwww
-    name: ${friendly_name}    # Put the name that you want to see in Home Assistant.
-    id: ${device_name}    # id used in esphome.
+    name: ${device_name_white}    # Put the name that you want to see in Home Assistant.
+    id: ${device_id_white}    # id used in esphome.
     cold_white: output_cold_white
     warm_white: output_warm_white
     cold_white_color_temperature: 6536 K
@@ -58,8 +58,8 @@ light:
         value: '1'
     icon: "hue:ceiling-aurelle-circle"
   - platform: rgb
-    name: ${friendly_name_rgb}
-    id: ${device_name_rgb}
+    name: ${device_name_rgb}
+    id: ${device_id_rgb}
     red: output_red
     green: output_green
     blue: output_blue

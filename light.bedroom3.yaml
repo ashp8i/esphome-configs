@@ -1,15 +1,21 @@
 substitutions:
-  device_ssid: "Bedroom3"
+  device_ssid: "Bedroom 3"
   device_name: bedroom3
-  device_description: "ZH United 40W RGBCW Slim Ceiling Light"
-  friendly_name: "Bedroom 3"    # Put the name that you want to see in Home Assistant.
-  friendly_name_rgb: "Bedroom 3 RGB"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "bedroom3"    # Put the name that you want to see in Home Assistant.
-  rgb_device_id: "bedroom3rgb" # Put the name that you want to see in Home Assistant.
-  # switch1b1_topic: frontswitch/button/4/command
-  # switch2b1_topic: passageswitch2/button/3/command
-  # switch2b2_topic: passageswitch2/button/4/command
-  project_name: "zhunited.40w-rgbcw-slim-ceiling-light-esp32-c3-arduino"
+  friendly_name: "Bedroom 3" 
+  device_description: "OffDarks LXD-XGP 28W RGB-CCT Ceiling LED light"
+  device_name_white: "Bedroom 3 - White"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "Bedroom3white" 
+  device_name_rgb: "Bedroom 3 - RGB"
+  device_id_rgb: bedroom3rgb    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Bedroom 3 RGB"
+  frequency_rgb: 100 Hz
+  frequency_cw: 1000 Hz
+  frequency_ww: 1000 Hz
+  # switch1b1_topic: ashishswitch2/button/1/command
+  # switch1b2_topic: ashishswitch2/button/2/command
+  # switch1b3_topic: ashishswitch2/button/3/command
+  # switch1b4_topic: ashishswitch2/button/4/command
+  project_name: "offdarks.lxd-xgp-28w-rgbcw-ceiling-esp32-arduino"
   project_version: "1.0"
 
 # Enable Home Assistant API
@@ -20,11 +26,11 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.light.zhunited-40w-jl-02-ceiling-light-esp32-c3-arduino.yaml
-<<: !include .base.global-mqtt-automation.yaml
-# <<: !include .base.automation.light-mqtt-1-button-plus-2-button-switch.yaml
-
-<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.device.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml
+<<: !include .base.global-rgbcct.yaml
+# <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
+<<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml
+# <<: !include .base.binary-sensor-offdarks-remote.yaml
 <<: !include .base.common-binary-sensor.yaml

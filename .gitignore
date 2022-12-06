@@ -12,5 +12,6 @@
 # ignored directories
 .ffs_lock
 secrets.yaml
+secrets-*.yaml
 /.esphome/
 /.unused/

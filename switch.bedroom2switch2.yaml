@@ -1,5 +1,5 @@
 substitutions:
-  device_ssid: "Bedroom 2 Switch 2"
+  device_ssid: "Bed 2 Switch 2"
   device_name: bedroom2switch2
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Bedroom 2 Switch 2"
@@ -9,8 +9,9 @@ substitutions:
   project_name: "shelly.plusi4-esp32-solo-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug.yaml
-<<: !include .base.switch.shelly-plus-i4-testing.yaml
+<<: !include .base-debug-switching_2.yaml
+# <<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
+<<: !include .base.device.switch.shelly-plus-i4-testing.yaml
 
 # Enable Home Assistant API
 api:

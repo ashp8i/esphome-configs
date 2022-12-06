@@ -1,0 +1,27 @@
+substitutions:
+  device_ssid: "Bed 2 Lamp 2"
+  device_name: bedroom2lamp2
+  device_description: "Skydance S1-B(WT) Tuya ESP02 Dimmer"
+  friendly_name: "Bedroom 2 Lamp 2" # Put the name that you want to see in Home Assistant.
+  main_device_id: "bedroom2lamp2" # Put the name that you want to see in Home Assistant.
+  dimmer_icon: "hue:desk-lamp"
+#  switch1b1_topic: masterswitch/button/1/command
+  project_name: "skydance.s1-b-wt-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  encryption:
+    key: !secret bedroom2lamp2_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug-tuya.yaml
+<<: !include .base.device.light.skydance-s1-b-wt-esp32-c3-arduino.yaml
+# <<: !include .base.global-rgbcct.yaml
+# <<: !include .base.automation.light-mqtt-1-button.yaml
+<<: !include .base.common-sensor.yaml
+# <<: !include .base.common-binary-sensor.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml

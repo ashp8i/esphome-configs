@@ -1,11 +1,11 @@
 substitutions:
-  device_ssid: "Ashish Switch 2"
-  device_name: ashishswitch2
+  device_ssid: "Bedroom 2 Switch 2"
+  device_name: bedroom2switch2
   device_description: "Shelly Plus i4 Switch Module"
-  friendly_name: "Ashish Switch 2"
-  main_device_id: "ashishswitch2" # Put the name that you want to see in Home Assistant.
-  remote_node: ashishspot1.local
-  remote_light_id: ashishspot1
+  friendly_name: "Bedroom 2 Switch 2"
+  main_device_id: "bedroom2switch2" # Put the name that you want to see in Home Assistant.
+  remote_node: bedroom2spot1.local
+  remote_light_id: bedroom2spot1
   project_name: "shelly.plusi4-esp32-solo-arduino"
   project_version: "1.0"
 
@@ -16,7 +16,7 @@ substitutions:
 api:
   password: !secret api_password
   encryption:
-    key: !secret ashishswitch2_noise_key
+    key: !secret bedroom2switch2_noise_key
   reboot_timeout: 0s
 
 <<: !include .base.common-mqtt.yaml

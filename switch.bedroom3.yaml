@@ -7,7 +7,7 @@ substitutions:
   project_name: "shelly.plusi4-esp32-solo-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug.yaml
+<<: !include .base-debug-switching_1.yaml
 <<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
 
 # Enable Home Assistant API

@@ -2,8 +2,8 @@ substitutions:
   device_ssid: "Bathroom"
   device_name: bathroom
   device_description: "ZH United 40W RGBCW Slim Ceiling Light"
-  friendly_name: "Bedroom"    # Put the name that you want to see in Home Assistant.
-  friendly_name_rgb: "Bedroom RGB"    # Put the name that you want to see in Home Assistant.
+  friendly_name: "Bathroom"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Bathroom RGB"    # Put the name that you want to see in Home Assistant.
   main_device_id: "bathroom"    # Put the name that you want to see in Home Assistant.
   rgb_device_id: "bathroomrgb" # Put the name that you want to see in Home Assistant.
   # switch1b1_topic: frontswitch/button/4/command

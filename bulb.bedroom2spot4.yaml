@@ -1,13 +1,13 @@
 substitutions:
-  name: "bedroom2spot2"
-  device_ssid: "Bedroom 2 Spot 2"
-  device_main_id: bedroom2spottwocct
+  name: "bedroom2spot4"
+  device_ssid: "Bed 2 Spot 4"
+  device_main_id: bedroom2spotfourcct
   device_description: "Athom GU10 RGBCW LB10-5W-ESP-1"
-  friendly_name: "Bedroom 2 Spot 2"    # Put the name that you want to see in Home Assistant.
-  device_name_rgb: bedroom2spot2rgb
-  device_description_rgb: "Bedroom 2 Spot 2 RGB."    # Put the name that you want to see in Home Assistant.
-  friendly_name_rgb: "Bedroom 2 Spot 2 RGB"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "bedroom2spot2"    # Put the name that you want to see in Home Assistant.
+  friendly_name: "Bedroom 2 Spot 4"    # Put the name that you want to see in Home Assistant.
+  device_name_rgb: bedroom2spot4rgb
+  device_description_rgb: "Bedroom 2 Spot 4 RGB."    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Bedroom 2 Spot 4 RGB"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "frontentrance"    # Put the name that you want to see in Home Assistant.
   switch1b1_topic: bedroom2switch2/button/1/command
   switch1b2_topic: bedroom2switch2/button/2/command
   switch1b3_topic: bedroom2switch2/button/3/command
@@ -24,10 +24,10 @@ substitutions:
 api:
   password: !secret api_password
   encryption:
-    key: !secret bedroom2bulb2_noise_key
+    key: !secret bedroom2bulb4_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug.yaml
+<<: !include .base-debug-switching_4.yaml
 <<: !include .base.device.bulb.athom-gu10.yaml
 <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
 <<: !include .base.common-binary-sensor.yaml

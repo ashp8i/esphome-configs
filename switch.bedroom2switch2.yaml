@@ -9,7 +9,7 @@ substitutions:
   project_name: "shelly.plusi4-esp32-solo-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug-switching_2.yaml
+<<: !include .base-debug.yaml
 # <<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
 <<: !include .base.device.switch.shelly-plus-i4-testing.yaml
 

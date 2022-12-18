@@ -17,7 +17,7 @@ api:
     key: !secret bedroom2_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug-switching_1.yaml
+<<: !include .base-debug.yaml
 <<: !include .base.device.light.miboxer-wb5-esp32-c3-arduino.yaml
 <<: !include .base.automation.light-mqtt-2-button.yaml
 <<: !include .base.common-sensor-die-temp.yaml

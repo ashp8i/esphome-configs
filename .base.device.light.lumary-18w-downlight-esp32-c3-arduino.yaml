@@ -30,7 +30,7 @@ web_server:
     username: admin
     password: !secret web_server_password
   include_internal: true
-  # local: true
+  local: true
 
 output:
   - platform: ledc

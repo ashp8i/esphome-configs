@@ -69,46 +69,45 @@ bool Tuya::validate_message_() {
   if (at == 1)
     return new_byte == 0xAA;
 
-  // Byte 2: COMMAND
-  uint8_t command = data[2];
+  // Byte 2: VERSION
+  // no validation for the following fields:
+  uint8_t version = data[2];
   if (at == 2)
     return true;
-
-  // Byte 3: LENGTH
+  // Byte 3: COMMAND
+  uint8_t command = data[3];
   if (at == 3)
+    return true;
+
+  // Byte 4: LENGTH1
+  // Byte 5: LENGTH2
+  if (at <= 5)
     // no validation for these fields
     return true;
 
-  uint8_t length = data[3];
+  uint16_t length = (uint16_t(data[4]) << 8) | (uint16_t(data[5]));
 
   // wait until all data is read
-  if (at - 3 < length)
+  if (at - 6 < length)
     return true;
 
-  if (at == 3 + length) {
     // Byte 6+LEN: CHECKSUM - sum of all bytes (including header) modulo 256
     uint8_t rx_checksum = new_byte;
     uint8_t calc_checksum = 0;
-    for (uint32_t i = 2; i <= 2 + length; i++)
+  for (uint32_t i = 0; i < 6 + length; i++)
       calc_checksum += data[i];
 
     if (rx_checksum != calc_checksum) {
       ESP_LOGW(TAG, "Tuya Received invalid message checksum %02X!=%02X", rx_checksum, calc_checksum);
       return false;
     }
-    return true;
-  }
-
-  if (at == 3 + length + 1 && new_byte != 0x7E) {
-    ESP_LOGW(TAG, "Tuya Received invalid message tail (0x%02X)", new_byte);
-    return false;
-  }
 
   // valid message
-  const uint8_t *message_data = data + 4;
-  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X DATA=[%s] INIT_STATE=%u", command,  // NOLINT
-           hexencode(message_data, length - 1).c_str(), this->init_state_);
-  this->handle_command_(command, message_data, length - 1);
+  const uint8_t *message_data = data + 6;
+  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", command, version,
+           hexencode(message_data, length).c_str(), this->init_state_);
+  if (this->version_ == 0)
+    this->handle_command_((TuyaCommandType) command, version, message_data, length);
 
   // return false to reset rx buffer
   return false;

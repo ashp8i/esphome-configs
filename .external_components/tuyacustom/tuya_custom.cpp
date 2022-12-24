@@ -97,6 +97,7 @@ bool TuyaCustom::validate_message_() {
     // no validation for these fields
     return true;
   }
+}
 
 }  // namespace tuyacustom
 }  // namespace esphome

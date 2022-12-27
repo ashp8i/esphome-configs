@@ -19,7 +19,7 @@ esphome:
 external_components:
   - source:
       type: local
-      path: .external_components/tuya_v0
+      path: .external_components/v0
 
 # globals:
 #   - id: cover_open
@@ -54,17 +54,12 @@ uart:
   # - id: mcu
     rx_pin: GPIO13
     tx_pin: GPIO15
-    # rx_pin: GPIO1
-    # tx_pin: GPIO3
     baud_rate: 9600
-    # baud_rate: 115200
     debug:
       direction: BOTH
       dummy_receiver: false
-      # after:
-      #   delimiter: "\n"
-      # after:
-      #   delimiter: "\n"
+      after:
+        delimiter: "\n"
       sequence:
         - lambda: UARTDebug::log_hex(direction, bytes, ':');
 

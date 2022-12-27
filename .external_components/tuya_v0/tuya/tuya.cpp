@@ -1,4 +1,4 @@
-#include "tuya_v0.h"
+#include "tuya.h"
 #include "esphome/components/network/util.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
@@ -6,7 +6,7 @@
 // #include "esphome/core/gpio.h"
 
 namespace esphome {
-namespace tuya_v0 {
+namespace tuya {
 
 static const char *TAG = "tuya";
 static const int COMMAND_DELAY = 50;
@@ -104,10 +104,9 @@ bool Tuya::validate_message_() {
 
   // valid message
   const uint8_t *message_data = data + 6;
-  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", command, version,
-           hexencode(message_data, length).c_str(), this->init_state_);
-  if (this->version_ == 0)
-    this->handle_command_((TuyaCommandType) command, version, message_data, length);
+  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X DATA=[%s] INIT_STATE=%u", command,  // NOLINT
+           hexencode(message_data, length - 1).c_str(), this->init_state_);
+  this->handle_command_(command, message_data, length - 1);
 
   // return false to reset rx buffer
   return false;
@@ -297,134 +296,133 @@ void Tuya::send_empty_command_(TuyaCommandType command) {
   send_command_(TuyaCommand{.cmd = command, .payload = std::vector<uint8_t>{0x00}});
 }
 
-void Tuya::set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value) {
-  this->set_raw_datapoint_value_(datapoint_id, value, false);
-}
+// void Tuya::set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value) {
+//   this->set_raw_datapoint_value_(datapoint_id, value, false);
+// }
 
-void Tuya::set_boolean_datapoint_value(uint8_t datapoint_id, bool value) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BOOLEAN, value, 1, false);
-}
+// void Tuya::set_boolean_datapoint_value(uint8_t datapoint_id, bool value) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BOOLEAN, value, 1, false);
+// }
 
-void Tuya::set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::INTEGER, value, 4, false);
-}
+// void Tuya::set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::INTEGER, value, 4, false);
+// }
 
-void Tuya::set_string_datapoint_value(uint8_t datapoint_id, const std::string &value) {
-  this->set_string_datapoint_value_(datapoint_id, value, false);
-}
+// void Tuya::set_string_datapoint_value(uint8_t datapoint_id, const std::string &value) {
+//   this->set_string_datapoint_value_(datapoint_id, value, false);
+// }
 
-void Tuya::set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::ENUM, value, 1, false);
-}
+// void Tuya::set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::ENUM, value, 1, false);
+// }
 
-void Tuya::set_bitmask_datapoint_value(uint8_t datapoint_id, uint32_t value, uint8_t length) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BITMASK, value, length, false);
-}
+// void Tuya::set_bitmask_datapoint_value(uint8_t datapoint_id, uint32_t value, uint8_t length) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BITMASK, value, length, false);
+// }
 
-void Tuya::force_set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value) {
-  this->set_raw_datapoint_value_(datapoint_id, value, true);
-}
+// void Tuya::force_set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value) {
+//   this->set_raw_datapoint_value_(datapoint_id, value, true);
+// }
 
-void Tuya::force_set_boolean_datapoint_value(uint8_t datapoint_id, bool value) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BOOLEAN, value, 1, true);
-}
+// void Tuya::force_set_boolean_datapoint_value(uint8_t datapoint_id, bool value) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BOOLEAN, value, 1, true);
+// }
 
-void Tuya::force_set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::INTEGER, value, 4, true);
-}
+// void Tuya::force_set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::INTEGER, value, 4, true);
+// }
 
-void Tuya::force_set_string_datapoint_value(uint8_t datapoint_id, const std::string &value) {
-  this->set_string_datapoint_value_(datapoint_id, value, true);
-}
+// void Tuya::force_set_string_datapoint_value(uint8_t datapoint_id, const std::string &value) {
+//   this->set_string_datapoint_value_(datapoint_id, value, true);
+// }
 
-void Tuya::force_set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::ENUM, value, 1, true);
-}
+// void Tuya::force_set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::ENUM, value, 1, true);
+// }
 
-void Tuya::force_set_bitmask_datapoint_value(uint8_t datapoint_id, uint32_t value, uint8_t length) {
-  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BITMASK, value, length, true);
-}
+// void Tuya::force_set_bitmask_datapoint_value(uint8_t datapoint_id, uint32_t value, uint8_t length) {
+//   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::BITMASK, value, length, true);
+// }
 
-optional<TuyaDatapoint> Tuya::get_datapoint_(uint8_t datapoint_id) {
-  for (auto &datapoint : this->datapoints_) {
-    if (datapoint.id == datapoint_id)
-      return datapoint;
-  }
-  return {};
-}
+// optional<TuyaDatapoint> Tuya::get_datapoint_(uint8_t datapoint_id) {
+//   for (auto &datapoint : this->datapoints_) {
+//     if (datapoint.id == datapoint_id)
+//       return datapoint;
+//   }
+//   return {};
+// }
 
-void Tuya::set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, const uint32_t value,
-                                        uint8_t length, bool forced) {
-  ESP_LOGD(TAG, "Setting datapoint %u to %u", datapoint_id, value);
-  optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
-  if (!datapoint.has_value()) {
-    ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
-  } else if (datapoint->type != datapoint_type) {
-    ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
-    return;
-  } else if (!forced && datapoint->value_uint == value) {
-    ESP_LOGV(TAG, "Not sending unchanged value");
-    return;
-  }
+// void Tuya::set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, const uint32_t value,
+//                                         uint8_t length, bool forced) {
+//   ESP_LOGD(TAG, "Setting datapoint %u to %u", datapoint_id, value);
+//   optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
+//   if (!datapoint.has_value()) {
+//     ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
+//   } else if (datapoint->type != datapoint_type) {
+//     ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
+//     return;
+//   } else if (!forced && datapoint->value_uint == value) {
+//     ESP_LOGV(TAG, "Not sending unchanged value");
+//     return;
+//   }
 
-  std::vector<uint8_t> data;
-  switch (length) {
-    case 4:
-      data.push_back(value >> 24);
-      data.push_back(value >> 16);
-    case 2:
-      data.push_back(value >> 8);
-    case 1:
-      data.push_back(value >> 0);
-      break;
-    default:
-      ESP_LOGE(TAG, "Unexpected datapoint length %u", length);
-      return;
-  }
-  this->send_datapoint_command_(datapoint_id, datapoint_type, data);
-}
+//   std::vector<uint8_t> data;
+//   switch (length) {
+//     case 4:
+//       data.push_back(value >> 24);
+//       data.push_back(value >> 16);
+//     case 2:
+//       data.push_back(value >> 8);
+//     case 1:
+//       data.push_back(value >> 0);
+//       break;
+//     default:
+//       ESP_LOGE(TAG, "Unexpected datapoint length %u", length);
+//       return;
+//   }
+//   this->send_datapoint_command_(datapoint_id, datapoint_type, data);
+// }
 
-void Tuya::set_raw_datapoint_value_(uint8_t datapoint_id, const std::vector<uint8_t> &value, bool forced) {
-  ESP_LOGD(TAG, "Setting datapoint %u to %s", datapoint_id, format_hex_pretty(value).c_str());
-  optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
-  if (!datapoint.has_value()) {
-    ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
-  } else if (datapoint->type != TuyaDatapointType::RAW) {
-    ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
-    return;
-  } else if (!forced && datapoint->value_raw == value) {
-    ESP_LOGV(TAG, "Not sending unchanged value");
-    return;
-  }
-  this->send_datapoint_command_(datapoint_id, TuyaDatapointType::RAW, value);
-}
+// void Tuya::set_raw_datapoint_value_(uint8_t datapoint_id, const std::vector<uint8_t> &value, bool forced) {
+//   ESP_LOGD(TAG, "Setting datapoint %u to %s", datapoint_id, format_hex_pretty(value).c_str());
+//   optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
+//   if (!datapoint.has_value()) {
+//     ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
+//   } else if (datapoint->type != TuyaDatapointType::RAW) {
+//     ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
+//     return;
+//   } else if (!forced && datapoint->value_raw == value) {
+//     ESP_LOGV(TAG, "Not sending unchanged value");
+//     return;
+//   }
+//   this->send_datapoint_command_(datapoint_id, TuyaDatapointType::RAW, value);
+// }
 
-void Tuya::set_string_datapoint_value_(uint8_t datapoint_id, const std::string &value, bool forced) {
-  ESP_LOGD(TAG, "Setting datapoint %u to %s", datapoint_id, value.c_str());
-  optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
-  if (!datapoint.has_value()) {
-    ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
-  } else if (datapoint->type != TuyaDatapointType::STRING) {
-    ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
-    return;
-  } else if (!forced && datapoint->value_string == value) {
-    ESP_LOGV(TAG, "Not sending unchanged value");
-    return;
-  }
-  std::vector<uint8_t> data;
-  for (char const &c : value) {
-    data.push_back(c);
-  }
-  this->send_datapoint_command_(datapoint_id, TuyaDatapointType::STRING, data);
+// void Tuya::set_string_datapoint_value_(uint8_t datapoint_id, const std::string &value, bool forced) {
+//   ESP_LOGD(TAG, "Setting datapoint %u to %s", datapoint_id, value.c_str());
+//   optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
+//   if (!datapoint.has_value()) {
+//     ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
+//   } else if (datapoint->type != TuyaDatapointType::STRING) {
+//     ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
+//     return;
+//   } else if (!forced && datapoint->value_string == value) {
+//     ESP_LOGV(TAG, "Not sending unchanged value");
+//     return;
+//   }
+//   std::vector<uint8_t> data;
+//   for (char const &c : value) {
+//     data.push_back(c);
+//   }
+//   this->send_datapoint_command_(datapoint_id, TuyaDatapointType::STRING, data);
 
 void Tuya::set_datapoint_value(std::vector<uint8_t> &data) {
   data.insert(data.begin(), data.size() + 1);
   this->send_command_(TuyaCommand{.cmd = TuyaCommandType::DATA_UPDATE, .payload = data});
 }
 
-// void Tuya::register_listener(uint8_t datapoint_id, TuyaDatapointType type,
-//                              const std::function<void(TuyaDatapoint)> &func) {
-void Tuya::register_listener(uint8_t datapoint_id, const std::function<void(TuyaDatapoint)> &func) {
+void Tuya::register_listener(uint8_t datapoint_id, TuyaDatapointType type,
+                             const std::function<void(TuyaDatapoint)> &func) {
   auto listener = TuyaDatapointListener{
       .datapoint_id = datapoint_id,
       .type = type,
@@ -438,5 +436,5 @@ void Tuya::register_listener(uint8_t datapoint_id, const std::function<void(Tuya
       func(datapoint);
 }
 
-}  // namespace tuya_v0
+}  // namespace tuya
 }  // namespace esphome

@@ -6,7 +6,7 @@
 #include "esphome/components/uart/uart.h"
 
 namespace esphome {
-namespace tuya_v0 {
+namespace tuya {
 
 enum class TuyaDatapointType : uint8_t {
   RAW = 0x00,      // variable length
@@ -67,9 +67,6 @@ class Tuya : public Component, public uart::UARTDevice {
   void add_ignore_mcu_update_on_datapoints(uint8_t ignore_mcu_update_on_datapoints) {
     this->ignore_mcu_update_on_datapoints_.push_back(ignore_mcu_update_on_datapoints);
   }
-  // void add_on_initialized_callback(std::function<void()> callback) {
-  //   this->initialized_callback_.add(std::move(callback));
-  // }
 
  protected:
   void handle_char_(uint8_t c);
@@ -94,5 +91,5 @@ class Tuya : public Component, public uart::UARTDevice {
   std::vector<TuyaCommand> command_queue_;
 };
 
-}  // namespace tuya_v0
+}  // namespace tuya
 }  // namespace esphome

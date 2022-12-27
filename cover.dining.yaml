@@ -17,7 +17,7 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug-tuya.yaml
-<<: !include .base.device.curtain.zemismart-bcm500ds-tyw.yaml
+<<: !include .base.device.curtain.zemismart-bcm500ds-tyw-custom-v0.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml

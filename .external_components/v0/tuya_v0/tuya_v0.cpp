@@ -1,8 +1,8 @@
 #include "tuya_v0.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
+#include "esphome/core/util.h"
 // #include "esphome/components/network/util.h"
-// #include "esphome/core/util.h"
 // #include "esphome/core/gpio.h"
 
 namespace esphome {
@@ -34,6 +34,8 @@ void Tuya::dump_config() {
     ESP_LOGCONFIG(TAG, "  If no further output is received, confirm that this is a supported Tuya device.");
     return;
   }
+  // if (this->version_ == 0)
+  //   ESP_LOGCONFIG(TAG, "  Battery powered device detected");
   for (auto &info : this->datapoints_) {
     if (info.type == TuyaDatapointType::BOOLEAN)
       ESP_LOGCONFIG(TAG, "  Datapoint %d: switch (value: %s)", info.id, ONOFF(info.value_bool));
@@ -105,7 +107,7 @@ bool Tuya::validate_message_() {
   const uint8_t *message_data = data + 6;
   ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", command, version,  // NOLINT
            hexencode(message_data, length).c_str(), this->init_state_);
-  this->handle_command_(command, message_data, length);
+  this->handle_command_(command, version, message_data, length);
 
   // return false to reset rx buffer
   return false;
@@ -199,7 +201,7 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
     //   this->send_command_(TuyaCommand{.cmd = TuyaCommandType::WIFI_TEST, .payload = std::vector<uint8_t>{0x00,
     //   0x00}}); break;
     // }
-    case TuyaCommandType::REALTIME_REPORT: {
+    case TuyaCommandType::DATA_UPDATE: {
       this->handle_datapoint_(buffer, len);
       break;
       }
@@ -209,7 +211,7 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
 }
 
 void Tuya::handle_datapoint_(const uint8_t *buffer, size_t len) {
-  if (len < 2)
+  if (len >= 4)
     return;
 
   for (auto &listener : this->listeners_) {
@@ -224,7 +226,7 @@ void Tuya::handle_datapoint_(const uint8_t *buffer, size_t len) {
         ESP_LOGV(TAG, "Datapoint index %u found in ignore_mcu_update_on_datapoints list, dropping MCU update",
                  datapoint.id);
       return;
-    }
+      }
     }
 
     switch (datapoint.type) {
@@ -238,7 +240,7 @@ void Tuya::handle_datapoint_(const uint8_t *buffer, size_t len) {
         datapoint.value_enum = buffer[datapoint.id];
             break;
           default:
-            return;
+        return;
         }
     ESP_LOGV(TAG, "Datapoint %u update to %u", datapoint.id, datapoint.value_uint);
 
@@ -258,24 +260,28 @@ void Tuya::handle_datapoint_(const uint8_t *buffer, size_t len) {
     }
   }
 
-void Tuya::send_command_(uint8_t command, const uint8_t *buffer, uint16_t len) {
-  uint8_t len_hi = len >> 8;
-  uint8_t len_lo = len >> 0;
-  uint8_t version = 0;
+void Tuya::send_raw_command_(TuyaCommand command) {
+  uint8_t length = (uint8_t)(command.payload.size());
+  // uint8_t len_hi = len >> 8;
+  // uint8_t len_lo = len >> 0;
+  // uint8_t version = 0;
 
   this->last_command_timestamp_ = millis();
 
-  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X DATA=[%s] INIT_STATE=%u", command.cmd, version,  // NOLINT
+  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X DATA=[%s] VERSION=%u DATA=[%s] INIT_STATE=%u", command.cmd,  // NOLINT
            hexencode(command.payload).c_str(), this->init_state_);
 
-  this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo});
+  // this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo});
+  this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd});
   if (!command.payload.empty())
     this->write_array(command.payload.data(), command.payload.size());
 
-    uint8_t checksum = 0x55 + 0xAA + (uint8_t) command.cmd + len_hi + len_lo;
+  // uint8_t checksum = 0x55 + 0xAA + (uint8_t) command.cmd + len_hi + len_lo;
+  uint8_t checksum = (uint8_t) command.cmd;
   for (auto &data : command.payload)
     checksum += data;
   this->write_byte(checksum);
+  // this->write_byte(0xFF);
 }
 
 void Tuya::process_command_queue_() {
@@ -298,7 +304,7 @@ void Tuya::send_empty_command_(TuyaCommandType command) {
 
 void Tuya::set_datapoint_value(std::vector<uint8_t> &data) {
   data.insert(data.begin(), data.size() + 1);
-  this->send_command_(TuyaCommand{.cmd = TuyaCommandType::REALTIME_REPORT, .payload = data});
+  this->send_command_(TuyaCommand{.cmd = TuyaCommandType::DATA_UPDATE, .payload = data});
 }
 
 void Tuya::register_listener(uint8_t datapoint_id, TuyaDatapointType type,

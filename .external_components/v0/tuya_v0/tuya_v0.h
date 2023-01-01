@@ -1,7 +1,7 @@
 #pragma once
 
 #include "esphome/core/component.h"
-#include "esphome/core/defines.h"
+// #include "esphome/core/defines.h"
 // #include "esphome/core/helpers.h"
 #include "esphome/components/uart/uart.h"
 
@@ -27,9 +27,9 @@ struct TuyaDatapoint {
   union {
     bool value_bool;
     int value_int;
-    uint8_t value_uint;
+    uint32_t value_uint;
     uint8_t value_enum;
-    uint8_t value_bitmask;
+    uint16_t value_bitmask;
   };
   std::string value_string;
 };
@@ -42,12 +42,14 @@ struct TuyaDatapointListener {
 
 enum class TuyaCommandType : uint8_t {
   HEARTBEAT = 0x00,
-  PRODUCT_QUERY = 0x01,
-  NETWORK_STATUS = 0x02,
-  WIFI_RESET = 0x03,
+  // PRODUCT_QUERY = 0x01,
+  DATA_UPDATE = 0x02,
+  WIFI_RESET = 0x06,
+  // NETWORK_STATUS = 0x02,
+  // WIFI_RESET = 0x03,
   WIFI_CONF = 0x04,
   REALTIME_REPORT = 0x05,
-  LOCAL_TIME = 0x06,
+  // LOCAL_TIME = 0x06,
   WIFI_TEST = 0x07,
   RECORD_REPORT = 0x08,
   SEND_COMMAND = 0x09,
@@ -60,7 +62,7 @@ enum class TuyaCommandType : uint8_t {
 };
 
 enum class TuyaInitState : uint8_t {
-  INIT_HEARTBEAT = 0x00,
+  INIT_HEARTBEAT = 0x01,
   INIT_PRODUCT,
   INIT_CONF,
   INIT_WIFI,
@@ -89,39 +91,24 @@ class Tuya : public Component, public uart::UARTDevice {
   void handle_char_(uint8_t c);
   void handle_datapoint_(const uint8_t *buffer, size_t len);
   bool validate_message_();
+
   void handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len);
   void send_raw_command_(TuyaCommand command);
   void process_command_queue_();
   void send_command_(TuyaCommand command);
   void send_empty_command_(TuyaCommandType command);
-  // void send_empty_command_(TuyaCommandTypeV0 command);
-  // void set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, uint32_t value,
-  //                                   uint8_t length, bool forced);
-  // void set_string_datapoint_value_(uint8_t datapoint_id, const std::string &value, bool forced);
-  // void set_raw_datapoint_value_(uint8_t datapoint_id, const std::vector<uint8_t> &value, bool forced);
-  // void send_datapoint_command_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, std::vector<uint8_t> data);
-  // void set_status_pin_();
-  // void send_wifi_status_();
 
-// #ifdef USE_TIME
-//   void send_local_time_();
-//   optional<time::RealTimeClock *> time_id_{};
-// #endif
   TuyaInitState init_state_ = TuyaInitState::INIT_HEARTBEAT;
   int gpio_status_ = -1;
   int gpio_reset_ = -1;
   uint32_t last_command_timestamp_ = 0;
-  // uint32_t last_rx_char_timestamp_ = 0;
   std::string product_ = "";
-  // int version_ = -1;
+  int version_ = -1;
   std::vector<TuyaDatapointListener> listeners_;
   std::vector<TuyaDatapoint> datapoints_;
   std::vector<uint8_t> rx_message_;
   std::vector<uint8_t> ignore_mcu_update_on_datapoints_{};
   std::vector<TuyaCommand> command_queue_;
-  // optional<TuyaCommandType> expected_response_{};
-  // uint8_t wifi_status_ = -1;
-  // CallbackManager<void()> initialized_callback_{};
 };
 
 }  // namespace tuya_v0

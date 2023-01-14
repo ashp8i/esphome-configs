@@ -43,7 +43,7 @@ web_server:
     username: admin
     password: !secret web_server_password
   include_internal: true
-  # local: true
+  local: true
 
 # status_led:
 #   pin:
@@ -65,18 +65,18 @@ uart:
 
 # Register the Tuya MCU connection
 tuya:
-#   # uart_id: mcu
+#     uart_id: mcu
 
 cover:
   - platform: tuya
     id: "${main_device_id}"
     name: "${cover_name}"
-    control_datapoint: 101
-    position_datapoint: 102
-    position_report_datapoint: 103
+    position_datapoint: 101
+    control_datapoint: 102
+    position_report_datapoint: 101
     direction_datapoint: 105
     min_value: 0
-    max_value: 255
+    max_value: 100
     invert_position: true
     device_class: curtain
 

@@ -51,7 +51,7 @@ void TuyaCover::setup() {
       return;
     }
     auto pos = float(datapoint.value_uint - this->min_value_) / this->value_range_;
-    this->position = pos;
+    this->position = 1.0f - pos;
     this->publish_state();
   });
 }

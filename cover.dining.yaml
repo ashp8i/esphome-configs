@@ -5,7 +5,6 @@ substitutions:
   friendly_name: "Dining Curtain" # Put the name that you want to see in Home Assistant.
   main_device_id: "diningcurtain" # Put the name that you want to see in Home Assistant.
   cover_name: "Dining Curtain"
-  # switch1b1_topic: masterswitch/button/1/command
   project_name: "zemismart.bcm500ds-tyw"
   project_version: "1.0"
 

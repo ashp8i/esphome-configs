@@ -5,8 +5,6 @@ substitutions:
   friendly_name: "Living Curtain" # Put the name that you want to see in Home Assistant.
   main_device_id: "livingcurtain" # Put the name that you want to see in Home Assistant.
   cover_name: "Living Curtain"
-  # cover_icon: "mdi:curtains"
-  # switch1b1_topic: masterswitch/button/1/command
   project_name: "zemismart.bcm500ds-tyw"
   project_version: "1.0"
 
@@ -18,7 +16,7 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug-tuya.yaml
-<<: !include .base.device.curtain.zemismart-bcm500ds-tyw.yaml
+<<: !include .base.device.curtain.zemismart-bcm500ds-tyw-working.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml

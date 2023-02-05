@@ -18,7 +18,6 @@ substitutions:
 
 # Enable Home Assistant API
 api:
-  password: !secret api_password
   encryption:
     key: !secret spare-28w-rgbcct_noise_key
   reboot_timeout: 0s

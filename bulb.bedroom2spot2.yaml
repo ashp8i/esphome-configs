@@ -22,7 +22,6 @@ substitutions:
   
 # Enable Home Assistant API
 api:
-  password: !secret api_password
   encryption:
     key: !secret bedroom2bulb2_noise_key
   reboot_timeout: 0s

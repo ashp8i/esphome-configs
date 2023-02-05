@@ -16,7 +16,6 @@ substitutions:
 
 # Enable Home Assistant API
 api:
-  password: !secret api_password
   encryption:
     key: !secret front_passage2_noise_key
   reboot_timeout: 0s

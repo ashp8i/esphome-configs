@@ -26,7 +26,7 @@ api:
     key: !secret bedroom2bulb3_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug-switching_3.yaml
+<<: !include .base-debug.yaml
 <<: !include .base.device.bulb.athom-gu10.yaml
 <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
 <<: !include .base.common-binary-sensor.yaml

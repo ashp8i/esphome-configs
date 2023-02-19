@@ -3,14 +3,14 @@ substitutions:
   device_name: diningroomlight
   device_description: "Ceiling LED light with IR remote located in Ashish Room with discreet Tunable White & RGB Front Light (shows up as separate lights)."
   friendly_name: "Dining Room Light"    # Put the name that you want to see in Home Assistant.
-  device_name_rgb: diningroomlightrgb
-  device_description_rgb: "Dining Room Light RGB."    # Put the name that you want to see in Home Assistant.
-  friendly_name_rgb: "Dining Room Light RGB"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "diningroomlight"    # Put the name that you want to see in Home Assistant.
-  switch1b1_topic: ashishswitch2/button/1/command
-  switch1b2_topic: ashishswitch2/button/2/command
-  switch1b3_topic: ashishswitch2/button/3/command
-  switch1b4_topic: ashishswitch2/button/4/command
+  device_id_white: diningroomlightwhite    # Put the name that you want to see in Home Assistant.
+  device_name_white: "Dining Room Light White"
+  device_id_rgb: diningroomlightrgb    # Put the name that you want to see in Home Assistant.
+  device_name_rgb: "Dining Room Light RGB"
+  switch1b1_topic: diningswitch/button/1/command
+  switch1b2_topic: diningswitch/button/2/command
+  switch1b3_topic: diningswitch/button/3/command
+  switch1b4_topic: diningswitch/button/4/command
   frequency_rgb: 250 Hz
   frequency_cw: 1000 Hz
   frequency_ww: 1000 Hz

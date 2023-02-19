@@ -4,17 +4,18 @@ substitutions:
   friendly_name: "Bedroom 3" 
   device_description: "OffDarks LXD-XGP 28W RGB-CCT Ceiling LED light"
   device_name_white: "Bedroom 3 - White"    # Put the name that you want to see in Home Assistant.
-  device_id_white: "Bedroom3white" 
+  device_id_white: "Bedroom3white"
   device_name_rgb: "Bedroom 3 - RGB"
   device_id_rgb: bedroom3rgb    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Bedroom 3 RGB"
   frequency_rgb: 100 Hz
   frequency_cw: 1000 Hz
   frequency_ww: 1000 Hz
-  # switch1b1_topic: ashishswitch2/button/1/command
-  # switch1b2_topic: ashishswitch2/button/2/command
-  # switch1b3_topic: ashishswitch2/button/3/command
-  # switch1b4_topic: ashishswitch2/button/4/command
+  switch1b1_topic: bedroom3switch/button/1/command
+  switch1b2_topic: bedroom3switch/button/2/command
+  switch1b3_topic: bedroom3switch/button/3/command
+  switch1b4_topic: bedroom3switch/button/4/command
+  aqara_remote_b1_topic: zigbee2mqtt/Rashila Stairs/action
   project_name: "offdarks.lxd-xgp-28w-rgbcw-ceiling-esp32-arduino"
   project_version: "1.0"
 
@@ -27,7 +28,7 @@ api:
 <<: !include .base-debug.yaml
 <<: !include .base.device.light.offdarks-lxd-xgp-28w-ceiling-wemos-d1-mini.yaml
 <<: !include .base.global-rgbcct.yaml
-# <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
+<<: !include .base.automation.light-mqtt-4-button-rgbcct-plus-zigbee2mqtt.yaml
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml

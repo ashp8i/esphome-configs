@@ -5,7 +5,7 @@ substitutions:
   device_description: Bathroom Wall Light
   friendly_name: "Bathroom Wall" # Put the name that you want to see in Home Assistant.
   main_device_id: "bathroomwallrelay"    # Put the name that you want to see in Home Assistant.
-  lonsonho1_topic: ashishswitch2/button/1/command
+  lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
   light_icon: "mdi:wall-sconce-flat-outline"
   project_name: "shelly.shelly1-relay-light"
   project_version: "1.0"
@@ -18,7 +18,7 @@ api:
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.relay.shelly-1-light.yaml
-<<: !include .base.automation.light-mqtt-1-lonsonho.yaml
+<<: !include .base.automation.light-mqtt-2-lonsonho-bath-wall-light.yaml
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml

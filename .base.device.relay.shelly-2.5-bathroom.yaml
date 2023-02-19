@@ -18,12 +18,6 @@ web_server:
   include_internal: true
   # local: true
 
-# globals:
-#   - id: last_light_on
-#     type: int
-#     restore_value: no
-#     initial_value: '1'
-
 # Device Specific Config
 i2c:
   sda: GPIO12

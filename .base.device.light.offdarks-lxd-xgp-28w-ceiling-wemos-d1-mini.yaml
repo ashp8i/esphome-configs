@@ -7,7 +7,7 @@ esphome:
 wifi:
     ssid: !secret wifi_all_ssid
     password: !secret wifi_all_password
-    use_address: passagelight.local
+    # use_address: passagelight.local
 
     # Enable fallback hotspot (captive portal) in case wifi connection fails
     ap:

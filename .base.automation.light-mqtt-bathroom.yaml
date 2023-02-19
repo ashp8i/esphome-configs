@@ -4,13 +4,13 @@ mqtt:
   password: !secret mqtt_password
   discovery: true
   on_message:
-    - topic: $lonsonho1_topic
+    - topic: $switch1_topic
       payload: 'SHORT_CLICK'
       qos: 0
       then:
-        - light.toggle: ${main_device_id}_light
-    - topic: $lonsonho2_topic
-      payload: 'SHORT_CLICK'
+        - light.toggle: ${main_device_id}
+    - topic: $ikea_tradfri_topic
+      payload: 'toggle'
       qos: 0
       then:
-        - fan.toggle: ${main_device_id}_fan
+        - light.toggle: ${main_device_id}

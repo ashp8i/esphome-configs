@@ -5,8 +5,7 @@ substitutions:
   device_description: Toilet Relay
   friendly_name: "Toilet" # Put the name that you want to see in Home Assistant.
   main_device_id: "toiletrelay"    # Put the name that you want to see in Home Assistant.
-  lonsonho1_topic: ashishswitch22/button/1/command
-  lonsonho2_topic: ashishswitch22/button/1/command
+  lonsonho_dual_topic: zigbee2mqtt/Toilet Wall/action
   light_icon: "hue:bulb-spot-hung"
   project_name: "shelly.shelly25-relay-light-fan"
   project_version: "1.0"
@@ -19,7 +18,7 @@ api:
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.relay.shelly-2.5-toilet.yaml
-<<: !include .base.automation.light-mqtt-2-lonsonho.yaml
+<<: !include .base.automation.light-mqtt-2-lonsonho-toilet.yaml
 <<: !include .base.sensor-shelly2.5.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml

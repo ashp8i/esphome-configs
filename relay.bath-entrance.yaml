@@ -5,7 +5,7 @@ substitutions:
   device_description: Bath Entrance Light
   friendly_name: "Bath Entrance" # Put the name that you want to see in Home Assistant.
   main_device_id: "bathentrancerelay"    # Put the name that you want to see in Home Assistant.
-  lonsonho1_topic: ashishswitch2/button/1/command
+  lonsonho_single_topic: zigbee2mqtt/Bath & Toilet Hallway/action
   light_icon: "hue:bulb-spot-hung"
   project_name: "shelly.shelly1-relay-light"
   project_version: "1.0"

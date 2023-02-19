@@ -4,8 +4,8 @@ mqtt:
   password: !secret mqtt_password
   discovery: true
   on_message:
-    - topic: $lonsonho1_topic
-      payload: 'SHORT_CLICK'
+    - topic: $lonsonho_single_topic
+      payload: 'single'
       qos: 0
       then:
         - light.toggle: ${main_device_id}

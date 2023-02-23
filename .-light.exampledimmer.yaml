@@ -1,0 +1,122 @@
+esphome:
+  name: $devicename
+  platform: ESP8266
+  board: esp01_1m
+
+substitutions:
+  devicename: light-remote-switch        # name of this node  
+  upper_devicename: "Light and Switch"   # English Readable name for the node
+  short_devicename: "LightSwitch"        # Short form English readable name
+  hass_light: "light.study_ceiling"      # HASS entity name of the HASS light to be controlled
+  address_ip: X.Y.Z.A
+  address_subnet: Y.Y.Y.Y
+  address_gateway: X.Y.Z.B
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  domain: !secret wifi_domain
+  reboot_timeout: 5min
+
+  manual_ip:
+    static_ip: $address_ip
+    gateway: $address_gateway
+    subnet: $address_subnet
+
+logger:
+api:
+ota:
+
+
+globals:
+  - id: bool_dim_or_bright #false = dim, true = brighten
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+switch:
+# This is to restart the ESPHome device remotely
+  - platform: restart
+    name: ${upper_devicename} - Restart
+
+sensor:
+  - platform: wifi_signal
+    name: ${upper_devicename} - WiFi
+    update_interval: 60s
+
+  - platform: homeassistant #a local sensor to hold the HASS light brightness
+    id: light_brightness_from_hass
+    entity_id: $hass_light 
+    attribute: brightness    
+
+binary_sensor:
+  - platform: homeassistant # a local binary sensor to hold the HASS light on / off status
+    id: controlled_light_on_hass
+    entity_id: $hass_light 
+
+  - platform: gpio
+    pin: # Note: This must be true or the ESP-01 will not boot is using a touch switch module (which must be set to be active low)
+      number: 0
+      inverted: TRUE 
+      mode: INPUT_PULLUP
+    id: touch_switch
+    filters:
+      - delayed_on: 50ms  
+      - delayed_off: 50ms 
+    on_click:
+      then:
+        - if:
+            condition:
+              binary_sensor.is_off: controlled_light_on_hass # if light is off, turn it on
+            then:
+              - homeassistant.service:
+                  service: light.turn_on
+                  data:
+                    entity_id: $hass_light 
+            else: # else it is on so turn it off
+              - homeassistant.service:
+                  service: light.turn_off
+                  data:
+                    entity_id: $hass_light 
+    on_press:
+      then:
+      - if:
+          condition: 
+              lambda: |-
+                return id(bool_dim_or_bright);
+# When above condition evaluates to true - brighter function else dimmer
+          then:
+          - delay: 0.5s
+          - while:
+              condition:
+                binary_sensor.is_on: touch_switch
+              then:
+                - homeassistant.service:
+                    service: light.turn_on
+                    data:
+                      brightness_step: "5"
+#                      transition: "1" 
+                      entity_id: $hass_light 
+                - delay: 0.05s
+          - lambda: |-
+              id(bool_dim_or_bright) = (false);
+          else:
+          - delay: 0.5s
+          - while:
+              condition:
+                and:
+                  - binary_sensor.is_on: touch_switch
+# This is to set the minimum value so that touch sensor only allows pre-set minimum
+                  - sensor.in_range:
+                      id: light_brightness_from_hass
+                      above: 10
+              then:
+                - homeassistant.service:
+                    service: light.turn_on
+                    data:
+                      brightness_step: "-5"
+#                      transition: "1"
+                      entity_id: $hass_light 
+                - delay: 0.05s
+          - lambda: |-
+              id(bool_dim_or_bright) = (true);

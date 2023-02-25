@@ -4,9 +4,9 @@ substitutions:
   device_description: "Ceiling LED light with IR remote located in Ashish Room with discreet Tunable White & RGB Front Light (shows up as separate lights)."
   friendly_name: "Living Room Light"    # Put the name that you want to see in Home Assistant.
   device_id_white: livingroomlightwhite    # Put the name that you want to see in Home Assistant.
-  device_name_white: "LivingRoom Light White"
+  device_name_white: "Living Room Light White"
   device_id_rgb: livingroomlightrgb    # Put the name that you want to see in Home Assistant.
-  device_name_rgb: "LivingRoom Light RGB"
+  device_name_rgb: "Living Room Light RGB"
   switch1b1_topic: livingswitch/button/1/command
   switch1b2_topic: livingswitch/button/2/command
   switch1b3_topic: livingswitch/button/3/command

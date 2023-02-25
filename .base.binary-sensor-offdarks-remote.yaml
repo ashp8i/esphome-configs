@@ -13,12 +13,12 @@ binary_sensor:
         - lambda: |-
             if(id(last_light_on) == 1)
             {
-            auto call = id(${main_device_id}).turn_on();
+            auto call = id(${device_id_white}).turn_on();
             call.perform();
             }
             else if (id(last_light_on) == 2)
             {
-            auto call = id(${device_name_rgb}).turn_on();
+            auto call = id(${device_id_rgb}).turn_on();
             call.perform();
             }
         
@@ -34,12 +34,12 @@ binary_sensor:
         - lambda: |-
             if(id(last_light_on) == 1)
             {
-            auto call = id(${main_device_id}).turn_off();
+            auto call = id(${device_id_white}).turn_off();
             call.perform();
             }
             else if (id(last_light_on) == 2)
             {
-            auto call = id(${device_name_rgb}).turn_off();
+            auto call = id(${device_id_rgb}).turn_off();
             call.perform();
             }
 
@@ -53,9 +53,9 @@ binary_sensor:
     on_press:
       then:
         - lambda: |-
-            auto call = id(${device_name_rgb}).turn_off();
+            auto call = id(${device_id_rgb}).turn_off();
             call.perform();
-            call = id(${main_device_id}).turn_on();
+            call = id(${device_id_white}).turn_on();
             call.set_color_temperature(500); // in mireds
             call.set_brightness(0.08);
             call.set_transition_length(1000); // in ms
@@ -72,13 +72,13 @@ binary_sensor:
     on_press:
         then:
         - lambda: |-
-            auto call = id(${device_name_rgb}).turn_off();
+            auto call = id(${device_id_rgb}).turn_off();
             call.perform();
             #define cwwwmode1 100mireds //Cool White
             #define cwwwmode2 300mireds //Natural White
             #define cwwwmode3 500mireds //Warm WHite
             static int cwwwmode = 1;
-            call = id(${main_device_id}).turn_on();
+            call = id(${device_id_white}).turn_on();
             call.set_transition_length(1000);
             switch(cwwwmode)
             {
@@ -106,10 +106,10 @@ binary_sensor:
     on_press:
       then:
         - lambda: |-
-            auto call = id(${main_device_id}).turn_off();
+            auto call = id(${device_id_white}).turn_off();
             call.perform();
             static int effect = 1;
-            call = id(${device_name_rgb}).turn_on();
+            call = id(${device_id_rgb}).turn_on();
             call.set_transition_length(500);
             switch(effect)
             {
@@ -141,10 +141,10 @@ binary_sensor:
     on_press:
       then:
         - lambda: |-
-            auto call = id(${main_device_id}).turn_off();
+            auto call = id(${device_id_white}).turn_off();
             call.perform();
             static int color = 1;
-            call = id(${device_name_rgb}).turn_on();
+            call = id(${device_id_rgb}).turn_on();
             call.set_effect("None");
             call.set_transition_length(500);
             switch(color)
@@ -181,16 +181,16 @@ binary_sensor:
         - lambda: |-
             if(id(last_light_on) == 1)
             {
-            float current_temp = id(${main_device_id}).current_values.get_color_temperature();
-            auto call = id(${main_device_id}).turn_on();
+            float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+            auto call = id(${device_id_white}).turn_on();
             call.set_color_temperature(current_temp + 25);
             call.set_transition_length(1000); // in ms
             call.perform();
             }
             else if (id(last_light_on) == 2)
             {
-            float current_temp = id(${device_name_rgb}).current_values.get_color_temperature();
-            auto call = id(${device_name_rgb}).turn_on();
+            float current_temp = id(${device_id_rgb}).current_values.get_color_temperature();
+            auto call = id(${device_id_rgb}).turn_on();
             call.set_color_temperature(current_temp + 25);
             call.set_transition_length(1000); // in ms
             call.perform();
@@ -209,16 +209,16 @@ binary_sensor:
         - lambda: |-
             if(id(last_light_on) == 1)
             {
-            float current_temp = id(${main_device_id}).current_values.get_color_temperature();
-            auto call = id(${main_device_id}).turn_on();
+            float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+            auto call = id(${device_id_white}).turn_on();
             call.set_color_temperature(current_temp - 25);
             call.set_transition_length(1000); // in ms
             call.perform();
             }
             else if (id(last_light_on) == 2)
             {
-            float current_temp = id(${device_name_rgb}).current_values.get_color_temperature();
-            auto call = id(${device_name_rgb}).turn_on();
+            float current_temp = id(${device_id_rgb}).current_values.get_color_temperature();
+            auto call = id(${device_id_rgb}).turn_on();
             call.set_color_temperature(current_temp - 25);
             call.set_transition_length(1000); // in ms
             call.perform();
@@ -238,8 +238,8 @@ binary_sensor:
             if(id(last_light_on) == 1)
             {
             float brightness;
-            auto call = id(${main_device_id}).turn_on();
-            id(${main_device_id}).remote_values.as_brightness( &brightness );
+            auto call = id(${device_id_white}).turn_on();
+            id(${device_id_white}).remote_values.as_brightness( &brightness );
             brightness += 0.05f;
             if( brightness > 1.0f )
             {
@@ -251,8 +251,8 @@ binary_sensor:
             else if (id(last_light_on) == 2)
             {
             float brightness;
-            auto call = id(${device_name_rgb}).turn_on();
-            id(${device_name_rgb}).remote_values.as_brightness( &brightness );
+            auto call = id(${device_id_rgb}).turn_on();
+            id(${device_id_rgb}).remote_values.as_brightness( &brightness );
             brightness += 0.05f;
             if( brightness > 1.0f )
             {
@@ -276,8 +276,8 @@ binary_sensor:
             if(id(last_light_on) == 1)
             {
             float brightness;
-            auto call = id(${main_device_id}).turn_on();
-            id(${main_device_id}).remote_values.as_brightness( &brightness );
+            auto call = id(${device_id_white}).turn_on();
+            id(${device_id_white}).remote_values.as_brightness( &brightness );
             brightness -= 0.05f;
             if( brightness < 0.0f )
             {
@@ -289,8 +289,8 @@ binary_sensor:
             else if (id(last_light_on) == 2)
             {
             float brightness;
-            auto call = id(${device_name_rgb}).turn_on();
-            id(${device_name_rgb}).remote_values.as_brightness( &brightness );
+            auto call = id(${device_id_rgb}).turn_on();
+            id(${device_id_rgb}).remote_values.as_brightness( &brightness );
             brightness -= 0.05f;
             if( brightness < 0.0f )
             {

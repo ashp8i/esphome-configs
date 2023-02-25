@@ -1,13 +1,12 @@
 substitutions:
   name: "bedroom2spot5"
   device_ssid: "Bed 2 Spot 5"
-  device_main_id: bedroom2spotfivecct
   device_description: "Athom GU10 RGBCW LB10-5W-ESP-1"
   friendly_name: "Bedroom 2 Spot 5"    # Put the name that you want to see in Home Assistant.
-  device_name_rgb: bedroom2spot5rgb
-  device_description_rgb: "Bedroom 2 Spot 5 RGB."    # Put the name that you want to see in Home Assistant.
-  friendly_name_rgb: "Bedroom 2 Spot 5 RGB"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "bedroom2spot5"    # Put the name that you want to see in Home Assistant.
+  device_name_white: "Bedroom 2 Spot 5 White"    # Put the name that you want to see in Home Assistant.
+  device_id_white: bedroom2spot5white
+  device_name_rgb: "Bedroom 2 Spot 5 RGB"    # Put the name that you want to see in Home Assistant.
+  device_id_rgb: bedroom2spot5rgb    # Put the name that you want to see in Home Assistant.
   switch1b1_topic: bedroom2switch2/button/1/command
   switch1b2_topic: bedroom2switch2/button/2/command
   switch1b3_topic: bedroom2switch2/button/3/command

@@ -52,8 +52,8 @@ e131:
 
 light:
   - platform: cwww
-    name: ${friendly_name}
-    id: ${main_device_id}
+    name: ${device_name_white}
+    id: ${device_id_white}
     cold_white: cold_white_output
     warm_white: warm_white_output
     default_transition_length: 0.5s
@@ -62,7 +62,7 @@ light:
     warm_white_color_temperature: 2700 K
     constant_brightness: true # Brightness & Temp NOT Cool White Bright & Warm White Brights
     on_turn_on:
-    - light.turn_off: ${device_name_rgb}
+    - light.turn_off: ${device_id_rgb}
     - globals.set:
         id: last_light_on
         value: '1'
@@ -76,14 +76,14 @@ light:
     restore_mode: RESTORE_DEFAULT_OFF
     internal: true
   - platform: partition
-    name: ${friendly_name_rgb}
-    id: ${device_name_rgb}
+    name: ${device_name_rgb}
+    id: ${device_id_rgb}
     segments:
       # Use internal_rgb as a single light partition for WLED and e1.31
       - single_light_id: internal_rgb
     default_transition_length: 0.25s
     on_turn_on:
-    - light.turn_off: ${main_device_id}
+    - light.turn_off: ${device_id_white}
     - globals.set:
         id: last_light_on
         value: '2'
@@ -141,7 +141,7 @@ light:
               scaled_g = 0.0f;
               scaled_b = 0.0f;
             }
-            auto call = id(${device_name_rgb}).turn_on();
+            auto call = id(${device_id_rgb}).turn_on();
             call.set_transition_length(0);
             call.set_brightness(m); 
             call.set_color_mode(ColorMode::RGB);

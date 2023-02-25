@@ -5,7 +5,7 @@ effects:
       lambda: |-
         static int state = 0;
         static int color_fade = 1;
-        auto call = id(${device_name_rgb}).turn_on(); //put the id for your light in here
+        auto call = id(${device_id_rgb}).turn_on(); //put the id for your light in here
         call.set_transition_length(100);
         if (state == 0) 
         {
@@ -76,7 +76,7 @@ effects:
       update_interval: 1s
       lambda: |-
         static int state = 0;
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         // Transtion of 1000ms = 1s
         call.set_transition_length(1000);
         if (state == 0) {
@@ -97,7 +97,7 @@ effects:
       update_interval: 1s
       lambda: |-
         static int state = 0;
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         // Transtion of 1000ms = 1s
         call.set_transition_length(1000);
         if (state == 0) {
@@ -118,7 +118,7 @@ effects:
       update_interval: 1s
       lambda: |-
         static int state = 0;
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         // Transtion of 1000ms = 1s
         call.set_transition_length(1000);
         if (state == 0) {
@@ -138,7 +138,7 @@ effects:
       name: randomflicker
       update_interval: 200 ms
       lambda: |-
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         float r = random_float() * 2.0f - 1.0f; 
         r =  r * r * r;
         call.set_transition_length(r);
@@ -151,7 +151,7 @@ effects:
       name: Chill Mode
       update_interval: 70s
       lambda: |-
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         call.set_transition_length(55000);
         call.set_white(0.0);
         light::ESPColor c = light::ESPColor::random_color();
@@ -163,7 +163,7 @@ effects:
       name: Chill Mode (Vibrant)
       update_interval: 120s
       lambda: |-
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         call.set_transition_length(800);
         call.set_white(0.0);
         light::ESPColor c = light::ESPColor::random_color();
@@ -175,7 +175,7 @@ effects:
       name: Disco
       update_interval: 500ms
       lambda: |-
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         //call.set_transition_length(rand() % 400 + 1);
         call.set_transition_length(500);
         call.set_white(0.0);
@@ -188,7 +188,7 @@ effects:
       name: WTF
       update_interval: 200ms
       lambda: |-
-        auto call = id(${device_name_rgb}).turn_on();
+        auto call = id(${device_id_rgb}).turn_on();
         call.set_transition_length(200);
         call.set_white(0.0);
         call.set_brightness((rand() % 255 + 1) / 255.0);
@@ -290,7 +290,7 @@ effects:
       lambda: |-
         static int state = 0;
         static int color = 1;
-        auto call = id(${device_name_rgb}).turn_on(); //the id of your light
+        auto call = id(${device_id_rgb}).turn_on(); //the id of your light
         call.set_transition_length(15000);
         if (state == 0) 
         {
@@ -323,7 +323,7 @@ effects:
         #define Color12 1.0, 0.0, 0.5
         static int state = 0;
         static int color = 1;
-        auto call = id(${device_name_rgb}).turn_on(); //put the id for your light in here
+        auto call = id(${device_id_rgb}).turn_on(); //put the id for your light in here
         call.set_transition_length(15000);
         if (state == 0) 
         {
@@ -392,7 +392,7 @@ effects:
       name: "Random colour fade"
       update_interval: 3s
       lambda: |-
-        auto call = id(${device_name_rgb}).turn_on();    
+        auto call = id(${device_id_rgb}).turn_on();    
         call.set_red_if_supported(random_float());
         call.set_green_if_supported(random_float());
         call.set_blue_if_supported(random_float());
@@ -404,7 +404,7 @@ effects:
       update_interval: 4s
       lambda: |-
         static int state = 0;
-        auto call = id(${device_name_rgb}).turn_on();                                                                           
+        auto call = id(${device_id_rgb}).turn_on();                                                                           
         call.set_transition_length(3000);                                                                      
         if (state == 0) {                                                                             
           call.set_rgb(1.0, 0.0, 0.0);

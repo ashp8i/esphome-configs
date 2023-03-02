@@ -47,8 +47,10 @@ light:
   - platform: "tuya"
     name: "${friendly_name}"
     dimmer_datapoint: 22
-    # min_value_datapoint: 26
     switch_datapoint: 20
+    # report_datapoint: 22
+    # min_value_datapoint: 26
+    # switch_datapoint: 20
     min_value: 25
     max_value: 1000
     icon: "hue:bulb-group-spot-hung"

@@ -1,4 +1,4 @@
-# Device Specific Config
+  # Device Specific Config
   esphome:
     name: ${device_name}
     comment: ${device_description}

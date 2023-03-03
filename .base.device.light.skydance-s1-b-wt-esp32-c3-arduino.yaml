@@ -54,8 +54,8 @@ light:
     id: ${main_device_id}
     dimmer_datapoint: 22
     switch_datapoint: 20
-    report_datapoint: 22
-    report_datapoint: 22
+#    report_datapoint: 22
+#    report_datapoint: 22
     # min_value_datapoint: 26
     # color_temperature_datapoint: 23
     # color_temperature_max_value: 1000

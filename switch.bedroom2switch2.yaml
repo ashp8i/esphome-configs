@@ -6,12 +6,14 @@ substitutions:
   main_device_id: "bedroom2switch2" # Put the name that you want to see in Home Assistant.
   remote_node: bedroom2spot1.local
   remote_light_id: bedroom2spot1
-  project_name: "shelly.plusi4-esp32-solo-arduino"
+  mqtt_prefix: bedroom2switch2
+  project_name: "shelly.plusi4-esp32-solo-esp-idf"
   project_version: "1.0"
 
 <<: !include .base-debug.yaml
 # <<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
-<<: !include .base.device.switch.shelly-plus-i4-testing.yaml
+<<: !include .base.device.switch.shelly-plus-i4-dev-esp-idf-web.yaml
+# <<: !include .base.device.switch.shelly-plus-i4-esp-idf.yaml
 
 # Enable Home Assistant API
 api:
@@ -19,9 +21,12 @@ api:
     key: !secret bedroom2switch2_noise_key
   reboot_timeout: 0s
 
-<<: !include .base.common-mqtt.yaml
-<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-mqtt-secure-esp32.yaml
+# <<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-sensor-esp32-esp-idf.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml
-<<: !include .base.binary-sensor-shelly-i4-4-buttons-testing.yaml
-<<: !include .base.button-testing-internal.yaml
+# <<: !include .base.binary-sensor-shelly-i4-4-buttons-mqtt.yaml
+<<: !include .base.binary-sensor-shelly-i4-4-buttons-mqtt-plus-test.yaml
+<<: !include .base.button-mqtt.yaml
+# <<: !include .base.button-testing-internal.yaml

@@ -57,7 +57,6 @@ binary_sensor:
                       - mqtt.publish:
                           topic: ${device_name}/button/1/command
                           payload: "HOLD"
-                      - delay: 0.05s
                 - delay: 0.05s
       # single click
       - timing:
@@ -143,7 +142,6 @@ binary_sensor:
                       - mqtt.publish:
                           topic: ${device_name}/button/2/command
                           payload: "HOLD"
-                      - delay: 0.05s
                 - delay: 0.05s
       # single click
       - timing:
@@ -229,7 +227,6 @@ binary_sensor:
                       - mqtt.publish:
                           topic: ${device_name}/button/3/command
                           payload: "HOLD"
-                      - delay: 0.05s
                 - delay: 0.05s
       # single click
       - timing:
@@ -315,7 +312,6 @@ binary_sensor:
                       - mqtt.publish:
                           topic: ${device_name}/button/4/command
                           payload: "HOLD"
-                      - delay: 0.05s
                 - delay: 0.05s
       # single click
       - timing:

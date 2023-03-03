@@ -1,0 +1,42 @@
+button:
+  - platform: template
+    name: MQTT Button 1
+    id: my_mqtt_button_1
+    # icon: "mdi:emoticon-outline"
+    on_press:
+      then:
+        - mqtt.publish:
+            topic: ${device_name}/button/1/command
+            payload: "SHORT_CLICK"
+        - logger.log: HA Button 1 Pressed
+    internal: false
+  - platform: template
+    name: MQTT Button 2
+    id: my_mqtt_button_2
+    # icon: "mdi:emoticon-outline"
+    on_press:
+      then:
+        - mqtt.publish:
+            topic: ${device_name}/button/2/command
+            payload: "SHORT_CLICK"
+        - logger.log: HA Button 2 Pressed
+  - platform: template
+    name: MQTT Button 3
+    id: my_mqtt_button_3
+    # icon: "mdi:emoticon-outline"
+    on_press:
+      then:
+        - mqtt.publish:
+            topic: ${device_name}/button/3/command
+            payload: "SHORT_CLICK"
+        - logger.log: HA Button 3 Pressed
+  - platform: template
+    name: MQTT Button 4
+    id: my_mqtt_button_4
+    # icon: "mdi:emoticon-outline"
+    on_press:
+      then:
+        - mqtt.publish:
+            topic: ${device_name}/button/4/command
+            payload: "SHORT_CLICK"
+        - logger.log: HA Button 4 Pressed

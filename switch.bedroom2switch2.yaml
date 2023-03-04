@@ -4,10 +4,10 @@ substitutions:
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Bedroom 2 Switch 2"
   main_device_id: "bedroom2switch2" # Put the name that you want to see in Home Assistant.
-  remote_node: bedroom2spot1.local
-  remote_light_id: bedroom2spot1
-  mqtt_prefix: bedroom2switch2
-  project_name: "shelly.plusi4-esp32-solo-esp-idf"
+  # remote_node: bedroom2spot1.local
+  # remote_light_id: bedroom2spot1
+  # mqtt_prefix: bedroom2switch2
+  project_name: "shelly.plusi4-esp32-solo-dev-esp-idf-web"
   project_version: "1.0"
 
 <<: !include .base-debug.yaml
@@ -23,7 +23,8 @@ api:
 
 <<: !include .base.common-mqtt-secure-esp32.yaml
 # <<: !include .base.common-sensor-die-temp.yaml
-<<: !include .base.common-sensor-esp32-esp-idf.yaml
+# <<: !include .base.common-sensor-esp32-esp-idf.yaml
+<<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml
 # <<: !include .base.binary-sensor-shelly-i4-4-buttons-mqtt.yaml

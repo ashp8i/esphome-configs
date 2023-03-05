@@ -1,0 +1,21 @@
+substitutions:
+  device_ssid: "Camera Test"
+  device_name: cameratest
+  device_description: "Freenove ESP32-S3 Camera"
+  friendly_name: "Camera Test"
+  main_device_id: "Camera Test" # Put the name that you want to see in Home Assistant.
+  project_name: "freenove.esp32-s3-camera"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret cameratest_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.camera.freenove-esp32-s3-camera-arduino.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml
+<<: !include .base.common-binary-sensor.yaml

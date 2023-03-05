@@ -1,0 +1,50 @@
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platformio_options:
+    board_build.flash_mode: dio
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  # board: um_tinys2
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  framework:
+    type: arduino
+    version: dev
+    platform_version: ^5.1.1
+  # framework:
+  #   type: arduino
+  #   version: 2.0.5
+  #   platform_version: 5.2.0
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+esp32_camera:
+  name: My Camera
+  external_clock:
+    pin: GPIO15
+    # frequency: 20MHz
+  i2c_pins:
+    sda: GPIO4
+    scl: GPIO5
+  data_pins: [GPIO11, GPIO9, GPIO8, GPIO10, GPIO12, GPIO18, GPIO17, GPIO16]
+  vsync_pin: GPIO6
+  href_pin: GPIO7
+  pixel_clock_pin: GPIO13
+  # power_down_pin: GPIO32
+  # Image settings
+  max_framerate: 5 fps    # default: 10 fps, max 60
+  idle_framerate: 0.2 fps # default: 0.1 fps - framerate for 'picture' in HA dashboard
+  resolution: 800x600     # default: 640x480 (VGA) - higher res requires more memory
+  jpeg_quality: 10        # 10 (best) to 63 (worst)

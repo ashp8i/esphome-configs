@@ -18,10 +18,11 @@
         CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ: "160"
 
   external_components:
-    # - source: github://pr#4330
-    #   components: [internal_temperature]
-    #   refresh: always
+    - source: github://pr#4330
+      components: [internal_temperature]
+      refresh: always
     - source: github://pr#3500
+    # - source: github://dentra/esphome@web-server-idf
       components:
         - web_server
         - web_server_idf
@@ -29,15 +30,15 @@
         - captive_portal
       refresh: 100days
 
-  captive_portal:
+#  captive_portal:
 
   web_server:
-    port: 80
-    auth:
-      username: admin
-      password: !secret web_server_password
-    include_internal: true
-    local: true
+#    port: 80
+#    auth:
+#      username: admin
+#      password: !secret web_server_password
+#    include_internal: true
+#    local: true
 
   # http_request:
   #   useragent: esphome/device

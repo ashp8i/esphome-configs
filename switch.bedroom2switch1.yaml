@@ -16,8 +16,11 @@ api:
     key: !secret bedroom2switch1_noise_key
   reboot_timeout: 0s
 
-<<: !include .base.common-mqtt.yaml
-<<: !include .base.common-sensor.yaml
+# <<: !include .base.common-mqtt.yaml
+<<: !include .base.common-mqtt-secure-esp32.yaml
+# <<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-sensor-esp32-esp-idf.yaml
+# <<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-i4-4-buttons-fallback.yaml

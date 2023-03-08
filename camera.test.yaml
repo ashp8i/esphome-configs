@@ -14,8 +14,8 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.camera.freenove-esp32-s3-camera-arduino.yaml
-<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.device.camera.freenove-esp32-s3-camera-esp-idf.yaml
+<<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.common-binary-sensor.yaml

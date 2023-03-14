@@ -1,0 +1,31 @@
+substitutions:
+  device_ssid: "Shelly1PMTest"
+  device_name: shellyplus1pmtest
+  device_main_description: "Shelly Plus 1 PM Test Switch"
+  device_description: Shelly Plus 1PM Test Switch
+  friendly_name: "Shelly Plus 1PM Test Switch" # Put the name that you want to see in Home Assistant.
+  main_device_id: "shellyplus1pmtest"    # Put the name that you want to see in Home Assistant.
+  # Higher value gives lower watt readout
+  current_res: "0.001"
+  # Lower value gives lower voltage readout
+  voltage_div: "1925"
+  # light_icon: "hue:bulb-spot-hung"
+  project_name: "shelly.shellyplus1pm-relay-switch"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret shelly1pmtest_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.relay.shelly-plus-1pm-solo-generic-esp-idf.yaml
+# <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
+# <<: !include .base.common-sensor.yaml
+<<: !include .base.sensor-shelly-plus-1pm-test.yaml
+# <<: !include .base.common-switch.yaml
+<<: !include .base.switch-shelly-plus-1pm-test.yaml
+<<: !include .base.common-text-sensor.yaml
+# <<: !include .base.binary-sensor-shelly-1-edge-switch.yaml
+<<: !include .base.binary-sensor-shelly-plus-1pm-test.yaml

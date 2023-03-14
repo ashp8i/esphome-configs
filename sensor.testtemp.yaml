@@ -1,0 +1,22 @@
+substitutions:
+  device_ssid: "Test Temp"
+  device_name: testtemp
+  device_description: "BME-280 Sensor via ESP32"
+  friendly_name: "Test Temp"
+  main_device_id: "testtemp" # Put the name that you want to see in Home Assistant.
+  project_name: "diy.bme280-esp32-esp-idf"
+  project_version: "1.0"
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.sensor-bme280-esp32-alternate-esp-idf.yaml
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret testtemp_noise_key
+  reboot_timeout: 0s
+
+# <<: !include .base.common-mqtt.yaml
+<<: !include .base.sensor-bme280.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml

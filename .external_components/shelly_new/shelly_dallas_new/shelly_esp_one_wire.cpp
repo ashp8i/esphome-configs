@@ -10,38 +10,34 @@ static const char *const TAG = "dallas.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-ESPOneWire::ESPOneWire(InternalGPIOPin *in_pin, GPIOPin *out_pin) : in_pin_(in_pin), out_pin_(out_pin) {
-  this->in_pin_->pin_mode(INPUT);
-  this->out_pin_->pin_mode(OUTPUT);  
-  this->out_pin_->digital_write(true);  
+ESPOneWire::ESPOneWire(InternalGPIOPin *in_pin, InternalGPIOPin *out_pin) : in_pin_(in_pin), out_pin_(out_pin) {
+  this->in_pin_->pin_mode(esphome::gpio::FLAG_INPUT);
+  this->out_pin_->pin_mode(esphome::gpio::FLAG_OUTPUT);
+  this->out_pin_->digital_write(true);
 }
 
 bool HOT IRAM_ATTR ESPOneWire::reset() {
-  // See reset here:
-  // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
-  // Wait for communication to clear (delay G)
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   uint8_t retries = 125;
   
   do {
     if (--retries == 0)
       return false;
     delayMicroseconds(2);
-  } while (!pin_.digital_read());
+  } while (!in_pin_->digital_read());
 
-  // Send 480µs LOW TX reset pulse (drive bus low, delay H)
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  // Send 480µs LOW TX reset pulse
+  // FIXME this->pin_->pin_mode(OUTPUT);
+  this->out_pin_->digital_write(false);
   delayMicroseconds(480);
   this->out_pin_->digital_write(true);
 
-  // Release the bus, delay I
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  // Switch into RX mode, letting the pin float
+  // FIXME this->pin_->pin_mode(INPUT_PULLUP);
+  // after 15µs-60µs wait time, slave pulls low for 60µs-240µs
+  // let's have 70µs just in case
   delayMicroseconds(70);
 
-  // sample bus, 0=device(s) present, 1=no device present
-  bool r = !pin_.digital_read();
-  // delay J
+  bool r = !this->in_pin_->digital_read();
   delayMicroseconds(410);
   return r;
 }
@@ -70,8 +66,10 @@ void HOT IRAM_ATTR ESPOneWire::write_bit(bool bit) {
 
 bool HOT IRAM_ATTR ESPOneWire::read_bit() {
   // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  // pin_.pin_mode(gpio::FLAG_OUTPUT);
+  this->out_pin_->digital_write(false);
+  delayMicroseconds(3);
+  this->out_pin_->digital_write(true);
 
   // note: for reading we'll need very accurate timing, as the
   // timing for the digital_read() is tight; according to the datasheet,
@@ -85,7 +83,14 @@ bool HOT IRAM_ATTR ESPOneWire::read_bit() {
   this->out_pin_->digital_write(true);
 
   // release bus, delay E
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  // pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  delayMicroseconds(10);
+
+  bool r = this->in_pin_->digital_read();
+  // read time slot at least 60µs long + 1µs recovery time between slots
+  delayMicroseconds(53);
+  return r;
+}
 
   // Unfortunately some frameworks have different characteristics than others
   // esp32 arduino appears to pull the bus low only after the digital_write(false),

@@ -2,8 +2,14 @@
 esphome:
   name: ${device_name}
   comment: ${device_description}
-  platform: ESP32
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
   board: esp32dev
+  framework: 
+    type: arduino
 
 captive_portal:
 

@@ -9,7 +9,8 @@ substitutions:
 
 <<: !include .base-debug.yaml
 # <<: !include .base.device.sensor-bme280-esp32-alternate-esp-idf.yaml
-<<: !include .base.device.sensor-bme280-shelly-dallas-esp32-esp-idf.yaml
+# <<: !include .base.device.sensor-bme280-shelly-dallas-esp32-esp-idf.yaml
+<<: !include .base.device.sensor-bme280-shelly-dallas-esp32-arduino.yaml
 
 # Enable Home Assistant API
 api:

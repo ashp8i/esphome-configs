@@ -13,10 +13,10 @@ class ShellyDallasNewTemperatureSensor;
 
 class ShellyDallasComponentnew : public PollingComponent {
  public:
-  explicit ShellyDallasComponent(ESPOneWire *one_wire);
+  explicit ShellyDallasComponentnew(ESPOneWire *one_wire);
 
-  ShellyDallasTemperatureSensor *get_sensor_by_address(uint64_t address, uint8_t resolution);
-  ShellyDallasTemperatureSensor *get_sensor_by_index(uint8_t index, uint8_t resolution);
+  ShellyDallasNewTemperatureSensor *get_sensor_by_address(uint64_t address, uint8_t resolution);
+  ShellyDallasNewTemperatureSensor *get_sensor_by_index(uint8_t index, uint8_t resolution);
 
   void setup() override;
   void dump_config() override;

@@ -28,11 +28,15 @@ uint16_t ShellyDallasNewTemperatureSensor::millis_to_wait_for_conversion() const
   }
 }
 
-void DallasComponent::setup() {
+void ShellyDallasComponentnew::setup() {
   ESP_LOGCONFIG(TAG, "Setting up ShellyDallasComponentnew...");
 
   yield();
-  raw_sensors = this->one_wire_->search_vec();
+  std::vector<uint64_t> raw_sensors;
+  {
+    InterruptLock lock;
+    raw_sensors = this->one_wire_->search_vec();
+  }
 
   for (auto &address : raw_sensors) {
     std::string s = uint64_to_string(address);

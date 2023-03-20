@@ -37,7 +37,7 @@ class ShellyDallasComponentnew : public PollingComponent {
 /// Internal class that helps us create multiple sensors for one Dallas hub.
 class ShellyDallasNewTemperatureSensor : public sensor::Sensor {
  public:
-  void set_parent(DallasComponent *parent) { parent_ = parent; }
+  void set_parent(ShellyDallasComponentnew *parent) { parent_ = parent; }
   /// Helper to get a pointer to the address as uint8_t.
   uint8_t *get_address8();
   /// Helper to create (and cache) the name for this sensor. For example "0xfe0000031f1eaf29".

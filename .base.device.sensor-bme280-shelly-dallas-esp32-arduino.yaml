@@ -49,3 +49,5 @@ i2c:
 shelly_dallas_new:
   pin_a: GPIO3
   pin_b: GPIO0
+# shelly_dallas_new:
+#   pin: GPIO3

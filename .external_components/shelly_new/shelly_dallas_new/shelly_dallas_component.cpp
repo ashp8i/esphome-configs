@@ -39,7 +39,6 @@ void ShellyDallasComponentnew::setup() {
   }
 
   for (auto &address : raw_sensors) {
-    std::string s = uint64_to_string(address);
     auto *address8 = reinterpret_cast<uint8_t *>(&address);
     if (crc8(address8, 7) != address8[7]) {
       ESP_LOGW(TAG, "Dallas device 0x%s has invalid CRC.", format_hex(address).c_str());
@@ -79,6 +78,7 @@ void ShellyDallasComponentnew::dump_config() {
   } else {
     ESP_LOGD(TAG, "  Found sensors:");
     for (auto &address : this->found_sensors_) {
+      //std::string s = uint64_to_string(address);
       ESP_LOGD(TAG, "    0x%s", format_hex(address).c_str());
     }
   }
@@ -97,8 +97,8 @@ void ShellyDallasComponentnew::dump_config() {
   }
 }
 
-void DallasComponent::register_sensor(ShellyDallasNewTemperatureSensor *sensor) { this->sensors_.push_back(sensor); }
-void DallasComponent::update() {
+void ShellyDallasComponentnew::register_sensor(ShellyDallasNewTemperatureSensor *sensor) { this->sensors_.push_back(sensor); }
+void ShellyDallasComponentnew::update() {
   this->status_clear_warning();
 
   bool result;
@@ -143,7 +143,13 @@ void DallasComponent::update() {
     });
   }
 }
+ShellyDallasComponent::ShellyDallasComponent(ESPOneWire *one_wire) : one_wire_(one_wire) {}
 
+ShellyDallasTemperatureSensor::ShellyDallasTemperatureSensor(uint64_t address, uint8_t resolution, ShellyDallasComponent *parent)
+    : parent_(parent) {
+  this->set_address(address);
+  this->set_resolution(resolution);
+}
 void ShellyDallasNewTemperatureSensor::set_address(uint64_t address) { this->address_ = address; }
 uint8_t ShellyDallasNewTemperatureSensor::get_resolution() const { return this->resolution_; }
 void ShellyDallasNewTemperatureSensor::set_resolution(uint8_t resolution) { this->resolution_ = resolution; }

@@ -1,4 +1,4 @@
-#include "dallas_component.h"
+#include "shelly_dallas_component.h"
 #include "esphome/core/log.h"
 
 namespace esphome {
@@ -28,7 +28,7 @@ uint16_t ShellyDallasNewTemperatureSensor::millis_to_wait_for_conversion() const
   }
 }
 
-void DallasComponent::setup() {
+void ShellyDallasComponentnew::setup() {
   ESP_LOGCONFIG(TAG, "Setting up ShellyDallasComponentnew...");
 
   pin_->setup();
@@ -99,8 +99,8 @@ void ShellyDallasComponentnew::dump_config() {
   }
 }
 
-void DallasComponent::register_sensor(ShellyDallasNewTemperatureSensor *sensor) { this->sensors_.push_back(sensor); }
-void DallasComponent::update() {
+void ShellyDallasComponentnew::register_sensor(ShellyDallasNewTemperatureSensor *sensor) { this->sensors_.push_back(sensor); }
+void ShellyDallasComponentnew::update() {
   this->status_clear_warning();
 
   bool result;

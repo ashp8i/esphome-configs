@@ -65,6 +65,7 @@ class ESPOneWire {
   InternalGPIOPin *in_pin_;
   InternalGPIOPin *out_pin_;
   uint8_t last_discrepancy_{0};
+  uint8_t last_family_discrepancy_{0};
   bool last_device_flag_{false};
   uint64_t rom_number_{0};
 };

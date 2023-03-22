@@ -1,12 +1,12 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
-from esphome.const import CONF_ID, CONF_PIN_A, CONF_PIN_B
+from esphome.const import CONF_ID, CONF_PIN
 
 MULTI_CONF = True
 AUTO_LOAD = ["sensor"]
 
-shelly_dallas_new_ns = cg.esphome_ns.namespace("shelly_dallas")
+shelly_dallas_new_ns = cg.esphome_ns.namespace("shelly_dallas_new")
 ShellyDallasComponentnew = shelly_dallas_new_ns.class_("ShellyDallasComponentnew", cg.PollingComponent)
 
 CONFIG_SCHEMA = cv.Schema(

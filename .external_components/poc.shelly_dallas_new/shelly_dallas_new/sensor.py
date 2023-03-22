@@ -10,7 +10,7 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT,
     UNIT_CELSIUS,
 )
-from . import DallasComponent, dallas_new_ns
+from . import ShellyDallasComponentnew, dallas_new_ns
 
 DallasTemperatureSensor = shelly_dallas_new_ns.class_("ShellyDallasNewTemperatureSensor", sensor.Sensor)
 

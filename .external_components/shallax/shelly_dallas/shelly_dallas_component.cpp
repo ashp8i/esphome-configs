@@ -2,9 +2,9 @@
 #include "esphome/core/log.h"
 
 namespace esphome {
-namespace shelly_dallas_new {
+namespace shelly_dallas {
 
-static const char *const TAG = "dallas.sensor";
+static const char *TAG = "dallas.sensor";
 
 static const uint8_t DALLAS_MODEL_DS18S20 = 0x10;
 static const uint8_t DALLAS_MODEL_DS1822 = 0x22;
@@ -15,7 +15,7 @@ static const uint8_t DALLAS_COMMAND_START_CONVERSION = 0x44;
 static const uint8_t DALLAS_COMMAND_READ_SCRATCH_PAD = 0xBE;
 static const uint8_t DALLAS_COMMAND_WRITE_SCRATCH_PAD = 0x4E;
 
-uint16_t ShellyDallasNewTemperatureSensor::millis_to_wait_for_conversion() const {
+uint16_t ShellyDallasTemperatureSensor::millis_to_wait_for_conversion() const {
   switch (this->resolution_) {
     case 9:
       return 94;
@@ -28,8 +28,8 @@ uint16_t ShellyDallasNewTemperatureSensor::millis_to_wait_for_conversion() const
   }
 }
 
-void ShellyDallasComponentnew::setup() {
-  ESP_LOGCONFIG(TAG, "Setting up ShellyDallasComponentnew...");
+void ShellyDallasComponent::setup() {
+  ESP_LOGCONFIG(TAG, "Setting up ShellyDallasComponent...");
 
   yield();
   std::vector<uint64_t> raw_sensors;
@@ -53,7 +53,7 @@ void ShellyDallasComponentnew::setup() {
     this->found_sensors_.push_back(address);
   }
 
-  for (auto *sensor : this->sensors_) {
+  for (auto sensor : this->sensors_) {
     if (sensor->get_index().has_value()) {
       if (*sensor->get_index() >= this->found_sensors_.size()) {
         this->status_set_error();
@@ -67,8 +67,8 @@ void ShellyDallasComponentnew::setup() {
     }
   }
 }
-void ShellyDallasComponentnew::dump_config() {
-  ESP_LOGCONFIG(TAG, "ShellyDallasComponentnew:");
+void ShellyDallasComponent::dump_config() {
+  ESP_LOGCONFIG(TAG, "ShellyDallasComponent:");
   LOG_PIN("  In Pin: ", this->one_wire_->get_in_pin());
   LOG_PIN("  Out Pin: ", this->one_wire_->get_out_pin());
   LOG_UPDATE_INTERVAL(this);
@@ -96,41 +96,53 @@ void ShellyDallasComponentnew::dump_config() {
   }
 }
 
-void ShellyDallasComponentnew::register_sensor(ShellyDallasNewTemperatureSensor *sensor) { this->sensors_.push_back(sensor); }
-void ShellyDallasComponentnew::update() {
+ShellyDallasTemperatureSensor *ShellyDallasComponent::get_sensor_by_address(uint64_t address, uint8_t resolution) {
+  auto s = new ShellyDallasTemperatureSensor(address, resolution, this);
+  this->sensors_.push_back(s);
+  return s;
+}
+ShellyDallasTemperatureSensor *ShellyDallasComponent::get_sensor_by_index(uint8_t index, uint8_t resolution) {
+  auto s = this->get_sensor_by_address(0, resolution);
+  s->set_index(index);
+  return s;
+}
+void ShellyDallasComponent::update() {
   this->status_clear_warning();
 
   bool result;
   {
     InterruptLock lock;
-    result = this->one_wire_->reset();
+    if (!this->one_wire_->reset()) {
+      result = false;
+    } else {
+      result = true;
+      this->one_wire_->skip();
+      this->one_wire_->write8(DALLAS_COMMAND_START_CONVERSION);
+    }
   }
+
   if (!result) {
     ESP_LOGE(TAG, "Requesting conversion failed");
     this->status_set_warning();
-    for (auto *sensor : this->sensors_) {
-      sensor->publish_state(NAN);
-    }
     return;
-  }
-
-  {
-    InterruptLock lock;
-    this->one_wire_->skip();
-    this->one_wire_->write8(DALLAS_COMMAND_START_CONVERSION);
   }
 
   for (auto *sensor : this->sensors_) {
     this->set_timeout(sensor->get_address_name(), sensor->millis_to_wait_for_conversion(), [this, sensor] {
-      bool res = sensor->read_scratch_pad();
+      bool res;
+      {
+        InterruptLock lock;
+        res = sensor->read_scratch_pad();
+      }
 
       if (!res) {
-        ESP_LOGW(TAG, "'%s' - Resetting bus for read failed!", sensor->get_name().c_str());
+        ESP_LOGW(TAG, "'%s' - Reseting bus for read failed!", sensor->get_name().c_str());
         sensor->publish_state(NAN);
         this->status_set_warning();
         return;
       }
       if (!sensor->check_scratch_pad()) {
+        ESP_LOGW(TAG, "'%s' - Scratch pad checksum invalid!", sensor->get_name().c_str());
         sensor->publish_state(NAN);
         this->status_set_warning();
         return;
@@ -149,45 +161,39 @@ ShellyDallasTemperatureSensor::ShellyDallasTemperatureSensor(uint64_t address, u
   this->set_address(address);
   this->set_resolution(resolution);
 }
-void ShellyDallasNewTemperatureSensor::set_address(uint64_t address) { this->address_ = address; }
-uint8_t ShellyDallasNewTemperatureSensor::get_resolution() const { return this->resolution_; }
-void ShellyDallasNewTemperatureSensor::set_resolution(uint8_t resolution) { this->resolution_ = resolution; }
-optional<uint8_t> ShellyDallasNewTemperatureSensor::get_index() const { return this->index_; }
-void ShellyDallasNewTemperatureSensor::set_index(uint8_t index) { this->index_ = index; }
-uint8_t *ShellyDallasNewTemperatureSensor::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
-const std::string &ShellyDallasNewTemperatureSensor::get_address_name() {
+void ShellyDallasTemperatureSensor::set_address(uint64_t address) { this->address_ = address; }
+uint8_t ShellyDallasTemperatureSensor::get_resolution() const { return this->resolution_; }
+void ShellyDallasTemperatureSensor::set_resolution(uint8_t resolution) { this->resolution_ = resolution; }
+optional<uint8_t> ShellyDallasTemperatureSensor::get_index() const { return this->index_; }
+void ShellyDallasTemperatureSensor::set_index(uint8_t index) { this->index_ = index; }
+uint8_t *ShellyDallasTemperatureSensor::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
+const std::string &ShellyDallasTemperatureSensor::get_address_name() {
   if (this->address_name_.empty()) {
     this->address_name_ = std::string("0x") + format_hex(this->address_);
   }
 
   return this->address_name_;
 }
-bool IRAM_ATTR ShellyDallasNewTemperatureSensor::read_scratch_pad() {
-  auto *wire = this->parent_->one_wire_;
-
-  {
-    InterruptLock lock;
-
-    if (!wire->reset()) {
-      return false;
-    }
+bool IRAM_ATTR ShellyDallasTemperatureSensor::read_scratch_pad() {
+  ESPOneWire *wire = this->parent_->one_wire_;
+  if (!wire->reset()) {
+    return false;
   }
 
-  {
-    InterruptLock lock;
+  wire->select(this->address_);
+  wire->write8(DALLAS_COMMAND_READ_SCRATCH_PAD);
 
-    wire->select(this->address_);
-    wire->write8(DALLAS_COMMAND_READ_SCRATCH_PAD);
-
-    for (unsigned char &i : this->scratch_pad_) {
-      i = wire->read8();
-    }
+  for (unsigned char &i : this->scratch_pad_) {
+    i = wire->read8();
   }
-
   return true;
 }
-bool ShellyDallasNewTemperatureSensor::setup_sensor() {
-  bool r = this->read_scratch_pad();
+bool ShellyDallasTemperatureSensor::setup_sensor() {
+  bool r;
+  {
+    InterruptLock lock;
+    r = this->read_scratch_pad();
+  }
 
   if (!r) {
     ESP_LOGE(TAG, "Reading scratchpad failed: reset");
@@ -221,7 +227,7 @@ bool ShellyDallasNewTemperatureSensor::setup_sensor() {
       break;
   }
 
-  auto *wire = this->parent_->one_wire_;
+  ESPOneWire *wire = this->parent_->one_wire_;
   {
     InterruptLock lock;
     if (wire->reset()) {
@@ -242,32 +248,16 @@ bool ShellyDallasNewTemperatureSensor::setup_sensor() {
   wire->reset();
   return true;
 }
-bool ShellyDallasNewTemperatureSensor::check_scratch_pad() {
-  bool chksum_validity = (crc8(this->scratch_pad_, 8) == this->scratch_pad_[8]);
-  bool config_validity = false;
-
-  switch (this->get_address8()[0]) {
-    case DALLAS_MODEL_DS18B20:
-      config_validity = ((this->scratch_pad_[4] & 0x9F) == 0x1F);
-      break;
-    default:
-      config_validity = ((this->scratch_pad_[4] & 0x10) == 0x10);
-  }
-
+bool ShellyDallasTemperatureSensor::check_scratch_pad() {
 #ifdef ESPHOME_LOG_LEVEL_VERY_VERBOSE
   ESP_LOGVV(TAG, "Scratch pad: %02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X (%02X)", this->scratch_pad_[0],
             this->scratch_pad_[1], this->scratch_pad_[2], this->scratch_pad_[3], this->scratch_pad_[4],
             this->scratch_pad_[5], this->scratch_pad_[6], this->scratch_pad_[7], this->scratch_pad_[8],
             crc8(this->scratch_pad_, 8));
 #endif
-  if (!chksum_validity) {
-    ESP_LOGW(TAG, "'%s' - Scratch pad checksum invalid!", this->get_name().c_str());
-  } else if (!config_validity) {
-    ESP_LOGW(TAG, "'%s' - Scratch pad config register invalid!", this->get_name().c_str());
-  }
-  return chksum_validity && config_validity;
+  return crc8(this->scratch_pad_, 8) == this->scratch_pad_[8];
 }
-float ShellyDallasNewTemperatureSensor::get_temp_c() {
+float ShellyDallasTemperatureSensor::get_temp_c() {
   int16_t temp = (int16_t(this->scratch_pad_[1]) << 11) | (int16_t(this->scratch_pad_[0]) << 3);
   if (this->get_address8()[0] == DALLAS_MODEL_DS18S20) {
     int diff = (this->scratch_pad_[7] - this->scratch_pad_[6]) << 7;
@@ -276,7 +266,7 @@ float ShellyDallasNewTemperatureSensor::get_temp_c() {
 
   return temp / 128.0f;
 }
-std::string ShellyDallasNewTemperatureSensor::unique_id() { return "dallas-" + str_lower_case(format_hex(this->address_)); }
+std::string ShellyDallasTemperatureSensor::unique_id() { return "dallas-" + format_hex(this->address_); }
 
-}  // namespace shelly_dallas_new
+}  // namespace dallas
 }  // namespace esphome

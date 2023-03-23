@@ -26,7 +26,7 @@ external_components:
   - source:
       type: local
       # path: .external_components/poc.shelly_dallas_new
-      path: .external_components/shelly_new
+      path: .external_components/shallax
       # path: .external_components/shelly
 
 captive_portal:
@@ -46,7 +46,7 @@ i2c:
   scan: false
   id: bus_a
 
-shelly_dallas_new:
+shelly_dallas:
   pin_a: GPIO3
   pin_b: GPIO0
 # shelly_dallas_new:

@@ -10,7 +10,7 @@ substitutions:
   # Lower value gives lower voltage readout
   voltage_div: "1925"
   # light_icon: "hue:bulb-spot-hung"
-  project_name: "shelly.shellyplus1pm-relay-switch"
+  project_name: "shelly.shellyplus1pm-relay-switch-addon-arduino"
   project_version: "1.0"
 
 # Enable Home Assistant API
@@ -20,7 +20,7 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.relay.shelly-plus-1pm-solo-generic-esp-idf.yaml
+<<: !include .base.device.relay.shelly-plus-1pm-solo-addon-arduino.yaml
 # <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
 # <<: !include .base.common-sensor.yaml
 <<: !include .base.sensor-shelly-plus-1pm-test.yaml

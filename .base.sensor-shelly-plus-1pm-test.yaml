@@ -100,6 +100,10 @@ sensor:
   - platform: shelly_dallas
     index: 0
     name: "Temperature #1"
+# Dallas - Regular
+  # - platform: dallas
+  #   index: 0
+  #   name: "Temperature #2"
 # Addon BME280 Attached
   - platform: bme280
     temperature:

@@ -4,6 +4,7 @@ esphome:
   comment: ${device_description}
   platformio_options:
     platform_packages:
+    # - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.7/framework-arduinoespressif32-solo1.zip
     - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
     board_build.f_cpu: 160000000L
   project:
@@ -15,7 +16,8 @@ esp32:
   variant: esp32
   framework:
     type: arduino
-    platform_version: 5.2.0
+    # platform_version: 5.2.0
+    platform_version: 6.1.0
 
 external_components:
   - source:
@@ -37,9 +39,9 @@ time:
     id: homeassistant_time  
 
 # Device Specific Config
-i2c:
-  sda: GPIO12
-  scl: GPIO14
+# i2c:
+#   sda: GPIO12
+#   scl: GPIO14
 
 output:
   - platform: gpio
@@ -47,9 +49,10 @@ output:
     pin: GPIO26
 
 shelly_dallas:
-      pin_a: GPIO0
-      # pin_b: GPIO19
-      pin_b: GPIO1
+      pin_a: RX
+      # pin_a: GPIO3
+      pin_b: GPIO19
+      # pin_b: GPIO0
 
 # dallas:
 #     pin: GPIO19

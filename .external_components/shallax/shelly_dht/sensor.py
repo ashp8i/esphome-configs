@@ -6,18 +6,18 @@ from esphome.const import CONF_HUMIDITY, CONF_ID, CONF_MODEL, CONF_PIN, CONF_TEM
     ICON_THERMOMETER, UNIT_CELSIUS, ICON_WATER_PERCENT, UNIT_PERCENT, CONF_PIN_A
 from esphome.cpp_helpers import gpio_pin_expression
 
-dht_ns = cg.esphome_ns.namespace('dht')
-DHTModel = dht_ns.enum('DHTModel')
+dht_ns = cg.esphome_ns.namespace("dht")
+DHTModel = dht_ns.enum("DHTModel")
 DHT_MODELS = {
-    'AUTO_DETECT': DHTModel.DHT_MODEL_AUTO_DETECT,
-    'DHT11': DHTModel.DHT_MODEL_DHT11,
-    'DHT22': DHTModel.DHT_MODEL_DHT22,
-    'AM2302': DHTModel.DHT_MODEL_AM2302,
-    'RHT03': DHTModel.DHT_MODEL_RHT03,
-    'SI7021': DHTModel.DHT_MODEL_SI7021,
-    'DHT22_TYPE2': DHTModel.DHT_MODEL_DHT22_TYPE2,
+    "AUTO_DETECT": DHTModel.DHT_MODEL_AUTO_DETECT,
+    "DHT11": DHTModel.DHT_MODEL_DHT11,
+    "DHT22": DHTModel.DHT_MODEL_DHT22,
+    "AM2302": DHTModel.DHT_MODEL_AM2302,
+    "RHT03": DHTModel.DHT_MODEL_RHT03,
+    "SI7021": DHTModel.DHT_MODEL_SI7021,
+    "DHT22_TYPE2": DHTModel.DHT_MODEL_DHT22_TYPE2,
 }
-DHT = dht_ns.class_('DHT', cg.PollingComponent)
+DHT = dht_ns.class_("DHT", cg.PollingComponent)
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DHT),
@@ -25,8 +25,8 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Required(CONF_PIN_A): pins.gpio_output_pin_schema,
     cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(UNIT_CELSIUS, ICON_THERMOMETER, 1),
     cv.Optional(CONF_HUMIDITY): sensor.sensor_schema(UNIT_PERCENT, ICON_WATER_PERCENT, 0),
-    cv.Optional(CONF_MODEL, default='auto detect'): cv.enum(DHT_MODELS, upper=True, space='_'),
-}).extend(cv.polling_component_schema('60s'))
+    cv.Optional(CONF_MODEL, default="auto detect"): cv.enum(DHT_MODELS, upper=True, space="_"),
+}).extend(cv.polling_component_schema("60s"))
 
 
 def to_code(config):

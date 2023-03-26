@@ -19,7 +19,7 @@ api:
     key: !secret shelly1pmtest_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug.yaml
+<<: !include .base-debug-off.yaml
 <<: !include .base.device.relay.shelly-plus-1pm-solo-addon-arduino.yaml
 # <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
 # <<: !include .base.common-sensor.yaml

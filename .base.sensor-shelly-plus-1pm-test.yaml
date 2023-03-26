@@ -105,13 +105,13 @@ sensor:
   #   index: 0
   #   name: "Temperature #2"
 # Addon BME280 Attached
-  - platform: bme280
-    temperature:
-      name: "BME280 Temperature"
-      oversampling: 16x
-    pressure:
-      name: "BME280 Pressure"
-    humidity:
-      name: "BME280 Humidity"
-    address: 0x76
-    update_interval: 60s
+  # - platform: bme280
+  #   temperature:
+  #     name: "BME280 Temperature"
+  #     oversampling: 16x
+  #   pressure:
+  #     name: "BME280 Pressure"
+  #   humidity:
+  #     name: "BME280 Humidity"
+  #   address: 0x76
+  #   update_interval: 60s

@@ -1,0 +1,27 @@
+#include <OneWire.h>
+#include "DS28E17.h"
+#define VEML6075_ADDR  0x010
+#define BRIDGE_WRITE_DATA_WITH_STOP    0x4B
+#define BRIDGE_WRITE_READ_DATA_WITH_STOP   0x2D
+#define TIMEOUT 20
+#define SEARCH_TIMEOUT 50
+
+
+typedef uint8_t DeviceAddress[8];
+
+typedef struct
+{
+    uint8_t address[8] = {0,0,0,0,0,0,0,0}; //! @brief Sensor address
+}vemlSensorT;
+
+    VEML6075(OneWire *oneWire);
+    bool begin(const uint8_t*);
+ 
+    uint8_t last_status; // status of last I2C transmission
+    OneWire *oneWire;
+ OneWire *_veml6075_onewire;
+ DS28E17 ds28e17;
+ vemlSensorT sensor;
+ 
+ uint8_t* deviceAddress;
+

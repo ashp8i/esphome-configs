@@ -28,13 +28,19 @@
  *
  */
 
-#include "Adafruit_BME280.h"
+#include "BME280_1wire.h"
+#include "DS28E17.h"
 #include "Arduino.h"
 
 /*!
  *  @brief  class constructor
  */
-Adafruit_BME280::Adafruit_BME280() {}
+Adafruit_BME280::Adafruit_BME280(OneWire *ow) {
+ oneWire = ow;
+    ds28e17 = DS28E17(ow);
+
+
+}
 
 /*!
  *   @brief  class constructor if using hardware SPI

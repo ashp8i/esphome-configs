@@ -1,0 +1,29 @@
+#include "VEML6075_1Wire.h"
+#include "DS28E17.h"
+VEML6075::VEML6075(OneWire *ow) {
+ //_veml6075_onewire = oneWire;
+ oneWire = ow;
+    ds28e17 = DS28E17(ow);
+bool VEML6075::begin(const uint8_t* uuid) {
+
+ deviceAddress = uuid;
+    // init I2C over OneWire
+ //_veml6075_onewire->select(deviceAddress);
+ ds28e17.setAddress(deviceAddress);
+
+uint16_t VEML6075::read16(uint8_t reg)
+{
+  uint8_t arr[2];
+  uint16_t value;
+  last_status = ds28e17.memoryRead(VEML6075_ADDR,reg, arr, 2);
+  value  = (uint16_t)arr[1] << 8; // value high byte
+  value |=           arr[0];      // value low byte
+
+  return value;
+void VEML6075::write16(uint8_t reg, uint16_t value)
+{
+  uint8_t data[3];
+  data[0] = reg;
+  data[1] = (value >> 8) & 0xFF; // value high byte
+  data[2] = value & 0xFF; // value low byte
+  last_status = ds28e17.write(VEML6075_ADDR, data, 3);

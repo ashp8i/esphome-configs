@@ -1,0 +1,36 @@
+sensor:
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+  # Uptime Sensor
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    id: uptime_sensor
+    update_interval: 360s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
+  - platform: custom
+    lambda: |-
+      auto ds = new DS28E17(ONE_WIRE_BUS, "\x19\x44\xA2\x03\x00\x00\x00\xA6");
+      auto bme = new BME280_OneWire(ds);
+      App.register_component(bme);
+      return {bme->make_temperature_sensor("BME280 Temperature", UNIT_C, 1),
+              bme->make_pressure_sensor("BME280 Pressure", UNIT_hPa, 1)};

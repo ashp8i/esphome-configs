@@ -1,0 +1,22 @@
+#######################################
+# Syntax Coloring Map For DallasTemperature
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+BME280_OneWire			KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+takeForcedMeasurement	KEYWORD2
+readTemperature			KEYWORD2
+readPressure			KEYWORD2
+readHumidity			KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+

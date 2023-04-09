@@ -1,0 +1,46 @@
+# Device Specific Config
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: esp32dev
+  framework: 
+    type: arduino
+
+external_components:
+  - source: github://pr#4330
+    components: [internal_temperature]
+    refresh: always
+  - source: "http://www.fay.tv/zms/content/uploads/BME280_OneWire.zip"
+    refresh: 86400s
+    components:
+      - id: "ds28e17"
+        library:
+          name: "BME280_OneWire"
+
+captive_portal:
+
+web_server:
+#    port: 80
+#    auth: 
+#      username: admin
+#      password: !secret web_server_password
+#    include_internal: true
+#    local: true
+
+# i2c sensor
+i2c:
+  sda: 21
+  scl: 22
+  scan: false
+  id: bus_a
+
+shelly_dallas:
+  pin_a: GPIO3
+  pin_b: GPIO0
+# shelly_dallas_new:
+#   pin: GPIO3

@@ -27,10 +27,16 @@ sensor:
                 (minutes ? to_string(minutes) + "m " : "") +
                 (to_string(seconds) + "s")
               ).c_str();
-  - platform: custom
-    lambda: |-
-      auto ds = new DS28E17(ONE_WIRE_BUS, "\x19\x44\xA2\x03\x00\x00\x00\xA6");
-      auto bme = new BME280_OneWire(ds);
-      App.register_component(bme);
-      return {bme->make_temperature_sensor("BME280 Temperature", UNIT_C, 1),
-              bme->make_pressure_sensor("BME280 Pressure", UNIT_hPa, 1)};
+#ONE_WIRE_BUS
+#auto bme = new BME280_OneWire(id(my_onewire_bus).get_pin(), "\x19\x44\xA2\x03\x00\x00\x00\xA6");
+  # - platform: custom
+  #   lambda: |-
+  #     auto bme = new BME280_OneWire(new OneWire(ONE_WIRE_BUS), "\x19\x44\xA2\x03\x00\x00\x00\xA6");
+  #     App.register_component(bme);
+  #     return {bme->make_temperature_sensor("BME280 Temperature", UNIT_C, 1),
+  #             bme->make_pressure_sensor("BME280 Pressure", UNIT_hPa, 1),
+  #             bme->make_humidity_sensor("BME280 Humidity", UNIT_PERCENT, 1)};
+  #   sensors:
+  #     - name: "BME280 Temperature"
+  #     - name: "BME280 Pressure"
+  #     - name: "BME280 Humidity"

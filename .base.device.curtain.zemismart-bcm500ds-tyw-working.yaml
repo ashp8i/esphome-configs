@@ -12,7 +12,7 @@ esphome:
 external_components:
   - source:
       type: local
-      path: .external_components/tuya_cover_custom
+      path: my_external_components/tuya_cover_custom
 
 captive_portal:
 

@@ -149,9 +149,44 @@ static const char *const TAG = "dallas_maxim.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-CustomOneWire::CustomOneWire(InternalGPIOPin *pin, bool low_power_mode, bool overdrive_mode)
-    : pin_(pin), rom_number_(0), last_discrepancy_(0), last_device_flag_(false), state_(State::Reset),
-      low_power_mode_(low_power_mode), overdrive_mode_(overdrive_mode) { pin_ = pin->to_isr(); }
+CustomOneWire::CustomOneWire(InternalGPIOPin *pin, InternalGPIOPin *in_pin, InternalGPIOPin *out_pin, bool low_power_mode, bool overdrive_mode, bool parasitic_power_mode)
+    : pin_(pin), in_pin_(in_pin), out_pin_(out_pin), low_power_mode_(low_power_mode), overdrive_mode_(overdrive_mode), parasitic_power_mode_(parasitic_power_mode) {
+  
+  if (parasitic_power_mode_) {
+    // Check if the pin supports PWM
+    if (!pin_->is_pwm()) {
+      ESP_LOGE(TAG, "Pin %d does not support PWM", pin_->get_pin());
+      return;
+    }
+
+    // Check if the PWM channel is available
+    int pwm_channel = pin_->get_pwm_channel();
+    
+    #if defined(ESP_PLATFORM) && defined(CONFIG_IDF_TARGET_ESP32)
+      if (ledc_get_pwm_channel_status(pwm_channel) != LEDC_CHANNEL_FREE) {
+        ESP_LOGE(TAG, "PWM channel %d is already in use", pwm_channel);
+        return;
+      }
+    #elif defined(ESP8266)
+      if (analogWrite(pin_->get_pin(), 0) == 0) {
+        ESP_LOGE(TAG, "PWM channel %d is already in use", pwm_channel);
+        return;
+      }
+    #endif
+
+    // All checks passed, enable PWM output on the pin
+    pin_->setup_pwm();
+  }
+  
+  if (in_pin && out_pin) {
+    // Split I/O mode
+    in_pin_ = in_pin->to_isr();
+    out_pin_ = out_pin->to_isr();
+  } else {
+    // Single-pin mode
+    pin_ = pin->to_isr();
+  }
+}
 
 bool HOT IRAM_ATTR CustomOneWire::reset() {
   // See reset here:
@@ -183,8 +218,18 @@ bool HOT IRAM_ATTR CustomOneWire::reset() {
 
 void HOT IRAM_ATTR CustomOneWire::write_bit(bool bit) {
   // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  if (in_pin_ && out_pin_) {
+    // Split I/O mode
+    in_pin_.pin_mode(gpio::FLAG_OUTPUT);
+    out_pin_.pin_mode(gpio::FLAG_OUTPUT);
+    in_pin_.digital_write(false);
+    out_pin_.digital_write(bit);
+  } else {
+    // Single-pin mode
+    pin_.pin_mode(gpio::FLAG_OUTPUT);
+    pin_.digital_write(false);
+    pin_.digital_write(bit);
+  }
 
   // from datasheet:
   // write 0 low time: t_low0: min=60µs, max=120µs
@@ -198,7 +243,15 @@ void HOT IRAM_ATTR CustomOneWire::write_bit(bool bit) {
   // delay A/C
   delayMicroseconds(delay0);
   // release bus
-  pin_.digital_write(true);
+  if (in_pin_ && out_pin_) {
+    // Split I/O mode
+    in_pin_.digital_write(true);
+    out_pin_.digital_write(false);
+  } else {
+    // Single-pin mode
+    pin_.digital_write(true);
+    pin_.digital_write(false);
+  }
   // delay B/D
   delayMicroseconds(delay1);
 }
@@ -398,6 +451,17 @@ void IRAM_ATTR CustomOneWire::set_overdrive() {
   // reduce delay times for overdrive mode
   uint32_t delay0 = bit ? 1 : 5;
   uint32_t delay1 = bit ? 4 : 1;
+}
+
+OneWireModeTracker one_wire_mode_tracker;
+
+void setup() {
+  one_wire_mode_tracker.setup();
+}
+
+void loop() {
+  // Call the update method of the OneWireModeTracker component
+  one_wire_mode_tracker.update();
 }
 
 }  // namespace custom_onewire

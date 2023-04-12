@@ -5,52 +5,43 @@ esphome:
   project:
     name: "${project_name}"
     version: "${project_version}"
-  libraries:
-    - Wire
-    - Adafruit Unified Sensor
-    - SPI
-    # - OneWire
-    - file:///config/esphome/.external_components/unused_arduino/OneWire
-    - file:///config/esphome/.external_components/arduino/BME280_OneWire
-    # - file:///config/esphome/.external_components/unused_arduino/arduino-DS28E17
-    # - file:///config/esphome/.external_components/unused_arduino/BME280_1wire
+  # libraries:
+  #   - Wire
+  #   - Adafruit Unified Sensor
+  #   - SPI
+  #   # - OneWire
+  #   - file:///config/esphome/.external_components/unused_arduino/OneWire
+  #   - file:///config/esphome/.external_components/arduino/BME280_OneWire
+  #   # - file:///config/esphome/.external_components/unused_arduino/arduino-DS28E17
+  #   # - file:///config/esphome/.external_components/unused_arduino/BME280_1wire
 
-  includes:
-    # - BME280_1wire.h
-    # - DS28E17.h
-    - OneWire.h
-    - BME280_OneWire.h
+  # includes:
+  #   # - BME280_1wire.h
+  #   # - DS28E17.h
+  #   - OneWire.h
+  #   - BME280_OneWire.h
 
 esp32:
   board: esp32dev
   framework: 
     type: arduino
 
-# external_components:
+external_components:
   # - source: github://pr#4330
   #   components: [internal_temperature]
   #   refresh: always
   # - source:
-  #     path: .external_components/arduino/arduino-DS28E17
+  #     path: my_external_components/custom_onewire
   #     type: local
-  #   refresh: 1d
-  #   components: all
+  #   # refresh: 1d
+  #   # components: all
   # - source:
-  #     path: .external_components/arduino
+  #     path: my_external_components/custom_onewire/ds28e17_i2c_bus
+  #     # \\10.10.1.6\config\esphome\.external_components\new_esphome_components\custom_onewire
   #     type: local
-  #   refresh: 86400s
-  #   components:
-  #     # - id: "ds28e17"
-  #       library:
-  #         name: "BME280_OneWire"
-  # - source:
-  #     name: "BME280_OneWire"
-  #     url: "http://www.fay.tv/zms/content/uploads/BME280_OneWire.zip"
-  #   refresh: 86400s
-  #   components:
-  #     - id: ds28e17
-  #       library:
-  #         name: BME280_OneWire
+  #   # refresh: 86400s
+  - source: my_external_components/test
+    refresh: always
 
 captive_portal:
 
@@ -62,38 +53,42 @@ web_server:
 #     id: my_onewire_bus
 
 # Define the custom platform for the BME280 sensor
-custom_component:
-  - lambda: |-
-      #include <OneWire.h>
-      #include <Adafruit_Sensor.h>
-      #include <BME280_OneWire.h>
+# custom_component:
+#   - lambda: |-
+#       #include <OneWire.h>
+#       #include <Adafruit_Sensor.h>
+#       #include <BME280_OneWire.h>
 
-      DeviceAddress addr = {0x19,0x44,0xA2,0x03,0x00,0x00,0x00,0xA6};
-      OneWire oneWire = OneWire(5);
-      BME280_OneWire bme = BME280_OneWire(&oneWire);
+#       DeviceAddress addr = {0x19,0x44,0xA2,0x03,0x00,0x00,0x00,0xA6};
+#       OneWire oneWire = OneWire(5);
+#       BME280_OneWire bme = BME280_OneWire(&oneWire);
 
-      void setup() {
-        bme.begin(addr);
-      }
+#       void setup() {
+#         bme.begin(addr);
+#       }
 
-      void loop() {
-        bme.takeForcedMeasurement();
-        float temperature = bme.readTemperature();
-        float pressure = bme.readPressure() / 100.0F;
-        float humidity = bme.readHumidity();
+#       void loop() {
+#         bme.takeForcedMeasurement();
+#         float temperature = bme.readTemperature();
+#         float pressure = bme.readPressure() / 100.0F;
+#         float humidity = bme.readHumidity();
 
-        // Publish the sensor values as MQTT messages
-        publish_state(temperature);
-        publish_state(pressure);
-        publish_state(humidity);
-      }
-    sensors:
-      - name: "BME280 Temperature"
-        unit_of_measurement: "°C"
-        accuracy_decimals: 2
-      - name: "BME280 Pressure"
-        unit_of_measurement: "hPa"
-        accuracy_decimals: 2
-      - name: "BME280 Humidity"
-        unit_of_measurement: "%"
-        accuracy_decimals: 2
+#         // Publish the sensor values as MQTT messages
+#         publish_state(temperature);
+#         publish_state(pressure);
+#         publish_state(humidity);
+#       }
+#     sensors:
+#       - name: "BME280 Temperature"
+#         unit_of_measurement: "°C"
+#         accuracy_decimals: 2
+#       - name: "BME280 Pressure"
+#         unit_of_measurement: "hPa"
+#         accuracy_decimals: 2
+#       - name: "BME280 Humidity"
+#         unit_of_measurement: "%"
+#         accuracy_decimals: 2
+
+onewire_bus:
+  pin: GPIO5
+# ds28e17_i2c_bus:

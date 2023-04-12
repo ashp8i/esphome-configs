@@ -1,0 +1,449 @@
+// #ifdef USE_ARDUINO // May not need as the Library is Platform Agnostic
+
+#include "onewire_bus_component.h"
+#include "esphome/core/log.h"
+#include "esphome/core/helpers.h"
+#include <cstdint>
+
+namespace esphome {
+namespace onewire_bus {
+
+static const char *const TAG = "dallas_maxim.one_wire";
+
+const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
+const int ONE_WIRE_ROM_SEARCH = 0xF0;
+
+bool HOT IRAM_ATTR OneWireBusComponent::reset() {
+  // See reset here:
+  // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
+  // Wait for communication to clear (delay G)
+  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  uint8_t retries = 125;
+  do {
+    if (--retries == 0)
+      return false;
+    delayMicroseconds(2);
+  } while (!pin_.digital_read());
+
+  // Send 480µs LOW TX reset pulse (drive bus low, delay H)
+  pin_.pin_mode(gpio::FLAG_OUTPUT);
+  pin_.digital_write(false);
+  delayMicroseconds(480);
+
+  // Release the bus, delay I
+  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  delayMicroseconds(70);
+
+  // sample bus, 0=device(s) present, 1=no device present
+  bool r = !pin_.digital_read();
+  // delay J
+  delayMicroseconds(410);
+  return r;
+}
+
+void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
+  // drive bus low
+  pin_.pin_mode(gpio::FLAG_OUTPUT);
+  pin_.digital_write(false);
+
+  // from datasheet:
+  // write 0 low time: t_low0: min=60µs, max=120µs
+  // write 1 low time: t_low1: min=1µs, max=15µs
+  // time slot: t_slot: min=60µs, max=120µs
+  // recovery time: t_rec: min=1µs
+  // ds18b20 appears to read the bus after roughly 14µs
+  uint32_t delay0 = bit ? 6 : 60;
+  uint32_t delay1 = bit ? 54 : 5;
+
+  // delay A/C
+  delayMicroseconds(delay0);
+  // release bus
+  pin_.digital_write(true);
+  // delay B/D
+  delayMicroseconds(delay1);
+}
+
+bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
+  // drive bus low
+  pin_.pin_mode(gpio::FLAG_OUTPUT);
+  pin_.digital_write(false);
+
+  // note: for reading we'll need very accurate timing, as the
+  // timing for the digital_read() is tight; according to the datasheet,
+  // we should read at the end of 16µs starting from the bus low
+  // typically, the ds18b20 pulls the line high after 11µs for a logical 1
+  // and 29µs for a logical 0
+
+  uint32_t start = micros();
+  // datasheet says >1µs
+  delayMicroseconds(3);
+
+  // release bus, delay E
+  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+
+  // Unfortunately some frameworks have different characteristics than others
+  // esp32 arduino appears to pull the bus low only after the digital_write(false),
+  // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
+  // manually correct for this with these constants.
+
+#ifdef USE_ESP32
+  uint32_t timing_constant = 12;
+#else
+  uint32_t timing_constant = 14;
+#endif
+
+  // measure from start value directly, to get best accurate timing no matter
+  // how long pin_mode/delayMicroseconds took
+  while (micros() - start < timing_constant)
+    ;
+
+  // sample bus to read bit from peer
+  bool r = pin_.digital_read();
+
+  // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
+  uint32_t now = micros();
+  if (now - start < 60)
+    delayMicroseconds(60 - (now - start));
+
+  return r;
+}
+
+void IRAM_ATTR OneWireBusComponent::write8(uint8_t val) {
+  for (uint8_t i = 0; i < 8; i++) {
+    this->write_bit(bool((1u << i) & val));
+  }
+}
+
+void IRAM_ATTR OneWireBusComponent::write64(uint64_t val) {
+  for (uint8_t i = 0; i < 64; i++) {
+    this->write_bit(bool((1ULL << i) & val));
+  }
+}
+
+uint8_t IRAM_ATTR OneWireBusComponent::read8() {
+  uint8_t ret = 0;
+  for (uint8_t i = 0; i < 8; i++) {
+    ret |= (uint8_t(this->read_bit()) << i);
+  }
+  return ret;
+}
+
+uint64_t IRAM_ATTR OneWireBusComponent::read64() {
+  uint64_t ret = 0;
+  for (uint8_t i = 0; i < 8; i++) {
+    ret |= (uint64_t(this->read_bit()) << i);
+  }
+  return ret;
+}
+
+void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
+  this->write8(ONE_WIRE_ROM_SELECT);
+  this->write64(address);
+}
+
+void IRAM_ATTR OneWireBusComponent::reset_search() {
+  this->last_discrepancy_ = 0;
+  this->last_device_flag_ = false;
+  this->rom_number_ = 0;
+}
+
+uint64_t IRAM_ATTR OneWireBusComponent::search() {
+  if (this->last_device_flag_) {
+    return 0u;
+  }
+
+  {
+    InterruptLock lock;
+    if (!this->reset()) {
+      // Reset failed or no devices present
+      this->reset_search();
+      return 0u;
+    }
+  }
+
+  uint8_t id_bit_number = 1;
+  uint8_t last_zero = 0;
+  uint8_t rom_byte_number = 0;
+  bool search_result = false;
+  uint8_t rom_byte_mask = 1;
+
+  {
+    InterruptLock lock;
+    // Initiate search
+    this->write8(ONE_WIRE_ROM_SEARCH);
+    do {
+      // read bit
+      bool id_bit = this->read_bit();
+      // read its complement
+      bool cmp_id_bit = this->read_bit();
+
+      if (id_bit && cmp_id_bit) {
+        // No devices participating in search
+        break;
+      }
+
+      bool branch;
+
+      if (id_bit != cmp_id_bit) {
+        // only chose one branch, the other one doesn't have any devices.
+        branch = id_bit;
+      } else {
+        // there are devices with both 0s and 1s at this bit
+        if (id_bit_number < this->last_discrepancy_) {
+          branch = (this->rom_number8_()[rom_byte_number] & rom_byte_mask) > 0;
+        } else {
+          branch = id_bit_number == this->last_discrepancy_;
+        }
+
+        if (!branch) {
+          last_zero = id_bit_number;
+        }
+      }
+
+      if (branch) {
+        // set bit
+        this->rom_number8_()[rom_byte_number] |= rom_byte_mask;
+      } else {
+        // clear bit
+        this->rom_number8_()[rom_byte_number] &= ~rom_byte_mask;
+      }
+
+      // choose/announce branch
+      this->write_bit(branch);
+      id_bit_number++;
+      rom_byte_mask <<= 1;
+      if (rom_byte_mask == 0u) {
+        // go to next byte
+        rom_byte_number++;
+        rom_byte_mask = 1;
+      }
+    } while (rom_byte_number < 8);  // loop through all bytes
+  }
+
+  if (id_bit_number >= 65) {
+    this->last_discrepancy_ = last_zero;
+    if (this->last_discrepancy_ == 0) {
+      // we're at root and have no choices left, so this was the last one.
+      this->last_device_flag_ = true;
+    }
+    search_result = true;
+  }
+
+  search_result = search_result && (this->rom_number8_()[0] != 0);
+  if (!search_result) {
+    this->reset_search();
+    return 0u;
+  }
+
+  return this->rom_number_;
+}
+
+std::vector<uint64_t> OneWireBusComponent::search_vec() {
+  std::vector<uint64_t> res;
+
+  this->reset_search();
+  uint64_t address;
+  while ((address = this->search()) != 0u)
+    res.push_back(address);
+
+  return res;
+}
+
+void IRAM_ATTR OneWireBusComponent::skip() {
+  this->write8(0xCC);  // skip ROM
+}
+
+uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
+
+void OneWireBusComponent::setup() {
+  ESP_LOGCONFIG(TAG, "Setting up OneWireBusComponent...");
+
+  // ... code related to pin setup and initialization ...
+  pin_->setup();
+
+  // clear bus with 480µs high, otherwise initial reset in search_vec() fails
+  pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  delayMicroseconds(480);
+
+  // Create an instance of the OneWireBus class
+  one_wire_ = new OneWireBus(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
+
+  std::vector<uint64_t> raw_devices;
+  raw_devices = this->one_wire_->search_vec();
+
+  // ... code for handling the raw_devices data ...
+  for (auto &address : raw_devices) {
+    auto *address8 = reinterpret_cast<uint8_t *>(&address);
+    if (crc8(address8, 7) != address8[7]) {
+      ESP_LOGW(TAG, "Dallas device 0x%s has invalid CRC.", format_hex(address).c_str());
+      continue;
+    }
+    // No specific device type checks
+    ESP_LOGI(TAG, "Found device with address: 0x%s", format_hex(address).c_str());
+    this->found_devices_.push_back(address);
+  }
+
+  for (auto *device : this->devices_) {
+    if (device->get_index().has_value()) {
+      if (*device->get_index() >= this->found_devices_.size()) {
+        this->status_set_error();
+        continue;
+      }
+      device->set_address(this->found_devices_[*device->get_index()]);
+    }
+
+    if (!device->setup_device()) {
+      this->status_set_error();
+    }
+  }
+}
+
+void OneWireBusComponent::dump_config() {
+  ESP_LOGCONFIG(TAG, "OneWireBusComponent:");
+  LOG_PIN("  Pin: ", this->pin_);
+  LOG_UPDATE_INTERVAL(this);
+
+  if (this->found_devices_.empty()) {
+    ESP_LOGW(TAG, "  Found no devices!");
+  } else {
+    ESP_LOGD(TAG, "  Found devices:");
+    for (auto &address : this->found_devices_) {
+      ESP_LOGD(TAG, "    0x%s", format_hex(address).c_str());
+    }
+  }
+
+  for (auto *device : this->devices_) {
+    LOG_SENSOR("  ", "Device", device);
+    if (device->get_index().has_value()) {
+      ESP_LOGCONFIG(TAG, "    Index %u", *device->get_index());
+      if (*device->get_index() >= this->found_devices_.size()) {
+        ESP_LOGE(TAG, "Couldn't find device by index - not connected. Proceeding without it.");
+        continue;
+      }
+    }
+    ESP_LOGCONFIG(TAG, "    Address: %s", device->get_address_name().c_str());
+    // No resolution check
+  }
+}
+
+void OneWireBusComponent::register_device(OneWireBusDevice *device) {
+  this->devices_.push_back(device);
+}
+
+void DallasComponent::update() {
+  this->status_clear_warning();
+
+  bool result;
+  {
+    InterruptLock lock;
+    result = this->one_wire_->reset();
+  }
+  if (!result) {
+    ESP_LOGE(TAG, "Requesting conversion failed");
+    this->status_set_warning();
+    for (auto *sensor : this->sensors_) {
+      sensor->publish_state(NAN);
+    }
+    return;
+  }
+
+  {
+    InterruptLock lock;
+    this->one_wire_->skip();
+    this->one_wire_->write8(DALLAS_COMMAND_START_CONVERSION);
+  }
+
+  for (auto *sensor : this->sensors_) {
+    this->set_timeout(sensor->get_address_name(), sensor->millis_to_wait_for_conversion(), [this, sensor] {
+      bool res = sensor->read_scratch_pad();
+
+      if (!res) {
+        ESP_LOGW(TAG, "'%s' - Resetting bus for read failed!", sensor->get_name().c_str());
+        sensor->publish_state(NAN);
+        this->status_set_warning();
+        return;
+      }
+      if (!sensor->check_scratch_pad()) {
+        sensor->publish_state(NAN);
+        this->status_set_warning();
+        return;
+      }
+
+      float tempc = sensor->get_temp_c();
+      ESP_LOGD(TAG, "'%s': Got Temperature=%.1f°C", sensor->get_name().c_str(), tempc);
+      sensor->publish_state(tempc);
+    });
+  }
+}
+
+void DallasTemperatureSensor::set_address(uint64_t address) { this->address_ = address; }
+
+optional<uint8_t> DallasTemperatureSensor::get_index() const { return this->index_; }
+
+void DallasTemperatureSensor::set_index(uint8_t index) { this->index_ = index; }
+
+uint8_t *DallasTemperatureSensor::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
+
+const std::string &DallasTemperatureSensor::get_address_name() {
+  if (this->address_name_.empty()) {
+    this->address_name_ = std::string("0x") + format_hex(this->address_);
+  }
+
+  return this->address_name_;
+}
+
+bool IRAM_ATTR DallasTemperatureSensor::read_scratch_pad() {
+  auto *wire = this->parent_->one_wire_;
+
+  {
+    InterruptLock lock;
+
+    if (!wire->reset()) {
+      return false;
+    }
+  }
+
+  {
+    InterruptLock lock;
+
+    wire->select(this->address_);
+    wire->write8(DALLAS_COMMAND_READ_SCRATCH_PAD);
+
+    for (unsigned char &i : this->scratch_pad_) {
+      i = wire->read8();
+    }
+  }
+
+  return true;
+}
+
+bool DallasTemperatureSensor::check_scratch_pad() {
+  bool chksum_validity = (crc8(this->scratch_pad_, 8) == this->scratch_pad_[8]);
+  bool config_validity = false;
+
+  switch (this->get_address8()[0]) {
+    case DALLAS_MODEL_DS18B20:
+      config_validity = ((this->scratch_pad_[4] & 0x9F) == 0x1F);
+      break;
+    default:
+      config_validity = ((this->scratch_pad_[4] & 0x10) == 0x10);
+  }
+
+#ifdef ESPHOME_LOG_LEVEL_VERY_VERBOSE
+  ESP_LOGVV(TAG, "Scratch pad: %02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X (%02X)", this->scratch_pad_[0],
+            this->scratch_pad_[1], this->scratch_pad_[2], this->scratch_pad_[3], this->scratch_pad_[4],
+            this->scratch_pad_[5], this->scratch_pad_[6], this->scratch_pad_[7], this->scratch_pad_[8],
+            crc8(this->scratch_pad_, 8));
+#endif
+  if (!chksum_validity) {
+    ESP_LOGW(TAG, "'%s' - Scratch pad checksum invalid!", this->get_name().c_str());
+  } else if (!config_validity) {
+    ESP_LOGW(TAG, "'%s' - Scratch pad config register invalid!", this->get_name().c_str());
+  }
+  return chksum_validity && config_validity;
+}
+
+std::string DallasTemperatureSensor::unique_id() { return "dallas-" + str_lower_case(format_hex(this->address_)); }
+
+}  // namespace onewire_bus
+}  // namespace esphome

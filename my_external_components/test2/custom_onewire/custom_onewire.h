@@ -9,7 +9,7 @@ namespace onewire {
 extern const uint8_t ONE_WIRE_ROM_SELECT;
 extern const int ONE_WIRE_ROM_SEARCH;
 
-class CustomOneWire : public Component {
+class CustomOneWire {
  public:
   CustomOneWire(InternalGPIOPin *pin, InternalGPIOPin *in_pin, InternalGPIOPin *out_pin, bool low_power_mode = false, bool overdrive_mode = false);
 
@@ -89,7 +89,7 @@ class CustomOneWire : public Component {
 
  private:
   InternalGPIOPin *pin_;
-  OneWire one_wire_;
+  CustomOneWire one_wire_;
   enum class State {
     Reset,
     PresenceDetection,

@@ -17,25 +17,25 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  this->pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   uint8_t retries = 125;
   do {
     if (--retries == 0)
       return false;
     delayMicroseconds(2);
-  } while (!pin_.digital_read());
+  } while (!this->pin_->digital_read());
 
   // Send 480µs LOW TX reset pulse (drive bus low, delay H)
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  this->pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_->digital_write(false);
   delayMicroseconds(480);
 
   // Release the bus, delay I
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  this->pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(70);
 
   // sample bus, 0=device(s) present, 1=no device present
-  bool r = !pin_.digital_read();
+  bool r = !this->pin_->digital_read();
   // delay J
   delayMicroseconds(410);
   return r;
@@ -43,8 +43,8 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
 
 void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  this->pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_->digital_write(false);
 
   // from datasheet:
   // write 0 low time: t_low0: min=60µs, max=120µs
@@ -58,15 +58,15 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // delay A/C
   delayMicroseconds(delay0);
   // release bus
-  pin_.digital_write(true);
+  this->pin_->digital_write(true);
   // delay B/D
   delayMicroseconds(delay1);
 }
 
 bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  this->pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_->digital_write(false);
 
   // note: for reading we'll need very accurate timing, as the
   // timing for the digital_read() is tight; according to the datasheet,
@@ -79,7 +79,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   delayMicroseconds(3);
 
   // release bus, delay E
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  this->pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
   // Unfortunately some frameworks have different characteristics than others
   // esp32 arduino appears to pull the bus low only after the digital_write(false),
@@ -98,7 +98,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
     ;
 
   // sample bus to read bit from peer
-  bool r = pin_.digital_read();
+  bool r = this->pin_->digital_read();
 
   // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
   uint32_t now = micros();
@@ -265,8 +265,8 @@ void OneWireBusComponent::setup() {
   pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(480);
 
-  // Create an instance of the OneWireBus class
-  one_wire_ = new OneWireBus(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
+  // Create an instance of the OneWireBusComponent class
+  one_wire_ = new OneWireBusComponent(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
 
   std::vector<uint64_t> raw_devices;
   raw_devices = this->one_wire_->search_vec();
@@ -275,7 +275,7 @@ void OneWireBusComponent::setup() {
   for (auto &address : raw_devices) {
     auto *address8 = reinterpret_cast<uint8_t *>(&address);
     if (crc8(address8, 7) != address8[7]) {
-      ESP_LOGW(TAG, "Dallas device 0x%s has invalid CRC.", format_hex(address).c_str());
+      ESP_LOGW(TAG, "ONEWIRE device 0x%s has invalid CRC.", format_hex(address).c_str());
       continue;
     }
     // No specific device type checks
@@ -313,7 +313,7 @@ void OneWireBusComponent::dump_config() {
   }
 
   for (auto *device : this->devices_) {
-    LOG_SENSOR("  ", "Device", device);
+    LOG_device("  ", "Device", device);
     if (device->get_index().has_value()) {
       ESP_LOGCONFIG(TAG, "    Index %u", *device->get_index());
       if (*device->get_index() >= this->found_devices_.size()) {
@@ -330,7 +330,7 @@ void OneWireBusComponent::register_device(OneWireBusDevice *device) {
   this->devices_.push_back(device);
 }
 
-void DallasComponent::update() {
+void OneWireBusComponent::update() {
   this->status_clear_warning();
 
   bool result;
@@ -341,50 +341,43 @@ void DallasComponent::update() {
   if (!result) {
     ESP_LOGE(TAG, "Requesting conversion failed");
     this->status_set_warning();
-    for (auto *sensor : this->sensors_) {
-      sensor->publish_state(NAN);
-    }
     return;
   }
 
   {
     InterruptLock lock;
     this->one_wire_->skip();
-    this->one_wire_->write8(DALLAS_COMMAND_START_CONVERSION);
+    this->one_wire_->write8(ONEWIRE_COMMAND_START_CONVERSION);
   }
 
-  for (auto *sensor : this->sensors_) {
-    this->set_timeout(sensor->get_address_name(), sensor->millis_to_wait_for_conversion(), [this, sensor] {
-      bool res = sensor->read_scratch_pad();
+  for (auto *device : this->devices_) {
+    this->set_timeout(device->get_address_name(), device->millis_to_wait_for_conversion(), [this, device] {
+      bool res = device->read_scratch_pad();
 
       if (!res) {
-        ESP_LOGW(TAG, "'%s' - Resetting bus for read failed!", sensor->get_name().c_str());
-        sensor->publish_state(NAN);
+        ESP_LOGW(TAG, "'%s' - Resetting bus for read failed!", device->get_name().c_str());
         this->status_set_warning();
         return;
       }
-      if (!sensor->check_scratch_pad()) {
-        sensor->publish_state(NAN);
+      if (!device->check_scratch_pad()) {
         this->status_set_warning();
         return;
       }
 
-      float tempc = sensor->get_temp_c();
-      ESP_LOGD(TAG, "'%s': Got Temperature=%.1f°C", sensor->get_name().c_str(), tempc);
-      sensor->publish_state(tempc);
+      device->process_scratch_pad();
     });
   }
 }
 
-void DallasTemperatureSensor::set_address(uint64_t address) { this->address_ = address; }
+void OneWireBusDevice::set_address(uint64_t address) { this->address_ = address; }
 
-optional<uint8_t> DallasTemperatureSensor::get_index() const { return this->index_; }
+optional<uint8_t> OneWireBusDevice::get_index() const { return this->index_; }
 
-void DallasTemperatureSensor::set_index(uint8_t index) { this->index_ = index; }
+void OneWireBusDevice::set_index(uint8_t index) { this->index_ = index; }
 
-uint8_t *DallasTemperatureSensor::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
+uint8_t *OneWireBusDevice::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
 
-const std::string &DallasTemperatureSensor::get_address_name() {
+const std::string &OneWireBusDevice::get_address_name() {
   if (this->address_name_.empty()) {
     this->address_name_ = std::string("0x") + format_hex(this->address_);
   }
@@ -392,58 +385,27 @@ const std::string &DallasTemperatureSensor::get_address_name() {
   return this->address_name_;
 }
 
-bool IRAM_ATTR DallasTemperatureSensor::read_scratch_pad() {
-  auto *wire = this->parent_->one_wire_;
+std::string OneWireBusDevice::unique_id() { return "OneWire-" + str_lower_case(format_hex(this->address_)); }
 
-  {
-    InterruptLock lock;
-
-    if (!wire->reset()) {
-      return false;
-    }
-  }
-
-  {
-    InterruptLock lock;
-
-    wire->select(this->address_);
-    wire->write8(DALLAS_COMMAND_READ_SCRATCH_PAD);
-
-    for (unsigned char &i : this->scratch_pad_) {
-      i = wire->read8();
-    }
-  }
-
-  return true;
+void OneWireBusDevice::process_scratch_pad(const std::vector<uint8_t>& scratch_pad) {
+  // Parse the temperature value from the scratch pad and publish it.
+  float tempc = this->parse_temperature(scratch_pad);
+  ESP_LOGD(TAG, "'%s': Got Temperature=%.1f°C", this->get_name().c_str(), tempc);
+  this->publish_state(tempc);
 }
 
-bool DallasTemperatureSensor::check_scratch_pad() {
-  bool chksum_validity = (crc8(this->scratch_pad_, 8) == this->scratch_pad_[8]);
-  bool config_validity = false;
+float OneWireBusDevice::parse_temperature(const std::vector<uint8_t>& scratch_pad) const {
+  // Implement the temperature parsing logic here, based on the scratch pad data format for this device.
+  // Return the temperature value as a float.
 
-  switch (this->get_address8()[0]) {
-    case DALLAS_MODEL_DS18B20:
-      config_validity = ((this->scratch_pad_[4] & 0x9F) == 0x1F);
-      break;
-    default:
-      config_validity = ((this->scratch_pad_[4] & 0x10) == 0x10);
-  }
+  // For example, if the device uses a scratch pad format with a 16-bit temperature value in
+  // the first two bytes of the scratch pad, where the temperature is represented in units of 0.0625°C,
+  // you can parse the temperature value as follows:
 
-#ifdef ESPHOME_LOG_LEVEL_VERY_VERBOSE
-  ESP_LOGVV(TAG, "Scratch pad: %02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X.%02X (%02X)", this->scratch_pad_[0],
-            this->scratch_pad_[1], this->scratch_pad_[2], this->scratch_pad_[3], this->scratch_pad_[4],
-            this->scratch_pad_[5], this->scratch_pad_[6], this->scratch_pad_[7], this->scratch_pad_[8],
-            crc8(this->scratch_pad_, 8));
-#endif
-  if (!chksum_validity) {
-    ESP_LOGW(TAG, "'%s' - Scratch pad checksum invalid!", this->get_name().c_str());
-  } else if (!config_validity) {
-    ESP_LOGW(TAG, "'%s' - Scratch pad config register invalid!", this->get_name().c_str());
-  }
-  return chksum_validity && config_validity;
+  uint16_t temp_raw = (scratch_pad[1] << 8) | scratch_pad[0];
+  float tempc = static_cast<float>(temp_raw) * 0.0625f;
+  return tempc;
 }
-
-std::string DallasTemperatureSensor::unique_id() { return "dallas-" + str_lower_case(format_hex(this->address_)); }
 
 }  // namespace onewire_bus
 }  // namespace esphome

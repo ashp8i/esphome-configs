@@ -21,7 +21,7 @@ class OneWireBusComponent : public Component {
   void dump_config() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
-  void update() override;
+  void update(); //override;
   std::vector<uint64_t> get_found_devices() { return found_devices_; }
 
 /** Reset the bus, should be done before all write operations.
@@ -76,13 +76,13 @@ class OneWireBusComponent : public Component {
   friend OneWireBusDevice;
 
   InternalGPIOPin *pin_;
-  OneWireBuComponent *one_wire_;
+  OneWireBusComponent *one_wire_;
   std::vector<OneWireBusDevice *> devices_;
   std::vector<uint64_t> found_devices_;
 };
 
 /// Internal class that helps us create multiple Devices for one instance of a 1-Wire Bus.
-class OneWireBusDevice : public Device::Device {
+class OneWireBusDevice : public onewire_bus::OneWireBusComponent {
  public:
   void set_parent(OneWireBusComponent *parent) { parent_ = parent; }
   /// Helper to get a pointer to the address as uint8_t.
@@ -111,11 +111,10 @@ class OneWireBusDevice : public Device::Device {
 
   bool setup_device();
 
-  bool read_scratch_pad();
+  std::string unique_id(); //override;
 
-  bool check_scratch_pad();
-
-  std::string unique_id() override;
+    // Add this new function to process the scratch pad data
+  void process_scratch_pad(const std::vector<uint8_t>& scratch_pad);
 
  protected:
   OneWireBusComponent *parent_;
@@ -131,6 +130,9 @@ class OneWireBusDevice : public Device::Device {
   uint8_t scratch_pad_[9] = {
       0,
   };
+
+  // Add this new function to parse the temperature value from the scratch pad
+  float parse_temperature(const std::vector<uint8_t>& scratch_pad) const;
 };
 
 }  // namespace onewire_bus

@@ -40,12 +40,15 @@ external_components:
   #     # \\10.10.1.6\config\esphome\.external_components\new_esphome_components\custom_onewire
   #     type: local
   #   # refresh: 86400s
-  # onewire_bus has issues trying former component
-  # - source: my_external_components/test
-  #   refresh: always
-  # custom_onewire
-  - source: my_external_components/test2
+  # onewire_bus - mending issues now finally
+  - source: my_external_components/test/v0.3
     refresh: always
+  # custom_onewire
+  # - source: my_external_components/test2
+  #   refresh: always
+  # esponewire-vanilla-merge
+  # - source: my_external_components/test3
+  #   refresh: always
 
 
 captive_portal:
@@ -94,8 +97,10 @@ web_server:
 #         unit_of_measurement: "%"
 #         accuracy_decimals: 2
 
-# onewire_bus:
-#   pin: GPIO5
-# ds28e17_i2c_bus:
-custom_onewire:
+onewire_bus:
   pin: GPIO5
+# ds28e17_i2c_bus:
+# custom_onewire:
+#   pin: GPIO5
+# esponewire:
+#   pin: GPIO5

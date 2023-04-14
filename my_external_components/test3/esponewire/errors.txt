@@ -1,0 +1,9 @@
+src/esphome/components/esponewire/esponewire_component.cpp: In member function 'uint64_t esphome::onewire::ESPOneWireComponent::search()':
+src/esphome/components/esponewire/esponewire_component.cpp:103:18: error: 'reset_search' cannot be used as a function
+     reset_search();
+                  ^
+src/esphome/components/esponewire/esponewire_component.cpp: In member function 'virtual void esphome::onewire::ESPOneWireComponent::setup()':
+src/esphome/components/esponewire/esponewire_component.cpp:152:12: error: 'class esphome::ISRInternalGPIOPin' has no member named 'setup'
+   isr_pin_.setup();
+            ^~~~~
+*** [/data/bme2801wire/.pioenvs/bme2801wire/src/esphome/components/esponewire/esponewire_component.cpp.o] Error 1

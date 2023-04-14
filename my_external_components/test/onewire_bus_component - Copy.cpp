@@ -141,6 +141,118 @@ void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
   this->write64(address);
 }
 
+// void IRAM_ATTR OneWireBusComponent::reset_search() {
+//   this->last_discrepancy_ = 0;
+//   this->last_device_flag_ = false;
+//   this->rom_number_ = 0;
+// }
+
+// uint64_t IRAM_ATTR OneWireBusComponent::search() {
+//   if (this->last_device_flag_) {
+//     return 0u;
+//   }
+
+//   {
+//     InterruptLock lock;
+//     if (!this->reset()) {
+//       // Reset failed or no devices present
+//       this->reset_search();
+//       return 0u;
+//     }
+//   }
+
+//   uint8_t id_bit_number = 1;
+//   uint8_t last_zero = 0;
+//   uint8_t rom_byte_number = 0;
+//   bool search_result = false;
+//   uint8_t rom_byte_mask = 1;
+
+//   {
+//     InterruptLock lock;
+//     // Initiate search
+//     this->write8(ONE_WIRE_ROM_SEARCH);
+//     do {
+//       // read bit
+//       bool id_bit = this->read_bit();
+//       // read its complement
+//       bool cmp_id_bit = this->read_bit();
+
+//       if (id_bit && cmp_id_bit) {
+//         // No devices participating in search
+//         break;
+//       }
+
+//       bool branch;
+
+//       if (id_bit != cmp_id_bit) {
+//         // only chose one branch, the other one doesn't have any devices.
+//         branch = id_bit;
+//       } else {
+//         // there are devices with both 0s and 1s at this bit
+//         if (id_bit_number < this->last_discrepancy_) {
+//           branch = (this->rom_number8_()[rom_byte_number] & rom_byte_mask) > 0;
+//         } else {
+//           branch = id_bit_number == this->last_discrepancy_;
+//         }
+
+//         if (!branch) {
+//           last_zero = id_bit_number;
+//         }
+//       }
+
+//       if (branch) {
+//         // set bit
+//         this->rom_number8_()[rom_byte_number] |= rom_byte_mask;
+//       } else {
+//         // clear bit
+//         this->rom_number8_()[rom_byte_number] &= ~rom_byte_mask;
+//       }
+
+//       // choose/announce branch
+//       this->write_bit(branch);
+//       id_bit_number++;
+//       rom_byte_mask <<= 1;
+//       if (rom_byte_mask == 0u) {
+//         // go to next byte
+//         rom_byte_number++;
+//         rom_byte_mask = 1;
+//       }
+//     } while (rom_byte_number < 8);  // loop through all bytes
+//   }
+
+//   if (id_bit_number >= 65) {
+//     this->last_discrepancy_ = last_zero;
+//     if (this->last_discrepancy_ == 0) {
+//       // we're at root and have no choices left, so this was the last one.
+//       this->last_device_flag_ = true;
+//     }
+//     search_result = true;
+//   }
+
+//   search_result = search_result && (this->rom_number8_()[0] != 0);
+//   if (!search_result) {
+//     this->reset_search();
+//     return 0u;
+//   }
+
+//   return this->rom_number_;
+// }
+
+// std::vector<uint64_t> OneWireBusComponent::search_vec() {
+//   std::vector<uint64_t> res;
+
+//   this->reset_search();
+//   uint64_t address;
+//   while ((address = this->search()) != 0u)
+//     res.push_back(address);
+
+//   return res;
+// }
+
+// void IRAM_ATTR OneWireBusComponent::skip() {
+//   this->write8(0xCC);  // skip ROM
+// }
+
 void IRAM_ATTR OneWireBusComponent::reset_search() {
   this->last_discrepancy_ = 0;
   this->last_device_flag_ = false;
@@ -252,6 +364,7 @@ std::vector<uint64_t> OneWireBusComponent::search_vec() {
 void IRAM_ATTR OneWireBusComponent::skip() {
   this->write8(0xCC);  // skip ROM
 }
+
 
 uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 

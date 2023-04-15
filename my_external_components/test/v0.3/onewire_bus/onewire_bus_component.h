@@ -12,9 +12,9 @@ extern const int ONE_WIRE_ROM_SEARCH;
 
 class OneWireBusComponent : public Component {
  public:
-  explicit OneWireBusComponent(InternalGPIOPin *pin);              // YAML pin setup pointer?
+  explicit OneWireBusComponent(ISRInternalGPIOPin *pin);              // YAML pin setup pointer?
   void set_pin(InternalGPIOPin *pin) { pin_ = pin; }               // Set pin
-  void register_Device(OneWireBusComponent *device);  // Register Device Callback
+  void register_device(OneWireBusComponent *device);               // Register Device Callback
   void setup() override;                                                      // Component Setup
   void dump_config() override;                                                // Read Configuration
   float get_setup_priority() const override { return setup_priority::DATA; }  // Component Setup priority
@@ -25,14 +25,9 @@ class OneWireBusComponent : public Component {
   uint8_t *get_address8();  // Helper to create (and cache) the name for this Device. For example "0xfe0000031f1eaf29".
   const std::string &get_address_name();  // Address Name Return Method
   void set_address(uint64_t address);     // Set the 64-bit unsigned address for this Device.
-  optional<uint8_t> get_index() const {
-    if (index_.has_value()) {
-      return index_.value();
-    } else {
-      return {};  // return an empty optional
-    }
-  }                               // Get the index of this Device. (0 if using address.)
-  void set_index(uint8_t index);  // Set the index, if using index, address will be set after setup.
+  optional<uint8_t> get_index() const;    // Get the index of this Device. (0 if using address.)
+  void set_index(uint8_t index);          // Set the index, if using index, address will be set after setup.
+  // uint16_t millis_to_wait_for_conversion() const;
   bool setup_device();            // Device Setup
   bool read_scratch_pad();
   bool check_scratch_pad();
@@ -53,18 +48,23 @@ class OneWireBusComponent : public Component {
   uint64_t search();                   // Search for devices, Returns 0 if all devices have been found.
   std::vector<uint64_t> search_vec();  // Helper that wraps search in a std::vector.
 
+//  private:
+//   InterruptSafeGPIOPin pin_;
+
  protected:
-  inline uint8_t *rom_number8_();      // Helper for internal 64-bit unsigned rom number as a 8-bit integer pointer.
-  ISRInternalGPIOPin isr_pin_;         // ISR Pin Pointer
-  InternalGPIOPin *pin_;               // Pin Pointer
-  OneWireBusComponent *one_wire_;      // one wire pointer
+  ISRInternalGPIOPin pin_;                                // ISR Pin Pointer
+  //ISRInternalGPIOPin isr_pin_;                            // ISR Pin Pointer
+  // InternalGPIOPin *pin_;                                  // Pin Pointer
+  uint8_t last_discrepancy_{0};                           // Scratch Pad Error Checking
+  bool last_device_flag_{false};                          // last device?
+  uint64_t rom_number_{0};                                // Unsigned 64-bit ROM Number
+  OneWireBusComponent *one_wire_;                         // one wire pointer
   std::vector<OneWireBusComponent *> devices_;            // device prefix
   std::vector<uint64_t> found_devices_;                   // Vector for devices returned from a search
-
-  std::vector<std::function<void(uint64_t)>> callbacks_;  // Write
   uint64_t address_;                                      // Unsigned 64-bit ROM Address
   optional<uint8_t> index_;                               // Unsigned 64-bit ROM Address
   std::string address_name_;                              // Device Name String
+  inline uint8_t *rom_number8_();                         // Helper to get the internal 64-bit unsigned rom number as a 8-bit integer pointer.
   uint8_t scratch_pad_[9] = {
       0,
   };  // Unsigned 8-bit Scratch Pad Store

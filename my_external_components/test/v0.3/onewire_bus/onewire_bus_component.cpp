@@ -13,32 +13,50 @@ static const char *const TAG = "dallas_maxim.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-ESPOneWireComponent::ESPOneWireComponent(InternalGPIOPin *pin) : pin_(pin), isr_pin_(pin) {}
+/*
+uint16_t OneWireBusComponent::millis_to_wait_for_conversion() const {
+  switch (this->resolution_) {
+    case 9:
+      return 94;
+    case 10:
+      return 188;
+    case 11:
+      return 375;
+    default:
+      return 750;
+  }
+}
+*/
+
+/*bad constructor
+OneWireBusComponent::OneWireBusComponent(InternalGPIOPin *pin) : pin_(pin), isr_pin_(pin) {}
+*/
+OneWireBusComponent(ISRInternalGPIOPin *pin)
 
 /*
 bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
-  this->pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  this->pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   uint8_t retries = 125;
   do {
     if (--retries == 0)
       return false;
     delayMicroseconds(2);
-  } while (!this->pin_->digital_read());
+  } while (!this->pin_.digital_read());
 
   // Send 480µs LOW TX reset pulse (drive bus low, delay H)
-  this->pin_->pin_mode(gpio::FLAG_OUTPUT);
-  this->pin_->digital_write(false);
+  this->pin_.pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_.digital_write(false);
   delayMicroseconds(480);
 
   // Release the bus, delay I
-  this->pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  this->pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(70);
 
   // sample bus, 0=device(s) present, 1=no device present
-  bool r = !this->pin_->digital_read();
+  bool r = !this->pin_.digital_read();
   // delay J
   delayMicroseconds(410);
   return r;
@@ -67,7 +85,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   delayMicroseconds(70);
 
   // sample bus, 0=device(s) present, 1=no device present
-  bool presence = = !pin_.digital_read();
+  bool presence = !pin_.digital_read();
   // delay J
   delayMicroseconds(410);
   return presence;
@@ -76,8 +94,8 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
 /*
 void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // drive bus low
-  this->pin_->pin_mode(gpio::FLAG_OUTPUT);
-  this->pin_->digital_write(false);
+  this->pin_.pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_.digital_write(false);
 
   // from datasheet:
   // write 0 low time: t_low0: min=60µs, max=120µs
@@ -91,7 +109,7 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // delay A/C
   delayMicroseconds(delay0);
   // release bus
-  this->pin_->digital_write(true);
+  this->pin_.digital_write(true);
   // delay B/D
   delayMicroseconds(delay1);
 }
@@ -122,8 +140,8 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
 /*
 bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   // drive bus low
-  this->pin_->pin_mode(gpio::FLAG_OUTPUT);
-  this->pin_->digital_write(false);
+  this->pin_.pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_.digital_write(false);
 
   // note: for reading we'll need very accurate timing, as the
   // timing for the digital_read() is tight; according to the datasheet,
@@ -136,7 +154,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   delayMicroseconds(3);
 
   // release bus, delay E
-  this->pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  this->pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
   // Unfortunately some frameworks have different characteristics than others
   // esp32 arduino appears to pull the bus low only after the digital_write(false),
@@ -155,7 +173,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
     ;
 
   // sample bus to read bit from peer
-  bool r = this->pin_->digital_read();
+  bool r = this->pin_.digital_read();
 
   // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
   uint32_t now = micros();
@@ -229,7 +247,7 @@ void IRAM_ATTR OneWireBusComponent::write8(uint8_t val) {
 }
 */
 
-void IRAM_ATTR ESPOneWire::write8(uint8_t val) {
+void IRAM_ATTR OneWireBusComponent::write8(uint8_t val) {
   for (uint8_t i = 0; i < 8; i++) {
     this->write_bit(bool((1u << i) & val));
   }
@@ -243,7 +261,7 @@ void IRAM_ATTR OneWireBusComponent::write64(uint64_t val) {
 }
 */
 
-void IRAM_ATTR ESPOneWire::write64(uint64_t val) {
+void IRAM_ATTR OneWireBusComponent::write64(uint64_t val) {
   for (uint8_t i = 0; i < 64; i++) {
     this->write_bit(bool((1ULL << i) & val));
   }
@@ -259,7 +277,7 @@ uint8_t IRAM_ATTR OneWireBusComponent::read8() {
 }
 */
 
-uint8_t IRAM_ATTR ESPOneWire::read8() {
+uint8_t IRAM_ATTR OneWireBusComponent::read8() {
   uint8_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
     ret |= (uint8_t(this->read_bit()) << i);
@@ -276,7 +294,7 @@ uint64_t IRAM_ATTR OneWireBusComponent::read64() {
   return ret;
 }
 */
-uint64_t IRAM_ATTR ESPOneWire::read64() {
+uint64_t IRAM_ATTR OneWireBusComponent::read64() {
   uint64_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
     ret |= (uint64_t(this->read_bit()) << i);
@@ -291,7 +309,7 @@ void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
 }
 */
 
-void IRAM_ATTR ESPOneWire::select(uint64_t address) {
+void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
   this->write8(ONE_WIRE_ROM_SELECT);
   this->write64(address);
 }
@@ -304,7 +322,7 @@ void IRAM_ATTR OneWireBusComponent::reset_search() {
 }
 */
 
-void IRAM_ATTR ESPOneWire::reset_search() {
+void IRAM_ATTR OneWireBusComponent::reset_search() {
   this->last_discrepancy_ = 0;
   this->last_device_flag_ = false;
   this->rom_number_ = 0;
@@ -403,7 +421,7 @@ uint64_t IRAM_ATTR OneWireBusComponent::search() {
 }
 */
 
-uint64_t IRAM_ATTR ESPOneWire::search() {
+uint64_t IRAM_ATTR OneWireBusComponent::search() {
   if (this->last_device_flag_) {
     return 0u;
   }
@@ -507,7 +525,7 @@ std::vector<uint64_t> OneWireBusComponent::search_vec() {
 }
 */
 
-std::vector<uint64_t> ESPOneWire::search_vec() {
+std::vector<uint64_t> OneWireBusComponent::search_vec() {
   std::vector<uint64_t> res;
 
   this->reset_search();
@@ -524,40 +542,26 @@ void IRAM_ATTR OneWireBusComponent::skip() {
 }
 */
 
-void IRAM_ATTR ESPOneWire::skip() {
+void IRAM_ATTR OneWireBusComponent::skip() {
   this->write8(0xCC);  // skip ROM
-}
-
-/*
-void IRAM_ATTR OneWireBusComponent::reset_search() {
-  this->last_discrepancy_ = 0;
-  this->last_device_flag_ = false;
-  this->rom_number_ = 0;
-}
-*/
-
-void IRAM_ATTR ESPOneWire::reset_search() {
-  this->last_discrepancy_ = 0;
-  this->last_device_flag_ = false;
-  this->rom_number_ = 0;
 }
 
 // uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
-uint8_t IRAM_ATTR *ESPOneWire::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
+uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
 void OneWireBusComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up OneWireBusComponent...");
 
   // ... code related to pin setup and initialization ...
-  pin_->setup();
+  pin_.setup();
 
   // clear bus with 480µs high, otherwise initial reset in search_vec() fails
-  pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(480);
 
   // Create an instance of the OneWireBusComponent class
-  one_wire_ = new OneWireBusComponent(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
+  one_wire_ = new OneWireBusComponent(&(pin_.to_gpio())); // NOLINT(cppcoreguidelines-owning-memory)
 
   std::vector<uint64_t> raw_devices;
   raw_devices = this->one_wire_->search_vec();
@@ -589,10 +593,11 @@ void OneWireBusComponent::setup() {
   }
 }
 
+/*broken config routine
 void OneWireBusComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "OneWireBusComponent:");
   LOG_PIN("  Pin: ", this->pin_);
-  LOG_UPDATE_INTERVAL(this);
+  // LOG_UPDATE_INTERVAL(this);
 
   if (this->found_devices_.empty()) {
     ESP_LOGW(TAG, "  Found no devices!");
@@ -616,11 +621,18 @@ void OneWireBusComponent::dump_config() {
     // No resolution check
   }
 }
+*/
 
-void OneWireBusComponent::register_device(OneWireBusDevice *device) {
+void IRAM_ATTR OneWireBusComponent::dump_config() {
+  ESP_LOGCONFIG(TAG, "ESPOneWireComponent:");
+  LOG_PIN("  Pin: ", pin_);
+}
+
+void OneWireBusComponent::register_device(OneWireBusComponent *device) {
   this->devices_.push_back(device);
 }
 
+/*update method needs finalising again
 void OneWireBusComponent::update() {
   this->status_clear_warning();
 
@@ -659,16 +671,17 @@ void OneWireBusComponent::update() {
     });
   }
 }
+*/
 
-void OneWireBusDevice::set_address(uint64_t address) { this->address_ = address; }
+void OneWireBusComponent::set_address(uint64_t address) { this->address_ = address; }
 
-optional<uint8_t> OneWireBusDevice::get_index() const { return this->index_; }
+// optional<uint8_t> OneWireBusComponent::get_index() const { return this->index_; }
 
-void OneWireBusDevice::set_index(uint8_t index) { this->index_ = index; }
+void OneWireBusComponent::set_index(uint8_t index) { this->index_ = index; }
 
-uint8_t *OneWireBusDevice::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
+uint8_t *OneWireBusComponent::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
 
-const std::string &OneWireBusDevice::get_address_name() {
+const std::string &OneWireBusComponent::get_address_name() {
   if (this->address_name_.empty()) {
     this->address_name_ = std::string("0x") + format_hex(this->address_);
   }
@@ -676,16 +689,16 @@ const std::string &OneWireBusDevice::get_address_name() {
   return this->address_name_;
 }
 
-std::string OneWireBusDevice::unique_id() { return "OneWire-" + str_lower_case(format_hex(this->address_)); }
+std::string OneWireBusComponent::unique_id() { return "OneWire-" + str_lower_case(format_hex(this->address_)); }
 
-// void OneWireBusDevice::process_scratch_pad(const std::vector<uint8_t>& scratch_pad) {
+// void OneWireBusComponent::process_scratch_pad(const std::vector<uint8_t>& scratch_pad) {
 //   // Parse the temperature value from the scratch pad and publish it.
 //   float tempc = this->parse_temperature(scratch_pad);
 //   ESP_LOGD(TAG, "'%s': Got Temperature=%.1f°C", this->get_name().c_str(), tempc);
 //   this->publish_state(tempc);
 // }
 
-// float OneWireBusDevice::parse_temperature(const std::vector<uint8_t>& scratch_pad) const {
+// float OneWireBusComponent::parse_temperature(const std::vector<uint8_t>& scratch_pad) const {
 //   // Implement the temperature parsing logic here, based on the scratch pad data format for this device.
 //   // Return the temperature value as a float.
 

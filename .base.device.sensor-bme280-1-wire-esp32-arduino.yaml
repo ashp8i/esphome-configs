@@ -99,6 +99,7 @@ web_server:
 
 onewire_bus:
   pin: GPIO5
+  mode: normal
 # ds28e17_i2c_bus:
 # custom_onewire:
 #   pin: GPIO5

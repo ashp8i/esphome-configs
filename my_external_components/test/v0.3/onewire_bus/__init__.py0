@@ -1,0 +1,39 @@
+import esphome.codegen as cg
+import esphome.config_validation as cv
+from esphome import pins
+from esphome.const import CONF_ID, CONF_PIN, CONF_IN_PIN, CONF_OUT_PIN
+
+MULTI_CONF = True
+
+onewire_bus_ns = cg.esphome_ns.namespace("onewire_bus")
+OneWireBusComponent = onewire_bus_ns.class_("OneWireBusComponent", cg.Component)
+
+CONFIG_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(): cv.declare_id(OneWireBusComponent),
+        cv.Optional(CONF_PIN): pins.gpio_output_pin_schema,
+        cv.Optional(CONF_IN_PIN): pins.gpio_input_pin_schema,
+        cv.Optional(CONF_OUT_PIN): pins.gpio_output_pin_schema,
+    }
+).extend(cv.COMPONENT_SCHEMA)
+
+async def to_code(config):
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
+
+    pin = await cg.gpio_pin_expression(config[CONF_PIN])
+    cg.add(var.set_pin(pin))
+    pin = None
+    if CONF_PIN in config:
+        pin = await cg.gpio_pin_expression(config[CONF_PIN])
+    elif CONF_IN_PIN in config:
+        pin = await cg.gpio_pin_expression(config[CONF_IN_PIN])
+    else:
+        raise ValueError("Either pin, in_pin, or out_pin must be specified")
+
+    if CONF_OUT_PIN in config:
+        out_pin = await cg.gpio_pin_expression(config[CONF_OUT_PIN])
+    else:
+        out_pin = pin
+    cg.add(var.set_pin(pin))
+    cg.add(var.set_out_pin(out_pin))

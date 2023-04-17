@@ -58,12 +58,12 @@ class CustomOneWire(custom_onewire.CustomOneWire):
         _LOGGER.info("Initialized Custom OneWire")
 
 def to_code(config):
-    pin = yield pins.internal_gpio_pin_expression(config[CONF_PIN])
+    pin = await pins.internal_gpio_pin_expression(config[CONF_PIN])
     in_pin = None
     out_pin = None
     if CONF_IN_PIN in config and CONF_OUT_PIN in config:
-        in_pin = yield pins.internal_gpio_pin_expression(config[CONF_IN_PIN])
-        out_pin = yield pins.internal_gpio_pin_expression(config[CONF_OUT_PIN])
+        in_pin = await pins.internal_gpio_pin_expression(config[CONF_IN_PIN])
+        out_pin = await pins.internal_gpio_pin_expression(config[CONF_OUT_PIN])
 
     low_power_mode = config[CONF_LOW_POWER_MODE]
     overdrive_mode = config[CONF_OVERDRIVE_MODE]
@@ -71,4 +71,4 @@ def to_code(config):
     mode = config.get(CONF_MODE, "normal")
     input_select = config.get(CONF_INPUT_SELECT)
 
-    yield CustomOneWire(pin, in_pin, out_pin, low_power_mode, overdrive_mode, parasitic_power_mode, mode, input_select)
+    await CustomOneWire(pin, in_pin, out_pin, low_power_mode, overdrive_mode, parasitic_power_mode, mode, input_select)

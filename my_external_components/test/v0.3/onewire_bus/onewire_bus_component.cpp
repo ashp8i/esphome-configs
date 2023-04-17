@@ -31,10 +31,9 @@ uint16_t OneWireBusComponent::millis_to_wait_for_conversion() const {
 /*bad constructor
 OneWireBusComponent::OneWireBusComponent(InternalGPIOPin *pin) : pin_(pin), isr_pin_(pin) {}
 */
-OneWireBusComponent(InternalGPIOPin *pin, InternalGPIOPin *in_pin, InternalGPIOPin *out_pin, bool low_power_mode, bool overdrive_mode, bool parasitic_power_mode)
-    : pin_(pin), in_pin_(in_pin), out_pin_(out_pin), low_power_mode_(low_power_mode), overdrive_mode_(overdrive_mode), parasitic_power_mode_(parasitic_power_mode) {
-  
-  if (parasitic_power_mode_) {
+
+auto one_wire_ = new OneWireBusComponent{ .pin = pin, .in_pin = in_pin, .out_pin = out_pin };
+{
     // Check if the pin supports PWM
     if (!pin_->is_pwm()) {
       ESP_LOGE(TAG, "Pin %d does not support PWM", pin_->get_pin());
@@ -43,32 +42,38 @@ OneWireBusComponent(InternalGPIOPin *pin, InternalGPIOPin *in_pin, InternalGPIOP
 
     // Check if the PWM channel is available
     int pwm_channel = pin_->get_pwm_channel();
-    
-    #if defined(ESP_PLATFORM) && defined(CONFIG_IDF_TARGET_ESP32)
-      if (ledc_get_pwm_channel_status(pwm_channel) != LEDC_CHANNEL_FREE) {
-        ESP_LOGE(TAG, "PWM channel %d is already in use", pwm_channel);
-        return;
-      }
-    #elif defined(ESP8266)
-      if (analogWrite(pin_->get_pin(), 0) == 0) {
-        ESP_LOGE(TAG, "PWM channel %d is already in use", pwm_channel);
-        return;
-      }
-    #endif
+
+#if defined(ESP_PLATFORM) && defined(CONFIG_IDF_TARGET_ESP32)
+    if (ledc_get_pwm_channel_status(pwm_channel) != LEDC_CHANNEL_FREE) {
+      ESP_LOGE(TAG, "PWM channel %d is already in use", pwm_channel);
+      return;
+    }
+#elif defined(ESP8266)
+    if (analogWrite(pin_->get_pin(), 0) == 0) {
+      ESP_LOGE(TAG, "PWM channel %d is already in use", pwm_channel);
+      return;
+    }
+#endif
 
     // All checks passed, enable PWM output on the pin
     pin_->setup_pwm();
   }
-  
+
   if (in_pin && out_pin) {
     // Split I/O mode
     in_pin_ = in_pin->to_isr();
     out_pin_ = out_pin->to_isr();
   } else {
     // Single-pin mode
-    pin_ = pin->to_isr();
+    pin_ = pin_->to_isr();
   }
 }
+
+// ~OneWireBusComponent() {
+//   delete pin_;
+//   delete in_pin_;
+//   delete out_pin_;
+// }
 
 /*
 bool HOT IRAM_ATTR OneWireBusComponent::reset() {
@@ -113,16 +118,16 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   } while (!pin_.digital_read());
 
   // Send 480µs LOW TX reset pulse (drive bus low, delay H)
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  pin_->pin_mode(gpio::FLAG_OUTPUT);
+  pin_->digital_write(false);
   delayMicroseconds(480);
 
   // Release the bus, delay I
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(70);
 
   // sample bus, 0=device(s) present, 1=no device present
-  bool presence = !pin_.digital_read();
+  bool presence = !pin_->digital_read();
   // delay J
   delayMicroseconds(410);
   return presence;
@@ -154,8 +159,8 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
 
 void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  pin_->pin_mode(gpio::FLAG_OUTPUT);
+  pin_->digital_write(false);
 
   // from datasheet:
   // write 0 low time: t_low0: min=60µs, max=120µs
@@ -163,13 +168,13 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // time slot: t_slot: min=60µs, max=120µs
   // recovery time: t_rec: min=1µs
   // ds18b20 appears to read the bus after roughly 14µs
-  uint32_t delay0 = bit ? 6 : 60;
-  uint32_t delay1 = bit ? 54 : 5;
+  uint32_t const delay0 = bit ? 6 : 60;
+  uint32_t const delay1 = bit ? 54 : 5;
 
   // delay A/C
   delayMicroseconds(delay0);
   // release bus
-  pin_.digital_write(true);
+  pin_->digital_write(true);
   // delay B/D
   delayMicroseconds(delay1);
 }
@@ -242,7 +247,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   // typically, the ds18b20 pulls the line high after 11µs for a logical 1
   // and 29µs for a logical 0
 
-  uint32_t start = micros();
+  uint32_t const start = micros();
   // datasheet says >1µs
   delayMicroseconds(3);
 
@@ -257,7 +262,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
 #ifdef USE_ESP32
   uint32_t timing_constant = 12;
 #else
-  uint32_t timing_constant = 14;
+  uint32_t const timing_constant = 14;
 #endif
 
   // measure from start value directly, to get best accurate timing no matter
@@ -269,7 +274,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   bool bit = pin_.digital_read();
 
   // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
-  uint32_t now = micros();
+  uint32_t const now = micros();
   if (now - start < 60)
     delayMicroseconds(60 - (now - start));
 
@@ -464,7 +469,7 @@ uint64_t IRAM_ATTR OneWireBusComponent::search() {
   }
 
   {
-    InterruptLock lock;
+    InterruptLock const lock;
     if (!this->reset()) {
       // Reset failed or no devices present
       this->reset_search();
@@ -479,14 +484,14 @@ uint64_t IRAM_ATTR OneWireBusComponent::search() {
   uint8_t rom_byte_mask = 1;
 
   {
-    InterruptLock lock;
+    InterruptLock const lock;
     // Initiate search
     this->write8(ONE_WIRE_ROM_SEARCH);
     do {
       // read bit
-      bool id_bit = this->read_bit();
+      bool const id_bit = this->read_bit();
       // read its complement
-      bool cmp_id_bit = this->read_bit();
+      bool const cmp_id_bit = this->read_bit();
 
       if (id_bit && cmp_id_bit) {
         // No devices participating in search
@@ -665,9 +670,7 @@ void IRAM_ATTR OneWireBusComponent::dump_config() {
   LOG_PIN("  Pin: ", pin_);
 }
 
-void OneWireBusComponent::register_device(OneWireBusComponent *device) {
-  this->devices_.push_back(device);
-}
+void OneWireBusComponent::register_device(OneWireBusComponent *device) { this->devices_.push_back(device); }
 
 /*update method needs finalising again
 void OneWireBusComponent::update() {

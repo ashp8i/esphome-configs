@@ -4,13 +4,14 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
 from esphome.const import (
+    # CONF_ID,
     CONF_PIN,
     CONF_MODE,
     CONF_NAME,
 )
 
 _LOGGER = logging.getLogger(__name__)
-CONF_ONE_WIRE_BUS_ID = 'one_wire_bus_id'
+CONF_ONE_WIRE_BUS_ID = 'onewire_bus_id'
 
 onewire_bus_ns = cg.esphome_ns.namespace("onewire_bus")
 OneWireBusComponent = onewire_bus_ns.class_("OneWireBusComponent", cg.Component)
@@ -67,7 +68,7 @@ def to_code(config):
     # Use get() method to get the name, and provide a default value of None
     name = config.get(CONF_NAME, None)
 
-    var = cg.new_Pvariable(config[CONF_ID], pin, out_pin, mode, name=name)
+    var = cg.new_Pvariable(config[CONF_ONE_WIRE_BUS_ID], pin, out_pin, mode)
 
     if 'low_power_mode' in config:
         cg.add(var.set_low_power_mode(config['low_power_mode']))

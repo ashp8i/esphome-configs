@@ -28,36 +28,6 @@ uint16_t OneWireBusComponent::millis_to_wait_for_conversion() const {
 }
 */
 
-/*
-bool HOT IRAM_ATTR OneWireBusComponent::reset() {
-  // See reset here:
-  // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
-  // Wait for communication to clear (delay G)
-  this->pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  uint8_t retries = 125;
-  do {
-    if (--retries == 0)
-      return false;
-    delayMicroseconds(2);
-  } while (!this->pin_.digital_read());
-
-  // Send 480µs LOW TX reset pulse (drive bus low, delay H)
-  this->pin_.pin_mode(gpio::FLAG_OUTPUT);
-  this->pin_.digital_write(false);
-  delayMicroseconds(480);
-
-  // Release the bus, delay I
-  this->pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  delayMicroseconds(70);
-
-  // sample bus, 0=device(s) present, 1=no device present
-  bool r = !this->pin_.digital_read();
-  // delay J
-  delayMicroseconds(410);
-  return r;
-}
-*/
-
 bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
@@ -86,30 +56,6 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   return presence;
 }
 
-/*
-void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
-  // drive bus low
-  this->pin_.pin_mode(gpio::FLAG_OUTPUT);
-  this->pin_.digital_write(false);
-
-  // from datasheet:
-  // write 0 low time: t_low0: min=60µs, max=120µs
-  // write 1 low time: t_low1: min=1µs, max=15µs
-  // time slot: t_slot: min=60µs, max=120µs
-  // recovery time: t_rec: min=1µs
-  // ds18b20 appears to read the bus after roughly 14µs
-  uint32_t delay0 = bit ? 6 : 60;
-  uint32_t delay1 = bit ? 54 : 5;
-
-  // delay A/C
-  delayMicroseconds(delay0);
-  // release bus
-  this->pin_.digital_write(true);
-  // delay B/D
-  delayMicroseconds(delay1);
-}
-*/
-
 void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // drive bus low
   pin_->pin_mode(gpio::FLAG_OUTPUT);
@@ -131,63 +77,6 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // delay B/D
   delayMicroseconds(delay1);
 }
-
-/*
-bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
-  // drive bus low
-  this->pin_.pin_mode(gpio::FLAG_OUTPUT);
-  this->pin_.digital_write(false);
-
-  // note: for reading we'll need very accurate timing, as the
-  // timing for the digital_read() is tight; according to the datasheet,
-  // we should read at the end of 16µs starting from the bus low
-  // typically, the ds18b20 pulls the line high after 11µs for a logical 1
-  // and 29µs for a logical 0
-
-  uint32_t start = micros();
-  // datasheet says >1µs
-  delayMicroseconds(3);
-
-  // release bus, delay E
-  this->pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-
-  // Unfortunately some frameworks have different characteristics than others
-  // esp32 arduino appears to pull the bus low only after the digital_write(false),
-  // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
-  // manually correct for this with these constants.
-
-#ifdef USE_ESP32
-  uint32_t timing_constant = 12;
-#else
-  uint32_t timing_constant = 14;
-#endif
-
-  // measure from start value directly, to get best accurate timing no matter
-  // how long pin_mode/delayMicroseconds took
-  while (micros() - start < timing_constant)
-    ;
-
-  // sample bus to read bit from peer
-  bool r = this->pin_.digital_read();
-
-  // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
-  uint32_t now = micros();
-  if (now - start < 60)
-    delayMicroseconds(60 - (now - start));
-
-  return r;
-}
-
-bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
-  isr_pin_.digital_write(false);
-  delayMicroseconds(10);
-  isr_pin_.digital_write(true);
-  delayMicroseconds(10);
-  bool bit = isr_pin_.digital_read();
-  delayMicroseconds(50);
-  return bit;
-}
-*/
 
 bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   // drive bus low
@@ -234,43 +123,17 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   return bit;
 }
 
-/*
-void IRAM_ATTR OneWireBusComponent::write8(uint8_t val) {
-  for (uint8_t i = 0; i < 8; i++) {
-    this->write_bit(bool((1u << i) & val));
-  }
-}
-*/
-
 void IRAM_ATTR OneWireBusComponent::write8(uint8_t val) {
   for (uint8_t i = 0; i < 8; i++) {
     this->write_bit(bool((1u << i) & val));
   }
 }
 
-/*
 void IRAM_ATTR OneWireBusComponent::write64(uint64_t val) {
   for (uint8_t i = 0; i < 64; i++) {
     this->write_bit(bool((1ULL << i) & val));
   }
 }
-*/
-
-void IRAM_ATTR OneWireBusComponent::write64(uint64_t val) {
-  for (uint8_t i = 0; i < 64; i++) {
-    this->write_bit(bool((1ULL << i) & val));
-  }
-}
-
-/*
-uint8_t IRAM_ATTR OneWireBusComponent::read8() {
-  uint8_t ret = 0;
-  for (uint8_t i = 0; i < 8; i++) {
-    ret |= (uint8_t(this->read_bit()) << i);
-  }
-  return ret;
-}
-*/
 
 uint8_t IRAM_ATTR OneWireBusComponent::read8() {
   uint8_t ret = 0;
@@ -280,15 +143,6 @@ uint8_t IRAM_ATTR OneWireBusComponent::read8() {
   return ret;
 }
 
-/*
-uint64_t IRAM_ATTR OneWireBusComponent::read64() {
-  uint64_t ret = 0;
-  for (uint8_t i = 0; i < 8; i++) {
-    ret |= (uint64_t(this->read_bit()) << i);
-  }
-  return ret;
-}
-*/
 uint64_t IRAM_ATTR OneWireBusComponent::read64() {
   uint64_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
@@ -297,124 +151,16 @@ uint64_t IRAM_ATTR OneWireBusComponent::read64() {
   return ret;
 }
 
-/*
 void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
   this->write8(ONE_WIRE_ROM_SELECT);
   this->write64(address);
 }
-*/
-
-void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
-  this->write8(ONE_WIRE_ROM_SELECT);
-  this->write64(address);
-}
-
-/*
-void IRAM_ATTR OneWireBusComponent::reset_search() {
-  this->last_discrepancy_ = 0;
-  this->last_device_flag_ = false;
-  this->rom_number_ = 0;
-}
-*/
 
 void IRAM_ATTR OneWireBusComponent::reset_search() {
   this->last_discrepancy_ = 0;
   this->last_device_flag_ = false;
   this->rom_number_ = 0;
 }
-
-/*
-uint64_t IRAM_ATTR OneWireBusComponent::search() {
-  if (this->last_device_flag_) {
-    return 0u;
-  }
-
-  {
-    InterruptLock lock;
-    if (!this->reset()) {
-      // Reset failed or no devices present
-      this->reset_search();
-      return 0u;
-    }
-  }
-
-  uint8_t id_bit_number = 1;
-  uint8_t last_zero = 0;
-  uint8_t rom_byte_number = 0;
-  bool search_result = false;
-  uint8_t rom_byte_mask = 1;
-
-  {
-    InterruptLock lock;
-    // Initiate search
-    this->write8(ONE_WIRE_ROM_SEARCH);
-    do {
-      // read bit
-      bool id_bit = this->read_bit();
-      // read its complement
-      bool cmp_id_bit = this->read_bit();
-
-      if (id_bit && cmp_id_bit) {
-        // No devices participating in search
-        break;
-      }
-
-      bool branch;
-
-      if (id_bit != cmp_id_bit) {
-        // only chose one branch, the other one doesn't have any devices.
-        branch = id_bit;
-      } else {
-        // there are devices with both 0s and 1s at this bit
-        if (id_bit_number < this->last_discrepancy_) {
-          branch = (this->rom_number8_()[rom_byte_number] & rom_byte_mask) > 0;
-        } else {
-          branch = id_bit_number == this->last_discrepancy_;
-        }
-
-        if (!branch) {
-          last_zero = id_bit_number;
-        }
-      }
-
-      if (branch) {
-        // set bit
-        this->rom_number8_()[rom_byte_number] |= rom_byte_mask;
-      } else {
-        // clear bit
-        this->rom_number8_()[rom_byte_number] &= ~rom_byte_mask;
-      }
-
-      // choose/announce branch
-      this->write_bit(branch);
-      id_bit_number++;
-      rom_byte_mask <<= 1;
-      if (rom_byte_mask == 0u) {
-        // go to next byte
-        rom_byte_number++;
-        rom_byte_mask = 1;
-      }
-    } while (rom_byte_number < 8);  // loop through all bytes
-  }
-
-  if (id_bit_number >= 65) {
-    this->last_discrepancy_ = last_zero;
-    if (this->last_discrepancy_ == 0) {
-      // we're at root and have no choices left, so this was the last one.
-      this->last_device_flag_ = true;
-    }
-    search_result = true;
-  }
-
-  search_result = search_result && (this->rom_number8_()[0] != 0);
-  if (!search_result) {
-    this->reset_search();
-    return 0u;
-  }
-
-  return this->rom_number_;
-}
-*/
 
 uint64_t IRAM_ATTR OneWireBusComponent::search() {
   if (this->last_device_flag_) {
@@ -507,19 +253,6 @@ uint64_t IRAM_ATTR OneWireBusComponent::search() {
   return this->rom_number_;
 }
 
-/*
-std::vector<uint64_t> OneWireBusComponent::search_vec() {
-  std::vector<uint64_t> res;
-
-  this->reset_search();
-  uint64_t address;
-  while ((address = this->search()) != 0u)
-    res.push_back(address);
-
-  return res;
-}
-*/
-
 std::vector<uint64_t> OneWireBusComponent::search_vec() {
   std::vector<uint64_t> res;
 
@@ -531,17 +264,9 @@ std::vector<uint64_t> OneWireBusComponent::search_vec() {
   return res;
 }
 
-/*
 void IRAM_ATTR OneWireBusComponent::skip() {
   this->write8(0xCC);  // skip ROM
 }
-*/
-
-void IRAM_ATTR OneWireBusComponent::skip() {
-  this->write8(0xCC);  // skip ROM
-}
-
-// uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
 uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
@@ -555,6 +280,32 @@ void IRAM_ATTR OneWireBusComponent::set_overdrive() {
   uint32_t delay0 = bit ? 1 : 5;
   uint32_t delay1 = bit ? 4 : 1;
 }
+
+void IRAM_ATTR OneWireBusComponent::sleep() {
+  if (low_power_mode_) { 
+    reset();
+    write8(0xCC); // Skip Rom command
+    write8(0xB4); // Issue a sleep command
+    state_ = State::Sleep; 
+  }
+}
+
+void IRAM_ATTR OneWireBusComponent::resume() {
+  if (low_power_mode_) { 
+    reset();
+    write8(0xCC); // Skip Rom command
+    write8(0xA5); // Issue a resume command
+    state_ = State::Reset; 
+  }
+}
+
+void IRAM_ATTR OneWireBusComponent::start_overdrive() {
+  if (overdrive_mode_) {
+    reset();
+    write8(0x3C); // Overdrive Skip Rom command
+    state_ = State::PresenceDetection;
+  }
+}  
 
 void OneWireBusComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up OneWireBusComponent...");
@@ -636,39 +387,42 @@ void OneWireBusComponent::setup() {
   }
 }
 
-/*broken config routine
-void OneWireBusComponent::dump_config() {
-  ESP_LOGCONFIG(TAG, "OneWireBusComponent:");
-  LOG_PIN("  Pin: ", this->pin_);
-  // LOG_UPDATE_INTERVAL(this);
-
-  if (this->found_devices_.empty()) {
-    ESP_LOGW(TAG, "  Found no devices!");
-  } else {
-    ESP_LOGD(TAG, "  Found devices:");
-    for (auto &address : this->found_devices_) {
-      ESP_LOGD(TAG, "    0x%s", format_hex(address).c_str());
-    }
-  }
-
-  for (auto *device : this->devices_) {
-    LOG_device("  ", "Device", device);
-    if (device->get_index().has_value()) {
-      ESP_LOGCONFIG(TAG, "    Index %u", *device->get_index());
-      if (*device->get_index() >= this->found_devices_.size()) {
-        ESP_LOGE(TAG, "Couldn't find device by index - not connected. Proceeding without it.");
-        continue;
-      }
-    }
-    ESP_LOGCONFIG(TAG, "    Address: %s", device->get_address_name().c_str());
-    // No resolution check
-  }
-}
-*/
-
+/* Old plain - basic config dump to get started
 void IRAM_ATTR OneWireBusComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "ESPOneWireComponent:");
   LOG_PIN("  Pin: ", pin_);
+}
+*/
+
+void OneWireBusComponent::dump_config() {
+  ESP_LOGCONFIG(TAG, "OneWireBusComponent:");
+  LOG_PIN("  Pin: ", pin_);
+  LOG_PIN("  Input Pin: ", in_pin_);
+  LOG_PIN("  Output Pin: ", out_pin_);
+  LOG_UPDATE_INTERVAL(config_->update_interval);
+
+  if (config_->overdrive_mode) {
+    ESP_LOGCONFIG(TAG, "  Mode: Overdrive");
+  } else if (config_->low_power_mode) {
+    ESP_LOGCONFIG(TAG, "  Mode: Low power");
+  } else {
+    ESP_LOGCONFIG(TAG, "  Mode: Standard");
+  }
+
+  std::vector<uint64_t> devices = one_wire_->search_vec();
+  if (devices.size() > 0) {
+    ESP_LOGCONFIG(TAG, "  Devices:");
+    for (auto &device : devices) {
+      ESP_LOGCONFIG(TAG, "    - Address: 0x%s", format_hex(device).c_str());
+    }
+  } else {
+    ESP_LOGCONFIG(TAG, "  Devices: none");
+  }
+}
+
+void OneWireBusComponent::register_component() {
+  // Register the OneWireBusComponent instance with the ESPHome runtime
+  App.register_component(this);
 }
 
 void OneWireBusComponent::register_device(OneWireBusComponent *device) { this->devices_.push_back(device); }

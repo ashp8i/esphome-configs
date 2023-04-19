@@ -112,6 +112,9 @@ class OneWireBusComponent : public Component {
    */
   bool ds28e17_write_command(uint64_t address, uint8_t command);
   void depower();  // Parasitic Power Support - depower
+  void sleep();  
+  void resume();
+  void start_overdrive();
 
  private:
   InternalGPIOPin *pin_;                 // Pin Declaration
@@ -123,6 +126,7 @@ class OneWireBusComponent : public Component {
   void pulse_pin(bool value);            // New Member Variable for Pulse Pin
   std::vector<uint64_t> found_devices_;  // Vector for devices returned from a search
   OneWireBusComponent *one_wire_;        // one wire pointer
+  State state;                          // State variable
   enum class State {
     Reset,
     PresenceDetection,
@@ -131,30 +135,6 @@ class OneWireBusComponent : public Component {
     Write,
     Sleep,
   };
-  void sleep_() {
-    if (low_power_mode_) { // only issue sleep command if low-power mode is enabled
-      reset_();
-      write_(0xCC); // Skip Rom command
-      write_(0xB4); // Issue a sleep command
-      state_ = State::Sleep; // transition to sleep state
-    }
-  }
-  void resume_() {
-    if (low_power_mode_) { // only issue resume command if low-power mode is enabled
-      reset_();
-      write_(0xCC); // Skip Rom command
-      write_(0xA5); // Issue a resume command
-      state_ = State::Reset; // transition back to reset state
-    }
-  }
-  void start_overdrive_() {
-    if (overdrive_mode_) {
-      reset_();
-      write_(0x3C); // Overdrive Skip Rom command
-      state_ = State::PresenceDetection;
-    }
-  }
-
   bool crc_check_(const uint8_t *data, int len, uint8_t crc) {
     uint8_t computed_crc = 0;
     for (int i = 0; i < len; i++) {
@@ -185,58 +165,6 @@ class OneWireBusComponent : public Component {
       0,
   };  // Unsigned 8-bit Scratch Pad Store
 };
-
-void OneWireModeTracker::setup() {
-  // Create the custom OneWire component
-  custom_one_wire_ = new CustomOneWire(&InternalGPIOPin(GPIO_NUM_4), false, false);
-  custom_one_wire_->set_client_id("my_custom_one_wire");
-  App.register_component(custom_one_wire_);
-
-  // Expose the current mode as a sensor
-  set_name("OneWire Mode");
-  set_icon("mdi:flash");
-  add_on_state_callback([this](std::string state) {
-    this->publish_state(state);
-  });
-
-  // Initialize the state machine with the current mode
-  if (custom_one_wire_->get_mode_id() == normal_mode) {
-    current_mode_ = normal_mode;
-    publish_state("Normal Mode");
-  } else if (custom_one_wire_->get_mode_id() == low_power_mode) {
-    current_mode_ = low_power_mode;
-    publish_state("Low Power Mode");
-  } else if (custom_one_wire_->get_mode_id() == overdrive_mode) {
-    current_mode_ = overdrive_mode;
-    publish_state("Overdrive Mode");
-  } else {
-    current_mode_ = normal_mode;
-    publish_state("Unknown Mode");
-  }
-}
-
-void OneWireModeTracker::update() {
-  // Check the current mode and update the sensor state if necessary
-  std::string current_mode_string;
-  if (custom_one_wire_->get_mode_id() == normal_mode) {
-    current_mode_string = "Normal Mode";
-    current_mode_ = normal_mode;
-  } else if (custom_one_wire_->get_mode_id() == low_power_mode) {
-    current_mode_string = "Low Power Mode";
-    current_mode_ = low_power_mode;
-  } else if (custom_one_wire_->get_mode_id() == overdrive_mode) {
-    current_mode_string = "Overdrive Mode";
-    current_mode_ = overdrive_mode;
-  } else {
-    current_mode_string = "Unknown Mode";
-    current_mode_ = normal_mode;
-  }
-
-  if (current_mode_ != last_mode_) {
-    last_mode_ = current_mode_;
-    publish_state(current_mode_string);
-  }
-}
 
 }  // namespace onewire_bus
 }  // namespace esphome

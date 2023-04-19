@@ -28,6 +28,19 @@ uint16_t OneWireBusComponent::millis_to_wait_for_conversion() const {
 }
 */
 
+/*bad constructor
+OneWireBusComponent::OneWireBusComponent(InternalGPIOPin *pin) : pin_(pin), isr_pin_(pin) {}
+*/
+
+// auto one_wire_ = new OneWireBusComponent{ .pin = pin, .in_pin = in_pin, .out_pin = out_pin };
+
+
+// ~OneWireBusComponent() {
+//   delete pin_;
+//   delete in_pin_;
+//   delete out_pin_;
+// }
+
 /*
 bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   // See reset here:
@@ -545,68 +558,21 @@ void IRAM_ATTR OneWireBusComponent::skip() {
 
 uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
-void IRAM_ATTR OneWireBusComponent::set_low_power() {
-  // reduce bus voltage to save power
-  pin_.analog_write(0);
-}
-
-void IRAM_ATTR OneWireBusComponent::set_overdrive() {
-  // reduce delay times for overdrive mode
-  uint32_t delay0 = bit ? 1 : 5;
-  uint32_t delay1 = bit ? 4 : 1;
-}
-
 void OneWireBusComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up OneWireBusComponent...");
 
-  // Initialize the pins
-  InternalGPIOPin *in_pin = nullptr;
-  InternalGPIOPin *out_pin = nullptr;
+  // ... code related to pin setup and initialization ...
+  pin_.setup();
 
-  if (config_->pin) {
-    pin_.reset(new InternalGPIOPin(config_->pin));
-    pin_->setup();
-    pin_ = pin_->to_isr();  // Set the pin's ISR
-  }
-
-  if (config_->in_pin && config_->out_pin) {
-    in_pin = new InternalGPIOPin(config_->in_pin);
-    in_pin->setup();
-    in_pin_ = in_pin->to_isr();  // Set the input pin's ISR
-    out_pin = new InternalGPIOPin(config_->out_pin);
-    out_pin->setup();
-    out_pin_ = out_pin->to_isr();  // Set the output pin's ISR
-  }
-
-  // Clear bus with 480µs high, otherwise initial reset in search_vec() fails
-  if (pin_) {
-    pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  } else {
-    in_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-    out_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  }
+  // clear bus with 480µs high, otherwise initial reset in search_vec() fails
+  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(480);
 
   // Create an instance of the OneWireBusComponent class
-  if (in_pin && out_pin) {
-    // Split I/O mode
-    one_wire_ = new OneWireBusComponent(config_, in_pin_, out_pin_);  // NOLINT(cppcoreguidelines-owning-memory)
-  } else {
-    // Single-pin mode
-    one_wire_ = new OneWireBusComponent(config_, pin_);  // NOLINT(cppcoreguidelines-owning-memory)
-  }
+  one_wire_ = new OneWireBusComponent(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
 
-  // Set bus mode options
-  if (config_->overdrive_mode) {
-    one_wire_->set_overdrive();
-  }
-  if (config_->low_power_mode) {
-    one_wire_->set_low_power();
-  }
-
-  // Search for devices on the bus
   std::vector<uint64_t> raw_devices;
-  raw_devices = one_wire_->search_vec();
+  raw_devices = this->one_wire_->search_vec();
 
   // ... code for handling the raw_devices data ...
   for (auto &address : raw_devices) {
@@ -617,21 +583,20 @@ void OneWireBusComponent::setup() {
     }
     // No specific device type checks
     ESP_LOGI(TAG, "Found device with address: 0x%s", format_hex(address).c_str());
-    found_devices_.push_back(address);
+    this->found_devices_.push_back(address);
   }
 
-  // Initialize the devices
-  for (auto *device : devices_) {
+  for (auto *device : this->devices_) {
     if (device->get_index().has_value()) {
-      if (*device->get_index() >= found_devices_.size()) {
-        status_set_error();
+      if (*device->get_index() >= this->found_devices_.size()) {
+        this->status_set_error();
         continue;
       }
-      device->set_address(found_devices_[*device->get_index()]);
+      device->set_address(this->found_devices_[*device->get_index()]);
     }
 
     if (!device->setup_device()) {
-      status_set_error();
+      this->status_set_error();
     }
   }
 }

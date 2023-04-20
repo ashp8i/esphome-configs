@@ -13,6 +13,17 @@ static const char *const TAG = "dallas_maxim.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
+enum class State {
+  Reset, 
+  PresenceDetection,
+  SelectRom,
+  WriteBit, 
+  ReadBit,
+  Sleep  
+};
+
+State state_;
+
 /*
 uint16_t OneWireBusComponent::millis_to_wait_for_conversion() const {
   switch (this->resolution_) {
@@ -32,27 +43,30 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  uint8_t retries = 125;
+  pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  
+  const uint8_t MAX_RESET_RETRIES = 125;
+  uint8_t retries = MAX_RESET_RETRIES;
   do {
     if (--retries == 0)
       return false;
-    delayMicroseconds(2);
-  } while (!pin_.digital_read());
+    delayMicroseconds(2); // Delay 2us
+  } while (!pin_->digital_read());
 
-  // Send 480µs LOW TX reset pulse (drive bus low, delay H)
+  // Send 480μs LOW TX reset pulse (drive bus low, delay H)
   pin_->pin_mode(gpio::FLAG_OUTPUT);
   pin_->digital_write(false);
-  delayMicroseconds(480);
+  delayMicroseconds(480); // Delay 480us
 
-  // Release the bus, delay I
+  // Release the bus, delay I  
   pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  delayMicroseconds(70);
+  delayMicroseconds(70); // Delay 70us
 
   // sample bus, 0=device(s) present, 1=no device present
   bool presence = !pin_->digital_read();
-  // delay J
-  delayMicroseconds(410);
+  
+  // delay J  
+  delayMicroseconds(410); // Delay 410us
   return presence;
 }
 
@@ -61,27 +75,34 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   pin_->pin_mode(gpio::FLAG_OUTPUT);
   pin_->digital_write(false);
 
-  // from datasheet:
-  // write 0 low time: t_low0: min=60µs, max=120µs
-  // write 1 low time: t_low1: min=1µs, max=15µs
-  // time slot: t_slot: min=60µs, max=120µs
-  // recovery time: t_rec: min=1µs
-  // ds18b20 appears to read the bus after roughly 14µs
-  uint32_t const delay0 = bit ? 6 : 60;
-  uint32_t const delay1 = bit ? 54 : 5;
+  uint32_t delay0; 
+  uint32_t delay1;
+  
+  const uint32_t DELAY_0_NORMAL = 6;     
+  const uint32_t DELAY_1_NORMAL = 60;
+  const uint32_t DELAY_0_OVERDRIVE = 1;  
+  const uint32_t DELAY_1_OVERDRIVE = 4;
+  
+  if (this->overdrive_mode_ != nullptr) { 
+    delay0 = DELAY_0_OVERDRIVE;
+    delay1 = DELAY_1_OVERDRIVE;
+  } else {
+    delay0 = DELAY_0_NORMAL; 
+    delay1 = DELAY_1_NORMAL; 
+  } 
 
   // delay A/C
-  delayMicroseconds(delay0);
+  delayMicroseconds(delay0);  
   // release bus
   pin_->digital_write(true);
   // delay B/D
-  delayMicroseconds(delay1);
+  delayMicroseconds(delay1);   
 }
 
 bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  pin_->pin_mode(gpio::FLAG_OUTPUT);
+  pin_->digital_write(false);
 
   // note: for reading we'll need very accurate timing, as the
   // timing for the digital_read() is tight; according to the datasheet,
@@ -94,7 +115,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   delayMicroseconds(3);
 
   // release bus, delay E
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
   // Unfortunately some frameworks have different characteristics than others
   // esp32 arduino appears to pull the bus low only after the digital_write(false),
@@ -113,7 +134,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
     ;
 
   // sample bus to read bit from peer
-  bool bit = pin_.digital_read();
+  bool bit = pin_->digital_read();
 
   // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
   uint32_t const now = micros();
@@ -270,15 +291,29 @@ void IRAM_ATTR OneWireBusComponent::skip() {
 
 uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
+bool OneWireBusComponent::crc_check_(const uint8_t *data, int len, uint8_t crc) {
+  uint8_t computed_crc = 0;
+    for (int i = 0; i < len; i++) {
+      uint8_t byte = data[i];
+      for (int j = 0; j < 8; j++) {
+        uint8_t bit = (byte ^ computed_crc) & 0x01;
+        computed_crc >>= 1;
+        byte >>= 1;
+        if (bit) {
+          computed_crc ^= 0x8C;
+        }
+      }
+    }
+    return computed_crc == crc;
+}
+
 void IRAM_ATTR OneWireBusComponent::set_low_power() {
   // reduce bus voltage to save power
-  pin_.analog_write(0);
+  pin_->digital_write(false);
 }
 
 void IRAM_ATTR OneWireBusComponent::set_overdrive() {
-  // reduce delay times for overdrive mode
-  uint32_t delay0 = bit ? 1 : 5;
-  uint32_t delay1 = bit ? 4 : 1;
+  this->overdrive_mode_ = true; // Enable overdrive mode 
 }
 
 void IRAM_ATTR OneWireBusComponent::sleep() {
@@ -286,7 +321,7 @@ void IRAM_ATTR OneWireBusComponent::sleep() {
     reset();
     write8(0xCC); // Skip Rom command
     write8(0xB4); // Issue a sleep command
-    state_ = State::Sleep; 
+    this->state_ = State::Sleep;
   }
 }
 
@@ -295,7 +330,7 @@ void IRAM_ATTR OneWireBusComponent::resume() {
     reset();
     write8(0xCC); // Skip Rom command
     write8(0xA5); // Issue a resume command
-    state_ = State::Reset; 
+    this->state_ = State::Reset; 
   }
 }
 
@@ -303,7 +338,7 @@ void IRAM_ATTR OneWireBusComponent::start_overdrive() {
   if (overdrive_mode_) {
     reset();
     write8(0x3C); // Overdrive Skip Rom command
-    state_ = State::PresenceDetection;
+    this->state_ = State::PresenceDetection;
   }
 }  
 

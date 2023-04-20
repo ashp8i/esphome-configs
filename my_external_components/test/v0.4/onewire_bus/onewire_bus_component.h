@@ -11,6 +11,8 @@ namespace onewire_bus {
 extern const uint8_t ONE_WIRE_ROM_SELECT;
 extern const int ONE_WIRE_ROM_SEARCH;
 
+// class State;
+
 class OneWireBusComponent : public Component {
  public:
   // Pin Setup
@@ -111,45 +113,26 @@ class OneWireBusComponent : public Component {
    *  Returns true if the write operation was successful, false otherwise.
    */
   bool ds28e17_write_command(uint64_t address, uint8_t command);
-  void depower();  // Parasitic Power Support - depower
-  void sleep();  
-  void resume();
-  void start_overdrive();
+  void depower();                        // Parasitic Power Support - depower
+  void sleep();                          // Sleep
+  void resume();                         // Resume
+  void start_overdrive();                // Start Overdrive
+  void set_low_power();                  // Enable Low Power Mode
+  void set_overdrive();                  // Enable Overdrive Mode
+  // CRC
+  bool crc_check_(const uint8_t *data, int len, uint8_t crc);
 
  private:
   InternalGPIOPin *pin_;                 // Pin Declaration
   InternalGPIOPin *in_pin_;              // In Pin Declaration
   InternalGPIOPin *out_pin_;             // Out Pin Declaration
+  // State *state_;                         // State Declaration Pointer
   bool low_power_mode_;                  // New Member Variable for Low Power Mode
   bool overdrive_mode_;                  // New Member Variable for Overdrive Mode
   bool parasitic_power_mode_;            // New Member Variable for Parasitic Power Mode
   void pulse_pin(bool value);            // New Member Variable for Pulse Pin
   std::vector<uint64_t> found_devices_;  // Vector for devices returned from a search
   OneWireBusComponent *one_wire_;        // one wire pointer
-  State state;                          // State variable
-  enum class State {
-    Reset,
-    PresenceDetection,
-    SelectRom,
-    Read,
-    Write,
-    Sleep,
-  };
-  bool crc_check_(const uint8_t *data, int len, uint8_t crc) {
-    uint8_t computed_crc = 0;
-    for (int i = 0; i < len; i++) {
-      uint8_t byte = data[i];
-      for (int j = 0; j < 8; j++) {
-        uint8_t bit = (byte ^ computed_crc) & 0x01;
-        computed_crc >>= 1;
-        byte >>= 1;
-        if (bit) {
-          computed_crc ^= 0x8C;
-        }
-      }
-    }
-    return computed_crc == crc;
-  }
 
  protected:
   uint8_t last_discrepancy_{0};    // Scratch Pad Error Checking

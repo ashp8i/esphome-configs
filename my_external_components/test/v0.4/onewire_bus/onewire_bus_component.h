@@ -11,14 +11,24 @@ namespace onewire_bus {
 extern const uint8_t ONE_WIRE_ROM_SELECT;
 extern const int ONE_WIRE_ROM_SEARCH;
 
-// class State;
+enum class State;
 
 class OneWireBusComponent : public Component {
  public:
-  // Pin Setup
-  explicit OneWireBusComponent(InternalGPIOPin* pin, InternalGPIOPin* in_pin, InternalGPIOPin* out_pin, bool low_power_mode = false, bool overdrive_mode = false, bool parasitic_power_mode = false)
-      : pin_(pin), in_pin_(in_pin), out_pin_(out_pin), low_power_mode_(low_power_mode), overdrive_mode_(overdrive_mode), parasitic_power_mode_(parasitic_power_mode), found_devices_() {}
-
+ public:
+  // default constructor initialise
+  // OneWireBusComponent() : pin_(nullptr), in_pin_(nullptr), out_pin_(nullptr), found_devices_() {}
+  // // Pin Setup
+  explicit OneWireBusComponent(InternalGPIOPin *pin, InternalGPIOPin *in_pin, InternalGPIOPin *out_pin,
+                               bool low_power_mode = false, bool overdrive_mode = false,
+                               bool parasitic_power_mode = false)
+      : pin_(pin),
+        in_pin_(in_pin),
+        out_pin_(out_pin),
+        low_power_mode_(low_power_mode),
+        overdrive_mode_(overdrive_mode),
+        parasitic_power_mode_(parasitic_power_mode),
+        found_devices_() {}
   // virtual ~OneWireBusComponent();                                             // Deconstructor declaration virtual
   // function
   void set_pins(InternalGPIOPin *pin, InternalGPIOPin *in_pin, InternalGPIOPin *out_pin) {
@@ -62,6 +72,7 @@ class OneWireBusComponent : public Component {
   uint64_t search();    // Search for devices, Returns 0 if all devices have been found.
   std::vector<uint8_t> device_id_ = std::vector<uint8_t>(8, 0x00);
   std::vector<uint64_t> search_vec();  // Helper that wraps search in a std::vector.
+  State state_;                        // State Declaration Pointer
   // uint8_t crc_ = 0;
   // uint8_t last_family_discrepancy_{0};
   // uint8_t last_family_result_{0};
@@ -126,7 +137,6 @@ class OneWireBusComponent : public Component {
   InternalGPIOPin *pin_;                 // Pin Declaration
   InternalGPIOPin *in_pin_;              // In Pin Declaration
   InternalGPIOPin *out_pin_;             // Out Pin Declaration
-  // State *state_;                         // State Declaration Pointer
   bool low_power_mode_;                  // New Member Variable for Low Power Mode
   bool overdrive_mode_;                  // New Member Variable for Overdrive Mode
   bool parasitic_power_mode_;            // New Member Variable for Parasitic Power Mode

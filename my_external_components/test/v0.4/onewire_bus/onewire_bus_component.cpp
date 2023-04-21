@@ -13,16 +13,9 @@ static const char *const TAG = "dallas_maxim.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-enum class State {
-  Reset, 
-  PresenceDetection,
-  SelectRom,
-  WriteBit, 
-  ReadBit,
-  Sleep  
-};
+enum class State { Reset, PresenceDetection, SelectRom, WriteBit, ReadBit, Sleep };
 
-State state_;
+OneWireBusComponent::OneWireBusComponent() : state_(State::Reset) { /* ... */ }
 
 /*
 uint16_t OneWireBusComponent::millis_to_wait_for_conversion() const {
@@ -83,13 +76,13 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   const uint32_t DELAY_0_OVERDRIVE = 1;  
   const uint32_t DELAY_1_OVERDRIVE = 4;
   
-  if (this->overdrive_mode_ != nullptr) { 
-    delay0 = DELAY_0_OVERDRIVE;
-    delay1 = DELAY_1_OVERDRIVE;
+  if (this->overdrive_mode_) { // Compare to true/false instead of nullptr 
+      delay0 = DELAY_0_OVERDRIVE;
+      delay1 = DELAY_1_OVERDRIVE; 
   } else {
-    delay0 = DELAY_0_NORMAL; 
-    delay1 = DELAY_1_NORMAL; 
-  } 
+      delay0 = DELAY_0_NORMAL;  
+      delay1 = DELAY_1_NORMAL;  
+  }
 
   // delay A/C
   delayMicroseconds(delay0);  
@@ -316,7 +309,8 @@ void IRAM_ATTR OneWireBusComponent::set_overdrive() {
   this->overdrive_mode_ = true; // Enable overdrive mode 
 }
 
-void IRAM_ATTR OneWireBusComponent::sleep() {
+// void IRAM_ATTR OneWireBusComponent::sleep()
+void OneWireBusComponent::sleep() {
   if (low_power_mode_) { 
     reset();
     write8(0xCC); // Skip Rom command

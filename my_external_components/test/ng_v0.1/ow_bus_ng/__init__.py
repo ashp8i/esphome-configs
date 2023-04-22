@@ -10,8 +10,8 @@ _LOGGER = logging.getLogger(__name__)
 CODEOWNERS = ['@ashp8i']
 MULTI_CONF = True
 
-owng_bus_ns = cg.esphome_ns.namespace('owng_bus')
-ESPHomeOneWireNG = owng_bus_ns.class_("ESPHomeOneWireNG", cg.Component)
+ow_bus_ng_ns = cg.esphome_ns.namespace('ow_bus_ng')
+ESPHomeOneWireNGComponent = ow_bus_ng_ns.class_("ESPHomeOneWireNGComponent", cg.Component)
 
 OneWirePinConfig = cv.enum({
     'single': 'PIN_SINGLE',
@@ -19,7 +19,7 @@ OneWirePinConfig = cv.enum({
 })
 
 CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(): cv.declare_id(ESPHomeOneWireNG),
+    cv.GenerateID(): cv.declare_id(ESPHomeOneWireNGComponent),
     cv.Optional(CONF_PIN): pins.gpio_output_pin_schema,
     cv.Required('pin_option'): OneWirePinConfig,
     cv.Optional('input_pin'): pins.gpio_input_pin_schema,
@@ -38,7 +38,7 @@ def validate_pin_option(config):
 CONFIG_SCHEMA = cv.All(CONFIG_SCHEMA, validate_pin_option)  
 
 async def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID], owng_bus_ns.ESPHomeOneWireNG)
+    var = cg.new_Pvariable(config[CONF_ID], ow_bus_ng_ns.ESPHomeOneWireNGComponent)
     pin_type = config['pin_option']
     cg.add(var.set_pin_type(pin_type))
     if pin_type == 'single':

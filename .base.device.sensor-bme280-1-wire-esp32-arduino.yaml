@@ -15,7 +15,9 @@ external_components:
   # - source: github://pr#4330
   #   components: [internal_temperature]
   #   refresh: always
-  - source: my_external_components/test/ng_v0.1
+  # - source: my_external_components/test/ng_v0.1
+  #   refresh: always
+  - source: github://ashp8i/esphome-components
     refresh: always
 
 
@@ -36,9 +38,11 @@ web_server:
 #   pin: 'GPIO18'
 #   split_io: false
 ow_bus_ng:
-  pin: 'GPIO18'
-  pin_option: 'single'
+  # pin: "GPIO12"
+  # pin_option: 'single'
+  input_pin: 'GPIO19'
+  output_pin: 'GPIO20'
 # ow_bus_ng:
 #   pin_option: 'split_io'
-#   input_pin: 'GPIO19'
-#   output_pin: 'GPIO20'
+    # input_pin: 'GPIO19'
+    # output_pin: 'GPIO20'

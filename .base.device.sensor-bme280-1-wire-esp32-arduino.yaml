@@ -25,6 +25,12 @@ captive_portal:
 
 web_server:
 
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 9600
+  # half_duplex: true
+
 # onewire_bus:
 #   pin: GPIO5
 #   mode: normal
@@ -37,12 +43,16 @@ web_server:
 #   # id: my_onewire_component
 #   pin: 'GPIO18'
 #   split_io: false
-ow_bus_ng:
-  # pin: "GPIO12"
+# ow_bus_ng:
+  # - id: test
+    # pin: 21
+    # pin: GPIO12
   # pin_option: 'single'
-  input_pin: 'GPIO19'
-  output_pin: 'GPIO20'
+  # input_pin: 'GPIO19'
+  # output_pin: 'GPIO20'
+    # mode: 'bitbang_single'
 # ow_bus_ng:
 #   pin_option: 'split_io'
     # input_pin: 'GPIO19'
     # output_pin: 'GPIO20'
+    # mode: 'bitbang_split_io'

@@ -20,16 +20,21 @@ external_components:
   - source: github://ashp8i/esphome-components
     refresh: always
 
-
 captive_portal:
 
 web_server:
 
+# uart:
+#   rx_pin: GPIO3
+#   tx_pin: GPIO1
+#   baud_rate: 9600
+#   # half_duplex: true
+
 uart:
-  rx_pin: GPIO3
-  tx_pin: GPIO1
-  baud_rate: 9600
-  # half_duplex: true
+    rx_pin: GPIO20
+    tx_pin: GPIO21
+    baud_rate: 9600
+    # id: uart_onewire
 
 # onewire_bus:
 #   pin: GPIO5
@@ -44,15 +49,12 @@ uart:
 #   pin: 'GPIO18'
 #   split_io: false
 # ow_bus_ng:
-  # - id: test
-    # pin: 21
-    # pin: GPIO12
-  # pin_option: 'single'
-  # input_pin: 'GPIO19'
-  # output_pin: 'GPIO20'
-    # mode: 'bitbang_single'
+  # pin: GPIO18
+  # mode: 'bitbang_single'
 # ow_bus_ng:
-#   pin_option: 'split_io'
-    # input_pin: 'GPIO19'
-    # output_pin: 'GPIO20'
-    # mode: 'bitbang_split_io'
+#   input_pin: 'GPIO19'
+#   output_pin: 'GPIO20'
+#   mode: 'bitbang_split_io'
+ow_bus_ng:
+  mode: 'uart_bus'
+  # uart: uart_onewire

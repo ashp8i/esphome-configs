@@ -35,7 +35,7 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(DHT),
         cv.Required(CONF_PIN): pins.internal_gpio_input_pin_schema,
-    	cv.Required(CONF_PIN_A): pins.internal_gpio_output_pin_schema,
+        cv.Required(CONF_PIN_A): pins.internal_gpio_input_pin_schema, 
         cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(
             unit_of_measurement=UNIT_CELSIUS,
             accuracy_decimals=1,
@@ -54,21 +54,21 @@ CONFIG_SCHEMA = cv.Schema(
     }
 ).extend(cv.polling_component_schema("60s"))
 
-
-def to_code(config):
+async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(var, config)
+    await cg.register_component(var, config)
 
-    pin = yield gpio_pin_expression(config[CONF_PIN])
-    pin_out = yield gpio_pin_expression(config[CONF_PIN_A])
+    pin = await gpio_pin_expression(config[CONF_PIN])
+    cg.add(var.set_pin(pin))
 
-    cg.add(var.set_pin(pin, pin_out))
+    pin_a = await gpio_pin_expression(config[CONF_PIN_A])
+    cg.add(var.set_pin_a(pin_a))  
 
     if CONF_TEMPERATURE in config:
-        sens = yield sensor.new_sensor(config[CONF_TEMPERATURE])
+        sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
         cg.add(var.set_temperature_sensor(sens))
     if CONF_HUMIDITY in config:
-        sens = yield sensor.new_sensor(config[CONF_HUMIDITY])
+        sens = await sensor.new_sensor(config[CONF_HUMIDITY])
         cg.add(var.set_humidity_sensor(sens))
 
     cg.add(var.set_dht_model(config[CONF_MODEL]))

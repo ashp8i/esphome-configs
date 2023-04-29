@@ -2,8 +2,20 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
 from esphome.components import sensor
-from esphome.const import CONF_HUMIDITY, CONF_ID, CONF_MODEL, CONF_PIN, CONF_TEMPERATURE, \
-    ICON_THERMOMETER, UNIT_CELSIUS, ICON_WATER_PERCENT, UNIT_PERCENT, CONF_PIN_A
+from esphome.const import (
+    CONF_HUMIDITY,
+    CONF_ID,
+    CONF_MODEL,
+    CONF_PIN,
+    CONF_PIN_A,
+    CONF_TEMPERATURE,
+    STATE_CLASS_MEASUREMENT,
+    UNIT_CELSIUS,
+    UNIT_PERCENT,
+    DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_HUMIDITY
+)
+
 from esphome.cpp_helpers import gpio_pin_expression
 
 dht_ns = cg.esphome_ns.namespace("dht")
@@ -19,30 +31,45 @@ DHT_MODELS = {
 }
 DHT = dht_ns.class_("DHT", cg.PollingComponent)
 
-CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(): cv.declare_id(DHT),
-    cv.Required(CONF_PIN): pins.gpio_input_pin_schema,
-    cv.Required(CONF_PIN_A): pins.gpio_output_pin_schema,
-    cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(UNIT_CELSIUS, ICON_THERMOMETER, 1),
-    cv.Optional(CONF_HUMIDITY): sensor.sensor_schema(UNIT_PERCENT, ICON_WATER_PERCENT, 0),
-    cv.Optional(CONF_MODEL, default="auto detect"): cv.enum(DHT_MODELS, upper=True, space="_"),
-}).extend(cv.polling_component_schema("60s"))
+CONFIG_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(): cv.declare_id(DHT),
+        cv.Required(CONF_PIN): pins.internal_gpio_input_pin_schema,
+        cv.Required(CONF_PIN_A): pins.internal_gpio_input_pin_schema, 
+        cv.Optional(CONF_TEMPERATURE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_CELSIUS,
+            accuracy_decimals=1,
+            device_class=DEVICE_CLASS_TEMPERATURE,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_HUMIDITY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_PERCENT,
+            accuracy_decimals=0,
+            device_class=DEVICE_CLASS_HUMIDITY,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
+        cv.Optional(CONF_MODEL, default="auto detect"): cv.enum(
+            DHT_MODELS, upper=True, space="_"
+        ),
+    }
+).extend(cv.polling_component_schema("60s"))
 
 
-def to_code(config):
+async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(var, config)
+    await cg.register_component(var, config)
 
-    pin = yield gpio_pin_expression(config[CONF_PIN])
-    pin_out = yield gpio_pin_expression(config[CONF_PIN_A])
+    pin = await gpio_pin_expression(config[CONF_PIN])
+    cg.add(var.set_pin(pin))
 
-    cg.add(var.set_pin(pin, pin_out))
+    pin_a = await gpio_pin_expression(config[CONF_PIN_A])
+    cg.add(var.set_pin_a(pin_a))  
 
     if CONF_TEMPERATURE in config:
-        sens = yield sensor.new_sensor(config[CONF_TEMPERATURE])
+        sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
         cg.add(var.set_temperature_sensor(sens))
     if CONF_HUMIDITY in config:
-        sens = yield sensor.new_sensor(config[CONF_HUMIDITY])
+        sens = await sensor.new_sensor(config[CONF_HUMIDITY])
         cg.add(var.set_humidity_sensor(sens))
 
     cg.add(var.set_dht_model(config[CONF_MODEL]))

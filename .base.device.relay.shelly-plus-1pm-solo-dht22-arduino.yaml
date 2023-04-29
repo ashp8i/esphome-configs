@@ -48,11 +48,13 @@ output:
     id: "relay_output"
     pin: GPIO26
 
+# shelly_dht:
 # shelly_dallas:
+  # pin_a: GPIO3
+  # pin_b: GPIO0
 #       pin_a: RX
-#       # pin_a: GPIO3
 #       pin_b: GPIO19
-#       # pin_b: GPIO0
+
 
 # dallas:
 #     pin: GPIO19

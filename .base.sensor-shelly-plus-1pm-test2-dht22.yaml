@@ -115,10 +115,10 @@ sensor:
   #     name: "BME280 Humidity"
   #   address: 0x76
   #   update_interval: 60s
+  #  - platform: dht
   - platform: shelly_dht
-#  - platform: dht
     pin: GPIO3
-    pin_a: GPIO1
+    pin_a: GPIO0
     temperature:
       name: "Test 2 Temperature"
     humidity:

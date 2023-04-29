@@ -11,6 +11,8 @@ void DHT::setup() {
   ESP_LOGCONFIG(TAG, "Setting up DHT...");
   this->pin_in_->pin_mode(esphome::gpio::FLAG_INPUT);
   this->pin_out_->pin_mode(esphome::gpio::FLAG_OUTPUT);  
+  this->pin_in_->setup();
+  this->pin_out_->setup();
   this->pin_out_->digital_write(true);  
 }
 void DHT::dump_config() {
@@ -33,19 +35,19 @@ void DHT::dump_config() {
 
 void DHT::update() {
   float temperature, humidity;
-  bool error;
+  bool success;
   if (this->model_ == DHT_MODEL_AUTO_DETECT) {
     this->model_ = DHT_MODEL_DHT22;
-    error = this->read_sensor_(&temperature, &humidity, false);
-    if (error) {
+    success = this->read_sensor_(&temperature, &humidity, false);
+    if (!success) {
       this->model_ = DHT_MODEL_DHT11;
       return;
     }
   } else {
-    error = this->read_sensor_(&temperature, &humidity, true);
+    success = this->read_sensor_(&temperature, &humidity, true);
   }
 
-  if (error) {
+  if (success) {
     ESP_LOGD(TAG, "Got Temperature=%.1f°C Humidity=%.1f%%", temperature, humidity);
 
     if (this->temperature_sensor_ != nullptr)
@@ -96,6 +98,8 @@ bool HOT IRAM_ATTR DHT::read_sensor_(float *temperature, float *humidity, bool r
       delayMicroseconds(40);
     } else if (this->model_ == DHT_MODEL_DHT22_TYPE2) {
       delayMicroseconds(2000);
+  } else if (this->model_ == DHT_MODEL_AM2302) {
+    delayMicroseconds(1000);
     } else {
       delayMicroseconds(800);
     }
@@ -112,10 +116,11 @@ bool HOT IRAM_ATTR DHT::read_sensor_(float *temperature, float *humidity, bool r
       // Wait for rising edge
       while (!this->pin_in_->digital_read()) {
         if (micros() - start_time > 90) {
-          if (i < 0)
+          if (i < 0) {
             error_code = 1;
-          else
+          } else {
             error_code = 2;
+          }
           break;
         }
       }
@@ -128,10 +133,11 @@ bool HOT IRAM_ATTR DHT::read_sensor_(float *temperature, float *humidity, bool r
       // Wait for falling edge
       while (this->pin_in_->digital_read()) {
         if ((end_time = micros()) - start_time > 90) {
-          if (i < 0)
+          if (i < 0) {
             error_code = 3;
-          else
+          } else {
             error_code = 4;
+          }
           break;
         }
       }

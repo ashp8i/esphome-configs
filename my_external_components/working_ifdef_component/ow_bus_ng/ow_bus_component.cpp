@@ -1,13 +1,17 @@
-#ifdef USE_BITBANG_SINGLE
-#define USE_BITBANG_SINGLE
+#ifdef USE_SINGLE_PIN_BIT_BANG
+#define USE_SINGLE_PIN_BIT_BANG
 #endif
 
-#ifdef USE_BITBANG_SPLIT_IO
-#define USE_BITBANG_SPLIT_IO
+#ifdef USE_SPLIT_IO_BIT_BANG
+#define USE_SPLIT_IO_BIT_BANG
 #endif
 
-#ifdef USE_UART_BUS
-#define USE_UART_BUS
+#ifdef USE_SINGLE_PIN_RMT
+#define USE_SINGLE_PIN_RMT
+#endif
+
+#ifdef USE_SPLIT_IO_RMT
+#define USE_SPLIT_IO_RMT
 #endif
 
 #include "ow_bus_component.h"
@@ -22,17 +26,13 @@ static const char *const TAG = "owbus.ng";
 // Constructor definitions here
 ESPHomeOneWireNGComponent::ESPHomeOneWireNGComponent() {}
 
-#ifdef USE_BITBANG_SINGLE
+#ifdef USE_SINGLE_PIN_BIT_BANG
 ESPHomeOneWireNGComponent::ESPHomeOneWireNGComponent(InternalGPIOPin *pin) {
-  if (pin->get_pin_mode() != OUTPUT_OPEN_DRAIN) {
-    ESP_LOGE(TAG, "1-Wire pin %d must be in open-drain mode!", pin->get_pin());
-    return;
-  }
   this->pin_ = pin;
 }
 #endif
 
-#ifdef USE_BITBANG_SPLIT_IO
+#ifdef USE_SPLIT_IO_BIT_BANG
 ESPHomeOneWireNGComponent::ESPHomeOneWireNGComponent(InputPin *input_pin, OutputPin *output_pin) {
   this->input_pin_ = input_pin;
   this->output_pin_ = output_pin;
@@ -40,80 +40,125 @@ ESPHomeOneWireNGComponent::ESPHomeOneWireNGComponent(InputPin *input_pin, Output
 }
 #endif
 
-#ifdef USE_UART_BUS
-ESPHomeOneWireNGComponent::ESPHomeOneWireNGComponent(UARTComponent *uart) {
-  this->uart_ = uart;
+#ifdef USE_SINGLE_PIN_RMT
+ESPHomeOneWireNGComponent::ESPHomeOneWireNGComponent(InternalGPIOPin *pin) {
+    // Configure RMT TX channel
+    rmt_config_t c{};
+    c.channel = RMT_CHANNEL_0;
+    c.gpio_num = this->pin_->get_pin();
+    c.clk_div = 80;
+    c.mem_block_num = 1;
+    c.tx_config.loop_en = false;
+    c.tx_config.carrier_en = false;
+    c.tx_config.idle_level = 1;
+    c.tx_config.idle_output_en = true;
+    this->config_rmt(c);
+    c.rmt_mode = RMT_MODE_TX;
+    rmt_driver_install(c.channel, &c, 0);
+
+    // Set RMT RX channel to use the same GPIO pin
+    rmt_set_gpio(RMT_CHANNEL_1, RMT_MODE_RX, this->pin_->get_pin(), 0);
+
+    // Enable input on GPIO pin 
+    this->pin_->setup_input(HAS_PULL_UP);  
   // Set UART mode
+}
+#endif
+
+#ifdef USE_SPLIT_IO_RMT
+ESPHomeOneWireNGComponent::ESPHomeOneWireNGComponent(InputPin *input_pin, OutputPin *output_pin) {
+  // Need to write/define/tweak
 }
 #endif
 
 void ESPHomeOneWireNGComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up ESPHomeOneWireNGComponent...");
-#ifdef USE_BITBANG_SINGLE
-  ESP_LOGCONFIG(TAG, "Setting up bitbang single pin mode...");
+#ifdef USE_SINGLE_PIN_BIT_BANG
+  ESP_LOGCONFIG(TAG, "Setting up single pin bit bang mode...");
   if (this->pin_ != nullptr) {
     if (!perform_reset())
       return;  // No device present
     single_pin_bus_ = new ESPHomeOneWireNGComponent(this->pin_->get_pin());
   }
 #endif
-#ifdef USE_BITBANG_SPLIT_IO
-  ESP_LOGCONFIG(TAG, "Setting up bitbang split IO mode...");
+#ifdef USE_SPLIT_IO_BIT_BANG
+  ESP_LOGCONFIG(TAG, "Setting up split IO bit bang mode...");
   if (this->input_pin_ != nullptr && this->output_pin_ != nullptr) {
     if (!perform_reset())
       return;  // No device present
     split_io_bus_ = new ESPHomeOneWireNGComponent(this->input_pin_->get_pin(), this->output_pin_->get_pin());
   }
 #endif
-#ifdef USE_UART_BUS
-  ESP_LOGCONFIG(TAG, "Setting up UART mode...");
-  if (this->uart_ != nullptr) {
+#ifdef USE_SINGLE_PIN_RMT
+    ESP_LOGCONFIG(TAG, "Setting up single pin RMT mode...");
+  if (this->pin_ != nullptr) {
     if (!perform_reset())
       return;  // No device present
-    uart_bus_ = new ESPHomeOneWireNGComponent(uart);
-    uart_bus_->begin();
+  //to define
+  }
+#endif
+#ifdef USE_SPLIT_IO_RMT
+  ESP_LOGCONFIG(TAG, "Setting up split io RMT mode...");
+  if (this->pin_ != nullptr) {
+    if (!perform_reset())
+      return;  // No device present
+  //to define
   }
 #endif
 }
 
 void ESPHomeOneWireNGComponent::dump_config() {
-#ifdef USE_BITBANG_SINGLE
-  ESP_LOGCONFIG(TAG, "  Using bitbang single pin mode:");
+#ifdef USE_SINGLE_PIN_BIT_BANG
+  ESP_LOGCONFIG(TAG, "  Using single pin bit bang mode:");
   ESP_LOGCONFIG(TAG, "    Pin: %d", this->pin_->get_pin());
 #endif
-#ifdef USE_BITBANG_SPLIT_IO
-  ESP_LOGCONFIG(TAG, "  Using bitbang split IO mode:");
+#ifdef USE_SPLIT_IO_BIT_BANG
+  ESP_LOGCONFIG(TAG, "  Using split io bit bang mode:");
   ESP_LOGCONFIG(TAG, "    Input pin: %d", this->input_pin_->get_pin());
   ESP_LOGCONFIG(TAG, "    Output pin: %d", this->output_pin_->get_pin());
 #endif
-#ifdef USE_UART_BUS
-  ESP_LOGCONFIG(TAG, "  Using UART mode:");
-  ESP_LOGCONFIG(TAG, "    UART bus: %s", this->uart_->get_name().c_str());
+#ifdef USE_SINGLE_PIN_RMT
+  ESP_LOGCONFIG(TAG, "  Using single pin RMT mode:");
+  ESP_LOGCONFIG(TAG, "    Pin: %d", this->pin_->get_pin());
+#endif
+#ifdef USE_SPLIT_IO_RMT
+  ESP_LOGCONFIG(TAG, "  Using split io RMT mode:");
+  ESP_LOGCONFIG(TAG, "    Input pin: %d", this->input_pin_->get_pin());
+  ESP_LOGCONFIG(TAG, "    Output pin: %d", this->output_pin_->get_pin());
 #endif
 }
 
 bool ESPHomeOneWireNGComponent::perform_reset() {
-#ifdef USE_BITBANG_SINGLE
+#ifdef USE_SINGLE_PIN_BIT_BANG
   if (this->pin_ != nullptr) {
-    this->pin_->digital_write(LOW);
+    this->pin_->digital_write(false);
     delayMicroseconds(480);
-    this->pin_->digital_write(HIGH);
+    this->pin_->digital_write(true);
     delayMicroseconds(70);
   }
 #endif
-#ifdef USE_BITBANG_SPLIT_IO
+#ifdef USE_SPLIT_IO_BIT_BANG
   if (this->input_pin_ != nullptr && this->output_pin_ != nullptr) {
-    this->output_pin_->digital_write(LOW);
+    this->output_pin_->digital_write(false);
     delayMicroseconds(480);
-    this->output_pin_->digital_write(HIGH);
+    this->output_pin_->digital_write(true);
      return this->input_pin_->digital_read() == LOW;
   }
 #endif
-#ifdef USE_UART_BUS
-  if (this->uart_ != nullptr) {
-    this->uart_->transmit_break();
-    while (this->uart_->peek() == 0) { /* wait */ }
-    return true;
+#ifdef USE_SINGLE_PIN_RMT
+  if (this->pin_ != nullptr) {
+    this->pin_->digital_write(false);
+    delayMicroseconds(480);
+    this->pin_->digital_write(true);
+    delayMicroseconds(70);
+  }
+#endif
+#ifdef USE_SPLIT_IO_RMT
+  if (this->input_pin_ != nullptr && this->output_pin_ != nullptr) {
+    this->output_pin_->digital_write(false);
+    delayMicroseconds(480);
+    this->output_pin_->digital_write(true);
+     return this->input_pin_->digital_read() == LOW;
   }
 #endif
 }

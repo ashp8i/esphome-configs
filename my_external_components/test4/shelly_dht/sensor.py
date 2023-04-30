@@ -54,16 +54,15 @@ CONFIG_SCHEMA = cv.Schema(
     }
 ).extend(cv.polling_component_schema("60s"))
 
+
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
     pin = await gpio_pin_expression(config[CONF_PIN])
-    cg.add(var.set_pin(pin))
-
-    pin_a = await gpio_pin_expression(config[CONF_PIN_A])
-    cg.add(var.set_pin_a(pin_a))  
-
+    pin_out = await gpio_pin_expression(config[CONF_PIN_A])
+    cg.add(var.set_pin(pin, pin_out))
+	
     if CONF_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_TEMPERATURE])
         cg.add(var.set_temperature_sensor(sens))

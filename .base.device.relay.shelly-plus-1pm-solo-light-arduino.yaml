@@ -4,7 +4,6 @@ esphome:
   comment: ${device_description}
   platformio_options:
     platform_packages:
-    # - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.7/framework-arduinoespressif32-solo1.zip
     - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
     board_build.f_cpu: 160000000L
   project:
@@ -16,13 +15,7 @@ esp32:
   variant: esp32
   framework:
     type: arduino
-    # platform_version: 5.2.0
-    platform_version: 6.1.0
-
-external_components:
-  - source:
-      type: local
-      path: my_external_components/test4
+    # platform_version: 6.1.0
 
 captive_portal:
 
@@ -38,7 +31,7 @@ time:
   - platform: homeassistant
     id: homeassistant_time  
 
-Device Specific Config
+# Device Specific Config
 i2c:
   sda: GPIO12
   scl: GPIO14
@@ -48,16 +41,12 @@ output:
     id: "relay_output"
     pin: GPIO26
 
-# shelly_dht:
-# shelly_dallas:
-  # pin_a: GPIO3
-  # pin_b: GPIO0
-#       pin_a: RX
-#       pin_b: GPIO19
-
-
-# dallas:
-#     pin: GPIO19
+light:
+  - platform: binary
+    name: "${friendly_name}"
+    output: relay_output
+    id: ${main_device_id}
+    icon: ${light_icon}
 
 # Commented out to avoid duplicates keys in config see .base.switch-shelly-2.5-generic.yaml
 # switch:

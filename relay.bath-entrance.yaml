@@ -1,13 +1,18 @@
 substitutions:
   device_ssid: "Bath Entrance"
   device_name: bathentrancerelay
-  device_main_description: "Shelly 1 Exposed as light"
-  device_description: Bath Entrance Light
+  device_main_description: "Shelly Plus 2 PM Exposed as Light"
+  device_description: Bath Entrance Light with Power Monitoring
   friendly_name: "Bath Entrance" # Put the name that you want to see in Home Assistant.
   main_device_id: "bathentrancerelay"    # Put the name that you want to see in Home Assistant.
   lonsonho_single_topic: zigbee2mqtt/Bath & Toilet Hallway/action
   light_icon: "hue:bulb-spot-hung"
-  project_name: "shelly.shelly1-relay-light"
+  # Higher value gives lower watt readout
+  current_res: "0.001"
+  # Lower value gives lower voltage readout
+  voltage_div: "1925"
+  # light_icon: "hue:bulb-spot-hung"
+  project_name: "shelly.shellyplus1pm-relay-arduino"
   project_version: "1.0"
 
 # Enable Home Assistant API
@@ -17,9 +22,10 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.relay.shelly-1-light.yaml
+<<: !include .base.device.relay.shelly-plus-1pm-solo-light-arduino.yaml
 <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
-<<: !include .base.common-sensor.yaml
+<<: !include .base.sensor-shelly-plus-1pm-light.yaml
+# <<: !include .base.switch-shelly-plus-1pm-light.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml
-<<: !include .base.binary-sensor-shelly-1-edge-switch.yaml
+<<: !include .base.binary-sensor-shelly-plus-1pm-edge-switch.yaml

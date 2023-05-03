@@ -10,9 +10,6 @@ static const char *const TAG = "dallas.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-Here is a merged version of the ESPOneWire class using two pins:
-
-```cpp
 ESPOneWire::ESPOneWire(InternalGPIOPin *in_pin, InternalGPIOPin *out_pin) {
   this->in_pin_ = in_pin->to_isr();
   this->out_pin_ = out_pin->to_isr();  
@@ -22,64 +19,90 @@ bool HOT IRAM_ATTR ESPOneWire::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
-  in_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  in_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   uint8_t retries = 125;
   do {
     if (--retries == 0)
       return false;
     delayMicroseconds(2);
-  } while (!in_pin_.digital_read());
+  } while (!in_pin_->digital_read());
 
   // Send 480μs LOW TX reset pulse (drive bus low, delay H)
-  out_pin_.pin_mode(gpio::FLAG_OUTPUT);
-  out_pin_.digital_write(false);
+  out_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  out_pin_->digital_write(false);
   delayMicroseconds(480);
 
   // Release the bus, delay I
-  out_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  out_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(70);
 
   // sample bus, 0=device(s) present, 1=no device present
-  bool r = !in_pin_.digital_read();
+  bool r = !in_pin_->digital_read();
   // delay J
   delayMicroseconds(410);
   return r;
 }
 
-// Rest of methods...
-
 void IRAM_ATTR ESPOneWire::write_bit(bool bit) {
-  out_pin_.pin_mode(gpio::FLAG_OUTPUT);
-  out_pin_.digital_write(false);
+  // drive bus low
+  out_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  out_pin_->digital_write(false);
 
+  // from datasheet:
+  // write 0 low time: t_low0: min=60µs, max=120µs
+  // write 1 low time: t_low1: min=1µs, max=15µs
+  // time slot: t_slot: min=60µs, max=120µs
+  // recovery time: t_rec: min=1µs
+  // ds18b20 appears to read the bus after roughly 14µs
   uint32_t delay0 = bit ? 6 : 60;
   uint32_t delay1 = bit ? 54 : 5;
 
+  // delay A/C
   delayMicroseconds(delay0);
-  out_pin_.digital_write(true);
+  // release bus
+  out_pin_->digital_write(true);
+  // delay B/D
   delayMicroseconds(delay1); 
 }
 
 bool IRAM_ATTR ESPOneWire::read_bit() {
-  out_pin_.pin_mode(gpio::FLAG_OUTPUT);
-  out_pin_.digital_write(false);
+  // drive bus low
+  out_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  out_pin_->digital_write(false);
+
+  // note: for reading we'll need very accurate timing, as the
+  // timing for the digital_read() is tight; according to the datasheet,
+  // we should read at the end of 16µs starting from the bus low
+  // typically, the ds18b20 pulls the line high after 11µs for a logical 1
+  // and 29µs for a logical 0
 
   uint32_t start = micros();
+  // datasheet says >1µs
   delayMicroseconds(3);
-  
-  out_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+
+  // release bus, delay E
+  out_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+
+  // Unfortunately some frameworks have different characteristics than others
+  // esp32 arduino appears to pull the bus low only after the digital_write(false),
+  // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
+  // manually correct for this with these constants.
 
 #ifdef USE_ESP32
   uint32_t timing_constant = 12; 
 #else
   uint32_t timing_constant = 14; 
 #endif
-  
+
+  // measure from start value directly, to get best accurate timing no matter
+  // how long pin_mode/delayMicroseconds took
   while (micros() - start < timing_constant) 
     ;
+
+  // sample bus to read bit from peer
+  bool r = in_pin_->digital_read();
   
-  bool r = in_pin_.digital_read();
-  
+  // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
   uint32_t now = micros();
   if (now - start < 60)
     delayMicroseconds(60 - (now - start));
@@ -120,7 +143,6 @@ void IRAM_ATTR ESPOneWire::select(uint64_t address) {
 void IRAM_ATTR ESPOneWire::reset_search() {
   this->last_discrepancy_ = 0;
   this->last_device_flag_ = false;
-  this->last_family_discrepancy_ = 0;
   this->rom_number_ = 0;
 }
 uint64_t IRAM_ATTR ESPOneWire::search() {
@@ -128,11 +150,13 @@ uint64_t IRAM_ATTR ESPOneWire::search() {
     return 0u;
   }
 
+  {
+    InterruptLock lock;
   if (!this->reset()) {
-    // Reset failed
+      // Reset failed or no devices present
     this->reset_search();
-    ESP_LOGD(TAG, "bus reset failed!!!!");
     return 0u;
+    }
   }
 
   uint8_t id_bit_number = 1;
@@ -141,6 +165,8 @@ uint64_t IRAM_ATTR ESPOneWire::search() {
   bool search_result = false;
   uint8_t rom_byte_mask = 1;
 
+  {
+    InterruptLock lock;
   // Initiate search
   this->write8(ONE_WIRE_ROM_SEARCH);
   do {
@@ -149,9 +175,10 @@ uint64_t IRAM_ATTR ESPOneWire::search() {
     // read its complement
     bool cmp_id_bit = this->read_bit();
 
-    if (id_bit && cmp_id_bit)
+      if (id_bit && cmp_id_bit) {
       // No devices participating in search
       break;
+      }
 
     bool branch;
 
@@ -168,18 +195,16 @@ uint64_t IRAM_ATTR ESPOneWire::search() {
 
       if (!branch) {
         last_zero = id_bit_number;
-        if (last_zero < 9) {
-          this->last_discrepancy_ = last_zero;
-        }
       }
     }
 
-    if (branch)
+      if (branch) {
       // set bit
       this->rom_number8_()[rom_byte_number] |= rom_byte_mask;
-    else
+      } else {
       // clear bit
       this->rom_number8_()[rom_byte_number] &= ~rom_byte_mask;
+      }
 
     // choose/announce branch
     this->write_bit(branch);
@@ -191,12 +216,14 @@ uint64_t IRAM_ATTR ESPOneWire::search() {
       rom_byte_mask = 1;
     }
   } while (rom_byte_number < 8);  // loop through all bytes
+  }
 
   if (id_bit_number >= 65) {
     this->last_discrepancy_ = last_zero;
-    if (this->last_discrepancy_ == 0)
+    if (this->last_discrepancy_ == 0) {
       // we're at root and have no choices left, so this was the last one.
       this->last_device_flag_ = true;
+    }
     search_result = true;
   }
 
@@ -221,9 +248,6 @@ std::vector<uint64_t> ESPOneWire::search_vec() {
 void IRAM_ATTR ESPOneWire::skip() {
   this->write8(0xCC);  // skip ROM
 }
-InternalGPIOPin *ESPOneWire::get_in_pin() { return this->in_pin_; }
-
-InternalGPIOPin *ESPOneWire::get_out_pin() { return this->out_pin_; }
 
 uint8_t IRAM_ATTR *ESPOneWire::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 

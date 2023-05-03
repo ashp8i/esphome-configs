@@ -30,13 +30,18 @@ uint16_t ShellyDallasNewTemperatureSensor::millis_to_wait_for_conversion() const
 
 void ShellyDallasComponentnew::setup() {
   ESP_LOGCONFIG(TAG, "Setting up ShellyDallasComponentnew...");
+  
+  in_pin_->setup();   
+  out_pin_->setup();  
+  
+  // clear bus with 480μs high on both pins
+  in_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);  
+  delayMicroseconds(480);  
+  
+  one_wire_ = new ESPOneWire(in_pin_, out_pin_);  // Use both pins
 
-  yield();
   std::vector<uint64_t> raw_sensors;
-  {
-    InterruptLock lock;
     raw_sensors = this->one_wire_->search_vec();
-  }
 
   for (auto &address : raw_sensors) {
     auto *address8 = reinterpret_cast<uint8_t *>(&address);
@@ -69,8 +74,8 @@ void ShellyDallasComponentnew::setup() {
 }
 void ShellyDallasComponentnew::dump_config() {
   ESP_LOGCONFIG(TAG, "ShellyDallasComponentnew:");
-  LOG_PIN("  In Pin: ", this->one_wire_->get_in_pin());
-  LOG_PIN("  Out Pin: ", this->one_wire_->get_out_pin());
+  LOG_PIN("  In Pin: ", this->in_pin_());
+  LOG_PIN("  Out Pin: ", this->out_pin_());
   LOG_UPDATE_INTERVAL(this);
 
   if (this->found_sensors_.empty()) {
@@ -142,13 +147,7 @@ void ShellyDallasComponentnew::update() {
     });
   }
 }
-ShellyDallasComponent::ShellyDallasComponent(ESPOneWire *one_wire) : one_wire_(one_wire) {}
 
-ShellyDallasTemperatureSensor::ShellyDallasTemperatureSensor(uint64_t address, uint8_t resolution, ShellyDallasComponent *parent)
-    : parent_(parent) {
-  this->set_address(address);
-  this->set_resolution(resolution);
-}
 void ShellyDallasNewTemperatureSensor::set_address(uint64_t address) { this->address_ = address; }
 uint8_t ShellyDallasNewTemperatureSensor::get_resolution() const { return this->resolution_; }
 void ShellyDallasNewTemperatureSensor::set_resolution(uint8_t resolution) { this->resolution_ = resolution; }

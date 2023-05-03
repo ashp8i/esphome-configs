@@ -1,13 +1,13 @@
 substitutions:
   device_ssid: "Bath EntranceO"
   device_name: bathentrancerelay-old
-  device_main_description: "Shelly 1 old Exposed as light"
-  device_description: Bath Entrance 2 Light
-  friendly_name: "Bath Entrance Old" # Put the name that you want to see in Home Assistant.
-  main_device_id: "bathentrancerelayold"    # Put the name that you want to see in Home Assistant.
+  device_main_description: "Shelly 1 old Exposed as light plus Sensor"
+  device_description: Bath Entrance 2 Light and Sensor
+  friendly_name: "Bath Entrance Old Light & Sensor" # Put the name that you want to see in Home Assistant.
+  main_device_id: "bathentrancerelayoldlightsensor"    # Put the name that you want to see in Home Assistant.
   lonsonho_single_topic: zigbee2mqtt/Bath & Toilet Hallway/action
   light_icon: "hue:bulb-spot-hung"
-  project_name: "shelly.shelly1-relay-light"
+  project_name: "shelly.shelly1-relay-light-sensor"
   project_version: "1.0"
 
 # Enable Home Assistant API
@@ -17,9 +17,10 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.relay.shelly-1-light.yaml
-<<: !include .base.automation.light-mqtt-1-lonsonho.yaml
-<<: !include .base.common-sensor.yaml
-<<: !include .base.common-switch.yaml
-<<: !include .base.common-text-sensor.yaml
-<<: !include .base.binary-sensor-shelly-1-edge-switch.yaml
+<<: !include .base.device.relay.shelly-1-light-sensor.yaml
+#<<: !include .base.automation.light-mqtt-1-lonsonho.yaml
+# <<: !include .base.common-sensor.yaml
+#<<: !include .base.sensor-shelly-1.yaml
+#<<: !include .base.common-switch.yaml
+#<<: !include .base.common-text-sensor.yaml
+#<<: !include .base.binary-sensor-shelly-1-edge-switch.yaml

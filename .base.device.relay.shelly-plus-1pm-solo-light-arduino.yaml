@@ -1,6 +1,5 @@
 esphome:
-  name: "${device_name}"
-  # name_add_mac_suffix: true
+  name: ${device_name}
   comment: ${device_description}
   platformio_options:
     platform_packages:
@@ -15,7 +14,7 @@ esp32:
   variant: esp32
   framework:
     type: arduino
-    # platform_version: 6.1.0
+    platform_version: 5.2.0
 
 captive_portal:
 

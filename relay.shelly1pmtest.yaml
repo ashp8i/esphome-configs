@@ -20,10 +20,10 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug-off.yaml
-<<: !include .base.device.relay.shelly-plus-1pm-solo-addon-arduino.yaml
+<<: !include .base.device.relay.shelly-plus-1pm-solo-generic-arduino.yaml
 # <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
-# <<: !include .base.common-sensor.yaml
-<<: !include .base.sensor-shelly-plus-1pm-test.yaml
+<<: !include .base.common-sensor.yaml
+# <<: !include .base.sensor-shelly-plus-1pm-test.yaml
 # <<: !include .base.common-switch.yaml
 <<: !include .base.switch-shelly-plus-1pm-test.yaml
 <<: !include .base.common-text-sensor.yaml

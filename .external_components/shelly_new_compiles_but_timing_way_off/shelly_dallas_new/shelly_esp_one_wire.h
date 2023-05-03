@@ -12,10 +12,13 @@ extern const int ONE_WIRE_ROM_SEARCH;
 class ESPOneWire {
  public:
   explicit ESPOneWire(InternalGPIOPin *in_pin, InternalGPIOPin *out_pin);
-  /* Timer*/
-  static void startTimer0(uint32_t time_us);
-  static void timer0_isr_init(void);
-  static void timer0_deinit(void);
+  /** Timer
+   *
+   * Takes approximately 1ms.
+   *
+   * @return Whether the operation was successful.
+   */
+
 
   /** Reset the bus, should be done before all write operations.
    *

@@ -1,0 +1,41 @@
+esphome:
+  name: "${device_name}"
+  # name_add_mac_suffix: true
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+external_components:
+  - source:
+      type: local
+      path: .external_components/shallax
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  local: true
+
+# Device Specific Config
+output:
+  - platform: gpio
+    pin: GPIO4
+    id: shelly_1_relay
+
+light:
+  - platform: binary
+    name: "${friendly_name}"
+    output: shelly_1_relay
+    id: ${main_device_id}
+    icon: ${light_icon}
+
+shelly_dallas:
+  pin_a: GPIO3
+  pin_b: GPIO0

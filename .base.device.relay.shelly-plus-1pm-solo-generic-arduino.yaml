@@ -16,7 +16,9 @@ esp32:
   variant: esp32
   framework:
     type: arduino
+    version: 2.0.8
     # platform_version: 5.2.0
+    platform_version: 6.2.0
 
 captive_portal:
 

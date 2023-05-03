@@ -58,8 +58,8 @@ class ESPOneWire {
   /// Helper to get the internal 64-bit unsigned rom number as a 8-bit integer pointer.
   inline uint8_t *rom_number8_();
 
-  ISRInternalGPIOPin  *in_pin_;
-  ISRInternalGPIOPin  *out_pin_;
+  ISRInternalGPIOPin  in_pin_;
+  ISRInternalGPIOPin  out_pin_;
   uint8_t last_discrepancy_{0};
   bool last_device_flag_{false};
   uint64_t rom_number_{0};

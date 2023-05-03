@@ -29,6 +29,6 @@ sensor:
               ).c_str();
 
 # Dallas - Shelly Split OneWire
-  - platform: shelly_dallas
+  - platform: shelly_dallas_new
     index: 0
     name: "Temperature #1"

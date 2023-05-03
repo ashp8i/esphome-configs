@@ -72,10 +72,11 @@ void ShellyDallasComponentnew::setup() {
     }
   }
 }
+
 void ShellyDallasComponentnew::dump_config() {
   ESP_LOGCONFIG(TAG, "ShellyDallasComponentnew:");
-  LOG_PIN("  In Pin: ", this->in_pin_());
-  LOG_PIN("  Out Pin: ", this->out_pin_());
+  LOG_PIN("  In Pin: ", this->in_pin_);
+  LOG_PIN("  Out Pin: ", this->out_pin_);
   LOG_UPDATE_INTERVAL(this);
 
   if (this->found_sensors_.empty()) {

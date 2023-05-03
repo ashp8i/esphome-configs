@@ -16,11 +16,11 @@ api:
     key: !secret bathentrancerelayold_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug.yaml
+<<: !include .base-debug-off.yaml
 <<: !include .base.device.relay.shelly-1-light-sensor.yaml
 #<<: !include .base.automation.light-mqtt-1-lonsonho.yaml
 # <<: !include .base.common-sensor.yaml
-#<<: !include .base.sensor-shelly-1.yaml
+<<: !include .base.sensor-shelly-1.yaml
 #<<: !include .base.common-switch.yaml
-#<<: !include .base.common-text-sensor.yaml
+<<: !include .base.common-text-sensor.yaml
 #<<: !include .base.binary-sensor-shelly-1-edge-switch.yaml

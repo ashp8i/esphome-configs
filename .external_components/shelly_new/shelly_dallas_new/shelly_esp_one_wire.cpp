@@ -12,32 +12,32 @@ const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
 ESPOneWire::ESPOneWire(InternalGPIOPin *in_pin, InternalGPIOPin *out_pin) {
   this->in_pin_ = in_pin->to_isr();
-  this->out_pin_ = out_pin->to_isr();  
+  this->out_pin_ = out_pin->to_isr(); 
 }
 
 bool HOT IRAM_ATTR ESPOneWire::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
-  in_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  in_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   uint8_t retries = 125;
   do {
     if (--retries == 0)
       return false;
     delayMicroseconds(2);
-  } while (!in_pin_->digital_read());
+  } while (!in_pin_.digital_read());
 
   // Send 480μs LOW TX reset pulse (drive bus low, delay H)
-  out_pin_->pin_mode(gpio::FLAG_OUTPUT);
-  out_pin_->digital_write(false);
+  out_pin_.pin_mode(gpio::FLAG_OUTPUT);
+  out_pin_.digital_write(false);
   delayMicroseconds(480);
 
   // Release the bus, delay I
-  out_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  out_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(70);
 
   // sample bus, 0=device(s) present, 1=no device present
-  bool r = !in_pin_->digital_read();
+  bool r = !in_pin_.digital_read();
   // delay J
   delayMicroseconds(410);
   return r;
@@ -45,8 +45,8 @@ bool HOT IRAM_ATTR ESPOneWire::reset() {
 
 void IRAM_ATTR ESPOneWire::write_bit(bool bit) {
   // drive bus low
-  out_pin_->pin_mode(gpio::FLAG_OUTPUT);
-  out_pin_->digital_write(false);
+  out_pin_.pin_mode(gpio::FLAG_OUTPUT);
+  out_pin_.digital_write(false);
 
   // from datasheet:
   // write 0 low time: t_low0: min=60µs, max=120µs
@@ -60,15 +60,15 @@ void IRAM_ATTR ESPOneWire::write_bit(bool bit) {
   // delay A/C
   delayMicroseconds(delay0);
   // release bus
-  out_pin_->digital_write(true);
+  out_pin_.digital_write(true);
   // delay B/D
   delayMicroseconds(delay1); 
 }
 
 bool IRAM_ATTR ESPOneWire::read_bit() {
   // drive bus low
-  out_pin_->pin_mode(gpio::FLAG_OUTPUT);
-  out_pin_->digital_write(false);
+  out_pin_.pin_mode(gpio::FLAG_OUTPUT);
+  out_pin_.digital_write(false);
 
   // note: for reading we'll need very accurate timing, as the
   // timing for the digital_read() is tight; according to the datasheet,
@@ -81,7 +81,7 @@ bool IRAM_ATTR ESPOneWire::read_bit() {
   delayMicroseconds(3);
 
   // release bus, delay E
-  out_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  out_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
   // Unfortunately some frameworks have different characteristics than others
   // esp32 arduino appears to pull the bus low only after the digital_write(false),
@@ -100,7 +100,7 @@ bool IRAM_ATTR ESPOneWire::read_bit() {
     ;
 
   // sample bus to read bit from peer
-  bool r = in_pin_->digital_read();
+  bool r = in_pin_.digital_read();
   
   // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
   uint32_t now = micros();

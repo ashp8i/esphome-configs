@@ -1,6 +1,40 @@
 #include "shelly_esp_one_wire.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
+using namespace esphome;
+using namespace esphome::shelly_dallas_new;
+
+void timer0_alarm_in_us(uint32_t time_us) {
+  // Set Timer0 alarm for time_us microseconds
+}
+
+void timer0_set_clock_frequency(uint32_t freq) { 
+  timer0_set_clock_div(1); // 1 MHz
+}
+
+void timer0_attach_interrupt(void (*fn)()) {
+  // Attach fn (timer0_isr) to Timer0 interrupt
+}  
+
+void timer0_isr() { 
+  InterruptLock.end_lock(); // Unlock interrupts 
+}
+
+void IRAM_ATTR timer0_isr() {}  
+
+// Static 1us Timer0 functions  
+static void startTimer0(uint32_t time_us) { 
+  timer0_isr_init();
+  esphome::timer0_alarm_in_us(time_us);  
+}
+
+static void timer0_isr_init(void) { 
+  esphome::timer0_set_clock_frequency(1ULL * 1000000ULL);  
+  esphome::timer0_attach_interrupt(timer0_isr);
+}   
+
+static const uint32_t WRITE_BIT_DELAY_0 = 6;  
+static const uint32_t WRITE_BIT_DELAY_1 = 60;
 
 namespace esphome {
 namespace shelly_dallas_new {
@@ -15,73 +49,45 @@ ESPOneWire::ESPOneWire(InternalGPIOPin *in_pin, InternalGPIOPin *out_pin) {
   this->out_pin_ = out_pin->to_isr(); 
 }
 
-// Static 1us Timer0 functions  
-static void ESPOneWire::startTimer0(uint32_t time_us) { 
-  timer0_isr_init();
-  delayMicroseconds(time_us);
-  timer0_deinit();
-}
-
-static void ESPOneWire::timer0_isr_init(void) {
-  timer0_set_clock_frequency(1ULL * 1000000ULL);
-  timer0_attach_interrupt(timer0_isr);
-} 
-
-static void ESPOneWire::timer0_deinit(void) {
-  timer0_set_clock_frequency(1ULL * 100000ULL);
-  timer0_detach_interrupt();
-}
-
-bool HOT IRAM_ATTR ESPOneWire::reset() {
-  timer0_isr_init();  // Set Timer0 resolution  
+bool HOT IRAM_ATTR ESPOneWire::reset() { 
+  timer0_isr_init();  
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
-  // Wait for communication to clear (delay G)
+  // Wait for communication to clear (delay G) 
   in_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP); 
   out_pin_.pin_mode(gpio::FLAG_INPUT);      
   uint8_t retries = 125;
   do {
     if (--retries == 0)
       return false;
-    startTimer0(2);  // Start 1us timer for 2us
+    startTimer0(2 + 480 + 410);   // Start 1us timer for 2us 
   } while (!in_pin_.digital_read());
 
-  // Send 480μs LOW TX reset pulse (drive bus low, delay H) 
-  startTimer0(480);  
-  
+  // Send 480μs LOW TX reset pulse (drive bus low, delay H)   
   // Release output bus 
   out_pin_.pin_mode(gpio::FLAG_INPUT);  
   
   // Delay J - 410us recovery 
-  startTimer0(410); 
-  
-  timer0_deinit(); // Restore default resolution    
-  
-  // Sample input pin, 0=device(s) present, 1=no device present
-  bool r = !in_pin_.digital_read();
+ 
+  bool r = !in_pin_.digital_read();  // Sample input pin, 0=device(s) present, 1=no device present
   return r;  
 }
 
 void HOT IRAM_ATTR ESPOneWire::write_bit(bool bit) { 
-  timer0_isr_init(); // Set Timer0 resolution once
-  
-  static const uint32_t WRITE_BIT_DELAY_0 = 6;  
-  static const uint32_t WRITE_BIT_DELAY_1 = 60;
+  timer0_isr_init();  
   
   // Drive output bus low 
   out_pin_.pin_mode(gpio::FLAG_OUTPUT);
   out_pin_.digital_write(false);  
   
-  startTimer0(bit ? WRITE_BIT_DELAY_1 : WRITE_BIT_DELAY_0);  
+  startTimer0(bit ? WRITE_BIT_DELAY_1 : WRITE_BIT_DELAY_0);   // Start 1us timer for 2us 
   
   // Release output bus 
-  out_pin_.pin_mode(gpio::FLAG_INPUT);   
-  
-  timer0_deinit(); // Restore default resolution
+  out_pin_.pin_mode(gpio::FLAG_INPUT); 
 }
 
 bool HOT IRAM_ATTR ESPOneWire::read_bit() {
-  timer0_isr_init(); // Set Timer0 resolution once 
+  timer0_isr_init(); 
   
   // Drive input bus low 
   in_pin_.pin_mode(gpio::FLAG_OUTPUT);
@@ -104,6 +110,8 @@ bool HOT IRAM_ATTR ESPOneWire::read_bit() {
   
   return bit; 
 }
+
+timer0_deinit();  // Restore default resolution
 
 void IRAM_ATTR ESPOneWire::write8(uint8_t val) {
   for (uint8_t i = 0; i < 8; i++) {

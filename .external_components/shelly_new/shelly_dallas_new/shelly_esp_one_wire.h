@@ -9,13 +9,14 @@ namespace shelly_dallas_new {
 extern const uint8_t ONE_WIRE_ROM_SELECT;
 extern const int ONE_WIRE_ROM_SEARCH;
 
+/* Timer*/
+static void startTimer0(uint32_t time_us);
+static void timer0_isr_init(void); 
+static void timer0_deinit(void);
+
 class ESPOneWire {
  public:
   explicit ESPOneWire(InternalGPIOPin *in_pin, InternalGPIOPin *out_pin);
-  /* Timer*/
-  static void startTimer0(uint32_t time_us);
-  static void timer0_isr_init(void);
-  static void timer0_deinit(void);
 
   /** Reset the bus, should be done before all write operations.
    *

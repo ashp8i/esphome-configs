@@ -11,7 +11,8 @@ esphome:
 external_components:
   - source:
       type: local
-      path: .external_components/shallax
+      # path: .external_components/shallax
+      path: .external_components/shelly_new_fixing_issues_original_dallas
 
 captive_portal:
 
@@ -24,18 +25,26 @@ web_server:
   local: true
 
 # Device Specific Config
-output:
-  - platform: gpio
-    pin: GPIO4
-    id: shelly_1_relay
+# output:
+#   - platform: gpio
+#     pin: GPIO4
+#     id: shelly_1_relay
 
-light:
-  - platform: binary
-    name: "${friendly_name}"
-    output: shelly_1_relay
-    id: ${main_device_id}
-    icon: ${light_icon}
+# light:
+#   - platform: binary
+#     name: "${friendly_name}"
+#     output: shelly_1_relay
+#     id: ${main_device_id}
+#     icon: ${light_icon}
 
-shelly_dallas:
-  pin_a: GPIO3
-  pin_b: GPIO0
+# dallas:
+#   input_pin: GPIO3
+#   output_pin: GPIO0
+
+# shelly_dallas_new:
+#   pin_a: GPIO3
+#   pin_b: GPIO0
+
+dallas:
+  input_pin: GPIO3
+  output_pin: GPIO0

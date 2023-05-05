@@ -11,7 +11,7 @@ extern const int ONE_WIRE_ROM_SEARCH;
 
 class ESPOneWire {
  public:
-  explicit ESPOneWire(ISRInternalGPIOPin pin_or_pins); 
+  explicit ESPOneWire(InternalGPIOPin pin_or_pins); 
 
   /** Reset the bus, should be done before all write operations.
    *
@@ -21,11 +21,17 @@ class ESPOneWire {
    */
   bool reset();
 
+  void SplitIOReset();
+
   /// Write a single bit to the bus, takes about 70µs.
   void write_bit(bool bit);
 
+  void SplitIOWriteBit(bool bit);
+
   /// Read a single bit from the bus, takes about 70µs
   bool read_bit();
+
+  bool SplitIOReadBit();
 
   /// Write a word to the bus. LSB first.
   void write8(uint8_t val);
@@ -54,17 +60,23 @@ class ESPOneWire {
   /// Helper that wraps search in a std::vector.
   std::vector<uint64_t> search_vec();
 
- protected:
+ protected: 
+  union {  
+    ISRInternalGPIOPin *pin_;
+    struct {
+      ISRInternalGPIOPin *input_pin_; 
+      ISRInternalGPIOPin *output_pin_; 
+    };
+  };
+  
+  uint8_t last_discrepancy_;
+  bool last_device_flag_;
+  uint64_t rom_number_;
+  
   /// Helper to get the internal 64-bit unsigned rom number as a 8-bit integer pointer.
-  inline uint8_t *rom_number8_();
-
-  bool split_io_{false};
-  ISRInternalGPIOPin pin_; 
-  ISRInternalGPIOPin *pin_1_; 
-  ISRInternalGPIOPin *pin_2_; 
-  uint8_t last_discrepancy_{0};
-  bool last_device_flag_{false};
-  uint64_t rom_number_{0};
+  uint8_t *rom_number8_(); 
+  
+  bool split_io_;
 };
 
 }  // namespace dallas

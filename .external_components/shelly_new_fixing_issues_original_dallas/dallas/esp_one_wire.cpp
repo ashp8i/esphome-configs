@@ -10,14 +10,15 @@ static const char *const TAG = "dallas.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-ESPOneWire::ESPOneWire(InternalGPIOPin pin_or_pins) {
-  InternalGPIOPin *pins = pin_or_pins;  
-  
-  if (pins[1] == nullptr) {
-    this->pin_ = pin_or_pins; 
+ESPOneWire::ESPOneWire(InternalGPIOPin pin_or_pins, uint8_t reset_pin = 0) 
+    : pin_{pin_or_pins, pin_or_pins}, using_split_io_(reset_pin != 0) {
+  if (using_split_io_) {
+    auto pins = {pin_or_pins, pin_or_pins};
+    this->pin_.input_pin_->pin_ = pins[0];
+    this->pin_.output_pin_->pin_ = pins[1];
+    this->pin_.pin_ = pins[reset_pin - 1]; 
   } else {
-    this->pin_1_ = pins[0]; 
-    this->pin_2_ = pins[1];       
+    this->pin_.pin_ = pin_or_pins; 
   }
 }
 
@@ -27,142 +28,149 @@ bool HOT IRAM_ATTR ESPOneWire::reset() {
     // See reset here:
     // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
     // Wait for communication to clear (delay G)
-    pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    this->pin_.pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
     uint8_t retries = 125;
     do {
       if (--retries == 0)
-        return false;
+        return false; 
       delayMicroseconds(2);
-    } while (!pin_.digital_read());
+    } while (!this->pin_.pin_->digital_read());
 
-    // Send 480µs LOW TX reset pulse (drive bus low, delay H)
-    pin_.pin_mode(gpio::FLAG_OUTPUT);
-    pin_.digital_write(false);
-    delayMicroseconds(480);
+    // Send 480μs LOW TX reset pulse (drive bus low, delay H)
+    this->pin_.pin_->pin_mode(gpio::FLAG_OUTPUT);
+    this->pin_.pin_->digital_write(false);
+    delayMicroseconds(480);  
 
     // Release the bus, delay I
-    pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-    delayMicroseconds(70);
+    this->pin_.pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    delayMicroseconds(70);  
 
     // sample bus, 0=device(s) present, 1=no device present
-    bool r = !pin_.digital_read();
-    // delay J
+    bool r = !this->pin_.pin_->digital_read();
+    // delay J  
     delayMicroseconds(410);
     return r;
   } else {
-    // Handle the case where input_pin() and output_pin() are used.
-    // See reset here:
-    // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
-    // Set output_pin() as output and high initially
-    pins[1]_.pin_mode(gpio::FLAG_OUTPUT);
-    pins[1].digital_write(true);
-
-    // Wait for communication to clear (delay G)
-    pins[0].pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);     
-    uint8_t retries = 125;
-    do {
-      if (--retries == 0)
-        return false;
-      delayMicroseconds(2);
-    } while (!pins[0].digital_read());
-
-    // Send 480μs LOW TX reset pulse (drive bus low, delay H)
-    pins[1].pin_mode(gpio::FLAG_OUTPUT);
-    pins[1].digital_write(false);
-    delayMicroseconds(480);  
-
-    // Release output bus
-    pins[1].pin_mode(gpio::FLAG_INPUT);
-
-    // Sample input pin, 0=device(s) present, 1=no device present
-    bool r = !pins[0].digital_read();
-
-    // Delay J - 410us recovery 
-    delayMicroseconds(410);
-    return r;
+    SplitIOReset(); 
   }
+}
+
+void HOT IRAM_ATTR ESPOneWire::SplitIOReset() {
+  // See reset here:
+  // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
+  // Set output_pin() as output and high initially
+  this->pin_.output_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_.output_pin_->digital_write(true);
+
+  // Wait for communication to clear (delay G)
+  this->pin_.input_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);     
+  uint8_t retries = 125;
+  do {
+    if (--retries == 0)
+      return false;
+    delayMicroseconds(2);
+  } while (!this->pin_.input_pin_->digital_read());
+
+  // Send 480μs LOW TX reset pulse (drive bus low, delay H)
+  this->pin_.output_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_.output_pin_->digital_write(false);
+  delayMicroseconds(480);  
+
+  // Release output bus
+  this->pin_.output_pin_->pin_mode(gpio::FLAG_INPUT);
+
+  // Sample input pin, 0=device(s) present, 1=no device present
+  bool r = !this->pin_.input_pin_->digital_read();
+
+  // Delay J - 410us recovery 
+  delayMicroseconds(410);
+  return r;
 }
 
 void HOT IRAM_ATTR ESPOneWire::write_bit(bool bit) {
   if (!using_split_io_) { 
     // Handle the case where a single pin_ is used.
     // drive bus low
-    pin_.pin_mode(gpio::FLAG_OUTPUT);
-    pin_.digital_write(false);
+    this->pin_.pin_->pin_mode(gpio::FLAG_OUTPUT);
+    this->pin_.pin_->digital_write(false);
 
     // from datasheet:
-    // write 0 low time: t_low0: min=60µs, max=120µs
-    // write 1 low time: t_low1: min=1µs, max=15µs
-    // time slot: t_slot: min=60µs, max=120µs
-    // recovery time: t_rec: min=1µs
-    // ds18b20 appears to read the bus after roughly 14µs
+    // write 0 low time: t_low0: min=60μs, max=120μs
+    // write 1 low time: t_low1: min=1μs, max=15μs
+    // time slot: t_slot: min=60μs, max=120μs
+    // recovery time: t_rec: min=1μs
+    // ds18b20 appears to read the bus after roughly 14μs
     uint32_t delay0 = bit ? 6 : 60;
     uint32_t delay1 = bit ? 54 : 5;
 
     // delay A/C
-    delayMicroseconds(delay0);
+    delayMicroseconds(delay0); 
     // release bus
-    pin_.digital_write(true);
+    this->pin_.pin_->digital_write(true);  
     // delay B/D
     delayMicroseconds(delay1);
   } else {
-    // Handle the case where pins[0] and pins[1] are used.
-    // Drive output bus low 
-    pins[1].pin_mode(gpio::FLAG_OUTPUT);
-    pins[1].digital_write(false);
+    SplitIOWriteBit(bit); 
+  } 
+} 
+  
+void HOT IRAM_ATTR ESPOneWire::SplitIOWriteBit(boot bit) {
+  // Handle the case where pins[0] and pins[1] are used.
+  // Drive output bus low
+  this->pin_.output_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_.output_pin_->digital_write(false);
 
-    // from datasheet:
-    // write 0 low time: t_low0: min=60µs, max=120µs
-    // write 1 low time: t_low1: min=1µs, max=15µs
-    // time slot: t_slot: min=60µs, max=120µs
-    // recovery time: t_rec: min=1µs
-    // ds18b20 appears to read the bus after roughly 14µs
-    uint32_t delay0 = bit ? 6 : 60; 
-    uint32_t delay1 = bit ? 54 : 5;
+  // from datasheet:
+  // write 0 low time: t_low0: min=60µs, max=120µs
+  // write 1 low time: t_low1: min=1µs, max=15µs
+  // time slot: t_slot: min=60µs, max=120µs
+  // recovery time: t_rec: min=1µs
+  // ds18b20 appears to read the bus after roughly 14µs
+  uint32_t delay0 = bit ? 6 : 60; 
+  uint32_t delay1 = bit ? 54 : 5;
 
-    // Delay A/C
-    delayMicroseconds(delay0);
+  // Delay A/C
+  delayMicroseconds(delay0);
 
-    // Release output bus
-    pins[1].pin_mode(gpio::FLAG_INPUT);
+  // Release output bus
+  this->pin_.output_pin_->pin_mode(gpio::FLAG_INPUT);
 
-    // Set the output pin state back to high
-    pins[1].digital_write(true);
+  // Set the output pin state back to high
+  this->pin_.output_pin_->digital_write(true);
 
-    // Delay B/D
-    delayMicroseconds(delay1);
-  }
+  // Delay B/D
+  delayMicroseconds(delay1);
 }
 
 bool HOT IRAM_ATTR ESPOneWire::read_bit() {
   if (!using_split_io_) { 
     // Handle the case where a single pin_ is used.
     // drive bus low
-    pin_.pin_mode(gpio::FLAG_OUTPUT);
-    pin_.digital_write(false);
+    this->pin_.pin_->pin_mode(gpio::FLAG_OUTPUT);
+    this->pin_.pin_->digital_write(false);
 
-    // note: for reading we'll need very accurate timing, as the
+    // note: for reading we'll need very accurate timing, as the  
     // timing for the digital_read() is tight; according to the datasheet,
-    // we should read at the end of 16µs starting from the bus low
-    // typically, the ds18b20 pulls the line high after 11µs for a logical 1
-    // and 29µs for a logical 0
+    // we should read at the end of 16μs starting from the bus low  
+    // typically, the ds18b20 pulls the line high after 11μs for a logical 1
+    // and 29μs for a logical 0
 
     uint32_t start = micros();
-    // datasheet says >1µs
+    // datasheet says >1μs
     delayMicroseconds(3);
 
-    // release bus, delay E
-    pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    // release bus, delay E  
+    this->pin_.pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP); 
 
-    // Unfortunately some frameworks have different characteristics than others
+    // Unfortunately some frameworks have different characteristics than others  
     // esp32 arduino appears to pull the bus low only after the digital_write(false),
     // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
-    // manually correct for this with these constants.
+    // manually correct for this with these constants.  
 
   #ifdef USE_ESP32
-    uint32_t timing_constant = 12;
+    uint32_t timing_constant = esp_timer_get_time_constant();
   #else
-    uint32_t timing_constant = 14;
+    uint32_t timing_constant = 14; 
   #endif
 
     // measure from start value directly, to get best accurate timing no matter
@@ -170,60 +178,65 @@ bool HOT IRAM_ATTR ESPOneWire::read_bit() {
     while (micros() - start < timing_constant)
       ;
 
-    // sample bus to read bit from peer
-    bool r = pin_.digital_read();
+    // sample bus to read bit from peer  
+    bool r = this->pin_.pin_->digital_read();
 
-    // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
+    // read slot is at least 60μs; get as close to 60μs to spend less time with interrupts locked
     uint32_t now = micros();
     if (now - start < 60)
       delayMicroseconds(60 - (now - start));
 
     return r;
   } else {
-    // Handle the case where pins[0] and pins[1] are used.
-    // Drive input bus low 
-    pins[0].pin_mode(gpio::FLAG_OUTPUT);
-    pins[0].digital_write(false);
-
-    // note: for reading we'll need very accurate timing, as the
-    // timing for the digital_read() is tight; according to the datasheet,
-    // we should read at the end of 16µs starting from the bus low
-    // typically, the ds18b20 pulls the line high after 11µs for a logical 1
-    // and 29µs for a logical 0
-
-    uint32_t start = micros();
-    // Datasheet says >1us
-    delayMicroseconds(3);
-
-    // Release input bus, delay E
-    pins[0].pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-
-    // Unfortunately some frameworks have different characteristics than others
-    // esp32 arduino appears to pull the bus low only after the digital_write(false),
-    // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
-    // manually correct for this with these constants.
-
-    #ifdef USE_ESP32
-      uint32_t timing_constant = 12; 
-    #else
-      uint32_t timing_constant = 14;  
-    #endif
-
-    // measure from start value directly, to get best accurate timing no matter
-    // how long pin_mode/delayMicroseconds took  
-    while (micros() - start < timing_constant)
-        ;
-
-    // Sample input pin to read bit     
-    bool bit = pins[0].digital_read();
-
-    // Minimum 60us slot     
-    uint32_t now = micros();
-    if (now - start < 60)  
-        delayMicroseconds(60 - (now - start));
-
-    return bit;
+    return SplitIOReadBit();
   }
+}
+
+bool HOT IRAM_ATTR ESPOneWire::SplitIOReadBit() {
+  // Handle the case where pins[0] and pins[1] are used.
+  // Drive input bus low 
+  this->pin_.input_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->pin_.input_pin_->digital_write(false);
+  this->pin_.output_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+
+  // note: for reading we'll need very accurate timing, as the
+  // timing for the digital_read() is tight; according to the datasheet,
+  // we should read at the end of 16μs starting from the bus low
+  // typically, the ds18b20 pulls the line high after 11μs for a logical 1
+  // and 29μs for a logical 0
+
+  uint32_t start = micros();
+  // Datasheet says >1us
+  delayMicroseconds(3);
+
+  // Release input bus, delay E
+  this->pin_.input_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+
+  // Unfortunately some frameworks have different characteristics than others
+  // esp32 arduino appears to pull the bus low only after the digital_write(false),
+  // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
+  // manually correct for this with these constants.
+
+  #ifdef USE_ESP32
+    uint32_t timing_constant = esp_timer_get_time_constant(); 
+  #else
+    uint32_t timing_constant = 14;  
+  #endif
+
+  // measure from start value directly, to get best accurate timing no matter
+  // how long pin_mode/delayMicroseconds took  
+  while (micros() - start < timing_constant)
+      ;
+
+  // Sample input pin to read bit     
+  bool bit = this->pin_.input_pin_->digital_read();
+
+  // Minimum 60us slot     
+  uint32_t now = micros();
+  if (now - start < 60)  
+      delayMicroseconds(60 - (now - start));
+
+  return bit;
 }
 
 void IRAM_ATTR ESPOneWire::write8(uint8_t val) {

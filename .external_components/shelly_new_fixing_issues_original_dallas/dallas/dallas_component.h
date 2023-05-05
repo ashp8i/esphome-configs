@@ -36,7 +36,13 @@ class DallasComponent : public PollingComponent {
  protected:
   friend DallasTemperatureSensor;
 
-  InternalGPIOPin *pin_;
+  union {
+    InternalGPIOPin *pin_;
+    struct {
+      InternalGPIOPin *input_pin_;
+      InternalGPIOPin *output_pin_;
+    };
+  }
   ESPOneWire *one_wire_;
   std::vector<DallasTemperatureSensor *> sensors_;
   std::vector<uint64_t> found_sensors_;

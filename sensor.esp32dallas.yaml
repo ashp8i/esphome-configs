@@ -1,0 +1,23 @@
+substitutions:
+  device_ssid: "esp32dallas"
+  device_name: esp32dallas
+  device_main_description: "esp32 dallas test"
+  device_description: esp32 dallas test
+  friendly_name: "ESP32 Dallas Test" # Put the name that you want to see in Home Assistant.
+  main_device_id: "esp32dallastest"    # Put the name that you want to see in Home Assistant.
+  project_name: "esp32.1-wire-dallas-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret esp32_dallas_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.sensor.esp32-1-wire-arduino.yaml
+# <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
+# <<: !include .base.common-sensor.yaml
+<<: !include .base.sensor-esp32-dallas.yaml
+<<: !include .base.common-switch.yaml
+<<: !include .base.common-text-sensor.yaml

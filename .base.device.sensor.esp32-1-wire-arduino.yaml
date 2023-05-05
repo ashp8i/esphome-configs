@@ -1,0 +1,41 @@
+esphome:
+  name: "${device_name}"
+  # name_add_mac_suffix: true
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: esp32dev
+  variant: esp32
+  framework: 
+    type: arduino
+
+# external_components:
+#   - source:
+#       type: local
+#       # path: .external_components/shallax
+#       # path: .external_components/shelly_new_fixing_issues_original_dallas
+#       path: .external_components/shelly_new_fixing_issues
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  local: true
+
+# dallas:
+#   input_pin: GPIO3
+#   output_pin: GPIO0
+
+# shelly_dallas_new:
+#   pin_a: GPIO3
+#   pin_b: GPIO0
+
+dallas:
+  pin: GPIO19

@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
-from esphome.const import CONF_ID, CONF_PIN
+from esphome.const import CONF_ID, CONF_PIN, CONF_PINS
 from esphome.config_validation import All
 
 CONF_INPUT_PIN = "input_pin"
@@ -45,11 +45,10 @@ async def to_code(config):
 
     if CONF_PIN in config:
         pin = await cg.gpio_pin_expression(config[CONF_PIN])
-        cg.add(var.set_pin(&pin))  // Pass the single pin
+        cg.add(var.set_pin(pin))
 		
     elif CONF_INPUT_PIN in config and CONF_OUTPUT_PIN in config:
         input_pin = await cg.gpio_pin_expression(config[CONF_INPUT_PIN])
         output_pin = await cg.gpio_pin_expression(config[CONF_OUTPUT_PIN])
-        pins[0] = input_pin
-        pins[1] = output_pin
-        cg.add(var.set_pin(pins))  // Pass the array of two pins 
+        pins = [input_pin, output_pin]
+        cg.add(var.set_pins(pins))

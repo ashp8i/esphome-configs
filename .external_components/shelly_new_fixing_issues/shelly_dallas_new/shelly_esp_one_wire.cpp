@@ -78,6 +78,7 @@ bool HOT IRAM_ATTR ESPOneWire::read_bit() {
   // Drive input bus low 
   in_pin_.pin_mode(gpio::FLAG_OUTPUT);
   in_pin_.digital_write(false);
+  out_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
   // note: for reading we'll need very accurate timing, as the
   // timing for the digital_read() is tight; according to the datasheet,

@@ -42,19 +42,19 @@ void DallasComponent::setup() {
 
   } else {
     // Split I/O case
-    pins[0]->setup();   
-    pins[1]->setup();  
+    input_pin->setup();   
+    output_pin->setup();  
     
     // clear bus with 480μs high on both pins
-    pins[1]->pin_mode(gpio::FLAG_OUTPUT);
-    pins[1]->digital_write(true);
+    output_pin->pin_mode(gpio::FLAG_OUTPUT);
+    output_pin->digital_write(true);
 
     // Wait for communication to clear (delay G)
-    pins[0]->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    input_pin->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
     // Send 480μs LOW TX reset pulse (drive bus low, delay H)
-    pins[1]->pin_mode(gpio::FLAG_OUTPUT);
-    pins[1]->digital_write(false); 
+    output_pin->pin_mode(gpio::FLAG_OUTPUT);
+    output_pin->digital_write(false); 
     delayMicroseconds(480);  
     
     InternalGPIOPin *pins[2] = {this->input_pin_, this->output_pin_}; 
@@ -101,8 +101,8 @@ void DallasComponent::dump_config() {
     LOG_PIN("  Pin: ", this->pin_);
   } else {
     // Split I/O case
-    LOG_PIN("  In Pin: ", this->pins[0]);
-    LOG_PIN("  Out Pin: ", this->pins[1]);
+    LOG_PIN("  In Pin: ", this->input_pin);
+    LOG_PIN("  Out Pin: ", this->output_pin);
   }
   LOG_UPDATE_INTERVAL(this);
 

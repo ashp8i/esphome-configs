@@ -32,6 +32,9 @@ sensor:
   # - platform: dallas
   #   index: 0
   #   name: "Temperature #1"
-  - platform: dallas
+  # - platform: dallas
+  #   index: 0
+  #   name: "Temperature #1"
+  - platform: onewirebus
     index: 0
     name: "Temperature #1"

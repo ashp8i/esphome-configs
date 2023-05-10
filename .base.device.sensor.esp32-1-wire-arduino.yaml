@@ -12,10 +12,10 @@ esp32:
   framework: 
     type: arduino
 
-# external_components:
-#   - source:
-#       type: local
-#       # path: .external_components/shallax
+external_components:
+  - source:
+      type: local
+      path: my_external_components/test6
 #       # path: .external_components/shelly_new_fixing_issues_original_dallas
 #       path: .external_components/shelly_new_fixing_issues
 
@@ -37,5 +37,8 @@ web_server:
 #   pin_a: GPIO3
 #   pin_b: GPIO0
 
-dallas:
+# dallas:
+#   pin: GPIO19
+
+onewirebus:
   pin: GPIO19

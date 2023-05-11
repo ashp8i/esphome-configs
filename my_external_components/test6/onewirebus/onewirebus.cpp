@@ -1,6 +1,7 @@
 #include "onewirebus.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
+#include <algorithm>
 
 namespace esphome {
 namespace onewirebus {
@@ -13,18 +14,19 @@ const uint64_t ONE_WIRE_SEARCH_ERROR = 0xFFFFFFFFFFFFFFFFULL;
 
 using std::vector;
 
-OneWireBus::OneWireBus(InternalGPIOPin *pin) { pin_ = pin->to_isr(); }
+OneWireBus::OneWireBus(InternalGPIOPin *pin) : pin_(pin->to_isr()), failed_communication_attempts_(0) {}
 
 bool HOT IRAM_ATTR OneWireBus::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
+
   // Wait for communication to clear (delay G)
   pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  const int max_retries = 10;
-  for (int retries = max_retries; retries > 0; --retries) {
-    if (pin_.digital_read())
+  for (int retries = 10; retries > 0; --retries) {
+    if (pin_.digital_read()) {
       break;
-    delayMicroseconds(2); 
+    }
+    delayMicroseconds(2);
   }
 
   // Send 480µs LOW TX reset pulse (drive bus low, delay H)
@@ -36,38 +38,58 @@ bool HOT IRAM_ATTR OneWireBus::reset() {
   pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(70);
 
-  // sample bus, 0=device(s) present, 1=no device present
-  bool bit = !pin_.digital_read();
-  // delay J
+  // Sample bus, 0=device(s) present, 1=no device present
+  bool presence_detected = !pin_.digital_read();
+  // Delay J
   delayMicroseconds(410);
-  return bit;
+
+  if (!presence_detected) {
+    failed_communication_attempts_--;
+    ESP_LOGD(TAG, "Presence pulse succeeded in reset");
+  } else {
+    failed_communication_attempts_++;
+    ESP_LOGD(TAG, "Presence pulse failed in reset");
+  }
+
+  return presence_detected;
 }
 
-void HOT IRAM_ATTR OneWireBus::write_bit(bool bit) {
-  // drive bus low
+
+
+bool HOT IRAM_ATTR OneWireBus::write_bit(bool bit_to_write) { 
+  // Drive bus low
   pin_.pin_mode(gpio::FLAG_OUTPUT);
   pin_.digital_write(false);
 
-  // from datasheet:
+  // from datasheet
   // write 0 low time: t_low0: min=60µs, max=120µs
   // write 1 low time: t_low1: min=1µs, max=15µs
   // time slot: t_slot: min=60µs, max=120µs
   // recovery time: t_rec: min=1µs
   // ds18b20 appears to read the bus after roughly 14µs
-  const uint32_t delay0 = bit ? 6 : 60;
-  const uint32_t delay1 = bit ? 54 : 5;
+  const uint32_t delay0 = bit_to_write ? 6 : 60;      
+  const uint32_t delay1 = bit_to_write ? 54 : 5;
 
-  // delay A/C
+  // Delay A/C
   delayMicroseconds(delay0);
-  // release bus
+  // Release bus
   pin_.digital_write(true);
-  // delay B/D
+  // Delay B/D
   delayMicroseconds(delay1);
+  // Add a small delay to allow the slave to process the bit
+  delayMicroseconds(1);
+
+  bool read_back = this->read_bit();
+  if (read_back != bit_to_write) {  
+    this->reset();          
+    ESP_LOGD(TAG, "Write bit failed");     
+  }
+
+  return read_back;
 }
 
-bool HOT IRAM_ATTR OneWireBus::read_bit() {
-  // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
+bool HOT IRAM_ATTR OneWireBus::read_bit() {  
+  pin_.pin_mode(gpio::FLAG_OUTPUT);  
   pin_.digital_write(false);
 
   // note: for reading we'll need very accurate timing, as the
@@ -80,7 +102,7 @@ bool HOT IRAM_ATTR OneWireBus::read_bit() {
   // datasheet says >1µs
   delayMicroseconds(3);
 
-  // release bus, delay E
+  // Release bus, delay E
   pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
   // Unfortunately some frameworks have different characteristics than others
@@ -96,46 +118,73 @@ bool HOT IRAM_ATTR OneWireBus::read_bit() {
 
   // measure from start value directly, to get best accurate timing no matter
   // how long pin_mode/delayMicroseconds took
-  while (micros() - start < timing_constant)
-    ;
+  while (micros() - start < timing_constant) {}
 
   // sample bus to read bit from peer
-  bool const bit = pin_.digital_read();
+  bool bit = pin_.digital_read();
 
   // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
   uint32_t const now = micros();
-  if (now - start < 60)
+  if (now - start < 60) {
     delayMicroseconds(60 - (now - start));
+  }
 
   return bit;
 }
 
+void OneWireBus::log_communication_status() {
+  if (failed_communication_attempts_ > 0) {
+    ESP_LOGW(TAG, "Communication failed %d times", failed_communication_attempts_);
+    failed_communication_attempts_ = 0;  // Reset counter
+  } else {
+    ESP_LOGI(TAG, "Communication successful");
+  }
+}
+
 void IRAM_ATTR OneWireBus::write8(uint8_t val) {
   for (uint8_t i = 0; i < 8; i++) {
-    this->write_bit(bool((1u << i) & val));
+    if (!this->write_bit(bool((1u << i) & val))) {
+      failed_communication_attempts_++;
+      ESP_LOGD(TAG, "Write byte failed");
+    }
   }
 }
 
 void IRAM_ATTR OneWireBus::write64(uint64_t val) {
   for (uint8_t i = 0; i < 64; i++) {
-    this->write_bit(bool((1ULL << i) & val));
+    if (!this->write_bit(bool((1ULL << i) & val))) {
+      failed_communication_attempts_++;
+      ESP_LOGD(TAG, "Write 64-bit value failed"); 
+    }
   }
 }
 
 uint8_t IRAM_ATTR OneWireBus::read8() {
   uint8_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
-    ret |= (uint8_t(this->read_bit()) << i);
+    bool bit = this->read_bit();
+    if (bit == false) {
+      ESP_LOGW(TAG, "Failed to read byte");
+      break;
+    }
+    ret |= (uint8_t(bit) << i);
   }
   return ret;
 }
+
 uint64_t IRAM_ATTR OneWireBus::read64() {
   uint64_t ret = 0;
-  for (uint8_t i = 0; i < 8; i++) {
-    ret |= (uint64_t(this->read_bit()) << i);
+  for (uint8_t i = 0; i < 64; i++) {
+    bool bit = this->read_bit();
+    if (bit == false) {
+      ESP_LOGW(TAG, "Failed to read 64-bit value");
+      break;
+    }
+    ret |= (uint64_t(bit) << i);
   }
   return ret;
 }
+
 void IRAM_ATTR OneWireBus::select(uint64_t address) {
   this->write8(ONE_WIRE_ROM_SELECT);
   this->write64(address);
@@ -149,7 +198,9 @@ void IRAM_ATTR OneWireBus::reset_search() {
 }
 uint64_t IRAM_ATTR OneWireBus::search() {
   const int MAX_RETRIES = 3;
+  const int MAX_ERRORS = 5; // Change this value to adjust the error limit
   int retries = 0;
+  int errors = 0;
 
   if (this->last_device_flag_) {
     return 0u;
@@ -182,6 +233,11 @@ uint64_t IRAM_ATTR OneWireBus::search() {
 
         if (id_bit && cmp_id_bit) {
           // Bus error - abort search and restart
+          errors++;
+          if (errors > MAX_ERRORS) {
+            this->reset_search();
+            return ONE_WIRE_SEARCH_ERROR;
+          }
           break;
         }
 
@@ -229,6 +285,7 @@ uint64_t IRAM_ATTR OneWireBus::search() {
           this->last_device_flag_ = true;
         }
         search_result = true;
+        errors = 0; // Reset error counter after successful search
         break;
       }
     }
@@ -245,7 +302,7 @@ uint64_t IRAM_ATTR OneWireBus::search() {
     return ONE_WIRE_SEARCH_ERROR; // Indicate failed search
   }
 
-  search_result = search_result && (this->rom_number_[0] != 0 || this->rom_number_[1] != 0 || this->rom_number_[2] != 0 || this->rom_number_[3] != 0 || this->rom_number_[4] != 0 || this->rom_number_[5] != 0 || this->rom_number_[6] != 0 || this->rom_number_[7] != 0);
+  search_result = search_result && std::any_of(std::begin(this->rom_number_), std::end(this->rom_number_), [](uint8_t val) { return val != 0; });
   if (!search_result) {
     this->reset_search();
     return 0u;

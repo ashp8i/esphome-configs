@@ -14,10 +14,10 @@ api:
     key: !secret esp32_dallas_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug.yaml
-<<: !include .base.device.sensor.esp32-1-wire-arduino.yaml
+<<: !include .base-debug-verbose.yaml
+<<: !include .base.device.sensor.esp32-1-wire-new-arduino.yaml
 # <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
 # <<: !include .base.common-sensor.yaml
-<<: !include .base.sensor-esp32-dallas.yaml
+<<: !include .base.sensor-esp32-onewire.yaml
 <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml

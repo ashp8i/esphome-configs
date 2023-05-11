@@ -22,10 +22,13 @@ class OneWireBus {
   bool reset();
 
   /// Write a single bit to the bus, takes about 70µs.
-  void write_bit(bool bit);
+  bool write_bit(bool bit_to_write);
 
   /// Read a single bit from the bus, takes about 70µs
   bool read_bit();
+
+  // Add a new method to log the status of communication attempts.
+  void log_communication_status();
 
   /// Write a word to the bus. LSB first.
   void write8(uint8_t val);
@@ -53,6 +56,9 @@ class OneWireBus {
 
   /// Helper that wraps search in a std::vector.
   std::vector<uint64_t> search_vec();
+
+ private:
+  uint32_t failed_communication_attempts_; 
 
  protected:
   ISRInternalGPIOPin pin_;

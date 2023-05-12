@@ -15,7 +15,7 @@ esp32:
 external_components:
   - source:
       type: local
-      path: my_external_components/test6
+      path: my_external_components/test7
 #       # path: .external_components/shelly_new_fixing_issues_original_dallas
 #       path: .external_components/shelly_new_fixing_issues
 

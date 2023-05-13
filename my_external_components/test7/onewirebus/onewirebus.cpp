@@ -13,6 +13,14 @@ const uint64_t ONE_WIRE_SEARCH_ERROR = 0xFFFFFFFFFFFFFFFFULL;
 
 OneWireBus::OneWireBus(InternalGPIOPin *pin) { pin_ = pin->to_isr(); }
 
+// Error counters
+unsigned int successful_reset = 0;
+unsigned int failed_reset = 0;
+unsigned int successful_write = 0;
+unsigned int failed_write = 0;
+unsigned int successful_read = 0;
+unsigned int failed_read = 0;
+
 bool HOT IRAM_ATTR OneWireBus::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
@@ -36,6 +44,19 @@ bool HOT IRAM_ATTR OneWireBus::reset() {
 
   // Sample bus, 0=device(s) present, 1=no device present
   bool presence_detected = !pin_.digital_read();
+
+  // Update error counters and log if necessary
+  if (presence_detected) {
+    successful_reset++;
+  } else {
+    failed_reset++;
+  }
+
+  // Only log once every 100 resets
+  if ((successful_reset + failed_reset) % 100 == 0) {
+    ESP_LOGD("OneWireBus", "Reset stats: Successful: %u, Failed: %u", successful_reset, failed_reset);
+  }
+
   // Delay J
   delayMicroseconds(410);
   return presence_detected;
@@ -59,8 +80,21 @@ void HOT IRAM_ATTR OneWireBus::write_bit(bool bit) {
   delayMicroseconds(delay0);
   // release bus
   pin_.digital_write(true);
+
   // delay B/D
   delayMicroseconds(delay1);
+
+  // Update error counters and log if necessary
+  if (bit) {
+    successful_write++;
+  } else {
+    failed_write++;
+  }
+
+  // Only log once every 100 writes
+  if ((successful_write + failed_write) % 100 == 0) {
+    ESP_LOGD("OneWireBus", "Write stats: Successful: %u, Failed: %u", successful_write, failed_write);
+  }
 }
 
 bool HOT IRAM_ATTR OneWireBus::read_bit() {
@@ -99,6 +133,18 @@ bool HOT IRAM_ATTR OneWireBus::read_bit() {
 
   // sample bus to read bit from peer
   bool bit = pin_.digital_read();
+
+  // Update error counters and log if necessary
+  if (bit) {
+    successful_read++;
+  } else {
+    failed_read++;
+  }
+
+  // Only log once every 100 reads
+  if ((successful_read + failed_read) % 100 == 0) {
+    ESP_LOGD("OneWireBus", "Read stats: Successful: %u, Failed: %u", successful_read, failed_read);
+  }
 
   // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
   uint32_t now = micros();

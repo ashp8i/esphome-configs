@@ -1,0 +1,25 @@
+class DS18B20Sensor : public OneWireBusDevice {
+  public: 
+    DS18B20Sensor(OneWireBusComponent *parent, uint64_t address);
+
+    float get_temperature();
+    void set_temp_for_conversion();
+
+  private:
+    bool read_registers() override;
+    bool check_registers() override; 
+    float parse_temperature();
+};
+
+float DS18B20Sensor::get_temperature() {
+  this->set_temp_for_conversion();
+  // Wait 750ms for conversion
+  
+  if (!this->read_registers()) { /* ... */ }
+  if (!this->check_registers()) { /* ... */ }
+  return this->parse_temperature();
+}
+
+void DS18B20Sensor::set_temp_for_conversion() {
+  // Send start conversion command 
+}

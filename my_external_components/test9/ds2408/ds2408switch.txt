@@ -1,0 +1,27 @@
+class DS2408Switch : public OneWireBusComponent {
+  public:
+    void setup() override;
+
+    void turn_on(uint8_t channel); 
+    void turn_off(uint8_t channel);
+    bool is_on(uint8_t channel);
+
+  protected:
+    bool write_logic_level(uint8_t channel, bool logic_level);
+};
+
+void DS2408Switch::turn_on(uint8_t channel) {
+  this->write_logic_level(channel, true);
+}
+
+void DS2408Switch::turn_off(uint8_t channel) {
+  this->write_logic_level(channel, false); 
+}
+
+bool DS2408Switch::is_on(uint8_t channel) {
+  // Read logic level of channel pin from DS2408
+}
+
+bool DS2408Switch::write_logic_level(uint8_t channel, bool logic_level) {
+  // Construct 1-Wire command and transmit to set logic level of channel  
+}

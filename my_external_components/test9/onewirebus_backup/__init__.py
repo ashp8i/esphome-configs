@@ -14,8 +14,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.GenerateID(): cv.declare_id(OneWireBusDevice),
         cv.Required(CONF_PIN): pins.internal_gpio_output_pin_schema,
     }
-)
-# .extend(cv.polling_component_schema("60s"))
+).extend(cv.polling_component_schema("60s"))
 
 
 async def to_code(config):

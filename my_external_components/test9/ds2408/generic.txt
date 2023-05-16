@@ -1,0 +1,25 @@
+class DS2450Sensor : public OneWireBusDevice {
+  public:  
+    void loop() override {
+      // Start A/D conversion on next channel 
+    }
+};
+
+class DS18B20Sensor : public OneWireBusDevice {
+  public:
+    void loop() override {
+      this->set_timeout(750ms, [this]() {
+        float temp = this->read_temperature(); 
+        // Publish temperature 
+      }); 
+    }  
+};
+
+class DS2408Switch : public OneWireBusDevice {
+  public:
+    void loop() override {
+      for (int i=0; i<8; i++) {
+        if (this->is_on(i)) { /* Channel i is on */ }    
+      }
+    }
+};  

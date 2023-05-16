@@ -8,14 +8,14 @@
 namespace esphome {
 namespace onewirebus {
 
-static const char *const TAG = "onewirebuscomponent.bus";
+static const char *const TAG = "onewirebus.one_wire";
 
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-OneWireBusComponent::OneWireBusComponent(InternalGPIOPin *pin) { pin_ = pin->to_isr(); }
+OneWireBus::OneWireBus(InternalGPIOPin *pin) { pin_ = pin->to_isr(); }
 
-bool HOT IRAM_ATTR OneWireBusComponent::reset() {
+bool HOT IRAM_ATTR OneWireBus::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
@@ -43,7 +43,7 @@ bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   return r;
 }
 
-void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
+void HOT IRAM_ATTR OneWireBus::write_bit(bool bit) {
   // drive bus low
   pin_.pin_mode(gpio::FLAG_OUTPUT);
   pin_.digital_write(false);
@@ -65,7 +65,7 @@ void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   delayMicroseconds(delay1);
 }
 
-bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
+bool HOT IRAM_ATTR OneWireBus::read_bit() {
   // drive bus low
   pin_.pin_mode(gpio::FLAG_OUTPUT);
   pin_.digital_write(false);
@@ -110,42 +110,42 @@ bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   return r;
 }
 
-void IRAM_ATTR OneWireBusComponent::write8(uint8_t val) {
+void IRAM_ATTR OneWireBus::write8(uint8_t val) {
   for (uint8_t i = 0; i < 8; i++) {
     this->write_bit(bool((1u << i) & val));
   }
 }
 
-void IRAM_ATTR OneWireBusComponent::write64(uint64_t val) {
+void IRAM_ATTR OneWireBus::write64(uint64_t val) {
   for (uint8_t i = 0; i < 64; i++) {
     this->write_bit(bool((1ULL << i) & val));
   }
 }
 
-uint8_t IRAM_ATTR OneWireBusComponent::read8() {
+uint8_t IRAM_ATTR OneWireBus::read8() {
   uint8_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
     ret |= (uint8_t(this->read_bit()) << i);
   }
   return ret;
 }
-uint64_t IRAM_ATTR OneWireBusComponent::read64() {
+uint64_t IRAM_ATTR OneWireBus::read64() {
   uint64_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
     ret |= (uint64_t(this->read_bit()) << i);
   }
   return ret;
 }
-void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
+void IRAM_ATTR OneWireBus::select(uint64_t address) {
   this->write8(ONE_WIRE_ROM_SELECT);
   this->write64(address);
 }
-void IRAM_ATTR OneWireBusComponent::reset_search() {
+void IRAM_ATTR OneWireBus::reset_search() {
   this->last_discrepancy_ = 0;
   this->last_device_flag_ = false;
   this->rom_number_ = 0;
 }
-uint64_t IRAM_ATTR OneWireBusComponent::search() {
+uint64_t IRAM_ATTR OneWireBus::search() {
   if (this->last_device_flag_) {
     return 0u;
   }
@@ -235,7 +235,7 @@ uint64_t IRAM_ATTR OneWireBusComponent::search() {
 
   return this->rom_number_;
 }
-std::vector<uint64_t> OneWireBusComponent::search_vec() {
+std::vector<uint64_t> OneWireBus::search_vec() {
   std::vector<uint64_t> res;
 
   this->reset_search();
@@ -246,64 +246,41 @@ std::vector<uint64_t> OneWireBusComponent::search_vec() {
   return res;
 }
 
-void IRAM_ATTR OneWireBusComponent::skip() {
+void IRAM_ATTR OneWireBus::skip() {
   this->write8(0xCC);  // skip ROM
 }
 
-uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
+uint8_t IRAM_ATTR *OneWireBus::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
-void OneWireBusComponent::add_device(std::unique_ptr<OneWireBusDevice> device) {
-  this->devices_.push_back(std::move(device));
-}
+// OneWireBusDevice *OneWireBusDevice::get_instance() {
+//   static OneWireBusDevice *instance;
+//   return instance; 
+// }
 
-void OneWireBusComponent::add_device(OneWireBusDevice& device) {
-  this->devices_.push_back(&device);
-}
+// void OneWireBusDevice::setup() {
+//   this->bus_ = new OneWireBus();
+//   this->devices_ = this->bus_->search_vec();
+// }
 
-const uint8_t* OneWireBusComponent::get_address8() const {
-  return this->address8_; 
-}
-
-const OneWireBusComponent::InternalGPIOPin* get_pin() const {
-  return this->pin_; 
-}
-
-void OneWireBusComponent::set_address(uint64_t address) { this->address_ = address; }
-uint8_t OneWireBusComponent::get_index() const { return this->index_; }
-void OneWireBusComponent::set_index(uint8_t index) { this->index_ = index; }
-uint8_t *OneWireBusComponent::get_address8() { return reinterpret_cast<uint8_t *>(&this->address_); }
-std::string OneWireBusComponent::get_address_name(uint64_t address) {
-  std::string address_name = "0x" + format_hex(address);
-  return address_name; 
-}
+OneWireBusDevice::OneWireBusDevice(OneWireBusComponent *parent) 
+  : parent_(parent) {}
 
 void OneWireBusComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up OneWireBusComponent...");
   this->pin_->setup();   
+
   // Clear bus 
   this->pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);  
   delayMicroseconds(480);
-  // Create bus instance
-  this->bus_ = new OneWireBusComponent(this->pin_);
-  // Discover devices
+
+  this->bus_ = new OneWireBus(this->pin_);    
   this->addresses_ = this->bus_->search();  
-  // Check device types and register specifically
+
+  // Add devices 
   for (auto &address : this->addresses_) {
-    auto *address8 = reinterpret_cast<uint8_t *>(&address);
-    if (crc8(address8, 7) != address8[7]) { 
-      continue; 
-    }
-    switch (address8[0]) {
-      case DALLAS_MODEL_DS18S20:
-      case DALLAS_MODEL_DS1822: 
-      {
-        auto *sensor = new OneWireTemperatureSensor(this, address);
-        sensor->setup();
-        break;
-      }
-      default:
-        devices_.push_back(new OneWireBusDevice(this)); 
-    }
+    OneWireBusDevice *device = new OneWireBusDevice(this); 
+    device->setup();
+    this->devices_.push_back(device);
   }
 }
 
@@ -326,8 +303,18 @@ void OneWireBusComponent::loop() {
   }
 }
 
-OneWireBusDevice::OneWireBusDevice(OneWireBusComponent *parent) 
-    : parent_(parent) {}
+void OneWireBusDevice::setup() {
+  this->bus_ = this->parent_->get_bus(); 
+  // Setup device...
+}
+
+void OneWireBusDevice::dump_config() {
+  // Dump device config...
+}
+
+void OneWireBusDevice::setup() {
+  // Child classes can override setup() to do any device-specific initialization 
+}
 
 void OneWireBusDevice::dump_config() {
   ESP_LOGCONFIG(TAG, "OneWire device: 0x%016llX", this->address_);
@@ -340,6 +327,20 @@ void OneWireBusDevice::loop() {
   // - Starting A/D conversions (DS2450)
   // - Setting timeouts to read values (DS18B20) 
   // - Checking digital input states (DS2408)
+}
+
+void OneWireBusComponent::register_device(OneWireDevice *device) {
+  if (auto *sensor = dynamic_cast<OneWireTemperatureSensor*>(device)) {
+    this->register_sensor(sensor);
+  } else {
+    // Handle other device types here
+    switch (device->get_model()) {
+      case /* some model */:
+        // Register device somehow
+        break;
+      // ...
+    }
+  }
 }
 
 }  // namespace onewirebus

@@ -297,7 +297,7 @@ void OneWireBusComponent::setup() {
       case DALLAS_MODEL_DS18S20:
       case DALLAS_MODEL_DS1822: 
       {
-        auto *sensor = new OneWireTemperatureSensor(this, address);
+        auto *sensor = new OneWireBusComponent(this, address);
         sensor->setup();
         break;
       }

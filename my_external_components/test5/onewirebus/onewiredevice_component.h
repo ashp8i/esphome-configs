@@ -26,7 +26,7 @@ class OneWireBusComponent : public PollingComponent {
   friend OneWireTemperatureSensor;
 
   InternalGPIOPin *pin_;
-  OneWireBus *one_wire_;
+  OneWireBusComponent *one_wire_;
   std::vector<OneWireTemperatureSensor *> sensors_;
   std::vector<uint64_t> found_sensors_;
 };

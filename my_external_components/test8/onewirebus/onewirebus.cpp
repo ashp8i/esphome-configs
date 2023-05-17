@@ -13,9 +13,9 @@ static const char *const TAG = "onewirebus.one_wire";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-OneWireBus::OneWireBus(InternalGPIOPin *pin) { pin_ = pin->to_isr(); }
+OneWireBusComponent::OneWireBusComponent(InternalGPIOPin *pin) { pin_ = pin->to_isr(); }
 
-bool HOT IRAM_ATTR OneWireBus::reset() {
+bool HOT IRAM_ATTR OneWireBusComponent::reset() {
   // See reset here:
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
@@ -43,7 +43,7 @@ bool HOT IRAM_ATTR OneWireBus::reset() {
   return r;
 }
 
-void HOT IRAM_ATTR OneWireBus::write_bit(bool bit) {
+void HOT IRAM_ATTR OneWireBusComponent::write_bit(bool bit) {
   // drive bus low
   pin_.pin_mode(gpio::FLAG_OUTPUT);
   pin_.digital_write(false);
@@ -65,7 +65,7 @@ void HOT IRAM_ATTR OneWireBus::write_bit(bool bit) {
   delayMicroseconds(delay1);
 }
 
-bool HOT IRAM_ATTR OneWireBus::read_bit() {
+bool HOT IRAM_ATTR OneWireBusComponent::read_bit() {
   // drive bus low
   pin_.pin_mode(gpio::FLAG_OUTPUT);
   pin_.digital_write(false);
@@ -110,42 +110,42 @@ bool HOT IRAM_ATTR OneWireBus::read_bit() {
   return r;
 }
 
-void IRAM_ATTR OneWireBus::write8(uint8_t val) {
+void IRAM_ATTR OneWireBusComponent::write8(uint8_t val) {
   for (uint8_t i = 0; i < 8; i++) {
     this->write_bit(bool((1u << i) & val));
   }
 }
 
-void IRAM_ATTR OneWireBus::write64(uint64_t val) {
+void IRAM_ATTR OneWireBusComponent::write64(uint64_t val) {
   for (uint8_t i = 0; i < 64; i++) {
     this->write_bit(bool((1ULL << i) & val));
   }
 }
 
-uint8_t IRAM_ATTR OneWireBus::read8() {
+uint8_t IRAM_ATTR OneWireBusComponent::read8() {
   uint8_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
     ret |= (uint8_t(this->read_bit()) << i);
   }
   return ret;
 }
-uint64_t IRAM_ATTR OneWireBus::read64() {
+uint64_t IRAM_ATTR OneWireBusComponent::read64() {
   uint64_t ret = 0;
   for (uint8_t i = 0; i < 8; i++) {
     ret |= (uint64_t(this->read_bit()) << i);
   }
   return ret;
 }
-void IRAM_ATTR OneWireBus::select(uint64_t address) {
+void IRAM_ATTR OneWireBusComponent::select(uint64_t address) {
   this->write8(ONE_WIRE_ROM_SELECT);
   this->write64(address);
 }
-void IRAM_ATTR OneWireBus::reset_search() {
+void IRAM_ATTR OneWireBusComponent::reset_search() {
   this->last_discrepancy_ = 0;
   this->last_device_flag_ = false;
   this->rom_number_ = 0;
 }
-uint64_t IRAM_ATTR OneWireBus::search() {
+uint64_t IRAM_ATTR OneWireBusComponent::search() {
   if (this->last_device_flag_) {
     return 0u;
   }
@@ -235,7 +235,7 @@ uint64_t IRAM_ATTR OneWireBus::search() {
 
   return this->rom_number_;
 }
-std::vector<uint64_t> OneWireBus::search_vec() {
+std::vector<uint64_t> OneWireBusComponent::search_vec() {
   std::vector<uint64_t> res;
 
   this->reset_search();
@@ -246,11 +246,11 @@ std::vector<uint64_t> OneWireBus::search_vec() {
   return res;
 }
 
-void IRAM_ATTR OneWireBus::skip() {
+void IRAM_ATTR OneWireBusComponent::skip() {
   this->write8(0xCC);  // skip ROM
 }
 
-uint8_t IRAM_ATTR *OneWireBus::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
+uint8_t IRAM_ATTR *OneWireBusComponent::rom_number8_() { return reinterpret_cast<uint8_t *>(&this->rom_number_); }
 
 // static const char *const TAG = "onewirebus.sensor";
 
@@ -285,7 +285,7 @@ void OneWireBusComponent::setup() {
   pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(480);
 
-  one_wire_ = new OneWireBus(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
+  one_wire_ = new OneWireBusComponent(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
 
   std::vector<uint64_t> raw_sensors;
   raw_sensors = this->one_wire_->search_vec();

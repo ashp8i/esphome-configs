@@ -11,7 +11,7 @@ esphome:
 external_components:
   - source:
       type: local
-      path: .external_components/shallax
+      path: my_external_components/test10
       # path: .external_components/shelly_new_fixing_issues_original_dallas
 
 captive_portal:
@@ -48,6 +48,8 @@ web_server:
 #   pin_a: GPIO3
 #   pin_b: GPIO0
 
-dallas:
-  input_pin: GPIO3
-  output_pin: GPIO0
+# shellydallasng:
+#   input_pin: GPIO3
+#   output_pin: GPIO0
+  # input_pin: 3
+  # output_pin: 0

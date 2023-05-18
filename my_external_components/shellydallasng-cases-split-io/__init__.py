@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
-from esphome.const import CONF_ID
+from esphome.const import CONF_ID, CONF_PIN
 
 MULTI_CONF = True
 AUTO_LOAD = ["sensor"]
@@ -12,8 +12,9 @@ ShellyDallasNgComponent = shellydallasng_ns.class_("ShellyDallasNgComponent", cg
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(ShellyDallasNgComponent),
-        cv.Required('input_pin'): pins.internal_gpio_input_pin_schema,
-        cv.Required('output_pin'): pins.internal_gpio_output_pin_schema,
+        cv.Optional(CONF_PIN): pins.internal_gpio_pin_schema,
+        cv.Optional('input_pin'): pins.internal_gpio_input_pin_schema,
+        cv.Optional('output_pin'): pins.internal_gpio_output_pin_schema 
     }
 ).extend(cv.polling_component_schema("60s"))
 
@@ -23,10 +24,10 @@ async def to_code(config):
     await cg.register_component(var, config)
     cg.add_library("https://github.com/pstolarz/OneWireNg", None)
 
-    input_pin = await cg.gpio_pin_expression(config['input_pin'])
-    cg.add(var.set_pin('input_pin'))
-    output_pin = await cg.gpio_pin_expression(config['output_pin'])
-    cg.add(var.set_pin('output_pin'))
-
-    onewire_in = cg.new_OneWireNg(var.input_pin) 
-    onewire_out = cg.new_OneWireNg(var.output_pin)
+    if 'pin' in config: 
+        pin = await cg.gpio_pin_expression(config[CONF_PIN])
+        cg.add(var.set_pin(pin))
+    else if 'input_pin' in config and 'output_pin' in config: 
+        input_pin = await cg.gpio_pin_expression(config['input_pin'])
+        output_pin = await cg.gpio_pin_expression(config['output_pin'])
+        cg.add(var.set_pins(input_pin, output_pin))

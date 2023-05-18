@@ -1,5 +1,5 @@
-#include "ShellyDallasng_component.h"
-#include "ShellyDallasng_temperature_sensor.h"
+#include "shelly_dallasng_component.h"
+#include "shelly_dallasng_temperature_sensor.h"
 #include "esphome/core/log.h"
 
 namespace esphome
@@ -11,7 +11,8 @@ namespace esphome
     {
       ESP_LOGCONFIG(TAG, "Setting up ShellyDallasComponent...");
       one_wire_->searchReset();
-      ESP_LOGI(TAG, "One wire using pin %d", pin_->get_pin());
+      ESP_LOGI(TAG, "One wire using input pin %d and output pin %d", 
+        input_pin_->get_pin(), output_pin_->get_pin());
       OneWireNg::Id id;
       one_wire_->searchReset();
       while (one_wire_->search(id, false) == OneWireNg::EC_MORE)
@@ -48,7 +49,8 @@ namespace esphome
     void ShellyDallasNgComponent::dump_config()
     {
       ESP_LOGCONFIG(TAG, "ShellyDallasComponent:");
-      LOG_PIN("  Pin: ", this->pin_);
+      LOG_PIN("  Input Pin: ", this->input_pin_);
+      LOG_PIN("  Output Pin: ", this->output_pin_);
       LOG_UPDATE_INTERVAL(this);
 
       if (this->found_sensors_.empty())

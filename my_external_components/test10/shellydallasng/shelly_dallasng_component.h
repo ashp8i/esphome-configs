@@ -7,6 +7,14 @@
 #include "OneWireNg_CurrentPlatform.h"
 #include "drivers/DSTherm.h"
 
+class GPIOPin {
+ public:
+  GPIOPin(int pin) : pin_(pin) {}
+  int get_pin() const { return pin_; }
+ private:
+  int pin_;
+};
+
 namespace esphome
 {
   namespace shellydallasng
@@ -17,12 +25,11 @@ namespace esphome
     class ShellyDallasNgComponent : public PollingComponent
     {
     public:
-      void set_pin(InternalGPIOPin *pin)
-      {
+      void set_pins(int input_pin, int output_pin) { 
         input_pin_ = input_pin;
         output_pin_ = output_pin;
-        one_wire_in_ = new OneWireNg_CurrentPlatform(input_pin_->get_pin(), false);   
-        one_wire_out_ = new OneWireNg_CurrentPlatformOneWireNg(output_pin_->get_pin(), false);
+        one_wire_input_ = new OneWireNg_CurrentPlatform(input_pin, false);   
+        one_wire_output_ = new OneWireNg_CurrentPlatform(output_pin, false); 
       }
 
       void setup() override;
@@ -37,10 +44,12 @@ namespace esphome
 
     protected:
       friend ShellyDallasNgTemperatureSensor;
-      InternalGPIOPin *input_pin_; 
-      InternalGPIOPin *output_pin_;
-      OneWireNg *one_wire_in_;
-      OneWireNg *one_wire_out_;
+
+    private:
+      int input_pin_; 
+      int output_pin_;
+      OneWireNg *one_wire_input_;
+      OneWireNg *one_wire_output_;
       std::vector<uint64_t> found_sensors_;
       std::vector<ShellyDallasNgTemperatureSensor *> sensors_;
     };

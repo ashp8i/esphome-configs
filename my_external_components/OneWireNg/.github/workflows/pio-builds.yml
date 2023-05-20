@@ -1,0 +1,80 @@
+name: PlatformIO builds
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+defaults:
+  run:
+    shell: bash
+jobs:
+  pio_info:
+    runs-on: ubuntu-latest
+    container: ghcr.io/pstolarz/pio-ci
+    steps:
+      - name: PlatformIO recent packages versions info
+        run: |
+          cd /pio-ard-ci && sudo pio pkg list && sudo pio pkg outdated
+          cd /pio-idf-ci && sudo pio pkg list && sudo pio pkg outdated
+  pio_ard_build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/pstolarz/pio-ci
+    strategy:
+      matrix:
+        plat:
+          - uno
+          - uno_wifi_rev2
+          - due
+          - esp32dev
+          - d1
+          - nucleo_l552ze_q
+        example:
+          - DallasTemperature
+    env:
+      BUILD_FLAGS: "\
+        -DOWNG_NO_NATIVE_CONFIG \
+        -DCONFIG_PWR_CTRL_ENABLED \
+        -DCONFIG_OVERDRIVE_ENABLED \
+        -DCONFIG_CRC16_ENABLED \
+        -DCONFIG_ITERATION_RETRIES=1"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: |
+          repo_dir=$(pwd)
+          cd /pio-ard-ci
+          cp ${repo_dir}/examples/arduino/${{ matrix.example }}/${{ matrix.example }}.ino \
+            src/${{ matrix.example }}.ino
+          sudo pio pkg install -l ${repo_dir}
+          sudo PLATFORMIO_BUILD_FLAGS="${BUILD_FLAGS}" pio run -e ${{ matrix.plat }}
+  pio_idf_build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/pstolarz/pio-ci
+    strategy:
+      matrix:
+        plat:
+          - esp32-s2-saola-1
+          - esp32-c3-devkitm-1
+        example:
+          - DallasTemperature
+    env:
+      BUILD_FLAGS: "\
+        -DOWNG_NO_NATIVE_CONFIG \
+        -DCONFIG_PWR_CTRL_ENABLED \
+        -DCONFIG_OVERDRIVE_ENABLED \
+        -DCONFIG_CRC16_ENABLED \
+        -DCONFIG_ITERATION_RETRIES=1 \
+        -DCONFIG_OW_PIN=13"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: |
+          repo_dir=$(pwd)
+          cd /pio-idf-ci
+          cp ${repo_dir}/examples/esp-idf/${{ matrix.example }}/main/${{ matrix.example }}.cpp \
+            src/${{ matrix.example }}.cpp
+          sudo pio pkg install -l ${repo_dir}
+          sudo PLATFORMIO_BUILD_FLAGS="${BUILD_FLAGS}" pio run -e ${{ matrix.plat }}

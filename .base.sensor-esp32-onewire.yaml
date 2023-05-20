@@ -29,12 +29,20 @@ sensor:
               ).c_str();
 
 # Dallas - Shelly Split OneWire
-  # - platform: dallas
-  #   index: 0
-  #   name: "Temperature #1"
+  - platform: dallas
+    index: 0
+    name: "Temperature #1"
   # - platform: dallas
   #   index: 0
   #   name: "Temperature #1"
   # - platform: onewiretemperature
   #   index: 0
   #   name: "Temperature #1"
+# Dallas - Shelly Split OneWire
+  # - platform: dallasng
+  #   index: 0
+  #   name: Temperature
+  #   resolution: 12
+  #   # expire_after: 1000s
+  #   filters:
+  #     - filter_out: NAN

@@ -9,8 +9,7 @@ static const char *const TAG = "dht";
 
 void DHT::setup() {
   ESP_LOGCONFIG(TAG, "Setting up DHT...");
-  this->pin_in_->pin_mode(esphome::gpio::FLAG_INPUT);
-  this->pin_out_->pin_mode(esphome::gpio::FLAG_OUTPUT);  
+  this->pin_out_->digital_write(true);
   this->pin_in_->setup();
   this->pin_out_->setup();
   this->pin_out_->digital_write(true);  
@@ -82,12 +81,8 @@ bool HOT IRAM_ATTR DHT::read_sensor_(float *temperature, float *humidity, bool r
   int8_t i = 0;
   uint8_t data[5] = {0, 0, 0, 0, 0};
 
-  {
-    InterruptLock lock;
-
-    //this->pin_->digital_write(false);
-    //this->pin_->pin_mode(OUTPUT);
-    //this->pin_->digital_write(false);
+    this->pin_out_->digital_write(false);
+    this->pin_out_->pin_mode(gpio::FLAG_OUTPUT);
     this->pin_out_->digital_write(false);
 
     if (this->model_ == DHT_MODEL_DHT11) {
@@ -103,9 +98,14 @@ bool HOT IRAM_ATTR DHT::read_sensor_(float *temperature, float *humidity, bool r
     } else {
       delayMicroseconds(800);
     }
-    //this->pin_->pin_mode(INPUT_PULLUP);
-    this->pin_out_->digital_write(true);
-    delayMicroseconds(40);
+    this->pin_out_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+
+  {
+    InterruptLock lock;
+    // Host pull up 20-40us then DHT response 80us
+    // Start waiting for initial rising edge at the center when we
+    // expect the DHT response (30us+40us)
+    delayMicroseconds(70);
 
     uint8_t bit = 7;
     uint8_t byte = 0;

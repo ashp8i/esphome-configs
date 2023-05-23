@@ -116,21 +116,21 @@ sensor:
   #   address: 0x76
   #   update_interval: 60s
   #  - platform: dht
-  # - platform: shelly_dht
-  #   pin: GPIO19
-  #   pin_a: GPIO0
-  #   # pin: GPIO3
-  #   # pin_a: GPIO0
-  #   temperature:
-  #     name: "Test 2 Temperature"
-  #   humidity:
-  #     name: "Test 2 Humidity"
-  #   update_interval: 5s
-  - platform: dht
-    pin: GPIO19
-    # pin_a: GPIO19
+  - platform: shelly_dht
+    pin: GPIO1
+    pin_a: GPIO0
+    # pin: GPIO3
+    # pin_a: GPIO0
     temperature:
       name: "Test 2 Temperature"
     humidity:
       name: "Test 2 Humidity"
-    update_interval: 60s
+    update_interval: 5s
+  # - platform: dht
+  #   pin: GPIO19
+  #   # pin_a: GPIO19
+  #   temperature:
+  #     name: "Test 2 Temperature"
+  #   humidity:
+  #     name: "Test 2 Humidity"
+  #   update_interval: 60s

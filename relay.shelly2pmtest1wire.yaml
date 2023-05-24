@@ -1,0 +1,31 @@
+substitutions:
+  device_ssid: "Shelly2PM1wire"
+  device_name: shellyplus2pm1wire
+  device_description: Shelly Plus 2 PM Switch & Sensor
+  friendly_name: "Shelly Plus 2 PM Switch & Sensor" # Put the name that you want to see in Home Assistant.
+  main_device_id: "shellyplus2pm1wire"    # Put the name that you want to see in Home Assistant.
+  device_name_1: "Relay 1"
+  device_name_2: "Relay 2"
+  # Relay trip limits
+  max_power: "3600.0"
+  max_temp: "80.0"
+  # light_icon: "hue:bulb-spot-hung"
+  project_name: "shelly.shellyplus1pm-relay-sensor-switch-addon-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret shelly2pmtest_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug-off.yaml
+<<: !include .base.device.relay.shelly-plus-2pm-solo-1-wire-arduino.yaml
+<<: !include .base.button-shelly-plus-2pm.yaml
+# <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
+# <<: !include .base.common-sensor.yaml
+<<: !include .base.sensor-shelly-plus-2pm-1-wire.yaml
+# <<: !include .base.common-switch.yaml
+<<: !include .base.switch-shelly-plus-2pm.yaml
+<<: !include .base.common-text-sensor.yaml
+<<: !include .base.binary-sensor-shelly-plus-2pm.yaml

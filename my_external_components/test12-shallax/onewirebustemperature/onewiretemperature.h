@@ -76,12 +76,9 @@ class OneWireTemperatureSensor : public sensor::Sensor {
 
 
 /// This class implements support for the dallas ds18x20 series sensor.
-class OneWireTemperatureComponent : public PollingComponent, public OneWirebus::OneWireDevice {
+class OneWireTemperatureComponent : public PollingComponent, public OneWireBus::OneWireDevice {
  public:
   void set_temperature_sensor(sensor::Sensor *temperature_sensor) { temperature_sensor_ = temperature_sensor; }
-
-  /// Set the oversampling value for the temperature sensor. Default is 16x.
-  void set_temperature_oversampling(BME280Oversampling temperature_over_sampling);
 
   // ========== INTERNAL METHODS ==========
   // (In most use cases you won't need these)

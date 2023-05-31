@@ -1,10 +1,6 @@
 #pragma once
 
 #include "esphome/core/hal.h"
-#include "esphome/core/component.h"
-#include "esphome/components/sensor/sensor.h"
-#include "onewirebus.h"
-
 #include <vector>
 
 namespace esphome {
@@ -12,19 +8,11 @@ namespace onewirebus {
 
 extern const uint8_t ONE_WIRE_ROM_SELECT;
 extern const int ONE_WIRE_ROM_SEARCH;
-static const uint8_t ONE_WIRE_MODEL_DS18S20 = 0x10;
-static const uint8_t ONE_WIRE_MODEL_DS1822 = 0x22;
-static const uint8_t ONE_WIRE_MODEL_DS18B20 = 0x28;
-static const uint8_t ONE_WIRE_MODEL_DS1825 = 0x3B;
-static const uint8_t ONE_WIRE_MODEL_DS28EA00 = 0x42;
-static const uint8_t ONE_WIRE_COMMAND_START_CONVERSION = 0x44;
-static const uint8_t ONE_WIRE_COMMAND_READ_SCRATCH_PAD = 0xBE;
-static const uint8_t ONE_WIRE_COMMAND_WRITE_SCRATCH_PAD = 0x4E;
 
 class OneWireBus {
  public:
   explicit OneWireBus(InternalGPIOPin *pin);  /// Constructor.
-  bool reset();                               /// Reset the bus, should be done before all write operations, takes 1ms and provides a return value.
+  bool reset();                               /// Reset the bus, should be done before all write operations, 1ms provides a return value.
   void write_bit(bool bit);                   /// Write a single bit to the bus, takes about 70µs.
   bool read_bit();                            /// Read a single bit from the bus, takes about 70µs
   void write8(uint8_t val);                   /// Write a word to the bus. LSB first.

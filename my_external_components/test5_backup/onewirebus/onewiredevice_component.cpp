@@ -1,7 +1,9 @@
-#include <cstdint>
 #include "onewiredevice_component.h"
 #include "esphome/core/log.h"
+/*
+#include <cstdint>
 #include "../../core/gpio.h"
+*/
 
 namespace esphome {
 namespace onewirebus {
@@ -107,7 +109,7 @@ void OneWireBusComponent::update() {
 
   bool result;
   {
-    InterruptLock const lock;
+    InterruptLock lock;
     result = this->one_wire_->reset();
   }
   if (!result) {
@@ -120,7 +122,7 @@ void OneWireBusComponent::update() {
   }
 
   {
-    InterruptLock const lock;
+    InterruptLock lock;
     this->one_wire_->skip();
     this->one_wire_->write8(DALLAS_COMMAND_START_CONVERSION);
   }
@@ -165,7 +167,7 @@ bool IRAM_ATTR OneWireTemperatureSensor::read_scratch_pad() {
   auto *wire = this->parent_->one_wire_;
 
   {
-    InterruptLock const lock;
+    InterruptLock lock;
 
     if (!wire->reset()) {
       return false;
@@ -173,7 +175,7 @@ bool IRAM_ATTR OneWireTemperatureSensor::read_scratch_pad() {
   }
 
   {
-    InterruptLock const lock;
+    InterruptLock lock;
 
     wire->select(this->address_);
     wire->write8(DALLAS_COMMAND_READ_SCRATCH_PAD);
@@ -222,7 +224,7 @@ bool OneWireTemperatureSensor::setup_sensor() {
 
   auto *wire = this->parent_->one_wire_;
   {
-    InterruptLock const lock;
+    InterruptLock lock;
     if (wire->reset()) {
       wire->select(this->address_);
       wire->write8(DALLAS_COMMAND_WRITE_SCRATCH_PAD);
@@ -242,7 +244,7 @@ bool OneWireTemperatureSensor::setup_sensor() {
   return true;
 }
 bool OneWireTemperatureSensor::check_scratch_pad() {
-  bool const chksum_validity = (crc8(this->scratch_pad_, 8) == this->scratch_pad_[8]);
+  bool chksum_validity = (crc8(this->scratch_pad_, 8) == this->scratch_pad_[8]);
   bool config_validity = false;
 
   switch (this->get_address8()[0]) {
@@ -269,7 +271,7 @@ bool OneWireTemperatureSensor::check_scratch_pad() {
 float OneWireTemperatureSensor::get_temp_c() {
   int16_t temp = (int16_t(this->scratch_pad_[1]) << 11) | (int16_t(this->scratch_pad_[0]) << 3);
   if (this->get_address8()[0] == DALLAS_MODEL_DS18S20) {
-    int const diff = (this->scratch_pad_[7] - this->scratch_pad_[6]) << 7;
+    int diff = (this->scratch_pad_[7] - this->scratch_pad_[6]) << 7;
     temp = ((temp & 0xFFF0) << 3) - 16 + (diff / this->scratch_pad_[7]);
   }
 

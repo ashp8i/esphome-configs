@@ -29,15 +29,15 @@ sensor:
               ).c_str();
 
 # Dallas - Shelly Split OneWire
-  - platform: dallas
-    index: 0
-    name: "Temperature #1"
   # - platform: dallas
   #   index: 0
   #   name: "Temperature #1"
-  # - platform: onewiretemperature
+  # - platform: dallas
   #   index: 0
-  #   name: "Temperature #1"
+    # name: "Temperature #1"
+  - platform: onewirebus
+    index: 0
+    name: "Temperature #1"
 # Dallas - Shelly Split OneWire
   # - platform: dallasng
   #   index: 0

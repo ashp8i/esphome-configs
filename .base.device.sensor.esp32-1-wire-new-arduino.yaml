@@ -24,6 +24,10 @@ external_components:
   #     type: local
   #     path: my_external_components/test10
   # - source: github://nrandell/dallasng
+# Refactor Test
+  - source:
+      type: local
+      path: my_external_components/test5
 
 captive_portal:
 
@@ -43,9 +47,12 @@ web_server:
 #   pin_a: GPIO3
 #   pin_b: GPIO0
 
-dallas:
-  pin: GPIO19
+# dallas:
+#   pin: GPIO19
 
 # dallasng:
 #   pin: 19
 #   update_interval: 3s
+
+onewirebus:
+  pin: GPIO19

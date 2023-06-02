@@ -10,102 +10,181 @@ static const char *const TAG = "onewirebus";
 const uint8_t ONE_WIRE_ROM_SELECT = 0x55;
 const int ONE_WIRE_ROM_SEARCH = 0xF0;
 
-OneWireBus::OneWireBus(InternalGPIOPin *pin) { pin_ = pin->to_isr(); }
+OneWireBus::OneWireBus(InternalGPIOPin *pin) { 
+  // split_io_ = false;
+  pin_ = pin->to_isr(); 
+}
+
+// OneWireBus::OneWireBus(InternalGPIOPin *input_pin, InternalGPIOPin *output_pin) {
+//   split_io_ = true;
+//   input_pin_ = input_pin->to_isr();
+//   output_pin_ = output_pin->to_isr();
+// } 
 
 bool HOT IRAM_ATTR OneWireBus::reset() {
-  // See reset here:
-  // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
-  // Wait for communication to clear (delay G)
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  uint8_t retries = 125;
-  do {
-    if (--retries == 0)
-      return false;
-    delayMicroseconds(2);
-  } while (!pin_.digital_read());
+  // if (split_io_) {
+  //   // Use separate input and output pins
+  //   // See reset here:
+  //   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
+  //   // Wait for communication to clear (delay G)
+  //   // Set input pin to input with pullup
+  //   input_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  //   uint8_t retries = 125;
+  //   do {
+  //     if (--retries == 0)
+  //       return false;
+  //     delayMicroseconds(2);
+  //   } while (!input_pin_.digital_read());
+    
+  //   // Send 480μs LOW TX reset pulse 
+  //   output_pin_.digital_write(false);
+  //   delayMicroseconds(480);
+  //   output_pin_.digital_write(true);
+    
+  //   // Release the bus, delay 70μs
+  //   delayMicroseconds(70);
+    
+  //   // Check for presence pulse (should be 60-240μs after reset pulse)
+  //   bool present = !input_pin_.digital_read();
+    
+  //   // Complete reset sequence, 410μs
+  //   delayMicroseconds(410);
+  //   return present;
+  // } else {
+    // See reset here:
+    // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
+    // Wait for communication to clear (delay G)
+    pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    uint8_t retries = 125;
+    do {
+      if (--retries == 0)
+        return false;
+      delayMicroseconds(2);
+    } while (!pin_.digital_read());
 
-  // Send 480µs LOW TX reset pulse (drive bus low, delay H)
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
-  delayMicroseconds(480);
+    // Send 480µs LOW TX reset pulse (drive bus low, delay H)
+    pin_.pin_mode(gpio::FLAG_OUTPUT);
+    pin_.digital_write(false);
+    delayMicroseconds(480);
 
-  // Release the bus, delay I
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  delayMicroseconds(70);
+    // Release the bus, delay I
+    pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    delayMicroseconds(70);
 
-  // sample bus, 0=device(s) present, 1=no device present
-  bool r = !pin_.digital_read();
-  // delay J
-  delayMicroseconds(410);
-  return r;
-}
+    // sample bus, 0=device(s) present, 1=no device present
+    bool r = !pin_.digital_read();
+    // delay J
+    delayMicroseconds(410);
+    return r;
+  }
+// }
 
 void HOT IRAM_ATTR OneWireBus::write_bit(bool bit) {
-  // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  // if (split_io_) {
+  //   // Use separate input and output pins
+  //   // Drive bus low
+  //   output_pin_.digital_write(false);
+    
+  //   // Write 0: hold bus low for 60-120us
+  //   // Write 1: hold bus low for 1-15us
+  //   uint32_t delay = bit ? 10 : 60;
+    
+  //   delayMicroseconds(delay);
 
-  // from datasheet:
-  // write 0 low time: t_low0: min=60µs, max=120µs
-  // write 1 low time: t_low1: min=1µs, max=15µs
-  // time slot: t_slot: min=60µs, max=120µs
-  // recovery time: t_rec: min=1µs
-  // ds18b20 appears to read the bus after roughly 14µs
-  uint32_t const delay0 = bit ? 6 : 60;
-  uint32_t const delay1 = bit ? 54 : 5;
+  //   // Release bus
+  //   output_pin_.digital_write(true);
+    
+  //   // Complete time slot (60-120us total) and recovery (1us) 
+  //   delayMicroseconds(bit ? 50 : 5); 
+  // } else {
+    // drive bus low
+    pin_.pin_mode(gpio::FLAG_OUTPUT);
+    pin_.digital_write(false);
 
-  // delay A/C
-  delayMicroseconds(delay0);
-  // release bus
-  pin_.digital_write(true);
-  // delay B/D
-  delayMicroseconds(delay1);
-}
+    // from datasheet:
+    // write 0 low time: t_low0: min=60µs, max=120µs
+    // write 1 low time: t_low1: min=1µs, max=15µs
+    // time slot: t_slot: min=60µs, max=120µs
+    // recovery time: t_rec: min=1µs
+    // ds18b20 appears to read the bus after roughly 14µs
+    uint32_t const delay0 = bit ? 6 : 60;
+    uint32_t const delay1 = bit ? 54 : 5;
+
+    // delay A/C
+    delayMicroseconds(delay0);
+    // release bus
+    pin_.digital_write(true);
+    // delay B/D
+    delayMicroseconds(delay1);
+  }
+// }
 
 bool HOT IRAM_ATTR OneWireBus::read_bit() {
-  // drive bus low
-  pin_.pin_mode(gpio::FLAG_OUTPUT);
-  pin_.digital_write(false);
+  // if (split_io_) {
+  //   // Use separate input and output pins
+  //   // Drive bus low for 1μs
+  //   output_pin_.digital_write(false);
+  //   delayMicroseconds(1);
+    
+  //   // Release bus - must sample within 15μs
+  //   output_pin_.digital_write(true);
+    
+  //   // Delay 10μs after releasing bus to sample
+  //   delayMicroseconds(10);  
+    
+  //   // Sample bus - read bit should be high or low here 
+  //   bool bit = input_pin_.digital_read();
+    
+  //   // Complete time slot (60μs total) and recovery time (1μs)
+  //   uint32_t time_left = 60 - 11;
+  //   delayMicroseconds(time_left);  
+    
+  //   return bit;
+  // } else {
+    // drive bus low
+    pin_.pin_mode(gpio::FLAG_OUTPUT);
+    pin_.digital_write(false);
 
-  // note: for reading we'll need very accurate timing, as the
-  // timing for the digital_read() is tight; according to the datasheet,
-  // we should read at the end of 16µs starting from the bus low
-  // typically, the ds18b20 pulls the line high after 11µs for a logical 1
-  // and 29µs for a logical 0
+    // note: for reading we'll need very accurate timing, as the
+    // timing for the digital_read() is tight; according to the datasheet,
+    // we should read at the end of 16µs starting from the bus low
+    // typically, the ds18b20 pulls the line high after 11µs for a logical 1
+    // and 29µs for a logical 0
 
-  uint32_t start = micros();
-  // datasheet says >1µs
-  delayMicroseconds(3);
+    uint32_t start = micros();
+    // datasheet says >1µs
+    delayMicroseconds(3);
 
-  // release bus, delay E
-  pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    // release bus, delay E
+    pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
-  // Unfortunately some frameworks have different characteristics than others
-  // esp32 arduino appears to pull the bus low only after the digital_write(false),
-  // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
-  // manually correct for this with these constants.
+    // Unfortunately some frameworks have different characteristics than others
+    // esp32 arduino appears to pull the bus low only after the digital_write(false),
+    // whereas on esp-idf it already happens during the pin_mode(OUTPUT)
+    // manually correct for this with these constants.
 
-#ifdef USE_ESP32
-  uint32_t timing_constant = 12;
-#else
-  uint32_t timing_constant = 14;
-#endif
+  #ifdef USE_ESP32
+    uint32_t timing_constant = 12;
+  #else
+    uint32_t timing_constant = 14;
+  #endif
 
-  // measure from start value directly, to get best accurate timing no matter
-  // how long pin_mode/delayMicroseconds took
-  while (micros() - start < timing_constant)
-    ;
+    // measure from start value directly, to get best accurate timing no matter
+    // how long pin_mode/delayMicroseconds took
+    while (micros() - start < timing_constant)
+      ;
 
-  // sample bus to read bit from peer
-  bool r = pin_.digital_read();
+    // sample bus to read bit from peer
+    bool r = pin_.digital_read();
 
-  // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
-  uint32_t now = micros();
-  if (now - start < 60)
-    delayMicroseconds(60 - (now - start));
+    // read slot is at least 60µs; get as close to 60µs to spend less time with interrupts locked
+    uint32_t now = micros();
+    if (now - start < 60)
+      delayMicroseconds(60 - (now - start));
 
-  return r;
-}
+    return r;
+  }
+// }
 
 void IRAM_ATTR OneWireBus::write8(uint8_t val) {
   for (uint8_t i = 0; i < 8; i++) {
@@ -265,13 +344,22 @@ uint16_t OneWireTemperatureSensor::millis_to_wait_for_conversion() const {
 void OneWireBusComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up OneWireBusComponent...");
 
-  pin_->setup();
-
-  // clear bus with 480µs high, otherwise initial reset in search_vec() fails
-  pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
-  delayMicroseconds(480);
-
-  one_wire_ = new OneWireBus(pin_);  // NOLINT(cppcoreguidelines-owning-memory)
+  // split_io_ = false; // Add this line
+  
+  // if (split_io_) {
+  //   input_pin_->setup();
+  //   output_pin_->setup();
+  //   // clear bus with 480μs high, otherwise initial reset in search_vec() fails
+  //   input_pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  //   delayMicroseconds(480);
+  //   one_wire_ = new OneWireBus(input_pin_, output_pin_);
+  // } else {
+    pin_->setup();
+    // clear bus with 480μs high, otherwise initial reset in search_vec() fails
+    pin_->pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+    delayMicroseconds(480);
+    one_wire_ = new OneWireBus(pin_);  
+  // }
 
   std::vector<uint64_t> raw_sensors;
   raw_sensors = this->one_wire_->search_vec();

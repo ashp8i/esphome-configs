@@ -24,6 +24,7 @@ static const uint8_t ONE_WIRE_COMMAND_WRITE_SCRATCH_PAD = 0x4E;
 class OneWireBus {
  public:
   explicit OneWireBus(InternalGPIOPin *pin);  /// Constructor.
+  explicit OneWireBus(InternalGPIOPin *input_pin, InternalGPIOPin *output_pin);  /// Constructor.
   bool reset();                               /// Reset the bus, should be done before all write operations, takes 1ms and provides a return value.
   void write_bit(bool bit);                   /// Write a single bit to the bus, takes about 70µs.
   bool read_bit();                            /// Read a single bit from the bus, takes about 70µs
@@ -39,8 +40,10 @@ class OneWireBus {
 
  protected:
   inline uint8_t *rom_number8_();             /// Helper to get the internal 64-bit unsigned rom number as a 8-bit integer pointer.
-
+  bool split_io_ = false;
   ISRInternalGPIOPin pin_;
+  ISRInternalGPIOPin input_pin_;
+  ISRInternalGPIOPin output_pin_;
   uint8_t last_discrepancy_{0};
   bool last_device_flag_{false};
   uint64_t rom_number_{0};
@@ -61,8 +64,10 @@ class OneWireBusComponent : public PollingComponent {
 
  protected:
   friend OneWireTemperatureSensor;
-
+  bool split_io_ = false;
   InternalGPIOPin *pin_;
+  InternalGPIOPin *input_pin_;
+  InternalGPIOPin *output_pin_;
   OneWireBus *one_wire_;
   std::vector<OneWireTemperatureSensor *> sensors_;
   std::vector<uint64_t> found_sensors_;

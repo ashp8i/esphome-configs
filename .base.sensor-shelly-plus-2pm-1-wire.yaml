@@ -120,6 +120,6 @@ sensor:
     power_id: power_channel_2
 
 # Dallas - Shelly Split OneWire
-  # - platform: shelly_dallas
-  #   index: 0
-  #   name: "Temperature #1"
+  - platform: onewirebus
+    index: 0
+    name: "Temperature #1"

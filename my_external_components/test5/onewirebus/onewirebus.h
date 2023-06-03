@@ -12,14 +12,6 @@ namespace onewirebus {
 
 extern const uint8_t ONE_WIRE_ROM_SELECT;
 extern const int ONE_WIRE_ROM_SEARCH;
-static const uint8_t ONE_WIRE_MODEL_DS18S20 = 0x10;
-static const uint8_t ONE_WIRE_MODEL_DS1822 = 0x22;
-static const uint8_t ONE_WIRE_MODEL_DS18B20 = 0x28;
-static const uint8_t ONE_WIRE_MODEL_DS1825 = 0x3B;
-static const uint8_t ONE_WIRE_MODEL_DS28EA00 = 0x42;
-static const uint8_t ONE_WIRE_COMMAND_START_CONVERSION = 0x44;
-static const uint8_t ONE_WIRE_COMMAND_READ_SCRATCH_PAD = 0xBE;
-static const uint8_t ONE_WIRE_COMMAND_WRITE_SCRATCH_PAD = 0x4E;
 
 class OneWireBus {
  public:
@@ -54,6 +46,11 @@ class OneWireTemperatureSensor;
 class OneWireBusComponent : public PollingComponent {
  public:
   void set_pin(InternalGPIOPin *pin) { pin_ = pin; }
+  inline void set_pins(InternalGPIOPin *input_pin, InternalGPIOPin *output_pin) {
+    split_io_ = true;
+    input_pin_ = input_pin;
+    output_pin_ = output_pin;
+  }
   void register_sensor(OneWireTemperatureSensor *sensor);
 
   void setup() override;

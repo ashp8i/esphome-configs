@@ -3,9 +3,3 @@ switch:
   #   id: "relay"
   #   name: "${device_name} Relay"
   #   output: "relay_output"
-    # this provides for a possibility to restart from the web console or Home automation should we ever need it
-  - platform: restart
-    id: restart_switch
-    name: "${friendly_name} Restart"
-  - platform: safe_mode
-    name: "${friendly_name} Restart (Safe Mode)"

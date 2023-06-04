@@ -1,0 +1,6 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    name: "${device_name} Switch"
+    pin: GPIO4

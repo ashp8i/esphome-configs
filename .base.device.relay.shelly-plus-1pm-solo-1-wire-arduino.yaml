@@ -16,7 +16,8 @@ esp32:
   variant: esp32
   framework:
     type: arduino
-    platform_version: 5.2.0
+    # platform_version: 5.2.0
+    platform_version: 6.1.0
 
 external_components:
   - source:
@@ -39,17 +40,20 @@ time:
 
 # Device Specific Config
 i2c:
-  sda: GPIO26
-  scl: GPIO25
+  sda: GPIO12
+  scl: GPIO14
 
 output:
   - platform: gpio
-    id: "relay_output_1"
-    pin: GPIO13
+    id: "relay_output"
+    pin: GPIO26
 
-  - platform: gpio
-    id: "relay_output_2"
-    pin: GPIO12
+light:
+  - platform: binary
+    name: "${friendly_name}"
+    output: relay_output
+    id: ${main_device_id}
+    icon: ${light_icon}
 
 #onewirebus:
 #  input_pin: GPIO1

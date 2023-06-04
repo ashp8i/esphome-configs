@@ -55,4 +55,6 @@ web_server:
 #   update_interval: 3s
 
 onewirebus:
-  pin: GPIO19
+  # pin: GPIO19
+  input_pin: GPIO18
+  output_pin: GPIO19

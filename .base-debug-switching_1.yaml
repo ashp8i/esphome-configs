@@ -1,7 +1,7 @@
 # Enable logging
 # Logger must be at least debug (default)
 logger:
-  level: debug
+  baud_rate: 0
 
 ota:
   safe_mode: true
@@ -10,7 +10,7 @@ ota:
 wifi:
     ssid: !secret wifi_all_ssid
     password: !secret wifi_all_password
-    use_address: *.local
+    use_address: shellyplus1pmtest2dht22.local
 
     # Enable fallback hotspot (captive portal) in case wifi connection fails
     ap:

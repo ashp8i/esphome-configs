@@ -30,26 +30,27 @@ bool HOT IRAM_ATTR OneWireBus::reset() {
   // https://www.maximintegrated.com/en/design/technical-documents/app-notes/1/126.html
   // Wait for communication to clear (delay G)
   // Set input pin to input with pullup
-  input_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  input_pin_.pin_mode(gpio::FLAG_INPUT);
+  output_pin_.pin_mode(gpio::FLAG_OUTPUT);
   uint8_t retries = 125;
   do {
     if (--retries == 0)
       return false;
     delayMicroseconds(2);
   } while (!input_pin_.digital_read());
-  
-  // Send 480μs LOW TX reset pulse 
+
+  // Send 480µs LOW TX reset pulse (drive bus low, delay H)
   output_pin_.digital_write(false);
   delayMicroseconds(480);
   output_pin_.digital_write(true);
-  
-  // Release the bus, delay 70μs
+
+  // Release the bus, delay I
+  input_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
   delayMicroseconds(70);
-  
-  // Check for presence pulse (should be 60-240μs after reset pulse)
+
+  // sample bus, 0=device(s) present, 1=no device present
   bool present = !input_pin_.digital_read();
-  
-  // Complete reset sequence, 410μs
+  // delay J
   delayMicroseconds(410);
   return present;
   } else {
@@ -144,7 +145,8 @@ bool HOT IRAM_ATTR OneWireBus::read_bit() {
   delayMicroseconds(3);
 
   // release bus, delay E
-  output_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  // output_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
+  input_pin_.pin_mode(gpio::FLAG_INPUT | gpio::FLAG_PULLUP);
 
   // Unfortunately some frameworks have different characteristics than others
   // esp32 arduino appears to pull the bus low only after the digital_write(false),

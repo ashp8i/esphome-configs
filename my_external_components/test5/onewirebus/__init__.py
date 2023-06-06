@@ -16,7 +16,7 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(OneWireBusComponent),
         cv.Optional(CONF_PIN): pins.internal_gpio_output_pin_schema,
-        cv.Optional(CONF_INPUT_PIN): pins.internal_gpio_input_pin_schema,
+        cv.Optional(CONF_INPUT_PIN): pins.internal_gpio_output_pin_schema,
         cv.Optional(CONF_OUTPUT_PIN): pins.internal_gpio_output_pin_schema,
     }
 ).extend(cv.polling_component_schema("60s"))

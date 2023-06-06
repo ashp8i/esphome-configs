@@ -55,9 +55,9 @@ light:
     id: ${main_device_id}
     icon: ${light_icon}
 
-#onewirebus:
-#  input_pin: GPIO1
-#  output_pin: GPIO0
+onewirebus:
+ input_pin: GPIO1
+ output_pin: GPIO0
 
 # Commented out to avoid duplicates keys in config see .base.switch-shelly-2.5-generic.yaml
 # switch:

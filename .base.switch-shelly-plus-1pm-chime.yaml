@@ -1,0 +1,9 @@
+switch:
+  - platform: output
+    id: "${main_device_id}"
+    name: "${friendly_name}"
+    output: "relay_output"
+    icon: "${chime_icon}"
+    on_turn_on:
+    - delay: 8000ms
+    - switch.turn_off: "${main_device_id}"

@@ -97,6 +97,6 @@ sensor:
     unit_of_measurement: kWh
     icon: mdi:clock-alert
 # Dallas - Shelly Split OneWire
-  - platform: onewirebus
-    index: 0
-    name: "Temperature #1"
+  # - platform: onewirebus
+  #   index: 0
+  #   name: "Temperature #1"

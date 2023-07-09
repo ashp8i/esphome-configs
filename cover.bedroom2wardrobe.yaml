@@ -1,11 +1,11 @@
 substitutions:
   device_ssid: "Bedroom 2 WB"
   device_name: bedroom2wardrobeblind
-  device_description: "Zemismart YH-002 Blind Motor ESP32-S3"
+  device_description: "Zemismart YH002 Blind Motor ESP32-S3"
   friendly_name: "Bedroom 2 Wardrobe Blind" # Put the name that you want to see in Home Assistant.
   main_device_id: "bedroom2cover2" # Put the name that you want to see in Home Assistant.
   cover_name: "Bedroom 2 Wardrobe Blind"
-  project_name: "zemismart.yh-002-esp32-s3"
+  project_name: "zemismart.yh002-esp32-s3"
   project_version: "1.0"
 
 # Enable Home Assistant API
@@ -15,7 +15,7 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug-tuya-verbose.yaml
-<<: !include .base.device.curtain.zemismart-bcm500ds-tyw-esp32-s3.yaml
+<<: !include .base.device.curtain.zemismart-yh002-esp32-s3.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-switch.yaml

@@ -28,5 +28,6 @@ api:
 <<: !include .base.sensor-shelly-plus-1pm-1-wire.yaml
 # <<: !include .base.common-switch.yaml
 <<: !include .base.common-text-sensor.yaml
-# <<: !include .base.binary-sensor-shelly-1-edge-switch.yaml
-<<: !include .base.binary-sensor-shelly-plus-1pm.yaml
+# <<: !include .base.binary-sensor-shelly-plus-1-edge-switch.yaml
+# <<: !include .base.binary-sensor-shelly-plus-1pm.yaml
+<<: !include .base.binary-sensor-shelly-plus-1pm-edge-switch.yaml

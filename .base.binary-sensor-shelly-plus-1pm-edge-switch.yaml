@@ -5,7 +5,7 @@ binary_sensor:
     pin:
       number: GPIO4
     name: "Switch Shelly 1 PM"
-    on_state:
+    on_press:
       then:
         - light.toggle: ${main_device_id}
     internal: true

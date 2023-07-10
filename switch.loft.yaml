@@ -18,6 +18,6 @@ api:
 
 <<: !include .base.common-mqtt.yaml
 <<: !include .base.common-sensor-die-temp.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-i4-4-buttons-fallback.yaml

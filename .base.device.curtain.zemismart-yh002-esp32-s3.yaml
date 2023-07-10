@@ -4,6 +4,7 @@ esphome:
   comment: ${device_description}
   platformio_options:
     board_build.flash_mode: dio
+    # needed for when board: um_tinys3 is set
     board_build.extra_flags:
       - "-DARDUINO_USB_CDC_ON_BOOT=0"  # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
   project:
@@ -11,13 +12,25 @@ esphome:
     version: "${project_version}"
 
 esp32:
-  board: um_tinys3
-  # board: esp32-s3-devkitc-1
+  # board: um_tinys3, has OTA issues using generic instead
+  # board: um_tinys3
+  # fallback generic board, known to work for all and OTA
+  board: esp32-s3-devkitc-1
   variant: esp32s3
+  # framework test setting, worked but OTA broken
+  # framework:
+  #   type: arduino
+  #   version: dev
+  #   platform_version: ^5.1.1
+  # fallback config, known to work for all and OTA
+  # framework:
+  #   type: arduino
+  #   platform_version: 5.2.0
+  # testing, should work nicely
   framework:
     type: arduino
-    version: dev
-    platform_version: ^5.1.1
+    # version: 2.0.5
+    platform_version: 5.2.0
 
 # external_components:
 #   - source:
@@ -34,6 +47,17 @@ web_server:
   include_internal: true
   local: true
 
+# Old Config had TuyaMCU connection Issues
+
+# uart:
+#     rx_pin: GPIO6
+#     tx_pin: GPIO7
+#     baud_rate: 9600
+#     debug:
+#       direction: BOTH
+#       dummy_receiver: false
+#       sequence:
+#         - lambda: UARTDebug::log_hex(direction, bytes, ':');
 
 uart:
     rx_pin: GPIO6
@@ -53,15 +77,10 @@ cover:
   - platform: "tuya"
     id: "${main_device_id}"
     name: "${cover_name}"
-    control_datapoint: 102
-    position_datapoint: 101
-    position_report_datapoint: 101
-    # direction_datapoint incorrect helps for now as the reporting is inverted but commands register correctly.
-    # invert position fixes the inverted reporting as long as the datapoint is set incorrectly.
-    direction_datapoint: 99
-    # direction_datapoint: 103 (old reference)
-    min_value: 0
-    max_value: 100
-    invert_position: false
-    device_class: curtain
+    control_datapoint: 1
+    position_datapoint: 2
+    position_report_datapoint: 3
+    direction_datapoint: 5
+    invert_position: true
+    device_class: blind
 

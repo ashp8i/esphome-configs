@@ -21,5 +21,5 @@ api:
 
 # <<: !include .base.common-mqtt.yaml
 <<: !include .base.sensor-bme280-1-wire.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml

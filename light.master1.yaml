@@ -18,6 +18,6 @@ api:
 <<: !include .base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml
 <<: !include .base.automation.light-mqtt-1-button.yaml
 <<: !include .base.common-sensor-die-temp.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.common-binary-sensor.yaml

@@ -16,6 +16,6 @@ api:
 <<: !include .base-debug.yaml
 <<: !include .base.device.camera.freenove-esp32-s3-camera-esp-idf.yaml
 <<: !include .base.common-sensor.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.common-binary-sensor.yaml

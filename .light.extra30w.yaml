@@ -19,6 +19,6 @@ api:
 <<: !include .base.global-mqtt-automation-cct.yaml
 # <<: !include .base.automation.light-mqtt-1-button-plus-2-button-switch.yaml
 <<: !include .base.common-sensor-die-temp.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.common-binary-sensor.yaml

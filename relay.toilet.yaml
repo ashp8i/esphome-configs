@@ -20,6 +20,6 @@ api:
 <<: !include .base.device.relay.shelly-2.5-toilet.yaml
 <<: !include .base.automation.light-mqtt-2-lonsonho-toilet.yaml
 <<: !include .base.sensor-shelly2.5.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-2.5-edge-switch-light.yaml

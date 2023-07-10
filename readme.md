@@ -132,7 +132,7 @@ This is the text sensor common config is present in all configs. It includes:
 
 # Switch
 
-[`.base.common-switch.yaml`](.base.common-switch.yaml)
+[`.base.common-button.yaml`](.base.common-button.yaml)
 
 This is the common switch config is present in all configs. It includes:
 
@@ -174,7 +174,7 @@ see [`cover.living.yaml`](cover.living.yaml) for example
 [`.base.device.curtain.zemismart-bcm500ds-tyw.yaml`](.base.device.curtain.zemismart-bcm500ds-tyw.yaml)\
 [`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 This device incorporates the following features in addition to MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
@@ -206,7 +206,7 @@ see [`bulb.ashish-spot1.yaml`](bulb.ashish-spot1.yaml) for example
 [`.base.device.bulb.athom-gu10.yaml`](.base.device.bulb.athom-gu10.yaml)\
 [`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 optional\
@@ -289,7 +289,7 @@ see [`light.master1.yaml`](light.master1.yaml) for example
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
@@ -326,7 +326,7 @@ see [`light.stairs.yaml`](light.stairs.yaml) for example
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
@@ -399,7 +399,7 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
@@ -455,7 +455,7 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:
@@ -540,7 +540,7 @@ the following files are required and all following substitutions should be set: 
 [`.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-035w-esp32-c3-arduino.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
@@ -627,7 +627,7 @@ the following files are required and all following substitutions should be set: 
 [`.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml`](.base.light.miboxer-fut-039w-esp32-c3-arduino.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
@@ -719,7 +719,7 @@ see [`light.bathroom.yaml`](light.bathroom.yaml) for example
 [`.base.light.miboxer-wb5-esp32-c3-arduino.yaml`](.base.light.miboxer-wb5-esp32-c3-arduino.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
@@ -773,7 +773,7 @@ see [`light.living.yaml`](light.living.yaml) for example
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.binary-sensor-offdarks-remote.yaml`](.base.binary-sensor-offdarks-remote.yaml)
 
 Optional\
@@ -821,7 +821,7 @@ see [`.light.spare-28w-rgbcct.yaml`](.light.spare-28w-rgbcct.yaml) for example
 [`.base.global-mqtt-automation.yaml`](.base.global-mqtt-automation.yaml)\
 [`.base.common-sensor.yaml`](.base.common-sensor.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.common-binary-sensor.yaml`](.base.common-binary-sensor.yaml)
 
 Optional\
@@ -999,7 +999,7 @@ see [`switch.dining.yaml`](switch.dining.yaml) for example
 [`.base.common-mqtt.yaml`](.base.common-mqtt.yaml)\
 [`.base.common-sensor-die-temp.yaml`](.base.common-sensor-die-temp.yaml)\
 [`.base.common-text-sensor.yaml`](.base.common-text-sensor.yaml)\
-[`.base.common-switch.yaml`](.base.common-switch.yaml)\
+[`.base.common-button.yaml`](.base.common-button.yaml)\
 [`.base.binary-sensor-shelly-i4-4-buttons-fallback.yaml`](.base.binary-sensor-shelly-i4-4-buttons-fallback.yaml)
 
 This device incorporates the following features in addition to MQTT, MQTT Automation, Sensors, Text Sensors, Restart Switches & Binary Status Sensor:

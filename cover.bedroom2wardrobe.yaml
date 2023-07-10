@@ -18,5 +18,5 @@ api:
 <<: !include .base.device.curtain.zemismart-yh002-esp32-s3.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml

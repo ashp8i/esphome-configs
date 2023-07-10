@@ -20,6 +20,6 @@ api:
 <<: !include .base.device.relay.shelly-1-light.yaml
 <<: !include .base.automation.light-mqtt-2-lonsonho-bath-wall-light.yaml
 <<: !include .base.common-sensor.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-1-edge-switch.yaml

@@ -24,6 +24,6 @@ api:
 <<: !include .base.global-mqtt-automation.yaml
 <<: !include .base.automation.light-mqtt-1-or-2-button-4-switch-plus-zigbee2mqtt.yaml
 <<: !include .base.common-sensor-die-temp.yaml
-<<: !include .base.common-switch.yaml
+<<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.common-binary-sensor.yaml

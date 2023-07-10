@@ -26,7 +26,7 @@ api:
 # <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
 # <<: !include .base.common-sensor.yaml
 <<: !include .base.sensor-shelly-plus-1pm-1-wire.yaml
-# <<: !include .base.common-switch.yaml
+# <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 # <<: !include .base.binary-sensor-shelly-plus-1-edge-switch.yaml
 # <<: !include .base.binary-sensor-shelly-plus-1pm.yaml

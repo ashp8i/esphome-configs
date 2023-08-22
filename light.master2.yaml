@@ -5,6 +5,7 @@ substitutions:
   friendly_name: "Master Bedroom 2" # Put the name that you want to see in Home Assistant.
   main_device_id: "masterbedroom2" # Put the name that you want to see in Home Assistant.
   switch1b1_topic: masterswitch/button/1/command
+  light_icon: "hue:lightstrip"
   project_name: "miboxer.fut035w-arduino"
   project_version: "1.0"
 

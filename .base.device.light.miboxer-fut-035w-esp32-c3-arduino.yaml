@@ -53,7 +53,7 @@ light:
     max_value: 1000
     cold_white_color_temperature: 153 mireds
     warm_white_color_temperature: 500 mireds
-    icon: "hue:lightstrip"
+    icon: "${light_icon}"
 # Datapoint 20: switch (value: ON)
 # Datapoint 21: enum (value: 0)
 # Datapoint 22: int value (value: 878)

@@ -7,6 +7,6 @@ binary_sensor:
     name: "Switch Shelly 1 PM"
     on_state:
       then:
-        - switch.toggle: ${main_device_id}
+        - light.toggle: ${main_device_id}
     internal: true
     id: ${main_device_id}_switch

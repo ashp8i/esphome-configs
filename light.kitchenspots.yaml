@@ -1,0 +1,22 @@
+substitutions:
+  device_ssid: "Kitchen Spots"
+  device_name: kitchenspots
+  device_description: "MiBoxer TRI-C1WR Tuya ESP32-C3 LED Dimmer."
+  friendly_name: "Kitchen Spots" # Put the name that you want to see in Home Assistant.
+  main_device_id: "kitchenspots" # Put the name that you want to see in Home Assistant.
+  light_icon: "hue:bulb-group-spot-hung"
+  project_name: "miboxer.tri-c1wr-esp32-c3-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret kitchenspots_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.light.miboxer-tri-c1wr-esp32-c3-arduino.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-button.yaml
+<<: !include .base.common-text-sensor.yaml

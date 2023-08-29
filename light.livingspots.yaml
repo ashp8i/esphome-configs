@@ -20,3 +20,4 @@ api:
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
+<<: !include .base.binary-sensor-miboxer-tri-c1wr.yaml

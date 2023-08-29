@@ -53,8 +53,17 @@ sensor:
     device_class: "distance"
     state_class: "measurement"
 # Self Check Number
-  - platform: "tuya"
-    name: "Self Check Number"
-    id: selfcheck
-    sensor_datapoint: 6
-    internal: True
+  # - platform: "tuya"
+  #   # tuya_id: "mcu"
+  #   name: "${friendly_name} Self Check Result"
+  #   id: selfcheck
+  #   icon: mdi:eye
+  #   sensor_datapoint: 6
+  #   device_class: "enum"
+  #   options:
+  #     0: Checking
+  #     1: Check Success
+  #     2: Check Failure
+  #     3: Others"
+  #     4: Comm Fault
+  #     5: Radar Fault

@@ -54,10 +54,49 @@ light:
     # cold_white_color_temperature: 153 mireds
     # warm_white_color_temperature: 500 mireds
     icon: "${light_icon}"
-# Datapoint 20: switch (value: ON)
-# Datapoint 21: enum (value: 0)
-# Datapoint 22: int value (value: 878)
-# Datapoint 26: int value (value: 0)
-# Product: '{"p":"vhqbpwy6a5ke1nig","
+# Tuya:
+#   Datapoint 20: switch (value: OFF)
+#   Datapoint 21: enum (value: 0)
+#   Datapoint 22: int value (value: 50)
+#   Datapoint 103: int value (value: 20)
+#   Datapoint 102: switch (value: OFF)
+#   Datapoint 104: switch (value: ON)
+#   Datapoint 105: enum (value: 1)
+#   Product: '{"p":"ws3odtueeha5yjln","v":"1.0.1","m":0}'
 # Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 23,23; TuyaMCU 99,24; TuyaMCU 12,34; DimmerRange 10,1000
 # cmd/tas Switch/Relay#; enum#########; Dimmer#######; CCT##########; String#######; String#######; DimmerMinMax
+
+# Minimum Brightness
+number:
+  - platform: "tuya"
+    name: "${friendly_name} Minimum Brightness"
+    number_datapoint: 103
+    min_value: 0
+    max_value: 255
+    step: 1
+
+# select:
+#   - platform: "tuya"
+#     # tuya_id: "mcu"
+#     name: "${friendly_name} Mode Test"
+#     icon: mdi:eye
+#     enum_datapoint: 21
+#     options:
+#       0: Mode 1
+#       1: Mode 2
+#       2: Mode 3
+#       3: Mode 4
+#       4: Mode 5
+#       5: Mode 6
+#   - platform: "tuya"
+#     # tuya_id: "mcu"
+#     name: "${friendly_name} Mode 2 Test"
+#     icon: mdi:eye
+#     enum_datapoint: 105
+#     options:
+#       0: Mode 1
+#       1: Mode 2
+#       2: Mode 3
+#       3: Mode 4
+#       4: Mode 5
+#       5: Mode 6

@@ -106,3 +106,53 @@ number:
     # device_class: "duration"
     # state_class: "measurement"
 
+  # - platform: "tuya"
+  #   name: "Self Check Result"
+  #   sensor_datapoint: 6
+  #   icon: mdi:eye
+  #   filters:
+  #   - substitute:
+  #     - "0 -> Checking"
+  #     - "1 -> Check Success"
+  #     - "2 -> Check Failure"
+  #     - "3 -> Others"
+  #     - "4 -> Comm Fault"
+  #     - "5 -> Radar Fault"
+  # - platform: template
+  #   name: "${friendly_name} Self Check Result"
+  #   icon: mdi:eye
+  #   lambda: |-
+  #     if (id(selfcheck).state == 0) {
+  #       return {"Checking"};
+  #     }
+  #     else if (id(selfcheck).state == 1) {
+  #       return {"Check Success"};
+  #     }
+  #     else if (id(selfcheck).state == 2) {
+  #       return {"Check Failure"};
+  #     }
+  #     else if (id(selfcheck).state == 3) {
+  #       return {"Others"};
+  #     }
+  #     else if (id(selfcheck).state == 4) {
+  #       return {"Comm Fault"};
+  #     }
+  #     else if (id(selfcheck).state == 5) {
+  #       return {"Radar Fault"};
+  #     }
+  #     else return {"Unknown"};
+
+select:
+  - platform: "tuya"
+    # tuya_id: "mcu"
+    name: "${friendly_name} Self Check Result"
+    icon: mdi:eye
+    enum_datapoint: 6
+    options:
+      0: Checking
+      1: Check Success
+      2: Check Failure
+      3: Others
+      4: Comm Fault
+      5: Radar Fault
+

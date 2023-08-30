@@ -63,8 +63,10 @@ light:
 #   Datapoint 104: switch (value: ON)
 #   Datapoint 105: enum (value: 1)
 #   Product: '{"p":"ws3odtueeha5yjln","v":"1.0.1","m":0}'
-# Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 23,23; TuyaMCU 99,24; TuyaMCU 12,34; DimmerRange 10,1000
+# Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 12,102; TuyaMCU 22,103; TuyaMCU 13,104; DimmerRange 10,1000
 # cmd/tas Switch/Relay#; enum#########; Dimmer#######; CCT##########; String#######; String#######; DimmerMinMax
+# Template
+# {"NAME":"Miboxer-TRI-C1WR","GPIO":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2304,2272],"FLAG":0,"BASE":54,"CMND":"SO97 1 | TuyaMCU 11,20 | TuyaMCU 98,21 | TuyaMCU 21,22 | TuyaMCU 12,102 | TuyaMCU 22,103 | TuyaMCU 13,104 | DimmerRange 10,1000"}
 
 # Minimum Brightness
 number:

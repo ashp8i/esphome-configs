@@ -14,7 +14,7 @@ api:
     key: !secret livingspots_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug.yaml
+<<: !include .base-debug-tuya.yaml
 <<: !include .base.device.light.miboxer-tri-c1wr-esp32-c3-arduino.yaml
 <<: !include .base.common-sensor-die-temp.yaml
 <<: !include .base.common-sensor.yaml

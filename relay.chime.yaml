@@ -1,6 +1,6 @@
 substitutions:
+  name: chime
   device_ssid: "ShellyChime"
-  device_name: chime
   device_main_description: "Shelly Plus 1 PM Relay Chime"
   device_description: Shelly Plus 1 PM Relay Chime
   friendly_name: "Chime" # Put the name that you want to see in Home Assistant.

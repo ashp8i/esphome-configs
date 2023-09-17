@@ -4,32 +4,32 @@ globals:
     restore_value: no
     initial_value: '1'
   # for dimming
-  - id: ${main_device_id}_min_brightness  #set the minimum allowed brightness
+  - id: ${device_id_white}_min_brightness  #set the minimum allowed brightness
     type: float
     restore_value: no
     initial_value: '0.05'
-  - id: ${main_device_id}_max_brightness   #set the maximum allowed brightness
+  - id: ${device_id_white}_max_brightness   #set the maximum allowed brightness
     type: float
     restore_value: no
     initial_value: '1.0'
-  - id: ${main_device_id}_dim_direction   #remember the current dim direction
+  - id: ${device_id_white}_dim_direction   #remember the current dim direction
     type: int
     restore_value: no
     initial_value: '1'
   # for color temp
-  - id: ${main_device_id}_min_color_temp  #set the minimum allowed color temp
+  - id: ${device_id_white}_min_color_temp  #set the minimum allowed color temp
     type: float
     restore_value: no
     initial_value: '0.05'
-  - id: ${main_device_id}_max_color_temp   #set the maximum allowed color temp
+  - id: ${device_id_white}_max_color_temp   #set the maximum allowed color temp
     type: float
     restore_value: no
     initial_value: '1.0'
-  - id: ${main_device_id}_color_temp_direction   #remember the current color temp direction
+  - id: ${device_id_white}_color_temp_direction   #remember the current color temp direction
     type: int
     restore_value: no
     initial_value: '1'
-  # - id: ${main_device_id}_loop_stop # stop the while loop upon min/max brightness
+  # - id: ${device_id_white}_loop_stop # stop the while loop upon min/max brightness
   #   type: bool
   #   restore_value: no
   #   initial_value: 'false'

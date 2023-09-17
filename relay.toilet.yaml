@@ -1,6 +1,6 @@
 substitutions:
+  name: toiletrelay
   device_ssid: "Toilet Relay"
-  device_name: toiletrelay
   device_main_description: "Shelly 2.5 Toilet Relay Exposed as Light & Fan"
   device_description: Toilet Relay
   friendly_name: "Toilet" # Put the name that you want to see in Home Assistant.

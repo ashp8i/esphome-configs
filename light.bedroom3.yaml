@@ -1,6 +1,6 @@
 substitutions:
+  name: bedroom3
   device_ssid: "Bedroom 3"
-  device_name: bedroom3
   friendly_name: "Bedroom 3" 
   device_description: "OffDarks LXD-XGP 28W RGB-CCT Ceiling LED light"
   device_name_white: "Bedroom 3 - White"    # Put the name that you want to see in Home Assistant.

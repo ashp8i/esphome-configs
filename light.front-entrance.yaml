@@ -1,6 +1,6 @@
 substitutions:
+  name: frontentrance
   device_ssid: "Front Entrance"
-  device_name: frontentrance
   device_description: "Lumary 18W RGBCW Slim Downlight"
   friendly_name: "Front Entrance"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Front Entrance RGB"    # Put the name that you want to see in Home Assistant.

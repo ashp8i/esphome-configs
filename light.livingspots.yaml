@@ -1,6 +1,6 @@
 substitutions:
+  name: livingspots
   device_ssid: "Living Spots"
-  device_name: livingspots
   device_description: "MiBoxer TRI-C1WR Tuya ESP32-C3 LED Dimmer."
   friendly_name: "Living Spots" # Put the name that you want to see in Home Assistant.
   main_device_id: "livingspots" # Put the name that you want to see in Home Assistant.

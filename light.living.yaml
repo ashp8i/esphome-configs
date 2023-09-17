@@ -1,6 +1,6 @@
 substitutions:
+  name: livingroomlight
   device_ssid: "Living Light"
-  device_name: livingroomlight
   device_description: "Ceiling LED light with IR remote located in Ashish Room with discreet Tunable White & RGB Front Light (shows up as separate lights)."
   friendly_name: "Living Room Light"    # Put the name that you want to see in Home Assistant.
   device_id_white: livingroomlightwhite    # Put the name that you want to see in Home Assistant.

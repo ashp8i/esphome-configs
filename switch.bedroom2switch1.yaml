@@ -1,6 +1,6 @@
 substitutions:
+  name: bedroom2switch1
   device_ssid: "Bed 2 Switch 1"
-  device_name: bedroom2switch1
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Bedroom 2 Switch 1"
   main_device_id: "bedroom2switch1" # Put the name that you want to see in Home Assistant.

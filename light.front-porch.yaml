@@ -1,6 +1,6 @@
 substitutions:
+  name: frontporch
   device_ssid: "Front Porch"
-  device_name: frontporch
   device_description: "Lumary 18W RGBCW Slim Downlight"
   friendly_name: "Front Porch"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Front Porch RGB"    # Put the name that you want to see in Home Assistant.

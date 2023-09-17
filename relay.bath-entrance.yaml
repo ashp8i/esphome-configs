@@ -1,6 +1,6 @@
 substitutions:
+  name: bathentrancerelay
   device_ssid: "Bath Entrance"
-  device_name: bathentrancerelay
   device_main_description: "Shelly Plus 2 PM Exposed as Light"
   device_description: Bath Entrance Light with Power Monitoring
   friendly_name: "Bath Entrance" # Put the name that you want to see in Home Assistant.

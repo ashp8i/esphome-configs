@@ -1,6 +1,6 @@
 substitutions:
+  name: passagesensor
   device_ssid: "Passage Motion"
-  device_name: passagesensor
   device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
   friendly_name: "Passage Sensor" # Put the name that you want to see in Home Assistant.
   main_device_id: "passagesensor" # Put the name that you want to see in Home Assistant.

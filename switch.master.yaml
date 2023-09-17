@@ -1,6 +1,6 @@
 substitutions:
+  name: masterswitch
   device_ssid: "Master Switch"
-  device_name: masterswitch
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Master Switch"
   main_device_id: "masterbedroomswitch" # Put the name that you want to see in Home Assistant.

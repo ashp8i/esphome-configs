@@ -1,6 +1,6 @@
 substitutions:
+  name: lowerloftstairs
   device_ssid: "Lower Loft"
-  device_name: lowerloftstairs
   device_description: "Lumary 18W RGBCW Slim Downlight"
   friendly_name: "Lower Loft Stairs"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Lower Loft Stairs RGB"    # Put the name that you want to see in Home Assistant.

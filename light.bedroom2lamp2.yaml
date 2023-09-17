@@ -1,6 +1,6 @@
 substitutions:
+  name: bedroom2lamp2
   device_ssid: "Bed 2 Lamp 2"
-  device_name: bedroom2lamp2
   device_description: "Skydance S1-B(WT) Tuya ESP02 Dimmer"
   friendly_name: "Bedroom 2 Lamp 2" # Put the name that you want to see in Home Assistant.
   main_device_id: "bedroom2lamp2" # Put the name that you want to see in Home Assistant.

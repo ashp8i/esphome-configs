@@ -1,6 +1,6 @@
 substitutions:
+  name: frontswitch
   device_ssid: "Front Switch"
-  device_name: frontswitch
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Front Switch"
   main_device_id: "frontswitch" # Put the name that you want to see in Home Assistant.

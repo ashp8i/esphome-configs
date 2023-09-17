@@ -1,6 +1,6 @@
 substitutions:
+  name: loftswitch
   device_ssid: "Loft Switch"
-  device_name: loftswitch
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Loft Switch"
   main_device_id: "loftswitch" # Put the name that you want to see in Home Assistant.

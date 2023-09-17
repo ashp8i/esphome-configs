@@ -1,6 +1,6 @@
 substitutions:
+  name: masterbedroom2
   device_ssid: "Master 2"
-  device_name: masterbedroom2
   device_description: "MiBoxer FUT035W Tuya ESP32-C3 LED Controller."
   friendly_name: "Master Bedroom 2" # Put the name that you want to see in Home Assistant.
   main_device_id: "masterbedroom2" # Put the name that you want to see in Home Assistant.

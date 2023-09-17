@@ -1,6 +1,6 @@
 substitutions:
+  name: livingswitch
   device_ssid: "Living Switch"
-  device_name: livingswitch
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Living Switch"
   main_device_id: "livingswitch" # Put the name that you want to see in Home Assistant.

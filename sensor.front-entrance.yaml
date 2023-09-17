@@ -1,6 +1,6 @@
 substitutions:
+  name: frontentrancesensor
   device_ssid: "Front Motion"
-  device_name: frontentrancesensor
   device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
   friendly_name: "Front Entrance Sensor" # Put the name that you want to see in Home Assistant.
   main_device_id: "frontentrancesensor" # Put the name that you want to see in Home Assistant.

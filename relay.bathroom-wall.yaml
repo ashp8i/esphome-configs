@@ -1,6 +1,6 @@
 substitutions:
+  name: bathroomwallrelay
   device_ssid: "Bathroom Wall"
-  device_name: bathroomwallrelay
   device_main_description: "Shelly 1 Exposed as light"
   device_description: Bathroom Wall Light
   friendly_name: "Bathroom Wall" # Put the name that you want to see in Home Assistant.

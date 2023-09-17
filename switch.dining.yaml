@@ -1,6 +1,6 @@
 substitutions:
+  name: diningswitch
   device_ssid: "Dining Switch"
-  device_name: diningswitch
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Dining Switch"
   main_device_id: "Diningswitch" # Put the name that you want to see in Home Assistant.

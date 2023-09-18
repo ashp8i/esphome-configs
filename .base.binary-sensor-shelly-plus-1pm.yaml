@@ -2,5 +2,5 @@ binary_sensor:
   - platform: status
     name: "${friendly_name} Status"
   - platform: gpio
-    name: "${device_name} Switch"
+    name: "${name} Switch"
     pin: GPIO4

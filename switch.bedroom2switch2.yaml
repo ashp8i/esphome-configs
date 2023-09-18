@@ -3,7 +3,6 @@ substitutions:
   device_ssid: "Bed 2 Switch 2"
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Bedroom 2 Switch 2"
-  main_device_id: "bedroom2switch2" # Put the name that you want to see in Home Assistant.
   # remote_node: bedroom2spot1.local
   # remote_light_id: bedroom2spot1
   # mqtt_prefix: bedroom2switch2

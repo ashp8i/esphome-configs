@@ -30,7 +30,7 @@ sensor:
   # Shelly Plus 1PM Power Sensors
   - platform: ntc
     sensor: temp_resistance_reading
-    name: "${device_name} Temperature"
+    name: "${name} Temperature"
     unit_of_measurement: "°C"
     accuracy_decimals: 1
     icon: "mdi:thermometer"
@@ -53,7 +53,7 @@ sensor:
     attenuation: 11db
 
   - platform: adc
-    name: "${device_name} Relay Supply Voltage"
+    name: "${name} Relay Supply Voltage"
     pin: GPIO33
     attenuation: 11db
     filters:
@@ -69,17 +69,17 @@ sensor:
     current_resistor: ${current_res}
     voltage_divider: ${voltage_div}
     current:
-      name: "${device_name} Current"
+      name: "${name} Current"
       unit_of_measurement: A
       accuracy_decimals: 3
       icon: mdi:flash-outline
     voltage:
-      name: "${device_name} Voltage"
+      name: "${name} Voltage"
       unit_of_measurement: V
       accuracy_decimals: 1
       icon: mdi:flash-outline
     power:
-      name: "${device_name} Power"
+      name: "${name} Power"
       unit_of_measurement: W
       id: power
       icon: mdi:flash-outline
@@ -90,7 +90,7 @@ sensor:
     change_mode_every: 2
     update_interval: 10s
   - platform: total_daily_energy
-    name: "${device_name} Daily energy consumed"
+    name: "${name} Daily energy consumed"
     power_id: power
     filters:
         - multiply: 0.001

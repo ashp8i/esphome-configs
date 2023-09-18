@@ -515,7 +515,7 @@ ESPHome YAML
 light:
   - platform: "tuya"
     name: "${friendly_name}"
-    id: ${main_device_id}
+    id: ${device_id_white}
     dimmer_datapoint: 22
     color_temperature_datapoint: 23
     color_temperature_max_value: 1000
@@ -602,7 +602,7 @@ ESPHome YAML
 light:
   - platform: "tuya"
     name: "${friendly_name}"
-    id: ${main_device_id}
+    id: ${device_id_white}
     dimmer_datapoint: 22
     color_temperature_datapoint: 23
     color_temperature_max_value: 1000
@@ -693,7 +693,7 @@ ESPHome YAML
 light:
   - platform: "tuya"
     name: "${friendly_name}"
-    id: ${main_device_id}
+    id: ${device_id_white}
     dimmer_datapoint: 22
     color_temperature_datapoint: 23
     color_temperature_max_value: 1000
@@ -959,7 +959,7 @@ see [`.base.switch.shelly-plus-i4-arduino.yaml`](.base.switch.shelly-plus-i4-ard
 
 ```yaml
   esphome:
-    name: ${device_name}
+    name: ${name}
     comment: ${device_description}
     platformio_options:
       platform_packages:

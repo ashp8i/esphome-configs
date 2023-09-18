@@ -3,7 +3,7 @@ substitutions:
   device_name: devicename
   device_description: "devicedescription"
   friendly_name: "Friendly Home Assistant Name"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "id_used_internally"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "id_used_internally"    # Put the name that you want to see in Home Assistant.
   project_name: "projectname" # Put the name that you want to see in Home Assistant.
   project_version: "1.0" # Put value that you want to see in Home Assistant.
 

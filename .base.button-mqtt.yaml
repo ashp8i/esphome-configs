@@ -6,7 +6,7 @@ button:
     on_press:
       then:
         - mqtt.publish:
-            topic: ${device_name}/button/1/command
+            topic: ${name}/button/1/command
             payload: "SHORT_CLICK"
         - logger.log: HA Button 1 Pressed
     internal: false
@@ -17,7 +17,7 @@ button:
     on_press:
       then:
         - mqtt.publish:
-            topic: ${device_name}/button/2/command
+            topic: ${name}/button/2/command
             payload: "SHORT_CLICK"
         - logger.log: HA Button 2 Pressed
   - platform: template
@@ -27,7 +27,7 @@ button:
     on_press:
       then:
         - mqtt.publish:
-            topic: ${device_name}/button/3/command
+            topic: ${name}/button/3/command
             payload: "SHORT_CLICK"
         - logger.log: HA Button 3 Pressed
   - platform: template
@@ -37,6 +37,6 @@ button:
     on_press:
       then:
         - mqtt.publish:
-            topic: ${device_name}/button/4/command
+            topic: ${name}/button/4/command
             payload: "SHORT_CLICK"
         - logger.log: HA Button 4 Pressed

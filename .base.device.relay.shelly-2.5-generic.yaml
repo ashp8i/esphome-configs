@@ -1,5 +1,5 @@
 esphome:
-  name: "${device_name}"
+  name: "${name}"
   # name_add_mac_suffix: true
   comment: ${device_description}
   platform: ESP8266
@@ -40,10 +40,10 @@ output:
 # Commented out to avoid duplicates keys in config see .base.switch-shelly-2.5-generic.yaml
 # switch:
 #   - platform: output
-#     name: "${device_name} Switch 1"
+#     name: "${name} Switch 1"
 #     output: shelly_25_relay_1
 #     id: switchid1
 #   - platform: output
-#     name: "${device_name} Switch 2"
+#     name: "${name} Switch 2"
 #     output: shelly_25_relay_2
 #     id: switchid2

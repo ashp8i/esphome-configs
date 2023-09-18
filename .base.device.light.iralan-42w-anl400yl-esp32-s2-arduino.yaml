@@ -1,5 +1,5 @@
 esphome:
-  name: ${device_name}
+  name: ${name}
   comment: ${device_description}
   platformio_options:
     board_build.flash_mode: dio
@@ -45,7 +45,7 @@ output:
 light:
   - platform: cwww
     name: ${friendly_name}
-    id: ${main_device_id}
+    id: ${device_id_white}
     cold_white: output_cold_white
     warm_white: output_warm_white
     cold_white_color_temperature: 6536 K

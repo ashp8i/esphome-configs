@@ -4,7 +4,7 @@ substitutions:
   device_main_description: "Shelly 2.5 Bathroom Relay Exposed as Fan with MQTT Switch"
   device_description: Bathroom Relay
   friendly_name: "Bathroom" # Put the name that you want to see in Home Assistant.
-  main_device_id: "bathroomrelay"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "bathroomrelay"    # Put the name that you want to see in Home Assistant.
   lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
   project_name: "shelly.shelly25-relay-light-fan"
   project_version: "1.0"

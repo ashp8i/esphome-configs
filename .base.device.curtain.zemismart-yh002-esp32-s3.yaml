@@ -1,6 +1,6 @@
 # Device Specific Config
 esphome:
-  name: ${device_name}
+  name: ${name}
   comment: ${device_description}
   platformio_options:
     board_build.flash_mode: dio
@@ -75,7 +75,7 @@ tuya:
 
 cover:
   - platform: "tuya"
-    id: "${main_device_id}"
+    id: "${device_id_white}"
     name: "${cover_name}"
     control_datapoint: 1
     position_datapoint: 2

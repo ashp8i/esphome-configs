@@ -4,7 +4,7 @@ substitutions:
   device_description: "Lumary 18W RGBCW Slim Downlight"
   friendly_name: "Lower Loft Stairs"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Lower Loft Stairs RGB"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "lowerloftstairs"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "lowerloftstairs"    # Put the name that you want to see in Home Assistant.
   rgb_device_id: "lowerloftstairsrgb" # Put the name that you want to see in Home Assistant.
   switch1b1_topic: loftswitch/button/1/command
   switch1b2_topic: loftswitch/button/2/command

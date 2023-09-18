@@ -4,7 +4,7 @@ substitutions:
   device_main_description: "esp32 onewirebus dallas test"
   device_description: esp32 onewirebus dallas test
   friendly_name: "ESP32 onewirebus  Test" # Put the name that you want to see in Home Assistant.
-  main_device_id: "esp32onewirebustest"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "esp32onewirebustest"    # Put the name that you want to see in Home Assistant.
   project_name: "esp32.1-wire-owbd-arduino"
   project_version: "1.0"
 

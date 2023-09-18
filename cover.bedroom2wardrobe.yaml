@@ -3,7 +3,7 @@ substitutions:
   device_ssid: "Bedroom 2 WB"
   device_description: "Zemismart YH002 Blind Motor ESP32-S3"
   friendly_name: "Bedroom 2 Wardrobe Blind" # Put the name that you want to see in Home Assistant.
-  main_device_id: "bedroom2cover2" # Put the name that you want to see in Home Assistant.
+  device_id_white: "bedroom2cover2" # Put the name that you want to see in Home Assistant.
   cover_name: "Bedroom 2 Wardrobe Blind"
   project_name: "zemismart.yh002-esp32-s3"
   project_version: "1.0"

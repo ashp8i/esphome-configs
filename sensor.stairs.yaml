@@ -1,9 +1,8 @@
 substitutions:
   device_ssid: "Stairs Motion"
-  device_name: stairssensor
+  name: stairssensor
   device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
   friendly_name: "Stairs Sensor" # Put the name that you want to see in Home Assistant.
-  main_device_id: "stairssensor" # Put the name that you want to see in Home Assistant.
   # switch1b1_topic: ashishswitch1/button/1/command
   # switch1b2_topic: ashishswitch1/button/2/command
   sensor_icon: "hue:ceiling-aurelle"
@@ -21,4 +20,5 @@ api:
 <<: !include .base.binary-sensor-zy-m100.yaml
 <<: !include .base.sensor-zy-m100.yaml
 <<: !include .base.common-button.yaml
-<<: !include .base.text-sensor-zy-m100.yaml
+<<: !include .base.common-text-sensor.yaml
+# <<: !include .base.text-sensor-zy-m100.yaml

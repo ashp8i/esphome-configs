@@ -3,7 +3,6 @@ substitutions:
   device_ssid: "Front Motion"
   device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
   friendly_name: "Front Entrance Sensor" # Put the name that you want to see in Home Assistant.
-  main_device_id: "frontentrancesensor" # Put the name that you want to see in Home Assistant.
   # switch1b1_topic: ashishswitch1/button/1/command
   # switch1b2_topic: ashishswitch1/button/2/command
   sensor_icon: "hue:ceiling-aurelle"

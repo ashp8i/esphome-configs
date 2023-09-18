@@ -3,7 +3,6 @@ substitutions:
   device_ssid: "Dining Switch"
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Dining Switch"
-  main_device_id: "Diningswitch" # Put the name that you want to see in Home Assistant.
   project_name: "shelly.plusi4-esp32-solo-arduino"
   project_version: "1.0"
 

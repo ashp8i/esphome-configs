@@ -3,7 +3,7 @@ substitutions:
   device_name: sparebathroomlight
   device_description: "CWWW 36W Starry PMMA Square Ceiling LED light"
   friendly_name: "Spare Bathroom Light"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "sparebathroomlight"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "sparebathroomlight"    # Put the name that you want to see in Home Assistant.
   tradfri_topic: ashishswitch-/button/1/command
   project_name: "lusunt.36w-cct-starry-pmmma-ceiling-light-square-esp-12f"
   project_version: "1.0"

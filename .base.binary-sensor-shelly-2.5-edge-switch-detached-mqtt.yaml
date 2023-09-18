@@ -10,7 +10,7 @@ binary_sensor:
     on_state:
       then:
         - mqtt.publish:
-            topic: ${device_name}/button/1/command
+            topic: ${name}/button/1/command
             payload: "SHORT_CLICK"
     internal: true
     id: switchid1
@@ -19,7 +19,7 @@ binary_sensor:
   #     number: GPIO5
   #     #mode: INPUT_PULLUP
   #     #inverted: True
-  #   name: "${device_name} Switch 2"
+  #   name: "${name} Switch 2"
   #   on_state:
   #     then:
   #       - light.toggle: lightid2

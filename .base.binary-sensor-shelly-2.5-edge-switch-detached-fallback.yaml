@@ -14,12 +14,12 @@ binary_sensor:
               api.connected:
             then:
               - homeassistant.event:
-                  event: esphome.${device_name}
+                  event: esphome.${name}
                   data:
                     title: button 1 short click            
             else:
               - mqtt.publish:
-                  topic: ${device_name}/button/1/command
+                  topic: ${name}/button/1/command
                   payload: "SHORT_CLICK"
     internal: true
     id: switchid1
@@ -28,7 +28,7 @@ binary_sensor:
   #     number: GPIO5
   #     #mode: INPUT_PULLUP
   #     #inverted: True
-  #   name: "${device_name} Switch 2"
+  #   name: "${name} Switch 2"
   #   on_state:
   #     then:
   #       - light.toggle: lightid2

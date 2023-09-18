@@ -1,6 +1,6 @@
 # Device Specific Config
 esphome:
-  name: "${device_name}"
+  name: "${name}"
   # name_add_mac_suffix: true
   comment: ${device_description}
   platform: ESP8266
@@ -62,7 +62,7 @@ uart:
 
 # cover:
 #   - platform: "tuya"
-#     id: "${main_device_id}"
+#     id: "${device_id_white}"
 #     name: "${cover_name}"
 #     control_datapoint: 101
 #     position_datapoint: 102

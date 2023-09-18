@@ -5,7 +5,7 @@ substitutions:
   device_main_description: "OffDarks LXD-XGP 28W RGBWW Ceiling LED light located in spare-28w-rgbcct Bedroom with discreet Tunable White & RGB Rear Light (shows up as separate lights)."
   device_description: Spare 28W RGB-CCT Light - Main Light
   friendly_name: "Spare 28W RGB-CCT Light - Tunable White"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "spare-28w-rgbcct" # Put the name that you want to see in Home Assistant.
+  device_id_white: "spare-28w-rgbcct" # Put the name that you want to see in Home Assistant.
   device_name_rgb: spare-28w-rgbcctlightrgb
   device_description_rgb: "Spare 28W RGB-CCT Light - RGB."    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Spare 28W RGB-CCT Light RGB"

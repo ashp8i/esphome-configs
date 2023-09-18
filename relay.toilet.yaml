@@ -4,7 +4,6 @@ substitutions:
   device_main_description: "Shelly 2.5 Toilet Relay Exposed as Light & Fan"
   device_description: Toilet Relay
   friendly_name: "Toilet" # Put the name that you want to see in Home Assistant.
-  main_device_id: "toiletrelay"    # Put the name that you want to see in Home Assistant.
   lonsonho_dual_topic: zigbee2mqtt/Toilet Wall/action
   light_icon: "hue:bulb-spot-hung"
   project_name: "shelly.shelly25-relay-light-fan"

@@ -3,7 +3,7 @@ substitutions:
   device_name: cameratest
   device_description: "Freenove ESP32-S3 Camera"
   friendly_name: "Camera Test"
-  main_device_id: "Camera Test" # Put the name that you want to see in Home Assistant.
+  device_id_white: "Camera Test" # Put the name that you want to see in Home Assistant.
   project_name: "freenove.esp32-s3-camera"
   project_version: "1.0"
 

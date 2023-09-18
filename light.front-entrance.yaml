@@ -4,7 +4,7 @@ substitutions:
   device_description: "Lumary 18W RGBCW Slim Downlight"
   friendly_name: "Front Entrance"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Front Entrance RGB"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "frontentrance"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "frontentrance"    # Put the name that you want to see in Home Assistant.
   rgb_device_id: "frontentrancergb" # Put the name that you want to see in Home Assistant.
   switch1b1_topic: frontswitch/button/4/command
   switch2b1_topic: passageswitch2/button/3/command

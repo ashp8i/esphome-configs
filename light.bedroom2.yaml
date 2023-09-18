@@ -3,7 +3,7 @@ substitutions:
   device_ssid: "Bedroom 2"
   device_description: "MiBoxer WB5 Tuya ESP32-C3 LED Controller."
   friendly_name: "Bedroom 2" # Put the name that you want to see in Home Assistant.
-  main_device_id: "bedroom2" # Put the name that you want to see in Home Assistant.
+  device_id_white: "bedroom2" # Put the name that you want to see in Home Assistant.
   switch1b1_topic: bedroom2switch1/button/1/command
   switch1b2_topic: bedroom2switch1/button/2/command
   light_icon: "hue:ceiling-aurelle"

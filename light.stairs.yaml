@@ -3,7 +3,7 @@ substitutions:
   device_ssid: "Stairs"
   device_description: "Iralan 42W CCT Slim Ceiling Light ESP32-S2"
   friendly_name: "Stairs"
-  main_device_id: "stairs" # Put the name that you want to see in Home Assistant.
+  device_id_white: "stairs" # Put the name that you want to see in Home Assistant.
   switch1b1_topic: frontswitch/button/1/command
   switch2b1_topic: passageswitch1/button/1/command
   switch2b2_topic: passageswitch1/button/2/command

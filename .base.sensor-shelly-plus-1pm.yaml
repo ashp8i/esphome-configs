@@ -41,7 +41,7 @@ sensor:
     on_value_range:
       - above: "80.0"
         then:
-          - switch.turn_off: "${main_device_id}"
+          - switch.turn_off: "${device_id_white}"
   - platform: resistance
     id: temp_resistance_reading
     sensor: temp_analog_reading
@@ -86,7 +86,7 @@ sensor:
       on_value_range:
         - above: "3600"
           then:
-            - switch.turn_off: "${main_device_id}"
+            - switch.turn_off: "${device_id_white}"
     change_mode_every: 2
     update_interval: 10s
   - platform: total_daily_energy

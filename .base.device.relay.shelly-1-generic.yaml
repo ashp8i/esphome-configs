@@ -1,5 +1,5 @@
 esphome:
-  name: "${device_name}"
+  name: "${name}"
   # name_add_mac_suffix: true
   comment: ${device_description}
   platform: ESP8266
@@ -35,4 +35,4 @@ output:
 #   - platform: output
 #     name: "Shelly 1 Switch"
 #     output: shelly_1_relay
-#     id: ${main_device_id}
+#     id: ${device_id_white}

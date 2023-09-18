@@ -26,13 +26,13 @@ binary_sensor:
               then:
                 # send double click event
                 - homeassistant.event:
-                    event: esphome.${device_name}
+                    event: esphome.${name}
                     data:
                       title: button 1 double click
               else:
                 # publish mqtt double click
                 - mqtt.publish:
-                    topic: ${device_name}/button/1/command
+                    topic: ${name}/button/1/command
                     payload: "DOUBLE_CLICK"
         # button held
       - timing:
@@ -49,13 +49,13 @@ binary_sensor:
                     then:
                       # send hold event
                       - homeassistant.event:
-                          event: esphome.${device_name}
+                          event: esphome.${name}
                           data:
                             title: button 1 hold
                     else:
                       # publish mqtt hold
                       - mqtt.publish:
-                          topic: ${device_name}/button/1/command
+                          topic: ${name}/button/1/command
                           payload: "HOLD"
                       - delay: 0.05s
                 - delay: 0.05s
@@ -70,17 +70,17 @@ binary_sensor:
               then:
                 # send short click event
                 - homeassistant.event:
-                    event: esphome.${device_name}
+                    event: esphome.${name}
                     data:
                       title: button 1 short click
               else:
                 # publish mqtt double click
                 - mqtt.publish:
-                    topic: ${device_name}/button/1/command
+                    topic: ${name}/button/1/command
                     payload: "SHORT_CLICK"
     # on_release:
     #   - homeassistant.event:
-    #       event: esphome.${device_name}
+    #       event: esphome.${name}
     #       data:
     #         title: button 1 released
     internal: true
@@ -112,13 +112,13 @@ binary_sensor:
               then:
                 # send double click event
                 - homeassistant.event:
-                    event: esphome.${device_name}
+                    event: esphome.${name}
                     data:
                             title: button 2 double click            
               else:
                 # publish mqtt double click
                 - mqtt.publish:
-                    topic: ${device_name}/button/2/command
+                    topic: ${name}/button/2/command
                     payload: "DOUBLE_CLICK"
         # button held
       - timing:
@@ -135,13 +135,13 @@ binary_sensor:
                     then:
                       # send hold event
                       - homeassistant.event:
-                          event: esphome.${device_name}
+                          event: esphome.${name}
                           data:
                             title: button 2 hold            
                     else:
                       # publish mqtt hold
                       - mqtt.publish:
-                          topic: ${device_name}/button/2/command
+                          topic: ${name}/button/2/command
                           payload: "HOLD"
                       - delay: 0.05s
                 - delay: 0.05s
@@ -156,17 +156,17 @@ binary_sensor:
               then:
                 # send short click event
                 - homeassistant.event:
-                    event: esphome.${device_name}
+                    event: esphome.${name}
                     data:
                       title: button 2 short click            
               else:
                 # publish mqtt double click
                 - mqtt.publish:
-                    topic: ${device_name}/button/2/command
+                    topic: ${name}/button/2/command
                     payload: "SHORT_CLICK"
     # on_release:
     #   - homeassistant.event:
-    #       event: esphome.${device_name}
+    #       event: esphome.${name}
     #       data:
     #         title: button 2 released
     internal: true

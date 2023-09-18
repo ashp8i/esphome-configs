@@ -3,7 +3,7 @@ substitutions:
   device_ssid: "Dining Curtain"
   device_description: "Zemismart BCM500DS-TYW Curtain Motor ESP32-S3"
   friendly_name: "Dining Curtain" # Put the name that you want to see in Home Assistant.
-  main_device_id: "diningcurtain" # Put the name that you want to see in Home Assistant.
+  device_id_white: "diningcurtain" # Put the name that you want to see in Home Assistant.
   cover_name: "Dining Curtain"
   project_name: "zemismart.bcm500ds-tyw-esp32-s3"
   project_version: "1.0"

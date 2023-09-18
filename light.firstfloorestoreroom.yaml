@@ -3,7 +3,7 @@ substitutions:
   device_ssid: "Upper Store"
   device_description: "MiBoxer FUT035W Tuya ESP32-C3 LED Controller."
   friendly_name: "First Floor Store Room" # Put the name that you want to see in Home Assistant.
-  main_device_id: "firstfloorstoreroom" # Put the name that you want to see in Home Assistant.
+  device_id_white: "firstfloorstoreroom" # Put the name that you want to see in Home Assistant.
   light_icon: "hue:lightstrip"
   project_name: "miboxer.fut035w-arduino"
   project_version: "1.0"

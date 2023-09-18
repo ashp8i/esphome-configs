@@ -3,7 +3,7 @@ substitutions:
   device_name: testtemp
   device_description: "BME-280 Sensor via ESP32"
   friendly_name: "Test Temp"
-  main_device_id: "testtemp" # Put the name that you want to see in Home Assistant.
+  device_id_white: "testtemp" # Put the name that you want to see in Home Assistant.
   project_name: "diy.bme280-esp32-esp-idf"
   project_version: "1.0"
 

@@ -17,7 +17,7 @@ binary_sensor:
         then:
           # send double click event
           - homeassistant.event:
-              event: esphome.${device_name}
+              event: esphome.${name}
               data:
                 title: button 1 double click
         # button held
@@ -31,7 +31,7 @@ binary_sensor:
               then:
                 # send hold event
                 - homeassistant.event:
-                    event: esphome.${device_name}
+                    event: esphome.${name}
                     data:
                       title: button 1 hold
                 - delay: 0.1s
@@ -42,12 +42,12 @@ binary_sensor:
         then:
           # send short click event
           - homeassistant.event:
-              event: esphome.${device_name}
+              event: esphome.${name}
               data:
                 title: button 1 short click
     # on_release:
     #   - homeassistant.event:
-    #       event: esphome.${device_name}
+    #       event: esphome.${name}
     #       data:
     #         title: button 1 released
     internal: true

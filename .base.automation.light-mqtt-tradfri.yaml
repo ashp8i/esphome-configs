@@ -8,7 +8,7 @@ mqtt:
       payload: 'SHORT_CLICK'
       qos: 0
       then:
-        - light.toggle: ${main_device_id}
+        - light.toggle: ${device_id_white}
 
 # mqtt:
 #   broker: !secret mqtt_ip
@@ -22,7 +22,7 @@ mqtt:
 #       payload: 'SHORT_CLICK'
 #       qos: 0
 #       then:
-#         - light.toggle: ${main_device_id}
+#         - light.toggle: ${device_id_white}
 #     # Hold - Brighten
 #     - topic: $switch1b1_topic
 #       payload: 'HOLD'
@@ -30,7 +30,7 @@ mqtt:
 #       then:
 #         # Increase the brightness by 5%
 #         - light.dim_relative:
-#             id: ${main_device_id}
+#             id: ${device_id_white}
 #             relative_brightness: 5%
 #             transition_length: 0.1s
 #         - delay: 0.1s
@@ -40,8 +40,8 @@ mqtt:
 #       qos: 0
 #       then:
 #         - lambda: |-
-#             float current_temp = id(${main_device_id}).current_values.get_color_temperature();
-#             auto call = id(${main_device_id}).turn_on();
+#             float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+#             auto call = id(${device_id_white}).turn_on();
 #             call.set_color_temperature(current_temp + 25);
 #             call.set_transition_length(1000); // in ms
 #             call.perform();
@@ -51,7 +51,7 @@ mqtt:
 #       payload: 'SHORT_CLICK'
 #       qos: 0
 #       then:
-#         - light.toggle: ${main_device_id}
+#         - light.toggle: ${device_id_white}
 #     # Hold - Dim
 #     - topic: $switch1b2_topic
 #       payload: 'HOLD'
@@ -59,7 +59,7 @@ mqtt:
 #       then:
 #         # Decreases the brightness by 5%
 #         - light.dim_relative:
-#             id: ${main_device_id}
+#             id: ${device_id_white}
 #             relative_brightness: -5%
 #             transition_length: 0.1s
 #         - delay: 0.1s
@@ -69,8 +69,8 @@ mqtt:
 #       qos: 0
 #       then:
 #         - lambda: |-
-#             float current_temp = id(${main_device_id}).current_values.get_color_temperature();
-#             auto call = id(${main_device_id}).turn_on();
+#             float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+#             auto call = id(${device_id_white}).turn_on();
 #             call.set_color_temperature(current_temp - 25);
 #             call.set_transition_length(1000); // in ms
 #             call.perform();
@@ -80,7 +80,7 @@ mqtt:
 #       payload: 'SHORT_CLICK'
 #       qos: 0
 #       then:
-#         - light.toggle: ${main_device_id}
+#         - light.toggle: ${device_id_white}
 #     # Hold - Brighten
 #     - topic: $switch1b3_topic
 #       payload: 'HOLD'
@@ -88,7 +88,7 @@ mqtt:
 #       then:
 #         # Increases the brightness by 5%
 #         - light.dim_relative:
-#             id: ${main_device_id}
+#             id: ${device_id_white}
 #             relative_brightness: 5%
 #             transition_length: 0.1s
 #         - delay: 0.1s
@@ -98,8 +98,8 @@ mqtt:
 #       qos: 0
 #       then:
 #         - lambda: |-
-#             float current_temp = id(${main_device_id}).current_values.get_color_temperature();
-#             auto call = id(${main_device_id}).turn_on();
+#             float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+#             auto call = id(${device_id_white}).turn_on();
 #             call.set_color_temperature(current_temp + 25);
 #             call.set_transition_length(1000); // in ms
 #             call.perform();
@@ -109,7 +109,7 @@ mqtt:
 #       payload: 'SHORT_CLICK'
 #       qos: 0
 #       then:
-#         - light.toggle: ${main_device_id}
+#         - light.toggle: ${device_id_white}
 #     # Hold - Dim
 #     - topic: $switch1b4_topic
 #       payload: 'HOLD'
@@ -117,7 +117,7 @@ mqtt:
 #       then:
 #         # Decreases the brightness by 5%
 #         - light.dim_relative:
-#             id: ${main_device_id}
+#             id: ${device_id_white}
 #             relative_brightness: -5%
 #             transition_length: 0.1s
 #         - delay: 0.1s
@@ -127,8 +127,8 @@ mqtt:
 #       qos: 0
 #       then:
 #         - lambda: |-
-#             float current_temp = id(${main_device_id}).current_values.get_color_temperature();
-#             auto call = id(${main_device_id}).turn_on();
+#             float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+#             auto call = id(${device_id_white}).turn_on();
 #             call.set_color_temperature(current_temp - 25);
 #             call.set_transition_length(1000); // in ms
 #             call.perform();

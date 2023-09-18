@@ -8,9 +8,9 @@ mqtt:
       payload: '2_single'
       qos: 0
       then:
-        - light.toggle: ${main_device_id}_light
+        - light.toggle: ${name}_light
     - topic: $lonsonho_dual_topic
       payload: '1_single'
       qos: 0
       then:
-        - fan.toggle: ${main_device_id}_fan
+        - fan.toggle: ${name}_fan

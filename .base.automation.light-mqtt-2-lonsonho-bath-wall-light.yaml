@@ -8,4 +8,4 @@ mqtt:
       payload: '1_single'
       qos: 0
       then:
-        - light.toggle: ${main_device_id}
+        - light.toggle: ${device_id_white}

@@ -2,7 +2,7 @@ switch:
   - platform: output
     name: "Shelly 1 Switch"
     output: shelly_1_relay
-    id: ${main_device_id}
+    id: ${device_id_white}
     # this provides for a possibility to restart from the web console or Home automation should we ever need it
   - platform: restart
     id: restart_switch

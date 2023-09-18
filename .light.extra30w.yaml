@@ -3,7 +3,7 @@ substitutions:
   device_name: extra30w
   device_description: "ZH United 30W CCT Slim Ceiling Light"
   friendly_name: "Extra 30W"    # Put the name that you want to see in Home Assistant.
-  main_device_id: "extra30w"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "extra30w"    # Put the name that you want to see in Home Assistant.
   tradfri_topic: ashishswitch-/button/1/command
   project_name: "zhunited.30w-cw-slim-ceiling-light-esp32-c3-arduino-cct"
   project_version: "1.0"

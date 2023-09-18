@@ -3,7 +3,7 @@ substitutions:
   device_ssid: "Bed 2 Lamp 2"
   device_description: "Skydance S1-B(WT) Tuya ESP02 Dimmer"
   friendly_name: "Bedroom 2 Lamp 2" # Put the name that you want to see in Home Assistant.
-  main_device_id: "bedroom2lamp2" # Put the name that you want to see in Home Assistant.
+  device_id_white: "bedroom2lamp2" # Put the name that you want to see in Home Assistant.
   dimmer_icon: "hue:desk-lamp"
 #  switch1b1_topic: masterswitch/button/1/command
   project_name: "skydance.s1-b-wt-arduino"

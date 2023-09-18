@@ -8,9 +8,9 @@ mqtt:
       payload: 'SHORT_CLICK'
       qos: 0
       then:
-        - light.toggle: ${main_device_id}
+        - light.toggle: ${device_id_white}
     - topic: $ikea_tradfri_topic
       payload: 'toggle'
       qos: 0
       then:
-        - light.toggle: ${main_device_id}
+        - light.toggle: ${device_id_white}

@@ -1,5 +1,5 @@
 switch:
   # - platform: output
   #   id: "relay"
-  #   name: "${device_name} Relay"
+  #   name: "${name} Relay"
   #   output: "relay_output"

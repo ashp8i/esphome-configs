@@ -1,10 +1,10 @@
 switch:
   - platform: output
-    name: "${device_name} Switch 1"
+    name: "${name} Switch 1"
     output: shelly_25_relay_1
     id: switchid1
   - platform: output
-    name: "${device_name} Switch 2"
+    name: "${name} Switch 2"
     output: shelly_25_relay_2
     id: switchid2
     # this provides for a possibility to restart from the web console or Home automation should we ever need it

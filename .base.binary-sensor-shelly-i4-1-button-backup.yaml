@@ -17,11 +17,11 @@ binary_sensor:
         then:
           # send double click event
           - homeassistant.event:
-              event: esphome.${device_name}
+              event: esphome.${name}
               data:
                 title: button 1 double click
           - mqtt.publish:
-              topic: ${device_name}/button/1/command
+              topic: ${name}/button/1/command
               payload: "DOUBLE_CLICK"
         # button held
       - timing:
@@ -33,11 +33,11 @@ binary_sensor:
                 - binary_sensor.is_on: button1
               then:
                 - homeassistant.event:
-                    event: esphome.${device_name}
+                    event: esphome.${name}
                     data:
                       title: button 1 hold
                 - mqtt.publish:
-                    topic: ${device_name}/button/1/command
+                    topic: ${name}/button/1/command
                     payload: "HOLD"
                 - delay: 0.1s
         # single click
@@ -46,15 +46,15 @@ binary_sensor:
           - OFF for at least 0.5s
         then:
           - homeassistant.event:
-              event: esphome.${device_name}
+              event: esphome.${name}
               data:
                 title: button 1 short click
           - mqtt.publish:
-              topic: ${device_name}/button/1/command
+              topic: ${name}/button/1/command
               payload: "SHORT_CLICK"
     # on_release:
     #   - homeassistant.event:
-    #       event: esphome.${device_name}
+    #       event: esphome.${name}
     #       data:
     #         title: button 1 released
     internal: true

@@ -1,5 +1,5 @@
 esphome:
-  name: ${device_name}
+  name: ${name}
   comment: ${device_description}
   platformio_options:
     platform_packages:

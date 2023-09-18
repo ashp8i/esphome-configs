@@ -1,6 +1,6 @@
 # Device Specific Config
 esphome:
-  name: ${device_name}
+  name: ${name}
   comment: ${device_description}
   project:
     name: "${project_name}"
@@ -31,7 +31,7 @@ output:
 light:
   - platform: cwww
     name: ${friendly_name}    # Put the name that you want to see in Home Assistant.
-    id: ${device_name}    # id used in esphome.
+    id: ${name}    # id used in esphome.
     cold_white: output_cold_white
     warm_white: output_warm_white
     cold_white_color_temperature: 6536 K

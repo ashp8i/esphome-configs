@@ -3,7 +3,6 @@ substitutions:
   device_ssid: "Stairs Switch 2"
   device_description: "Shelly Plus i4 Switch Module"
   friendly_name: "Stairs Switch 2"
-  main_device_id: "stairsswitch2" # Put the name that you want to see in Home Assistant.
   project_name: "shelly.plusi4-esp32-solo-arduino"
   project_version: "1.0"
 

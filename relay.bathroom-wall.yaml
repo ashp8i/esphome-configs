@@ -4,7 +4,7 @@ substitutions:
   device_main_description: "Shelly 1 Exposed as light"
   device_description: Bathroom Wall Light
   friendly_name: "Bathroom Wall" # Put the name that you want to see in Home Assistant.
-  main_device_id: "bathroomwallrelay"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "bathroomwallrelay"    # Put the name that you want to see in Home Assistant.
   lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
   light_icon: "mdi:wall-sconce-flat-outline"
   project_name: "shelly.shelly1-relay-light"

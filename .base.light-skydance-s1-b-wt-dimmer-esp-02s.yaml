@@ -1,6 +1,6 @@
 # Device Specific Config
 esphome:
-  name: ${device_name}
+  name: ${name}
   comment: ${device_description}
   platform: ESP8266
   board: modwifi

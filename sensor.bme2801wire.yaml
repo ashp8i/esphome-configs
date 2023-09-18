@@ -3,7 +3,7 @@ substitutions:
   device_name: bme2801wire
   device_description: "BME-280 1-Wire Sensor Powered by ESP32"
   friendly_name: "BME280 1-Wire"
-  main_device_id: bme2801wire # Put the name that you want to see in Home Assistant.
+  device_id_white: bme2801wire # Put the name that you want to see in Home Assistant.
   project_name: "diy.bme2801wire-esp32-esp-idf"
   project_version: "1.0"
 

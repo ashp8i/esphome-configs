@@ -4,7 +4,7 @@ substitutions:
   device_main_description: "esp32 dallas test"
   device_description: esp32 dallas test
   friendly_name: "ESP32 Dallas Test" # Put the name that you want to see in Home Assistant.
-  main_device_id: "esp32dallastest"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "esp32dallastest"    # Put the name that you want to see in Home Assistant.
   project_name: "esp32.1-wire-dallas-arduino"
   project_version: "1.0"
 

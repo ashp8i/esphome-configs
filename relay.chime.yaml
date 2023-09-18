@@ -4,7 +4,7 @@ substitutions:
   device_main_description: "Shelly Plus 1 PM Relay Chime"
   device_description: Shelly Plus 1 PM Relay Chime
   friendly_name: "Chime" # Put the name that you want to see in Home Assistant.
-  main_device_id: "shellyplus1pmchime"
+  device_id_white: "shellyplus1pmchime"
   # Higher value gives lower watt readout
   current_res: "0.001"
   # Lower value gives lower voltage readout

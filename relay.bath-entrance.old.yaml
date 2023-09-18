@@ -4,7 +4,7 @@ substitutions:
   device_main_description: "Shelly 1 old Exposed as light plus Sensor"
   device_description: Bath Entrance 2 Light and Sensor
   friendly_name: "Bath Entrance Old Light & Sensor" # Put the name that you want to see in Home Assistant.
-  main_device_id: "bathentrancerelayoldlightsensor"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "bathentrancerelayoldlightsensor"    # Put the name that you want to see in Home Assistant.
   lonsonho_single_topic: zigbee2mqtt/Bath & Toilet Hallway/action
   light_icon: "hue:bulb-spot-hung"
   project_name: "shelly.shelly1-relay-light-sensor"

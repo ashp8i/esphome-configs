@@ -1,6 +1,6 @@
 # Device Specific Config
 esphome:
-  name: ${device_name}
+  name: ${name}
   comment: ${device_description}
   project:
     name: "${project_name}"

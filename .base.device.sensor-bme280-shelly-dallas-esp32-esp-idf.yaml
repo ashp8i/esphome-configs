@@ -1,6 +1,6 @@
 # Device Specific Config
 esphome:
-  name: ${device_name}
+  name: ${name}
   comment: ${device_description}
   # platformio_options:
   #   board_build.f_cpu: 160000000L

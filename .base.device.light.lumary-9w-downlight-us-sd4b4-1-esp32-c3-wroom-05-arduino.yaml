@@ -35,29 +35,29 @@ web_server:
 output:
   - platform: ledc
     id: output_red
-    pin: GPIO6
+    pin: GPIO4
     # max_power: 100%
-    # frequency: ${frequency_rgb}
+    # frequency: ${frequency_rgb} GPIO4 - RED
   - platform: ledc
     id: output_green
-    pin: GPIO7
+    pin: GPIO5
     # max_power: 100%
-    # frequency: ${frequency_rgb}
+    # frequency: ${frequency_rgb} GPIO5 - GREEN
   - platform: ledc
     id: output_blue
-    pin: GPIO3
+    pin: GPIO6
     # max_power: 100%
-    # frequency: ${frequency_rgb}
+    # frequency: ${frequency_rgb} GPIO6 - BLUE
   - platform: ledc
     id: output_cold_white
+    pin: GPIO3
     max_power: 100%
-    # frequency: ${frequency_cw}
-    pin: GPIO5
+    # frequency: ${frequency_cw} GPIO3 - COLD WHITE
   - platform: ledc
     id: output_warm_white
-    pin: GPIO4
+    pin: GPIO7
     max_power: 100%
-    # frequency: ${frequency_ww}
+    # frequency: ${frequency_ww} GPIO7 - WARM WHITE
 
 light:
   - platform: cwww

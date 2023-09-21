@@ -1,7 +1,7 @@
 substitutions:
   name: "bedroom2light6"
   device_ssid: "Bed 2 light 6"
-  device_description: "Lumary 9W RGBCW Slim Downlight 8-inch L-SD6B4"
+  device_description: "Lumary 9W RGBCW Slim Downlight 4-inch US-SD6B4-1"
   friendly_name: "Bedroom 2 Light 6"    # Put the name that you want to see in Home Assistant.
   device_name_white: "Bedroom 2 Light 6 White"    # Put the name that you want to see in Home Assistant.
   device_id_white: bedroom2light6white
@@ -23,7 +23,7 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.light.lumary-9w-downlight-sd4b4-esp32-c3-wroom-05-arduino.yaml
+<<: !include .base.device.light.lumary-9w-downlight-us-sd4b4-1-esp32-c3-wroom-05-arduino.yaml
 # <<: !include .base.automation.light-mqtt-secure-8-button-rgbcct-esp8266.yaml
 <<: !include .base.global-mqtt-automation.yaml
 <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml

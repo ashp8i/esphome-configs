@@ -1,0 +1,23 @@
+substitutions:
+  name: bathroomsensor
+  device_ssid: "Bathroom Sensor"
+  device_description: "BME680 Sensor ESP32 AC Relay Board Arduino"
+  friendly_name: "Bathroom" # Put the name that you want to see in Home Assistant.
+  # switch1b1_topic: ashishswitch1/button/1/command
+  # switch1b2_topic: ashishswitch1/button/2/command
+  sensor_icon: "hue:ceiling-aurelle"
+  project_name: "diy.ac_relay_board_bme680-esp32-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret bathroomsensor_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.sensor-bme680-esp32-arduino.yaml
+<<: !include .base.common-binary-sensor.yaml
+<<: !include .base.sensor-bme680.yaml
+<<: !include .base.common-button.yaml
+<<: !include .base.common-text-sensor.yaml

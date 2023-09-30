@@ -1,25 +1,31 @@
 substitutions:
   name: bathroomwallrelay
-  device_ssid: "Bathroom Wall"
-  device_main_description: "Shelly 1 Exposed as light"
+  device_ssid: "Bath Wall"
+  device_main_description: "Shelly Plus 1 PM Exposed as light"
   device_description: Bathroom Wall Light
   friendly_name: "Bathroom Wall" # Put the name that you want to see in Home Assistant.
-  device_id_white: "bathroomwallrelay"    # Put the name that you want to see in Home Assistant.
-  lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
+  device_id: "bathroomwallrelay"    # Put the name that you want to see in Home Assistant.
+  # Higher value gives lower watt readout
+  current_res: "0.001"
+  # Lower value gives lower voltage readout
+  voltage_div: "1925"
   light_icon: "mdi:wall-sconce-flat-outline"
-  project_name: "shelly.shelly1-relay-light"
+  lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
+  project_name: "shelly.shellyplus1pm-relay-light-arduino"
   project_version: "1.0"
 
 # Enable Home Assistant API
 api:
   encryption:
-    key: !secret bathroomwallrelay_noise_key
+    key: !secret bathroomwallrelay_old_noise_key
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.relay.shelly-1-light.yaml
+# <<: !include .base-debug.yaml
+<<: !include .base.device.relay.shelly-plus-1pm-solo-light-arduino.yaml
 <<: !include .base.automation.light-mqtt-2-lonsonho-bath-wall-light.yaml
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-1-edge-switch.yaml
+# <<: !include .base.binary-sensor-shelly-plus-1pm-chime-trigger.yaml

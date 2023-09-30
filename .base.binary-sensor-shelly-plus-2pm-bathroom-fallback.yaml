@@ -1,0 +1,44 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  #Shelly Switch Input 1
+  - platform: gpio
+    name: "${friendly_name} Input"
+    pin: GPIO5
+    #small delay to prevent debouncing
+    filters:
+      - delayed_on_off: 50ms
+    # config for state change of input button
+    on_state:
+      then:
+        - if:
+            condition:
+              api.connected:
+            then:
+              - homeassistant.event:
+                  event: esphome.${name}
+                  data:
+                    title: button 1 short click            
+            else:
+              - mqtt.publish:
+                  topic: ${name}/button/1/command
+                  payload: "SHORT_CLICK"
+    internal: true
+    id: switchid1
+
+
+  #reset button on device
+  - platform: gpio
+    name: "${friendly_name} Button"
+    pin:
+      number: GPIO4
+      inverted: yes
+      mode:
+        input: true
+        pullup: true
+    on_press:
+      then:
+        - button.press: "restart_device"
+    filters:
+      - delayed_on_off: 5ms
+    internal: true

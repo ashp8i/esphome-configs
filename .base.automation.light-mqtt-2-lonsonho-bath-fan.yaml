@@ -8,4 +8,4 @@ mqtt:
       payload: '2_single'
       qos: 0
       then:
-        - fan.toggle: ${device_id_white}_fan
+        - fan.toggle: ${device_id}_fan

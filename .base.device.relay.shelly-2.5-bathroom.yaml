@@ -41,4 +41,4 @@ fan:
   - platform: binary
     name: "${friendly_name}"
     output: shelly_25_relay_2
-    id: ${device_id_white}_fan
+    id: ${device_id}_fan

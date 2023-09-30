@@ -34,5 +34,5 @@ light:
   - platform: binary
     name: "${friendly_name}"
     output: shelly_1_relay
-    id: ${device_id_white}
+    id: ${device_id}
     icon: ${light_icon}

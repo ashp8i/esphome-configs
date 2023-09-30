@@ -1,0 +1,26 @@
+substitutions:
+  name: bathroomwallrelay-old
+  device_ssid: "Bath Wall Old"
+  device_main_description: "Shelly 1 Exposed as light"
+  device_description: Bathroom Wall Light Old
+  friendly_name: "Bathroom Wall" # Put the name that you want to see in Home Assistant.
+  device_id: "bathroomwallrelayold"    # Put the name that you want to see in Home Assistant.
+  lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
+  light_icon: "mdi:wall-sconce-flat-outline"
+  project_name: "shelly.shelly1-relay-light"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret bathroomwallrelay_old_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug-switching_1.yaml
+# <<: !include .base-debug.yaml
+<<: !include .base.device.relay.shelly-1-light.yaml
+<<: !include .base.automation.light-mqtt-2-lonsonho-bath-wall-light.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-button.yaml
+<<: !include .base.common-text-sensor.yaml
+<<: !include .base.binary-sensor-shelly-1-edge-switch.yaml

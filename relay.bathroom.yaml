@@ -1,12 +1,18 @@
 substitutions:
   name: bathroomrelay
-  device_ssid: "Bathroom Relay"
-  device_main_description: "Shelly 2.5 Bathroom Relay Exposed as Fan with MQTT Switch"
+  device_ssid: "Bathr'm Relay"
+  device_main_description: "Shelly Plus 2PM Bathroom Relay Exposed as Fan with MQTT Switch"
   device_description: Bathroom Relay
-  friendly_name: "Bathroom" # Put the name that you want to see in Home Assistant.
-  device_id_white: "bathroomrelay"    # Put the name that you want to see in Home Assistant.
+  friendly_name: "Bathroomrelay" # Put the name that you want to see in Home Assistant.
+  device_id: "bathroomrelay"    # Put the name that you want to see in Home Assistant.
+  relay_1: "Relay 1"
+  relay_2: "Bathroom"
+  # Relay trip limits
+  max_power: "3600.0"
+  max_temp: "80.0"
+  # light_icon: "hue:bulb-spot-hung"
   lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
-  project_name: "shelly.shelly25-relay-light-fan"
+  project_name: "shelly.shellyplus2pm-relay-light-fan"
   project_version: "1.0"
 
 # Enable Home Assistant API
@@ -16,9 +22,9 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.relay.shelly-2.5-bathroom.yaml
+<<: !include .base.device.relay.shelly-plus-2pm-bathroom-arduino.yaml
 <<: !include .base.automation.light-mqtt-2-lonsonho-bath-fan.yaml
-<<: !include .base.sensor-shelly2.5.yaml
+<<: !include .base.sensor-shelly-plus-2pm-bathroom.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
-<<: !include .base.binary-sensor-shelly-2.5-edge-switch-detached-fallback.yaml
+<<: !include .base.binary-sensor-shelly-plus-2pm-bathroom-fallback.yaml

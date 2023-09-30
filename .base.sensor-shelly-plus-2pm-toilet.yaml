@@ -1,0 +1,120 @@
+sensor:
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+  # Uptime Sensor
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    id: uptime_sensor
+    update_interval: 360s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
+  # Shelly Plus 2PM Power Sensors
+  #temperature sensor
+  - platform: ntc
+    sensor: temp_resistance_reading
+    name: "${friendly_name} Temperature"
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    icon: "mdi:thermometer"
+    entity_category: 'diagnostic'
+    calibration:
+      #These default values don't seem accurate
+      b_constant: 3350
+      reference_resistance: 10kOhm
+      reference_temperature: 298.15K
+    on_value_range:
+      - above: ${max_temp}
+        then:
+          - light.turn_off: "${name}_light"
+          - fan.turn_off: "${name}_fan"
+          - homeassistant.service:
+                service: persistent_notification.create
+                data:
+                  title: "Message from ${friendly_name}"
+                data_template:
+                  message: "${relay_1} and ${relay_2} turned off because temperature exceeded ${max_temp}°C"
+
+  - platform: resistance
+    id: temp_resistance_reading
+    sensor: temp_analog_reading
+    configuration: DOWNSTREAM
+    resistor: 10kOhm
+
+  - platform: adc
+    id: temp_analog_reading
+    pin: GPIO35
+    attenuation: 11db
+    update_interval: 60s
+
+  #power monitoring
+  - platform: ade7953
+    irq_pin: GPIO27 # Prevent overheating by setting this
+    voltage:
+      name: "${friendly_name} Voltage"
+      entity_category: 'diagnostic'
+    # On the Shelly 2.5 channels are mixed ch1=B ch2=A
+    current_a:
+      name: "${relay_2} Current"
+      entity_category: 'diagnostic'
+    current_b:
+      name: "${relay_1} Current"
+      entity_category: 'diagnostic'
+    active_power_a:
+      name: "${relay_2} Power"
+      id: power_channel_2
+      entity_category: 'diagnostic'
+      # active_power_a is normal, so don't multiply by -1
+      on_value_range:
+        - above: ${max_power}
+          then:
+            - fan.turn_off: "${name}_fan"
+            - homeassistant.service:
+                service: persistent_notification.create
+                data:
+                  title: "Message from ${friendly_name}"
+                data_template:
+                  message: "${relay_2} turned off because power exceeded ${max_power}W"
+    active_power_b:
+      name: "${relay_1} Power"
+      id: power_channel_1
+      entity_category: 'diagnostic'
+      # active_power_b is inverted, so multiply by -1
+      filters:
+        - multiply: -1
+      on_value_range:
+        - above: ${max_power}
+          then:
+            - light.turn_off: "${name}_light"
+            - homeassistant.service:
+                service: persistent_notification.create
+                data:
+                  title: "Message from ${friendly_name}"
+                data_template:
+                  message: "${relay_1} turned off because power exceeded ${max_power}W"
+    update_interval: 30s
+
+  - platform: total_daily_energy
+    name: "${relay_1} Daily Energy"
+    power_id: power_channel_1
+  - platform: total_daily_energy
+    name: "${relay_2} Daily Energy"
+    power_id: power_channel_2

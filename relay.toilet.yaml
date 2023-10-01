@@ -24,8 +24,8 @@ api:
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.relay.shelly-plus-2pm-toilet-arduino.yaml
-# <<: !include .base.automation.light-mqtt-2-lonsonho-toilet.yaml
-# <<: !include .base.sensor-shelly-plus-2pm-toilet.yaml
+<<: !include .base.automation.light-mqtt-2-lonsonho-toilet.yaml
+<<: !include .base.sensor-shelly-plus-2pm-toilet.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
-# <<: !include .base.binary-sensor-shelly-plus-2pm-toilet-fallback.yaml
+<<: !include .base.binary-sensor-shelly-plus-2pm-toilet-fallback.yaml

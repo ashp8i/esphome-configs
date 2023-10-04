@@ -1,0 +1,22 @@
+substitutions:
+  name: miteshswitch
+  device_ssid: "Mitesh Switch"
+  device_description: "Shelly Plus i4 Switch Module"
+  friendly_name: "Mitesh Switch"
+  project_name: "shelly.plusi4-esp32-solo-arduino"
+  project_version: "1.0"
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret miteshswitch_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base.common-mqtt.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-button.yaml
+<<: !include .base.common-text-sensor.yaml
+<<: !include .base.binary-sensor-shelly-i4-4-buttons-fallback.yaml

@@ -4,9 +4,9 @@ binary_sensor:
   - platform: gpio
     pin:
       number: GPIO4
-    name: "Switch Shelly 1 PM"
+    name: "${friendly_name} Switch"
     on_state:
       then:
-        - light.toggle: ${device_id_white}
+        - light.toggle: ${device_id}
     internal: true
-    id: ${device_id_white}_switch
+    id: ${device_id}_switch

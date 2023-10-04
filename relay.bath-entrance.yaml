@@ -4,7 +4,7 @@ substitutions:
   device_main_description: "Shelly Plus 2 PM Exposed as Light"
   device_description: Bath Entrance Light with Power Monitoring
   friendly_name: "Bath Entrance" # Put the name that you want to see in Home Assistant.
-  device_id_white: "bathentrancerelay"    # Put the name that you want to see in Home Assistant.
+  device_id: "bathentrancerelay"    # Put the name that you want to see in Home Assistant.
   lonsonho_single_topic: zigbee2mqtt/Bath & Toilet Hallway/action
   light_icon: "hue:bulb-spot-hung"
   # Higher value gives lower watt readout

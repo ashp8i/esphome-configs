@@ -1,5 +1,5 @@
 substitutions:
-  name: "bedroom2spot5"
+  name: "miteshspot5"
   device_ssid: "Mit 2 Spot 5"
   device_description: "Athom GU10 RGBCW LB10-5W-ESP-1"
   friendly_name: "Mitesh Spot 5"    # Put the name that you want to see in Home Assistant.

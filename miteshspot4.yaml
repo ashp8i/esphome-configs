@@ -1,12 +1,12 @@
 substitutions:
-  name: "bedroom2spot5"
-  device_ssid: "Mit 2 Spot 5"
+  name: "miteshspot4"
+  device_ssid: "Mit 2 Spot 4"
   device_description: "Athom GU10 RGBCW LB10-5W-ESP-1"
-  friendly_name: "Mitesh Spot 5"    # Put the name that you want to see in Home Assistant.
-  device_name_white: "Mitesh Spot 5 White"    # Put the name that you want to see in Home Assistant.
-  device_id_white: miteshspot5white
-  device_name_rgb: "Mitesh Spot 5 RGB"    # Put the name that you want to see in Home Assistant.
-  device_id_rgb: miteshspot5rgb    # Put the name that you want to see in Home Assistant.
+  friendly_name: "Mitesh Spot 4"    # Put the name that you want to see in Home Assistant.
+  device_name_white: "Mitesh Spot 4 White"    # Put the name that you want to see in Home Assistant.
+  device_id_white: miteshspot4white
+  device_name_rgb: "Mitesh Spot 4 RGB"    # Put the name that you want to see in Home Assistant.
+  device_id_rgb: miteshspot4rgb    # Put the name that you want to see in Home Assistant.
   switch1b1_topic: miteshswitch2/button/1/command
   switch1b2_topic: miteshswitch2/button/2/command
   switch1b3_topic: miteshswitch2/button/3/command
@@ -22,7 +22,7 @@ substitutions:
 # Enable Home Assistant API
 api:
   encryption:
-    key: !secret miteshbulb5_noise_key
+    key: !secret miteshbulb4_noise_key
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml

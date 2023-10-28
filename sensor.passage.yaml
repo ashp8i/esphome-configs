@@ -20,4 +20,5 @@ api:
 <<: !include .base.binary-sensor-zy-m100.yaml
 <<: !include .base.sensor-zy-m100.yaml
 <<: !include .base.common-button.yaml
-<<: !include .base.text-sensor-zy-m100.yaml
+<<: !include .base.common-text-sensor.yaml
+# <<: !include .base.text-sensor-zy-m100.yaml

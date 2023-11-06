@@ -1,0 +1,24 @@
+substitutions:
+  device_ssid: "display-test"
+  name: display-test
+  device_description: "TM1638 Test DIY Device Powered by ESP32"
+  friendly_name: "TM1638 Test"
+  project_name: "diy.display-test-esp32-esp-idf"
+  project_version: "1.0"
+
+<<: !include .base-debug.yaml
+# <<: !include .base.device.sensor-bme280-esp32-alternate-esp-idf.yaml
+# <<: !include .base.device.sensor-bme280-shelly-dallas-esp32-esp-idf.yaml
+# <<: !include .base.device.sensor-bme280-shelly-dallas-esp32-arduino.yaml
+<<: !include .base.device.display-test-esp32-arduino.yaml
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret testtemp_noise_key
+  reboot_timeout: 0s
+
+# <<: !include .base.common-mqtt.yaml
+# <<: !include .base.sensor-bme280-1-wire.yaml
+<<: !include .base.common-button.yaml
+<<: !include .base.common-text-sensor.yaml

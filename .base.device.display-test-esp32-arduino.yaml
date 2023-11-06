@@ -1,0 +1,45 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: esp32dev
+  framework: 
+    type: arduino
+# external_components:
+#   # - source: github://pr#4330
+#   #   components: [internal_temperature]
+#   #   refresh: always
+#   # - source: my_external_components/test/ng_v0.1
+#   #   refresh: always
+#   - source: github://ashp8i/esphome-components
+#     refresh: always
+
+captive_portal:
+
+web_server:
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# Example configuration entry
+display:
+    platform: tm1638
+    id: tm1638_display
+    stb_pin: 16
+    clk_pin: 18
+    dio_pin: 23
+    intensity: 5
+    update_interval: 500ms
+    lambda: |-
+        static int i = 0;
+        i++;
+        if ((i % 2) == 0)
+          it.strftime("%H..%M", id(homeassistant_time).now());
+        else
+          it.strftime("%H  %M", id(homeassistant_time).now());

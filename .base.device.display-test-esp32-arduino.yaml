@@ -34,12 +34,12 @@ display:
     stb_pin: 16
     clk_pin: 18
     dio_pin: 23
-    intensity: 5
+    intensity: 1
     update_interval: 500ms
     lambda: |-
         static int i = 0;
         i++;
         if ((i % 2) == 0)
-          it.strftime("%H..%M", id(homeassistant_time).now());
+          it.strftime("...", id(homeassistant_time).now());
         else
-          it.strftime("%H  %M", id(homeassistant_time).now());
+          it.strftime("%H%M", id(homeassistant_time).now());

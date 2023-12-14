@@ -274,10 +274,12 @@ I had to preflashed new chip ESP-C3-12F using USB Programmer with spring module 
 
 As with the ESP32-C3 initial support was poor until ESP-IDF support came out but lacks a webserver or captive portal thus I stuck with tasmota, now that platform-espressif32 is version 5.2.0 and Arduino IDE version 2.0.5 is out, Support is good and I no longer have issues with OTA in ESPHome with the Arduino Framework, I used to run ESPHome with ESP-IDF Framework but find the Web Server and Captive Portal useful, therefore Arduino IDE is preferred however it is not officially supported.
 
-Please not as you read this ledc is broken in the Arduino IDE for new ESP32 variants and requires a PR for an issue that is still open, that I use in the config below:
+Please note as you read this ledc is broken in the Arduino IDE for new ESP32 variants and requires a PR for an issue that is still open, that I use in the config below:
 
 [LEDC not working with ESP32-C3 and Arduino framework (but with ESP-IDF) #3128](https://github.com/esphome/issues/issues/3128)
 see PR appied in the file [`.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml`](.base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml)
+
+Might be fixed now need to confirm PR is merged!
 
 # Setup
 

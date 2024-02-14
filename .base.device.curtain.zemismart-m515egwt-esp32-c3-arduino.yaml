@@ -1,0 +1,100 @@
+# Device Specific Config
+esphome:
+  name: "${name}"
+  comment: ${device_description}
+  platformio_options:
+    board_build.flash_mode: dio
+    upload_speed: 921600
+    platform: espressif32@5.2.0
+    
+esp32:
+  board: esp32-c3-devkitm-1
+  framework: 
+    type: arduino
+    version: 2.0.5
+    platform_version: 5.2.0
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  local: true
+
+# Old Config had TuyaMCU connection Issues
+
+# uart:
+#     rx_pin: GPIO6
+#     tx_pin: GPIO7
+#     baud_rate: 9600
+#     debug:
+#       direction: BOTH
+#       dummy_receiver: false
+#       sequence:
+#         - lambda: UARTDebug::log_hex(direction, bytes, ':');
+
+uart:
+  rx_pin: GPIO6
+  tx_pin: GPIO7
+  baud_rate: 9600
+  debug:
+    direction: BOTH
+    dummy_receiver: false
+    sequence:
+      - lambda: UARTDebug::log_hex(direction, bytes, ':');
+
+# Register the Tuya MCU connection
+# tuya:
+tuya:
+
+cover:
+  - platform: "tuya"
+    id: "${device_id}"
+    name: "${cover_name}"
+    control_datapoint: 1
+    position_datapoint: 2
+    position_report_datapoint: 2
+    # direction_datapoint: 5
+    # invert_position: false
+    device_class: blind
+
+select:
+  - platform: "tuya"
+    # tuya_id: "mcu"
+    name: "${friendly_name} Calibration"
+    icon: mdi:eye
+    enum_datapoint: 16
+    options:
+      0: Set Top Position
+      1: Set Bottom Position
+      2: Delete Up Position
+      3: Delete Down Position
+      4: Reset Calibration
+  - platform: "tuya"
+    # tuya_id: "mcu"
+    name: "${friendly_name} Direction"
+    icon: mdi:eye
+    enum_datapoint: 5
+    options:
+      0: Forward
+      1: Reverse
+  - platform: "tuya"
+    # tuya_id: "mcu"
+    name: "${friendly_name} State"
+    icon: mdi:eye
+    enum_datapoint: 7
+    options:
+      0: Opening
+      1: Closing
+  - platform: "tuya"
+    # tuya_id: "mcu"
+    name: "${friendly_name} Control"
+    icon: mdi:eye
+    enum_datapoint: 1
+    options:
+      0: Open
+      1: Stop
+      2: Close

@@ -1,0 +1,25 @@
+button:
+  # - platform: template
+  #   name: Reset calibration
+  #   on_press:
+  #     - lambda: |-
+  #         id(bedroom2cover).set_enum_datapoint_value(16, 4);
+  # - platform: template
+  #   name: Set top position
+  #   on_press:
+  #     - lambda: |-
+  #         id(bedroom2cover).set_enum_datapoint_value(16, 0);
+  # - platform: template
+  #   name: Set bottom position
+  #   on_press:
+  #     - lambda: |-
+  #         id(bedroom2cover).set_enum_datapoint_value(16, 1);
+  # this provides for a possibility to restart from the web console or Home automation should we ever need it
+  - platform: restart
+    id: "restart_device"
+    name: "${friendly_name} Restart"
+    entity_category: 'diagnostic'
+  - platform: safe_mode
+    id: "restart_device_safe_mode"
+    name: "${friendly_name} Restart (Safe Mode)"
+    entity_category: 'diagnostic'

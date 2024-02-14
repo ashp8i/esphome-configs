@@ -1,17 +1,17 @@
 substitutions:
-  name: bedroom2wardrobeblind
-  device_ssid: "Bedroom 2 WB"
+  name: "bedroom2oldwardrobeblind"
+  device_ssid: "Bedroom 2 W old"
   device_description: "Zemismart YH002 Blind Motor ESP32-S3"
-  friendly_name: "Bedroom 2 Wardrobe Blind" # Put the name that you want to see in Home Assistant.
-  device_id_white: "bedroom2cover2" # Put the name that you want to see in Home Assistant.
-  cover_name: "Bedroom 2 Wardrobe Blind"
+  friendly_name: "Bedroom 2 Wardrobe Blind Old" # Put the name that you want to see in Home Assistant.
+  device_id_white: "bedroom2cover2old" # Put the name that you want to see in Home Assistant.
+  cover_name: "Bedroom 2 Wardrobe Blind Old"
   project_name: "zemismart.yh002-esp32-s3"
   project_version: "1.0"
 
 # Enable Home Assistant API
 api:
   encryption:
-    key: !secret bedroom2wardrobeblind_noise_key
+    key: !secret bedroom2oldwardrobeblind_noise_key
   reboot_timeout: 0s
 
 <<: !include .base-debug-tuya-verbose.yaml

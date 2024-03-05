@@ -1,5 +1,5 @@
 substitutions:
-  name: "masterbedroom2"
+  name: masterbedroom2
   device_ssid: "Master Room 2"
   device_description: "Lumary 18W RGBCW Slim Downlight"
   friendly_name: "Master Bedroom 2"    # Put the name that you want to see in Home Assistant.

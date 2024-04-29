@@ -1,9 +1,9 @@
 substitutions:
-  name: newmandir
+  name: "mandir"
   device_ssid: "Mandir Light"
   device_description: "MiBoxer FUT035W Tuya ESP32-C3 LED Controller."
   friendly_name: "Mandir" # Put the name that you want to see in Home Assistant.
-  device_id_white: "newmandir" # Put the name that you want to see in Home Assistant.
+  device_id_white: "mandir" # Put the name that you want to see in Home Assistant.
   light_icon: "hue:lightstrip"
   project_name: "miboxer.fut035w-arduino"
   project_version: "1.0"

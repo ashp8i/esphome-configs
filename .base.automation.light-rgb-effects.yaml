@@ -154,7 +154,7 @@ effects:
         auto call = id(${device_id_rgb}).turn_on();
         call.set_transition_length(55000);
         call.set_white(0.0);
-        light::ESPColor c = light::ESPColor::random_color();
+        esphome::Color c = esphome::Color::random_color();
         call.set_rgb((c.red%255)/255.0, (c.green%255)/255.0, (c.blue%255)/255.0);
         call.set_publish(false);
         call.set_save(false);
@@ -166,7 +166,7 @@ effects:
         auto call = id(${device_id_rgb}).turn_on();
         call.set_transition_length(800);
         call.set_white(0.0);
-        light::ESPColor c = light::ESPColor::random_color();
+        esphome::Color c = esphome::Color::random_color();
         call.set_rgb((c.red%128)/255.0, (c.green%128)/255.0, (c.blue%128)/255.0);
         call.set_publish(false);
         call.set_save(false);
@@ -179,7 +179,7 @@ effects:
         //call.set_transition_length(rand() % 400 + 1);
         call.set_transition_length(500);
         call.set_white(0.0);
-        light::ESPColor c = light::ESPColor::random_color();
+        esphome::Color c = esphome::Color::random_color();
         call.set_rgb((c.red)/255.0, (c.green)/255.0, (c.blue)/255.0);
         call.set_publish(false);
         call.set_save(false);

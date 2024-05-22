@@ -52,7 +52,9 @@ remote_receiver:
   pin:
     number: GPIO27
     inverted: True
-  dump: nec
+    mode: OUTPUT_OPEN_DRAIN
+  tolerance: 45%
+  dump: all
 #  tolerance: 20%
 #  buffer_size: 1kB
 #  filter: 2us

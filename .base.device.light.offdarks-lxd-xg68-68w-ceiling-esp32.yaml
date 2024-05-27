@@ -51,14 +51,20 @@ output:
 remote_receiver:
   pin:
     number: GPIO27
-    inverted: True
-    mode: OUTPUT_OPEN_DRAIN
-  tolerance: 45%
+    inverted: true
+    # mode:
+    #   input: true
+    #   pulldown: true
+      # pullup: true
+  # pin: GPIO27
   dump: all
-#  tolerance: 20%
-#  buffer_size: 1kB
-#  filter: 2us
-#  idle: 4ms
+  # Settings to optimize recognition of RF devices
+  # tolerance: 50%
+  # filter: 250us
+  # idle: 4ms
+  # buffer_size: 2kb
+  clock_divider: 40
+  rmt_channel: 4
 
 wled:
 

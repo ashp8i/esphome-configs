@@ -1,0 +1,44 @@
+esphome:
+  name: ir-test
+  friendly_name: ir_test
+
+esp32:
+  board: esp32dev
+  # framework:
+    # type: arduino
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "UqJbScLv5m5QAGqGkGHQti5M7PB4o9qiKbj5Sw31PV4="
+
+ota:
+  password: "789734adb5daf008650b557a6903dab0"
+
+wifi:
+  ssid: !secret wifi_ash_ssid
+  password: !secret wifi_ash_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Ir-Test Fallback Hotspot"
+    password: "o3JTT8V0CNK5"
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  
+remote_receiver:
+  pin:
+    number: GPIO27
+  dump: all

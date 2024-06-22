@@ -34,7 +34,9 @@ esphome:
           effect: beeptwice
   
   
-  wifi:
+  safe_mode:
+
+wifi:
     ssid: "MySSID"
     password: "SomePassword"
     manual_ip: # I am using manual/static IP just during testing as in mu setup mDNS does not work and then you cannot do OTA. I recommend to remove this in production (avoids having to OTA a new config if you ever change your LAN setup or want to use the device in another network)

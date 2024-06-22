@@ -4,8 +4,11 @@ logger:
   level: debug
 
 ota:
-  safe_mode: true
-  password: !secret ota_password
+  - platform: esphome
+    version: 2
+    password: !secret ota_password
+
+safe_mode:
 
 wifi:
     ssid: !secret wifi_all_ssid
@@ -16,3 +19,7 @@ wifi:
     ap:
       ssid: ${device_ssid} Fallback Hotspot
       password: !secret ap_password
+
+network:
+    enable_ipv6: true
+    min_ipv6_addr_count: 2

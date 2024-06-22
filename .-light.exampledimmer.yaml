@@ -12,6 +12,8 @@ substitutions:
   address_subnet: Y.Y.Y.Y
   address_gateway: X.Y.Z.B
 
+safe_mode:
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password

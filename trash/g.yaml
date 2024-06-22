@@ -18,6 +18,8 @@ api:
 ota:
   password: "8c263ceda097db903e5dac0714ded476"
 
+safe_mode:
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password

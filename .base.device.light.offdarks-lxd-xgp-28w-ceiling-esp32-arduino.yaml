@@ -10,6 +10,8 @@ esp32:
   framework: 
     type: arduino
 
+safe_mode:
+
 wifi:
     ssid: !secret wifi_all_ssid
     password: !secret wifi_all_password
@@ -19,6 +21,10 @@ wifi:
     ap:
       ssid: ${device_ssid}
       password: !secret ap_password
+
+network:
+    enable_ipv6: true
+    min_ipv6_addr_count: 2
 
 captive_portal:
 

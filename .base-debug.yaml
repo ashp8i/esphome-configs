@@ -11,6 +11,7 @@ ota:
 safe_mode:
 
 wifi:
+    power_save_mode: none
     ssid: !secret wifi_all_ssid
     password: !secret wifi_all_password
 

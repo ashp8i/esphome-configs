@@ -1,7 +1,7 @@
 substitutions:
   name: diningroomlight
   device_ssid: "Dining Light"
-  device_description: "Ceiling LED light with IR remote located in Ashish Room with discreet Tunable White & RGB Front Light (shows up as separate lights)."
+  device_description: "Ceiling LED light with IR remote located in Dining Room with discreet Tunable White & RGB Front Light (shows up as separate lights)."
   friendly_name: "Dining Room Light"    # Put the name that you want to see in Home Assistant.
   device_id_white: diningroomlightwhite    # Put the name that you want to see in Home Assistant.
   device_name_white: "Dining Room Light White"
@@ -24,10 +24,9 @@ api:
   reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.light.offdarks-lxd-xg68-68w-ceiling-esp32.yaml
+<<: !include .base.device.light.offdarks-lxd-xg68-68w-ceiling-esp32-wizmote-arduino.yaml
 <<: !include .base.global-rgbcct.yaml
 <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
 <<: !include .base.common-sensor-die-temp.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
-<<: !include .base.binary-sensor-offdarks-remote-updated.yaml

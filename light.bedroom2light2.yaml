@@ -24,6 +24,7 @@ api:
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.light.lumary-9w-downlight-us-sd4b4-1-esp32-c3-wroom-05-arduino.yaml
+# <<: !include .base.device.light.lumary-9w-downlight-us-sd4b4-1-esp32-c3-wroom-05-arduino.yaml
 # <<: !include .base.automation.light-mqtt-secure-4-button-rgbcct-esp8266.yaml
 <<: !include .base.global-mqtt-automation.yaml
 <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml

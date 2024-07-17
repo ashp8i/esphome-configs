@@ -21,6 +21,11 @@ esp32:
 external_components:
   - source: github://pr#3820
     components: [ ledc ]
+  - source:
+      type: git
+      url: https://github.com/KaufHA/common
+    components: [ ddp ]
+    refresh: always
 
 captive_portal:
 
@@ -59,10 +64,7 @@ output:
     max_power: 100%
     # frequency: ${frequency_ww} GPIO7 - WARM WHITE
 
-wled:
-
-e131:
-  method: multicast # default: register E1.31 to Multicast group
+ddp:
 
 light:
   - platform: cwww
@@ -83,18 +85,10 @@ light:
     icon: ${light_icon}
   - platform: rgb
     name: ${device_name_rgb}
-    id: internal_rgb
+    id: ${device_id_rgb}
     red: output_red
     green: output_green
     blue: output_blue
-    restore_mode: RESTORE_DEFAULT_OFF
-    internal: true
-  - platform: partition
-    name: ${device_name_rgb}
-    id: ${device_id_rgb}
-    segments:
-      # Use internal_rgb as a single light partition for WLED and e1.31
-      - single_light_id: internal_rgb
     default_transition_length: 0.25s
     on_turn_on:
     - light.turn_off: ${device_id_white}
@@ -103,68 +97,14 @@ light:
         value: '2'
     icon: "${light_icon_2}"
     effects:
-      - lambda:
+      - ddp:
           name: DDP
-          update_interval: 0s
-          lambda: |-
-            // our statics
-            static float scaled_r = 0.0;
-            static float scaled_g = 0.0;
-            static float scaled_b = 0.0;
-            static std::unique_ptr<WiFiUDP> udp_;
-          
-            // allocate and start UDP
-            if (!udp_) {
-              udp_ = make_unique<WiFiUDP>();
-              if (!udp_->begin(4048)) {   // always listen on DDP port
-                return;
-              }
-            }
-            
-            // read UDP payload
-            std::vector<uint8_t> payload;
-            while (uint16_t packet_size = udp_->parsePacket()) {
-              payload.resize(packet_size);
-              if (!udp_->read(&payload[0], payload.size())) {
-                continue;
-              }
-            }
-        
-            // ignore small payload
-            if (payload.size() < 2) {
-              return;
-            }
-  
-            // do the thing
-            float r = (float)payload[10]/255.0f;
-            float g = (float)payload[11]/255.0f;
-            float b = (float)payload[12]/255.0f;
-            
-            float m = 0.0f;
-            if ( (r>=g) && (r>=b) ) { m = r; }
-            else if ( g >= b )      { m = g; }
-            else                    { m = b; }
-            
-            if (m != 0.0f) {
-              scaled_r = r/m;
-              scaled_g = g/m;
-              scaled_b = b/m;
-            } else {
-              scaled_r = 0.0f;
-              scaled_g = 0.0f;
-              scaled_b = 0.0f;
-            }
-            auto call = id(${device_id_rgb}).turn_on();
-            call.set_transition_length(0);
-            call.set_brightness(m); 
-            call.set_color_mode(ColorMode::RGB);
-            call.set_rgb(scaled_r, scaled_g, scaled_b);
-            call.set_publish(false);
-            call.set_save(false);
-            call.perform();
-      - wled:
-          # port: 21324
-      - e131:
-          universe: 1
-          channels: RGB
+          timeout: 10s
+          disable_gamma: true
+          brightness_scaling: none
+      # - wled:
+      #     # port: 21324
+      # - e131:
+      #     universe: 1
+      #     channels: RGB
       

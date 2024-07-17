@@ -5,18 +5,11 @@ esphome:
   platformio_options:
     board_build.flash_mode: dio
     upload_speed: 921600
-    platform: espressif32@5.2.0
-  # includes:
-  #   - .esp32-internal-temperature.h
     
 esp32:
   board: esp32-c3-devkitm-1
-  framework: 
-    type: arduino
-    version: 2.0.5
-    platform_version: 5.2.0
-# framework:
-#   type: esp-idf
+  framework:
+    type: esp-idf
 
 external_components:
   - source: github://pr#3820
@@ -40,36 +33,34 @@ web_server:
 output:
   - platform: ledc
     id: output_red
-    pin: GPIO6
+    pin: GPIO4
     # max_power: 100%
-    # frequency: ${frequency_rgb}
+    # frequency: ${frequency_rgb} GPIO4 - RED
   - platform: ledc
     id: output_green
-    pin: GPIO7
+    pin: GPIO5
     # max_power: 100%
-    # frequency: ${frequency_rgb}
+    # frequency: ${frequency_rgb} GPIO5 - GREEN
   - platform: ledc
     id: output_blue
-    pin: GPIO3
+    pin: GPIO6
     # max_power: 100%
-    # frequency: ${frequency_rgb}
+    # frequency: ${frequency_rgb} GPIO6 - BLUE
   - platform: ledc
     id: output_cold_white
-    pin: GPIO5
+    pin: GPIO3
     max_power: 100%
-    # frequency: ${frequency_cw}
+    # frequency: ${frequency_cw} GPIO3 - COLD WHITE
   - platform: ledc
     id: output_warm_white
-    pin: GPIO4
+    pin: GPIO7
     max_power: 100%
-    # frequency: ${frequency_ww}
-
-# wled:
-
-ddp:
+    # frequency: ${frequency_ww} GPIO7 - WARM WHITE
 
 # e131:
 #   method: multicast # default: register E1.31 to Multicast group
+
+ddp:
 
 light:
   - platform: cwww
@@ -107,8 +98,6 @@ light:
           timeout: 10s
           disable_gamma: true
           brightness_scaling: none
-      # - wled:
-      #     # port: 21324
       # - e131:
       #     universe: 1
       #     channels: RGB

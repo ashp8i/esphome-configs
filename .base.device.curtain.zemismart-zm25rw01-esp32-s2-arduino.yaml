@@ -1,0 +1,91 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: esp32-s2-saola-1
+  framework:
+    type: arduino
+
+external_components:
+  - source:
+      type: local
+      path: my_external_components/tuya_cover_custom
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  local: true
+
+uart:
+    rx_pin: RX
+    tx_pin: TX
+    baud_rate: 9600
+    # debug:
+    #   direction: BOTH
+    #   dummy_receiver: false
+    #   sequence:
+    #     - lambda: UARTDebug::log_hex(direction, bytes, ':');
+
+# Register the Tuya MCU connection
+# tuya:
+tuya:
+
+# cover:
+#   - platform: "tuya"
+#     id: "${device_id_white}"
+#     name: "${cover_name}"
+#     control_datapoint: 1
+#     position_datapoint: 2
+#     position_report_datapoint: 3
+#     invert_position: true
+#     device_class: blind
+
+cover:
+  - platform: tuya-ex
+    id: "${device_id}"
+    name: "${cover_name}"
+    control_datapoint: 1
+    position_datapoint: 2
+    position_report_datapoint: 3
+    restore_mode: NO_RESTORE
+    min_value: 0
+    max_value: 100
+    device_class: blind
+    invert_position_report: true
+
+number:
+  - platform: tuya
+    name: Set Position
+    min_value: 0
+    max_value: 100
+    step: 1
+    number_datapoint: 2
+    unit_of_measurement: "%"
+    mode: box
+    entity_category: DIAGNOSTIC
+
+select:
+- platform: tuya
+  name: Motor Direction
+  enum_datapoint: 5
+  options:
+    0: Normal
+    1: Invert
+  entity_category: CONFIG
+- platform: tuya
+  name: Motor Mode
+  enum_datapoint: 106
+  options:
+    0: Continuous
+    1: Stepped
+  entity_category: CONFIG

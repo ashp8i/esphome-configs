@@ -12,7 +12,7 @@ substitutions:
 # Enable Home Assistant API
 api:
   encryption:
-    key: !secret stairsmotion_noise_key
+    key: !secret stairsmotion_new_noise_key
   reboot_timeout: 0s
 
 <<: !include .base-debug-tuya.yaml

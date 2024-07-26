@@ -36,6 +36,11 @@ uart:
     #   sequence:
     #     - lambda: UARTDebug::log_hex(direction, bytes, ':');
 
+# uart:
+#     tx_pin: GPIO1
+#     rx_pin: GPIO3
+#     baud_rate: 9600
+
 # Register the Tuya MCU connection
 # tuya:
 tuya:
@@ -51,7 +56,7 @@ tuya:
 #     device_class: blind
 
 cover:
-  - platform: tuya-ex
+  - platform: tuya
     id: "${device_id}"
     name: "${cover_name}"
     control_datapoint: 1
@@ -61,7 +66,7 @@ cover:
     min_value: 0
     max_value: 100
     device_class: blind
-    invert_position_report: true
+    # invert_position_report: true
 
 number:
   - platform: tuya

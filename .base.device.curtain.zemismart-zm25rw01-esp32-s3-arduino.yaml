@@ -7,7 +7,7 @@ esphome:
     version: "${project_version}"
 
 esp32:
-  board: esp32-s2-saola-1
+  board: um_tinys3
   framework:
     type: arduino
 
@@ -30,30 +30,10 @@ uart:
     rx_pin: GPIO44
     tx_pin: GPIO43
     baud_rate: 9600
-    # debug:
-    #   direction: BOTH
-    #   dummy_receiver: false
-    #   sequence:
-    #     - lambda: UARTDebug::log_hex(direction, bytes, ':');
-
-# uart:
-#     tx_pin: GPIO1
-#     rx_pin: GPIO3
-#     baud_rate: 9600
 
 # Register the Tuya MCU connection
 # tuya:
 tuya:
-
-# cover:
-#   - platform: "tuya"
-#     id: "${device_id_white}"
-#     name: "${cover_name}"
-#     control_datapoint: 1
-#     position_datapoint: 2
-#     position_report_datapoint: 3
-#     invert_position: true
-#     device_class: blind
 
 cover:
   - platform: tuya-ex
@@ -66,7 +46,7 @@ cover:
     min_value: 0
     max_value: 100
     device_class: blind
-    # invert_position_report: true
+    invert_position_report: true
 
 number:
   - platform: tuya

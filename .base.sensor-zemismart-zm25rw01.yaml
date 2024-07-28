@@ -47,11 +47,15 @@ sensor:
     entity_category: DIAGNOSTIC
   - platform: "tuya"
     name: "Current Situation"
-    sensor_datapoint: 11
+    sensor_datapoint: 102
     entity_category: DIAGNOSTIC
   # Bitfield: 1 appears to mean "limits not set" - TODO: lock out the cover controls from HA
   # until limits are set.
+  # - platform: "tuya"
+  #   name: "Motor Fault"
+  #   sensor_datapoint: 12
+  #   entity_category: DIAGNOSTIC
   - platform: "tuya"
     name: "Motor Fault"
-    sensor_datapoint: 12
+    sensor_datapoint: 10
     entity_category: DIAGNOSTIC

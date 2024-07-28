@@ -45,6 +45,16 @@ uart:
 # tuya:
 tuya:
 
+# Tuya:
+# Datapoint 7: enum (value: 3)
+# Datapoint 3: int value (value: 75) - Position Report
+# Datapoint 102: enum (value: 3)
+# Datapoint 11: enum (value: 0)
+# Datapoint 5: enum (value: 1) - Motor Direction
+# Datapoint 103: int value (value: 100)
+# Datapoint 1: enum (value: 2) - Control
+# Product: '{"p":"crfwyri5jzt5cxec","v":"1.0.0","m":0}'
+
 # cover:
 #   - platform: "tuya"
 #     id: "${device_id_white}"

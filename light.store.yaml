@@ -1,0 +1,30 @@
+substitutions:
+  name: store
+  device_ssid: "Store Light"
+  device_description: "Lumary 12W RGBCW Slim Downlight"
+  friendly_name: "Store"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Store RGB"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "store"    # Put the name that you want to see in Home Assistant.
+  rgb_device_id: "storergb" # Put the name that you want to see in Home Assistant.
+  switch1b1_topic: loftswitch/button/3/command
+  switch1b2_topic: loftswitch/button/4/command
+  switch2b1_topic: stairsswitch2/button/3/command
+  switch2b2_topic: stairsswitch2/button/4/command
+  project_name: "lumary.12w-rgbcw-slim-downlight-esp32-c3-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret store_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.light.lumary-12w-downlight-esp32-c3-arduino.yaml
+<<: !include .base.global-mqtt-automation.yaml
+<<: !include .base.automation.light-mqtt-2-button-2-switch.yaml
+<<: !include .base.common-sensor-die-temp.yaml
+# <<: !include .base.common-binary-sensor.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-button.yaml
+<<: !include .base.common-text-sensor.yaml

@@ -1,0 +1,11 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    pin:
+      number: GPIO16
+      mode: INPUT_PULLUP
+    name: ${sensor_name}
+    # filters:
+    #   - delayed_on_off: 1000ms
+    device_class: ${sensor_class}

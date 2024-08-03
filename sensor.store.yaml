@@ -1,0 +1,23 @@
+substitutions:
+  name: storesensor
+  device_ssid: "Store Sensor"
+  device_description: "Reed Switch Sensor ESP32 AC Relay Board Arduino"
+  friendly_name: "Store" # Put the name that you want to see in Home Assistant.
+  sensor_name: "Store Room Door"
+  sensor_icon: "mdi:door"
+  sensor_class: "door"
+  project_name: "diy.ac_relay-board-reed-switch-esp32-arduino"
+  project_version: "1.0"
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret storesensor_noise_key
+  reboot_timeout: 0s
+
+<<: !include .base-debug.yaml
+<<: !include .base.device.sensor-reed-switch-esp32-arduino.yaml
+<<: !include .base.binary-sensor-reed-switch-store.yaml
+<<: !include .base.common-sensor.yaml
+<<: !include .base.common-button.yaml
+<<: !include .base.common-text-sensor.yaml

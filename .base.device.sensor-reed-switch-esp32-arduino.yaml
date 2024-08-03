@@ -1,0 +1,16 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: esp32dev
+  framework: 
+    type: arduino
+
+captive_portal:
+
+web_server:

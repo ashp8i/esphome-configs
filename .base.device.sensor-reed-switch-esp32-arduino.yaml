@@ -14,3 +14,11 @@ esp32:
 captive_portal:
 
 web_server:
+
+http_request:
+  verify_ssl: false
+
+output:
+  - platform: gpio
+    id: "relay_output_1"
+    pin: GPIO16

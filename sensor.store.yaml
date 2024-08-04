@@ -21,3 +21,4 @@ api:
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
+<<: !include .base.switch-reed-switch-store.yaml

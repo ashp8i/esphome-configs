@@ -3,9 +3,16 @@ binary_sensor:
     name: "${friendly_name} Status"
   - platform: gpio
     pin:
-      number: GPIO16
-      mode: INPUT_PULLUP
+      number: GPIO17
+      mode: INPUT_PULLDOWN
     name: ${sensor_name}
-    # filters:
-    #   - delayed_on_off: 1000ms
     device_class: ${sensor_class}
+    filters:
+      - invert:
+    on_state:
+      then:
+        - switch.toggle: relay_1
+        - http_request.post: http://store.local/light/store/toggle
+        # - mqtt.publish:
+        #     topic: ${name}/button/2/command
+        #     payload: "SHORT_CLICK"

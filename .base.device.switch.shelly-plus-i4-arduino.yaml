@@ -26,3 +26,6 @@ web_server:
     password: !secret web_server_password
   include_internal: true
   # local: true
+
+http_request:
+  verify_ssl: false

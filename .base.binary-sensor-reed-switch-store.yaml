@@ -9,10 +9,10 @@ binary_sensor:
     device_class: ${sensor_class}
     filters:
       - invert:
-    on_state:
-      then:
-        - switch.toggle: relay_1
-        - http_request.post: http://store.local/light/store/toggle
-        # - mqtt.publish:
-        #     topic: ${name}/button/2/command
-        #     payload: "SHORT_CLICK"
+    # on_state:
+    #   then:
+    #     - switch.toggle: relay_1
+    #     - http_request.post: http://store.local/light/store/toggle
+    #     - mqtt.publish:
+    #         topic: ${name}/button/2/command
+    #         payload: "SHORT_CLICK"

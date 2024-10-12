@@ -4,7 +4,7 @@ binary_sensor:
   - platform: gpio
     name: "${friendly_name} Button 1"
     pin:
-      number: GPIO12
+      number: GPIO10
       mode:
         input: true
     on_multi_click:

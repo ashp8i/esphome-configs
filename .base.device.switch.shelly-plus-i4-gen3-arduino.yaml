@@ -1,0 +1,46 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  flash_size: 8MB
+  framework:
+    type: arduino
+    version: 2.0.5
+    platform_version: 5.2.0
+
+# esp32:
+#   board: esp32-c3-devkitm-1
+#   flash_size: 8MB
+#   framework:
+#     type: esp-idf
+#     version: recommended
+#     sdkconfig_options:
+#       COMPILER_OPTIMIZATION_SIZE: y
+#     advanced:
+#       ignore_efuse_mac_crc: false
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+http_request:
+  verify_ssl: false
+
+status_led:
+  pin:
+    number: GPIO0
+    inverted: true

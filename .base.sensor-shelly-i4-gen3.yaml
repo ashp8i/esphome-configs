@@ -27,12 +27,30 @@ sensor:
                 (minutes ? to_string(minutes) + "m " : "") +
                 (to_string(seconds) + "s")
               ).c_str();
-
-#   - platform: custom
-#     lambda: |-
-#       auto esp32internaltemperature = new ESP32InternalTemperature();
-#       App.register_component(esp32internaltemperature);
-#       return {esp32internaltemperature};
-
-# sensors:
-#   name: "My Custom Sensor"
+  # Shelly i4 gen3 NTC Temperature
+  - platform: ntc
+    sensor: temp_resistance_reading
+    name: "Temperature"
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    icon: "mdi:thermometer"
+    calibration:
+      b_constant: 3350
+      reference_resistance: 10kOhm
+      reference_temperature: 298.15K
+  - platform: resistance
+    id: temp_resistance_reading
+    sensor: temp_analog_reading
+    configuration: DOWNSTREAM
+    resistor: 10kOhm
+  - platform: adc
+    id: temp_analog_reading
+    pin: GPIO3
+    attenuation: 12db
+  # Shelly i4 gen3 CPU Temperature
+  - platform: template
+    name: ${friendly_name} ESP32 Internal Temperature
+    id: temp
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    accuracy_decimals: 2

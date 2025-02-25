@@ -3,11 +3,12 @@ esphome:
   name: "${name}"
   # name_add_mac_suffix: true
   comment: ${device_description}
-  platform: ESP8266
-  board: modwifi
   project:
     name: "${project_name}"
     version: "${project_version}"
+
+esp8266:
+  board: modwifi
 
 captive_portal:
 

@@ -16,6 +16,7 @@ api:
 
 <<: !include .base-debug-tuya-verbose.yaml
 <<: !include .base.device.curtain.zemismart-bcm500ds-tyw-esp32-s3.yaml
+<<: !include .base.common-mqtt.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml
 <<: !include .base.common-button.yaml

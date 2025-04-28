@@ -12,17 +12,13 @@ substitutions:
   # Lower value gives lower voltage readout
   voltage_div: "1925"
   # light_icon: "hue:bulb-spot-hung"
+  api_key: !secret bathentrancerelay_noise_key
   project_name: "shelly.shellyplus1pm-relay-arduino"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret bathentrancerelay_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug.yaml
 <<: !include .base.device.relay.shelly-plus-1pm-solo-light-arduino.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
 <<: !include .base.sensor-shelly-plus-1pm-light.yaml
 # <<: !include .base.switch-shelly-plus-1pm-light.yaml

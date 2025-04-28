@@ -6,23 +6,21 @@ substitutions:
   friendly_name_rgb: "Store RGB"    # Put the name that you want to see in Home Assistant.
   device_id_white: "store"    # Put the name that you want to see in Home Assistant.
   rgb_device_id: "storergb" # Put the name that you want to see in Home Assistant.
-  switch1b1_topic: loftswitch/button/3/command
-  switch1b2_topic: loftswitch/button/4/command
-  switch2b1_topic: stairsswitch2/button/3/command
-  switch2b2_topic: stairsswitch2/button/4/command
+  external_udp_ip: 10.10.2.108
+  udp_provider_device_name_1: storesensor
+  udp_consumer_key_1: !secret udp_key_2
+  udp_provider_key_1: !secret udp_key_1
+  external_presence_sensor_id: storeroompresence
+  api_key: !secret store_noise_key
   project_name: "lumary.12w-rgbcw-slim-downlight-esp8684-wroom-03-arduino"
   project_version: "1.0"
-
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret store_noise_key
-  reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.light.lumary-12w-downlight-esp8684-wroom-03-arduino.yaml
 <<: !include .base.global-mqtt-automation.yaml
-<<: !include .base.automation.light-mqtt-2-button-2-switch.yaml
+<<: !include .base.udp-light-zy-m100.yaml
+<<: !include .base.common-api.yaml
+<<: !include .base.common-mqtt.yaml
 <<: !include .base.common-sensor-die-temp.yaml
 # <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml

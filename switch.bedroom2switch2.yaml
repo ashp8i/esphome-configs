@@ -6,6 +6,7 @@ substitutions:
   # remote_node: bedroom2spot1.local
   # remote_light_id: bedroom2spot1
   # mqtt_prefix: bedroom2switch2
+  api_key: !secret bedroom2switch2_noise_key
   project_name: "shelly.plusi4-esp32-solo-arduino"
   project_version: "1.0"
 
@@ -34,14 +35,9 @@ substitutions:
 <<: !include .base-debug.yaml
 <<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret bedroom2switch2_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base.common-mqtt.yaml
 <<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml
 <<: !include .base.binary-sensor-shelly-i4-4-buttons-http-auth.yaml

@@ -11,17 +11,13 @@ substitutions:
   switch2b2_topic: passageswitch1/button/4/command
   switch3b1_topic: stairsswitch1/button/1/command
   switch3b2_topic: stairsswitch1/button/2/command
+  api_key: !secret front_passage2_noise_key
   project_name: "lumary.18w-rgbcw-slim-downlight-esp32-c3-esp-idf"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret front_passage2_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug.yaml
 <<: !include .base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.global-mqtt-automation.yaml
 <<: !include .base.automation.light-mqtt-1-or-2-button-3-switch.yaml
 <<: !include .base.common-binary-sensor.yaml

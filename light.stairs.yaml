@@ -10,19 +10,20 @@ substitutions:
   switch3b1_topic: stairsswitch1/button/3/command
   switch3b2_topic: stairsswitch1/button/4/command
   aqara_remote_b2_topic: zigbee2mqtt/Rashila Stairs/action
+  longitude: !secret longitude
+  latitude: !secret latitude
+  presence_sensor_mqtt_topic: stairssensor/binary_sensor/stairs_sensor_presence_state/state
+  api_key: !secret stairs_noise_key
   project_name: "iralan.42w-cwww-slim-ceiling-light-esp32-s2-arduino"
   project_version: "1.0"
-
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret stairs_noise_key
-  reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.light.iralan-42w-anl400yl-esp32-s2-arduino.yaml
 <<: !include .base.global-mqtt-automation.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.automation.light-mqtt-1-or-2-button-4-switch-plus-zigbee2mqtt.yaml
+<<: !include .base.automation.light-udp-mmwave.yaml
+# <<: !include .base.automation.light-mqtt-mmwave.yaml
 <<: !include .base.common-sensor-die-temp.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml

@@ -5,16 +5,12 @@ substitutions:
   friendly_name: "Kitchen Spots" # Put the name that you want to see in Home Assistant.
   device_id_white: "kitchenspots" # Put the name that you want to see in Home Assistant.
   light_icon: "hue:bulb-group-spot-hung"
+  api_key: !secret kitchenspots_noise_key
   project_name: "miboxer.tri-c1wr-esp32-c3-arduino"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret kitchenspots_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.device.light.miboxer-tri-c1wr-esp32-c3-arduino.yaml
 <<: !include .base.common-sensor-die-temp.yaml
 <<: !include .base.common-sensor.yaml

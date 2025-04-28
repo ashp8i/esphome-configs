@@ -13,17 +13,13 @@ substitutions:
   switch1b4_topic: bedroom2switch2/button/4/command
   light_icon: "hue:ceiling-aurelle-circle"
   light_icon_2: "hue:ceiling-aurelle-circle"
+  api_key: !secret bedroom2light1_noise_key
   project_name: "lumary.18w-rgbcw-slim-downlight-sd4b4-esp32-c3-wroom-05-arduino"
   project_version: "1.0"
-  
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret bedroom2light1_noise_key
-  reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.light.lumary-9w-downlight-l-sd4b4-esp32-c3-wroom-05-arduino.yaml
+<<: !include .base.common-api.yaml
 # <<: !include .base.automation.light-mqtt-secure-4-button-rgbcct-esp8266.yaml
 <<: !include .base.global-mqtt-automation.yaml
 <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml

@@ -3,7 +3,7 @@ mqtt:
   username: !secret mqtt_username
   password: !secret mqtt_password
   port: 8883
-  discovery: false
+  discovery: true
   # discovery_prefix: ${mqtt_prefix}/homeassistant
   # log_topic: ${mqtt_prefix}/logs
   birth_message:

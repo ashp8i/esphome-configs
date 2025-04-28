@@ -8,17 +8,13 @@ substitutions:
   rgb_device_id: "bathroomrgb" # Put the name that you want to see in Home Assistant.
   switch1_topic: bathroomrelay/button/1/command
   ikea_tradfri_topic: zigbee2mqtt/Bathroom Remote/action
+  api_key: !secret bathroom_noise_key
   project_name: "zhunited.40w-rgbcw-slim-ceiling-light-esp32-c3-arduino"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret bathroom_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug.yaml
 <<: !include .base.device.light.zhunited-40w-jl-02-ceiling-light-esp32-c3-arduino.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.global-mqtt-automation.yaml
 <<: !include .base.automation.light-mqtt-bathroom.yaml
 <<: !include .base.common-sensor-die-temp.yaml

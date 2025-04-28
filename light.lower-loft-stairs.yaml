@@ -9,7 +9,7 @@ substitutions:
   switch1b1_topic: loftswitch/button/1/command
   switch1b2_topic: loftswitch/button/2/command
   switch2b1_topic: stairsswitch2/button/1/command
-  switch2b2_topic: stairsswitch2/button/2/command
+  switch2b2_topic: stairsswitch2/button/2/command 
   project_name: "lumary.18w-rgbcw-slim-downlight-esp32-c3-arduino"
   project_version: "1.0"
 

@@ -5,16 +5,12 @@ substitutions:
   friendly_name: "Master Bedroom 1"
   device_id_white: "masterbedroom1" # Put the name that you want to see in Home Assistant.
   switch1b1_topic: masterswitch/button/2/command
+  api_key: !secret masterbedroom1_noise_key
   project_name: "iralan.42w-cwww-slim-ceiling-light-esp32-c3-arduino"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret masterbedroom1_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.device.light.iralan-42w-anl400yl-esp32-c3-arduino.yaml
 <<: !include .base.automation.light-mqtt-1-button.yaml
 <<: !include .base.common-sensor-die-temp.yaml

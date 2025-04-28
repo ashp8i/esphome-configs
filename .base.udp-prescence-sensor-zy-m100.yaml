@@ -1,0 +1,11 @@
+# Example configuration entry
+udp:
+  update_interval: 5s
+  # encryption: "${udp_consumer_key_1}"
+  # rolling_code_enable: true
+  # ping_pong_enable: true
+  # providers:
+  #   - name: "${udp_consumer_device_name_1}"
+      # encryption: "${udp_consumer_key_1}"
+  binary_sensors:
+    - ${presence_binary_sensor_id}

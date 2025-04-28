@@ -13,20 +13,16 @@ substitutions:
   switch1b4_topic: miteshswitch2/button/4/command
   light_icon: "hue:bulb-spot-hung"
   light_icon_2: "hue:bulb-spot-hung"
+  api_key: !secret miteshbulb2_noise_key
   project_name: "athom.rgbww-light"
   project_version: "1.0"
   # frequency_rgb: 250 Hz
   frequency_cw: 1000 Hz
   frequency_ww: 1000 Hz
-  
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret miteshbulb2_noise_key
-  reboot_timeout: 0s
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.bulb.athom-gu10.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml

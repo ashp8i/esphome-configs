@@ -269,3 +269,21 @@ mqtt:
       qos: 0
       then:
         - light.toggle: ${device_id_white}
+    - topic: ${presence_sensor_mqtt_topic}
+      qos: 0
+      payload: 'ON'
+      then:
+        - if:
+            condition:
+              - sun.is_below_horizon:
+            then:
+              - light.turn_on: ${device_id_white}
+    - topic: ${presence_sensor_mqtt_topic}
+      qos: 0
+      payload: 'OFF'
+      then:
+        - if:
+            condition:
+              - sun.is_below_horizon:
+            then:
+              - light.turn_off: "${device_id_white}"

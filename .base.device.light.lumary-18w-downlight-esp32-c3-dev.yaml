@@ -5,7 +5,7 @@ esphome:
   platformio_options:
     board_build.flash_mode: dio
     upload_speed: 921600
-    platform: espressif32@5.2.0
+#    platform: espressif32@5.2.0
   # includes:
   #   - .esp32-internal-temperature.h
     
@@ -13,7 +13,7 @@ esp32:
   board: esp32-c3-devkitm-1
   framework: 
     type: arduino
-    version: 2.0.5
+#    version: 2.0.5
 # framework:
 #   type: esp-idf
 

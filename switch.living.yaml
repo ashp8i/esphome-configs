@@ -3,20 +3,16 @@ substitutions:
   device_ssid: "Living Switch"
   device_description: "Shelly Plus i4 gen3 Switch Module"
   friendly_name: "Living Switch"
+  api_key: !secret livingswitch_noise_key
   project_name: "shelly.plusi4-esp32c3-8mb-arduino"
   project_version: "1.0"
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.switch.shelly-plus-i4-gen3-arduino.yaml
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret livingswitch_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base.common-mqtt.yaml
 # <<: !include .base.common-sensor-die-temp.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.sensor-shelly-i4-gen3.yaml
 <<: !include .base.common-button.yaml
 <<: !include .base.common-text-sensor.yaml

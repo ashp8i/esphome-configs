@@ -1,0 +1,34 @@
+# Example configuration entry
+udp:
+  - id: udp_external
+    update_interval: 60s
+    # encryption: "${udp_consumer_key_1}"
+    # ping_pong_enable: true
+    # rolling_code_enable: true
+    addresses:
+      - "${external_udp_ip}"
+    # providers:
+    #   - name: "${udp_provider_device_name_1}"
+    #     encryption: "${udp_provider_key_1}"
+    # sensors:
+    #   - id: uptime_sensor
+
+binary_sensor:
+  - platform: udp
+    provider: "${udp_provider_device_name_1}"
+    id: "${external_presence_sensor_id}"
+    # --- Automation when Sensor turns ON ---
+    # Proper state change triggers
+    on_state:
+      - if:
+          condition:
+            # and:
+              # - not:
+              #     api.connected:
+              # - not:
+              #     mqtt.connected:
+            - binary_sensor.is_on: "${external_presence_sensor_id}"
+          then:
+            - light.turn_on: "${device_id_white}"
+          else:
+            - light.turn_off: "${device_id_white}"

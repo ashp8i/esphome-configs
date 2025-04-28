@@ -18,7 +18,7 @@ esp32:
   variant: esp32s3
   framework:
     type: arduino
-    platform_version: 5.2.0
+#    platform_version: 5.2.0
 
 external_components:
   - source:

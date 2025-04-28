@@ -2,7 +2,7 @@ mqtt:
   broker: !secret mqtt_ip
   username: !secret mqtt_username
   password: !secret mqtt_password
-  discovery: false
+  discovery: true
   on_message:
     # Switch 1 - Button 1
     # Short Click - Toggle

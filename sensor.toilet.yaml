@@ -4,19 +4,20 @@ substitutions:
   device_description: "BME680 Sensor ESP32 AC Relay Board Arduino"
   friendly_name: "Toilet" # Put the name that you want to see in Home Assistant.
   # switch1b1_topic: ashishswitch1/button/1/command
-  # switch1b2_topic: ashishswitch1/button/2/command
+  # switch1b2_topic: ashishswitch1/button/2/command  presence_binary_sensor_id: storeroompresence
+  light_command_topic: store/light/store/command
+  udp_consumer_device_name_1: store
+  udp_consumer_key_1: !secret udp_key_1
+  udp_provider_key_1: !secret udp_key_2
   sensor_icon: "hue:ceiling-aurelle"
+  api_key: !secret toiletsensor_noise_key
   project_name: "diy.ac_relay_board_bme680-bsec-esp32-arduino"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret toiletsensor_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug.yaml
 <<: !include .base.device.sensor-bme680-bsec-esp32-arduino.yaml
+<<: !include .base.common-api.yaml
+<<: !include .base.common-mqtt.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.sensor-bme680-bsec.yaml
 <<: !include .base.common-button.yaml

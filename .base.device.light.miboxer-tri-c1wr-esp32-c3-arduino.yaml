@@ -12,8 +12,8 @@ esp32:
   board: esp32-c3-devkitm-1
   framework:
     type: arduino
-    version: 2.0.5
-    platform_version: 5.2.0
+#    version: 2.0.5
+#    platform_version: 5.2.0
 
 # external_components:
 #   - source: github://pr#3820

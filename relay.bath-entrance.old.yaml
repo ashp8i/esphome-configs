@@ -7,17 +7,13 @@ substitutions:
   device_id_white: "bathentrancerelayoldlightsensor"    # Put the name that you want to see in Home Assistant.
   lonsonho_single_topic: zigbee2mqtt/Bath & Toilet Hallway/action
   light_icon: "hue:bulb-spot-hung"
+  api_key: !secret bathentrancerelayold_noise_key
   project_name: "shelly.shelly1-relay-light-sensor"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret bathentrancerelayold_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug-off.yaml
 <<: !include .base.device.relay.shelly-1-light-sensor.yaml
+<<: !include .base.common-api.yaml
 #<<: !include .base.automation.light-mqtt-1-lonsonho.yaml
 # <<: !include .base.common-sensor.yaml
 <<: !include .base.sensor-shelly-1.yaml

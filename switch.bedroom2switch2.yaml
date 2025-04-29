@@ -34,7 +34,6 @@ substitutions:
 
 <<: !include .base-debug.yaml
 <<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
-
 <<: !include .base.common-mqtt.yaml
 <<: !include .base.common-sensor-die-temp.yaml
 <<: !include .base.common-api.yaml

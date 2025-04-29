@@ -29,7 +29,7 @@ binary_sensor:
     #       then:
     #         # publish mqtt light on
     #         - mqtt.publish:
-    #             topic: ${light_command_topic}
+    #             topic: ${light_command_topic_1}
     #             # payload: '{"state":"on"}'
     #             payload: "ON"
     #             qos: 1  # Ensure delivery
@@ -47,7 +47,7 @@ binary_sensor:
     #       then:
     #         # publish mqtt light on
     #         - mqtt.publish:
-    #             topic: ${light_command_topic}
+    #             topic: ${light_command_topic_1}
     #             # payload: '{"state":"off"}'
     #             payload: "OFF"
     #             qos: 1  # Ensure delivery

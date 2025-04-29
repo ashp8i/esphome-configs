@@ -5,17 +5,13 @@ substitutions:
   friendly_name: "Dining Curtain" # Put the name that you want to see in Home Assistant.
   device_id_white: "diningcurtain" # Put the name that you want to see in Home Assistant.
   cover_name: "Dining Curtain"
+  api_key: !secret diningcurtain_noise_key
   project_name: "zemismart.bcm500ds-tyw-esp32-s3"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret diningcurtain_noise_key
-  reboot_timeout: 0s
-
 <<: !include .base-debug-tuya-verbose.yaml
 <<: !include .base.device.curtain.zemismart-bcm500ds-tyw-esp32-s3.yaml
+<<: !include .base.common-api.yaml
 <<: !include .base.common-mqtt.yaml
 <<: !include .base.common-binary-sensor.yaml
 <<: !include .base.common-sensor.yaml

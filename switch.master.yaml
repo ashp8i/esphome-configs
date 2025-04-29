@@ -8,8 +8,7 @@ substitutions:
   project_version: "1.0"
 
 <<: !include .base-debug.yaml
-<<: !include .base.device.switch.shelly-plus-i4-arduino.yaml
-
+<<: !include .base.device.switch.shelly-plus-i4-arduino.yamls
 <<: !include .base.common-mqtt.yaml
 <<: !include .base.common-sensor-die-temp.yaml
 <<: !include .base.common-api.yaml

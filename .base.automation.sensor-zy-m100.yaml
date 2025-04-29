@@ -35,7 +35,7 @@ automation:
             # MQTT is connected: Use MQTT
             - logger.log: "MQTT connected, sending ON via MQTT."
             - mqtt.publish:
-                topic: "${light_command_topic}"
+                topic: "${light_command_topic_1}"
                 payload: "ON" # Standard ON payload
           else:
             # MQTT is also disconnected: Use UDP as the second level fallback
@@ -77,7 +77,7 @@ automation:
             # MQTT is connected: Use MQTT
             - logger.log: "MQTT connected, sending OFF via MQTT."
             - mqtt.publish:
-                topic: "${light_command_topic}"
+                topic: "${light_command_topic_1}"
                 payload: "OFF" # Standard OFF payload
           else:
             # MQTT is also disconnected: Use UDP as the second level fallback

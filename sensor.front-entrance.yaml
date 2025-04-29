@@ -5,9 +5,10 @@ substitutions:
   friendly_name: "Front Entrance Sensor" # Put the name that you want to see in Home Assistant.
   # switch1b1_topic: ashishswitch1/button/1/command
   # switch1b2_topic: ashishswitch1/button/2/command
-  presence_binary_sensor_id: storeroompresence
-  light_command_topic: store/light/store/command
-  udp_consumer_device_name_1: store
+  presence_binary_sensor_id: frontentrancepresence
+  light_command_topic_1: frontentrance/light/frontentrance/command
+  light_command_topic_2: frontporch/light/porch/command
+  udp_consumer_device_name_1: frontentrancesensor
   udp_consumer_key_1: !secret udp_key_1
   udp_provider_key_1: !secret udp_key_2
   sensor_icon: "hue:ceiling-aurelle"

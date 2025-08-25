@@ -1,21 +1,25 @@
+import esphome.codegen as cg
 from esphome.components import sensor
 import esphome.config_validation as cv
-import esphome.codegen as cg
 from esphome.const import CONF_ID, CONF_SENSOR_DATAPOINT
-from .. import tuya_ns, CONF_TUYA_ID, Tuya
+
+from .. import CONF_TUYA_ID, Tuya, tuya_ns
 
 DEPENDENCIES = ["tuya"]
 CODEOWNERS = ["@jesserockz"]
 
 TuyaSensor = tuya_ns.class_("TuyaSensor", sensor.Sensor, cg.Component)
 
-CONFIG_SCHEMA = sensor.SENSOR_SCHEMA.extend(
-    {
-        cv.GenerateID(): cv.declare_id(TuyaSensor),
-        cv.GenerateID(CONF_TUYA_ID): cv.use_id(Tuya),
-        cv.Required(CONF_SENSOR_DATAPOINT): cv.uint8_t,
-    }
-).extend(cv.COMPONENT_SCHEMA)
+CONFIG_SCHEMA = (
+    sensor.sensor_schema(TuyaSensor)
+    .extend(
+        {
+            cv.GenerateID(CONF_TUYA_ID): cv.use_id(Tuya),
+            cv.Required(CONF_SENSOR_DATAPOINT): cv.uint8_t,
+        }
+    )
+    .extend(cv.COMPONENT_SCHEMA)
+)
 
 
 async def to_code(config):

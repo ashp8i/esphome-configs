@@ -4,7 +4,8 @@ esphome:
   comment: ${device_description}
   platformio_options:
     platform_packages:
-    - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
+    - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/v3.1.3.250411/framework-arduinoespressif32-solo1.zip
+    # - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.6/framework-arduinoespressif32-solo1.zip
     board_build.f_cpu: 160000000L
   project:
     name: "${project_name}"
@@ -15,7 +16,8 @@ esp32:
   variant: esp32
   framework:
     type: arduino
-#    platform_version: 5.2.0
+    version: 3.1.3
+    platform_version: 53.03.13
 
 captive_portal:
 

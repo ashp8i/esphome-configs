@@ -15,14 +15,14 @@ substitutions:
   project_name: "lumary.12w-rgbcw-slim-downlight-esp8684-wroom-03-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug.yaml
-<<: !include .base.device.light.lumary-12w-downlight-esp8684-wroom-03-arduino.yaml
-<<: !include .base.global-mqtt-automation.yaml
-<<: !include .base.udp-light-zy-m100.yaml
-<<: !include .base.common-api.yaml
-<<: !include .base.common-mqtt.yaml
-<<: !include .base.common-sensor-die-temp.yaml
-# <<: !include .base.common-binary-sensor.yaml
-<<: !include .base.common-sensor.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/devices/lumary-12w-downlight-esp8684-wroom-03.yaml
+  - !include packages/global/mqtt-automation.yaml
+  - !include packages/udp/light-zy-m100.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/binary-sensor.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/sensor-die-temp.yaml
+  - !include packages/common/text-sensor.yaml

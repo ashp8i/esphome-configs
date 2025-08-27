@@ -1,0 +1,6 @@
+switch:
+  - platform: output
+    id: "relay"
+    name: "${name} Relay"
+    output: "relay_output"
+    # this provides for a possibility to restart from the web console or Home automation should we ever need it

@@ -1,0 +1,6 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  reboot_timeout: 0s

@@ -1,0 +1,199 @@
+esphome:
+  name: "${name}"
+  # name_add_mac_suffix: true
+  comment: ${device_description}
+  platform: ESP8266
+  board: modwifi
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+captive_portal:
+
+web_server:
+  port: 80
+
+globals:
+  - id: last_light_on
+    type: int
+    restore_value: no
+    initial_value: '1'
+
+# dashboard_import:
+#   package_import_url: github://athom-tech/athom-configs/athom-rgbww-light.yaml
+
+# Device Specific Config
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+# Sensors with general information.
+sensor:
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    id: uptime_sensor
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+    
+text_sensor:
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${friendly_name} IP
+    ssid:
+      name: ${friendly_name} SSID
+    bssid:
+      name: ${friendly_name} BSSID
+
+text_sensor:
+- platform: wifi_info
+  ip_address:
+    name: "${friendly_name} IP Address"
+    disabled_by_default: true
+  # Expose WiFi information as sensors.
+  ssid:
+    name: ${friendly_name} SSID
+  bssid:
+    name: ${friendly_name} BSSID
+# Expose Uptime
+- platform: template
+  name: ${friendly_name} Uptime
+  id: uptime_HA
+  icon: mdi:clock-start
+
+switch:
+    # this provides for a possibility to restart from the web console or Home automation should we ever need it
+  - platform: restart
+    id: restart_switch
+    name: "${friendly_name} Restart"
+  - platform: safe_mode
+    name: "${friendly_name} Restart (Safe Mode)"
+
+output:
+  - platform: esp8266_pwm
+    id: red_output
+    pin: GPIO4
+  - platform: esp8266_pwm
+    id: green_output
+    pin: GPIO12
+  - platform: esp8266_pwm
+    id: blue_output
+    pin: GPIO14
+  - platform: esp8266_pwm
+    id: warm_white_output
+    pin: GPIO13
+  - platform: esp8266_pwm
+    id: cold_white_output
+    pin: GPIO5
+
+wled:
+
+e131:
+  method: multicast # default: register E1.31 to Multicast group
+
+light:
+  - platform: cwww
+    name: ${friendly_name}
+    id: ${device_main_id}
+    cold_white: cold_white_output
+    warm_white: warm_white_output
+    default_transition_length: 0.5s
+    restore_mode: RESTORE_DEFAULT_OFF
+    cold_white_color_temperature: 6500 K
+    warm_white_color_temperature: 2700 K
+    constant_brightness: true # Brightness & Temp NOT Cool White Bright & Warm White Brights
+    on_turn_on:
+    - light.turn_off: ${device_name_rgb}
+    - globals.set:
+        id: last_light_on
+        value: '1'
+  - platform: rgb
+    name: internal_rgb
+    id: internal_rgb
+    red: red_output
+    green: green_output
+    blue: blue_output
+    restore_mode: RESTORE_DEFAULT_OFF
+    internal: true
+  - platform: partition
+    name: ${friendly_name_rgb}
+    id: ${device_name_rgb}
+    segments:
+      # Use internal_rgb as a single light partition for WLED and e1.31
+      - single_light_id: internal_rgb
+    default_transition_length: 0.25s
+    on_turn_on:
+    - light.turn_off: ${device_main_id}
+    - globals.set:
+        id: last_light_on
+        value: '2'
+    # internal: true
+    effects:
+      - lambda:
+          name: DDP
+          update_interval: 0s
+          lambda: |-
+            // our statics
+            static float scaled_r = 0.0;
+            static float scaled_g = 0.0;
+            static float scaled_b = 0.0;
+            static std::unique_ptr<WiFiUDP> udp_;
+          
+            // allocate and start UDP
+            if (!udp_) {
+              udp_ = make_unique<WiFiUDP>();
+              if (!udp_->begin(4048)) {   // always listen on DDP port
+                return;
+              }
+            }
+            
+            // read UDP payload
+            std::vector<uint8_t> payload;
+            while (uint16_t packet_size = udp_->parsePacket()) {
+              payload.resize(packet_size);
+              if (!udp_->read(&payload[0], payload.size())) {
+                continue;
+              }
+            }
+        
+            // ignore small payload
+            if (payload.size() < 2) {
+              return;
+            }
+  
+            // do the thing
+            float r = (float)payload[10]/255.0f;
+            float g = (float)payload[11]/255.0f;
+            float b = (float)payload[12]/255.0f;
+            
+            float m = 0.0f;
+            if ( (r>=g) && (r>=b) ) { m = r; }
+            else if ( g >= b )      { m = g; }
+            else                    { m = b; }
+            
+            if (m != 0.0f) {
+              scaled_r = r/m;
+              scaled_g = g/m;
+              scaled_b = b/m;
+            } else {
+              scaled_r = 0.0f;
+              scaled_g = 0.0f;
+              scaled_b = 0.0f;
+            }
+            auto call = id(${device_name_rgb}).turn_on();
+            call.set_transition_length(0);
+            call.set_brightness(m); 
+            call.set_color_mode(ColorMode::RGB);
+            call.set_rgb(scaled_r, scaled_g, scaled_b);
+            call.set_publish(false);
+            call.set_save(false);
+            call.perform();
+      - wled:
+          # port: 21324
+      - e131:
+          universe: 1
+          channels: RGB
+      

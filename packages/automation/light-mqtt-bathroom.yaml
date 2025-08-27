@@ -1,0 +1,16 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  on_message:
+    - topic: $switch1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    - topic: $ikea_tradfri_topic
+      payload: 'toggle'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}

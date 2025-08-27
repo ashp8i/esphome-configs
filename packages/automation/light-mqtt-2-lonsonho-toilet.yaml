@@ -1,0 +1,16 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  on_message:
+    - topic: $lonsonho_dual_topic
+      payload: '2_single'
+      qos: 0
+      then:
+        - light.toggle: ${name}_light
+    - topic: $lonsonho_dual_topic
+      payload: '1_single'
+      qos: 0
+      then:
+        - fan.toggle: ${name}_fan

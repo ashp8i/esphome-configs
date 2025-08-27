@@ -1,0 +1,12 @@
+# Time configuration without API
+time:
+  - platform: sntp
+    id: esp_time
+    servers:
+      - 0.pool.ntp.org
+      - 1.pool.ntp.org
+
+# Sun position calculation
+sun:
+  latitude: ${latitude}
+  longitude: ${longitude}

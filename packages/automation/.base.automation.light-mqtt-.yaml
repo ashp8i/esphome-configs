@@ -1,0 +1,45 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  on_message:
+    - topic: $switch1b1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    - topic: $switch1b2_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    - topic: $switch1b1_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    - topic: $switch1b2_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    - topic: $switch1b1_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    - topic: $switch1b2_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    # on_message:
+    # - topic: bedford/ota_mode
+    #   payload: 'ON'
+    #   then:
+    #     - deep_sleep.prevent: deep_sleep_1
+    # - topic: bedford/sleep_mode
+    #   payload: 'ON'
+    #   then:
+    #     - deep_sleep.enter: deep_sleep_1

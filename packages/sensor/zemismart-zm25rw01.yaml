@@ -1,0 +1,61 @@
+sensor:
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+  # Uptime Sensor
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    id: uptime_sensor
+    update_interval: 360s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
+  - platform: template
+    name: ${friendly_name} ESP32 Internal Temperature
+    id: temp
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    accuracy_decimals: 2
+  - platform: "tuya"
+    name: "Reported Position"
+    sensor_datapoint: 3
+    entity_category: DIAGNOSTIC
+  # - platform: "tuya"
+  #   name: "Setpoint Position"
+  #   sensor_datapoint: 2
+  #   entity_category: DIAGNOSTIC
+  - platform: "tuya"
+    name: "Current Operation"
+    sensor_datapoint: 7
+    entity_category: DIAGNOSTIC
+  - platform: "tuya"
+    name: "Current Situation"
+    sensor_datapoint: 102
+    entity_category: DIAGNOSTIC
+  # Bitfield: 1 appears to mean "limits not set" - TODO: lock out the cover controls from HA
+  # until limits are set.
+  # - platform: "tuya"
+  #   name: "Motor Fault"
+  #   sensor_datapoint: 12
+  #   entity_category: DIAGNOSTIC
+  - platform: "tuya"
+    name: "Motor Fault"
+    sensor_datapoint: 10
+    entity_category: DIAGNOSTIC

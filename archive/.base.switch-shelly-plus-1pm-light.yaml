@@ -1,0 +1,5 @@
+switch:
+  # - platform: output
+  #   id: "relay"
+  #   name: "${name} Relay"
+  #   output: "relay_output"

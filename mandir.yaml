@@ -5,18 +5,15 @@ substitutions:
   friendly_name: "Mandir" # Put the name that you want to see in Home Assistant.
   device_id_white: "mandir" # Put the name that you want to see in Home Assistant.
   light_icon: "hue:lightstrip"
+  api_key: !secret newmandir_noise_key
   project_name: "miboxer.fut035w-arduino"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret newmandir_noise_key
-  reboot_timeout: 0s
-
-<<: !include .base-debug-tuya.yaml
-<<: !include .base.device.light.miboxer-fut-035w-esp32-c3-arduino.yaml
-<<: !include .base.common-mqtt.yaml
-<<: !include .base.common-sensor-die-temp.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
+packages:
+  - !include packages/base/debug-tuya.yaml
+  - !include packages/devices/miboxer-fut-035w-esp32-c3.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/sensor-die-temp.yaml
+  - !include packages/common/text-sensor.yaml

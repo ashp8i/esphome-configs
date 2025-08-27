@@ -1,0 +1,62 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+#    version: 2.0.5
+#    platform_version: 5.2.0
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  local: true
+
+uart:
+  - id: mcu
+    rx_pin: GPIO20
+    tx_pin: GPIO21
+    baud_rate: 9600
+
+# Register the Tuya MCU connection
+tuya:
+  uart_id: mcu
+
+light:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    id: ${device_id_white}
+    dimmer_datapoint: 22
+    # min_value_datapoint: 26
+    color_temperature_datapoint: 23
+    color_temperature_max_value: 1000
+    color_temperature_invert: true
+    switch_datapoint: 20
+    min_value: 10
+    max_value: 1000
+    gamma_correct: 1.0 
+    default_transition_length: 0s
+    cold_white_color_temperature: 153 mireds
+    warm_white_color_temperature: 500 mireds
+    icon: "${light_icon}"
+# Datapoint 20: switch (value: ON)
+# Datapoint 21: enum (value: 0)
+# Datapoint 22: int value (value: 878)
+# Datapoint 26: int value (value: 0)
+# Product: '{"p":"vhqbpwy6a5ke1nig","
+# Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 23,23; TuyaMCU 99,24; TuyaMCU 12,34; DimmerRange 10,1000
+# Backlog DimmerRange 100,1024; TuyaMCU 11,20; TuyaMCU 21,22; TuyaMCU 23,23; TuyaMCU 98,101;
+# cmd/tas Switch/Relay#; enum#########; Dimmer#######; CCT##########; String#######; String#######; DimmerMinMax

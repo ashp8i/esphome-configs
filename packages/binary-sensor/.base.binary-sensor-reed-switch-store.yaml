@@ -1,0 +1,54 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    id: ${presence_binary_sensor_id}
+    pin:
+      number: GPIO17
+      mode: INPUT_PULLDOWN
+    name: ${sensor_name}
+    device_class: ${sensor_class}
+    filters:
+      - invert:
+    # on_state:
+    #   then:
+    #     - switch.toggle: relay_1
+    #     - http_request.post: http://store.local/light/store/toggle
+    #     - mqtt.publish:
+    #         topic: ${name}/button/2/command
+    #         payload: "SHORT_CLICK"
+    # --- Automation when Sensor turns ON ---
+    # on_press:
+    #   - if:
+    #       # --- CONDITION: Only run if API is disconnected and MQTT works ---
+    #       condition:
+    #         - not:
+    #           - api.connected: # Check if mqtt is -NOT- connected
+    #         - mqtt.connected: # Check if mqtt -IS- connected
+    #       # --- ACTION: If conditions met, turn the light ON ---
+    #       then:
+    #         # publish mqtt light on
+    #         - mqtt.publish:
+    #             topic: ${light_command_topic_1}
+    #             # payload: '{"state":"on"}'
+    #             payload: "ON"
+    #             qos: 1  # Ensure delivery
+    #             retain: false
+
+    # # --- Automation when Sensor turns OFF ---
+    # on_release:
+    #   - if:
+    #       # --- CONDITION: Only run if API is disconnected and MQTT works ---
+    #       condition:
+    #         - not:
+    #           - api.connected: # Check if mqtt is -NOT- connected
+    #         - mqtt.connected: # Check if mqtt -IS- connected
+    #       # --- ACTION: If conditions met, turn the light OFF ---
+    #       then:
+    #         # publish mqtt light on
+    #         - mqtt.publish:
+    #             topic: ${light_command_topic_1}
+    #             # payload: '{"state":"off"}'
+    #             payload: "OFF"
+    #             qos: 1  # Ensure delivery
+    #             retain: false

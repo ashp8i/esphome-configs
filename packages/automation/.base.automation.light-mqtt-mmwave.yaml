@@ -1,0 +1,22 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  on_message:
+    - topic: "${presence_sensor_mqtt_topic}"
+      qos: 0
+      payload: "ON"
+        - if:
+            condition:
+              - sun.is_below_horizon:
+            then:
+              - light.turn_on: "${device_id_white}"
+    - topic: "${presence_sensor_mqtt_topic}"
+      qos: 0
+      payload: "OFF"
+        - if:
+            condition:
+              - sun.is_below_horizon:
+            then:
+              - light.turn_off: "${device_id_white}"

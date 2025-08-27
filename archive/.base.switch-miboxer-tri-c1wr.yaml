@@ -1,0 +1,9 @@
+switch: 
+  - platform: "tuya"
+    id: "${device_id_white}_mode"
+    name: "${friendly_name} Switch Mode"
+    switch_datapoint: 102
+  # - platform: "tuya"
+  #   id: "${device_id_white}_test"
+  #   name: "${friendly_name} Tuya Test"
+  #   switch_datapoint: 104

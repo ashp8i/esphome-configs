@@ -1,0 +1,24 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: esp32dev
+  framework: 
+    type: arduino
+
+captive_portal:
+
+web_server:
+
+http_request:
+  verify_ssl: false
+
+output:
+  - platform: gpio
+    id: "relay_output_1"
+    pin: GPIO16

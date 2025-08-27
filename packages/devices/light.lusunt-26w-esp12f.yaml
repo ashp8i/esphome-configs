@@ -1,0 +1,42 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+  platform: ESP8266
+  board: modwifi
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+output:
+  - platform: esp8266_pwm
+    id: output_cold_white
+    max_power: 100%
+    pin: GPIO5
+  - platform: esp8266_pwm
+    id: output_warm_white
+    pin: GPIO13
+    max_power: 100%
+
+light:
+  - platform: cwww
+    name: ${friendly_name}    # Put the name that you want to see in Home Assistant.
+    id: ${name}    # id used in esphome.
+    cold_white: output_cold_white
+    warm_white: output_warm_white
+    cold_white_color_temperature: 6536 K
+    warm_white_color_temperature: 2000 K
+    constant_brightness: false
+    gamma_correct: 0
+    default_transition_length: 1s
+    icon: "hue:ceiling-aurelle"

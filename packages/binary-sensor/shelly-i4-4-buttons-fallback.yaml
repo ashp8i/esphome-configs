@@ -1,0 +1,343 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    name: "${friendly_name} Button 1"
+    pin:
+      number: GPIO12
+      mode:
+        input: true
+    on_multi_click:
+      # double click
+      - timing:
+          - ON for at most 0.35s
+          - OFF for at most 0.35s
+          - ON for at most 0.35s
+          - OFF for at least 0.1s
+      # - timing:
+      #     - ON for at most 1s
+      #     - OFF for at most 1s
+      #     - ON for at most 1s
+      #     - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send double click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 1 double click
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/1/command
+                    payload: "DOUBLE_CLICK"
+      # button held
+      - timing:
+          - ON for at least 0.5s
+        then:
+          - delay: 0.05s
+          - while:
+              condition:
+                - binary_sensor.is_on: button1
+              then:
+                - if:
+                    condition:
+                      api.connected:
+                    then:
+                      # send hold event
+                      - homeassistant.event:
+                          event: esphome.${name}
+                          data:
+                            title: button 1 hold
+                    else:
+                      # publish mqtt hold
+                      - mqtt.publish:
+                          topic: ${name}/button/1/command
+                          payload: "HOLD"
+                - delay: 0.05s
+      # single click
+      - timing:
+          - ON for at most 0.9s
+          - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send short click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 1 short click
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/1/command
+                    payload: "SHORT_CLICK"
+    # on_release:
+    #   - homeassistant.event:
+    #       event: esphome.${name}
+    #       data:
+    #         title: button 1 released
+    internal: true
+    id: button1
+    filters:
+      - delayed_on_off: 50ms
+  - platform: gpio
+    name: "${friendly_name} Button 2"
+    pin:
+      number: GPIO14
+      mode:
+        input: true
+    on_multi_click:
+      # double click
+      - timing:
+        - ON for at most 0.35s
+        - OFF for at most 0.35s
+        - ON for at most 0.35s
+        - OFF for at least 0.1s
+      # - timing:
+      #     - ON for at most 1s
+      #     - OFF for at most 1s
+      #     - ON for at most 1s
+      #     - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send double click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 2 double click
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/2/command
+                    payload: "DOUBLE_CLICK"
+      # button held
+      - timing:
+          - ON for at least 0.5s
+        then:
+          - delay: 0.05s
+          - while:
+              condition:
+                - binary_sensor.is_on: button2
+              then:
+                - if:
+                    condition:
+                      api.connected:
+                    then:
+                      # send hold event
+                      - homeassistant.event:
+                          event: esphome.${name}
+                          data:
+                            title: button 2 hold
+                    else:
+                      # publish mqtt hold
+                      - mqtt.publish:
+                          topic: ${name}/button/2/command
+                          payload: "HOLD"
+                - delay: 0.05s
+      # single click
+      - timing:
+          - ON for at most 0.9s
+          - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send short click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 2 short click
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/2/command
+                    payload: "SHORT_CLICK"
+    # on_release:
+    #   - homeassistant.event:
+    #       event: esphome.${name}
+    #       data:
+    #         title: button 2 released
+    internal: true
+    id: button2
+    filters:
+      - delayed_on_off: 50ms
+  - platform: gpio
+    name: "${friendly_name} Button 3"
+    pin:
+      number: GPIO27
+      mode:
+        input: true
+    on_multi_click:
+      # double click
+      - timing:
+        - ON for at most 0.35s
+        - OFF for at most 0.35s
+        - ON for at most 0.35s
+        - OFF for at least 0.1s
+      # - timing:
+      #     - ON for at most 1s
+      #     - OFF for at most 1s
+      #     - ON for at most 1s
+      #     - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send double click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 3 double click
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/3/command
+                    payload: "DOUBLE_CLICK"
+      # button held
+      - timing:
+          - ON for at least 0.5s
+        then:
+          - delay: 0.05s
+          - while:
+              condition:
+                - binary_sensor.is_on: button3
+              then:
+                - if:
+                    condition:
+                      api.connected:
+                    then:
+                      # send hold event
+                      - homeassistant.event:
+                          event: esphome.${name}
+                          data:
+                            title: button 3 hold
+                    else:
+                      # publish mqtt hold
+                      - mqtt.publish:
+                          topic: ${name}/button/3/command
+                          payload: "HOLD"
+                - delay: 0.05s
+      # single click
+      - timing:
+          - ON for at most 0.9s
+          - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send short click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 3 short click
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/3/command
+                    payload: "SHORT_CLICK"
+    # on_release:
+    #   - homeassistant.event:
+    #       event: esphome.${name}
+    #       data:
+    #         title: button 3 released
+    internal: true
+    id: button3
+    filters:
+      - delayed_on_off: 50ms
+  - platform: gpio
+    name: "${friendly_name} Button 4"
+    pin:
+      number: GPIO26
+      mode:
+        input: true
+    on_multi_click:
+      # double click
+      - timing:
+        - ON for at most 0.35s
+        - OFF for at most 0.35s
+        - ON for at most 0.35s
+        - OFF for at least 0.1s
+      # - timing:
+      #     - ON for at most 1s
+      #     - OFF for at most 1s
+      #     - ON for at most 1s
+      #     - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send double click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 4 double click            
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/4/command
+                    payload: "DOUBLE_CLICK"
+      # button held
+      - timing:
+          - ON for at least 0.5s
+        then:
+          - delay: 0.05s
+          - while:
+              condition:
+                - binary_sensor.is_on: button4
+              then:
+                - if:
+                    condition:
+                      api.connected:
+                    then:
+                      # send hold event
+                      - homeassistant.event:
+                          event: esphome.${name}
+                          data:
+                            title: button 4 hold            
+                    else:
+                      # publish mqtt hold
+                      - mqtt.publish:
+                          topic: ${name}/button/4/command
+                          payload: "HOLD"
+                - delay: 0.05s
+      # single click
+      - timing:
+          - ON for at most 0.9s
+          - OFF for at least 0.1s
+        then:
+          - if:
+              condition:
+                api.connected:
+              then:
+                # send short click event
+                - homeassistant.event:
+                    event: esphome.${name}
+                    data:
+                      title: button 4 short click            
+              else:
+                # publish mqtt double click
+                - mqtt.publish:
+                    topic: ${name}/button/4/command
+                    payload: "SHORT_CLICK"
+    # on_release:
+    #   - homeassistant.event:
+    #       event: esphome.${name}
+    #       data:
+    #         title: button 4 released
+    internal: true
+    id: button4
+    filters:
+      - delayed_on_off: 50ms

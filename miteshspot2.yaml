@@ -20,12 +20,13 @@ substitutions:
   frequency_cw: 1000 Hz
   frequency_ww: 1000 Hz
 
-<<: !include .base-debug.yaml
-<<: !include .base.device.bulb.athom-gu10.yaml
-<<: !include .base.common-api.yaml
-<<: !include .base.automation.light-mqtt-4-button-rgbcct.yaml
-<<: !include .base.common-binary-sensor.yaml
-<<: !include .base.common-sensor.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
-      
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/devices/bulb.athom-gu10.yaml
+  - !include packages/automation/light-mqtt-4-button-rgbcct.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/binary-sensor.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/sensor-die-temp.yaml
+  - !include packages/common/text-sensor.yaml

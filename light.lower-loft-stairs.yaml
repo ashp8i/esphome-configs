@@ -10,21 +10,17 @@ substitutions:
   switch1b2_topic: loftswitch/button/2/command
   switch2b1_topic: stairsswitch2/button/1/command
   switch2b2_topic: stairsswitch2/button/2/command 
-  project_name: "lumary.18w-rgbcw-slim-downlight-esp32-c3-arduino"
+  api_key: !secret lowerloftstairs_noise_key
+  project_name: "lumary.18w-rgbcw-slim-downlight-esp32-c3"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret lowerloftstairs_noise_key
-  reboot_timeout: 0s
-
-<<: !include .base-debug.yaml
-<<: !include .base.device.light.lumary-18w-downlight-esp32-c3-arduino.yaml
-<<: !include .base.global-mqtt-automation.yaml
-<<: !include .base.automation.light-mqtt-2-button-2-switch.yaml
-<<: !include .base.common-sensor-die-temp.yaml
-# <<: !include .base.common-binary-sensor.yaml
-<<: !include .base.common-sensor.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/common/api.yaml
+  - !include packages/device/light.lumary-18w-downlight-esp32-c3-arduino.yaml
+  - !include packages/global/mqtt-automation.yaml
+  - !include packages/automation/light-mqtt-2-button-2-switch.yaml
+  - !include packages/common/sensor-die-temp.yaml
+  - !include packages/common/sensor.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/text-sensor.yaml

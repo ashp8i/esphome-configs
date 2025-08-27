@@ -1,0 +1,27 @@
+# Enable logging
+# Logger must be at least debug (default)
+logger:
+  level: VERY_VERBOSE
+  baud_rate: 0
+  logs:
+    onewirebus.component: VERY_VERBOSE
+
+ota:
+  - platform: esphome
+    version: 2
+    password: !secret ota_password
+
+safe_mode:
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid} Fallback Hotspot
+      password: !secret ap_password
+
+network:
+    enable_ipv6: true
+    min_ipv6_addr_count: 2

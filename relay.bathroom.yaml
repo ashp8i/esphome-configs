@@ -21,10 +21,13 @@ api:
     key: !secret bathroomrelay_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug.yaml
-<<: !include .base.device.relay.shelly-plus-2pm-bathroom-arduino.yaml
-<<: !include .base.automation.light-mqtt-2-lonsonho-bath-fan.yaml
-<<: !include .base.sensor-shelly-plus-2pm-bathroom.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
-<<: !include .base.binary-sensor-shelly-plus-2pm-bathroom-fallback.yaml
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/devices/relay.shelly-plus-2pm-bathroom.yaml
+  - !include packages/automation/light-mqtt-2-lonsonho-bath-fan.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/text-sensor.yaml
+  - !include packages/binary-sensor/shelly-plus-2pm-bathroom-fallback.yaml
+  - !include packages/sensor/shelly-plus-2pm-bathroom.yaml

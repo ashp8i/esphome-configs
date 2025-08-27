@@ -1,0 +1,266 @@
+mqtt:
+  broker: !secret mqtt_ip
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  on_message:
+    # Switch 1 - Button 1
+    # Short Click - Toggle
+    - topic: $switch1b1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    # Hold - Two Way Dimming
+    - topic: $switch1b1_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        - light.dim_relative: 
+            id: ${device_id_white}
+            # This lambda will dim up or down depending on the dim direction
+            # if dim = up, it will keep increasing brightness with global var 'step' (so we can easily change this in a central place) as long as the button keeps being pressed until max_brightness would be exceed
+            # in the case it will set it to max brightness, beep the buzzer once (the buzzer is defined as a light with effect "beeponce") and then stop the loop - this both prevent further needless loops as well as ensures the buzzer only buzzes once
+            # if dim = down, it will keep decreasing brightness with global var 'step' (so we can easily change this in a central place) as long as the button keeps being pressed until min_brightness would be exceed
+            # in the case it will set it to min brightness, beep the buzzer once (the buzzer is defined as a light with effect "beeponce") and then stop the loop - this both prevent further needless loops as well as ensures the buzzer only buzzes once
+            relative_brightness: !lambda |-
+              float brightness;
+              float gamma;
+              id(${device_id_white}).current_values_as_brightness(&brightness);
+              // this is the gamma corrected value - we need to 'un'compensate for gamma to get a lineair %value
+              gamma = id(${device_id_white}).get_gamma_correct();
+              brightness = powf(brightness,1/gamma);
+              //id(${device_id_white}).dump_config();
+              ESP_LOGD("main", "while loop, dim=%d, brightness=%6.4lf, step=%6.4lf, max=%6.4lf, gamma=%6.4lf", id(${device_id_white}_dim_direction), brightness,id(step),id(${device_id_white}_max_brightness),gamma);
+              if (brightness >= id(${device_id_white}_max_brightness)) {
+                // if we are at max already, no point in dimming up - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+                id(${device_id_white}_dim_direction) = '0';
+              }
+              else if (brightness <= id(${device_id_white}_min_brightness)) {
+                // if we are at min already, no point in dimming down - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+                id(${device_id_white}_dim_direction) = '1';
+              }
+              if (id(${device_id_white}_dim_direction) == '1') {
+                if ((id(step) + brightness) <= id(${device_id_white}_max_brightness)) { 
+                    return(id(step));
+                }
+                else {
+                    return(id(${device_id_white}_max_brightness)- brightness);
+                }
+              }
+              else if (id(${device_id_white}_dim_direction) != '1') {
+                if ((brightness - id(step)) >= id(${device_id_white}_min_brightness)) { 
+                  return(-id(step));
+                }
+                else {
+                  return(id(${device_id_white}_min_brightness)- brightness);
+                }  
+              }
+              // the else is strictly speaking not needed as the loop should break before this condition is true but if for whatever reason that would not happen at least we are returning something
+              else {
+                return(0);
+              }
+            transition_length: 0.05s
+        - delay: 0.04s
+        # now toggle the dim up/down direction so next time we do the opposite action
+        - globals.set:
+            id: ${device_id_white}_dim_direction
+            value: !lambda |-
+              if (id(${device_id_white}_dim_direction) == '1') {
+                  return('0');
+              } else {
+                return('1');
+              }
+    # Double Click - Increase color Temperature
+    # - topic: $switch1b1_topic
+    #   payload: 'DOUBLE_CLICK'
+    #   qos: 0
+    #   then: 
+    #     - lambda: |-
+    #         float color_temp;
+    #         id(${device_id_white}).current_values_as_ct(&color_temp);
+    #         //id(${device_id_white}).dump_config();
+    #         ESP_LOGD("main", "while loop, dim=%d, color_temp=%6.4lf, step=%6.4lf, max=%6.4lf", id(${device_id_white}_color_temp_direction), color_temp,id(step),id(${device_id_white}_max_color_temp));
+    #         if (color_temp >= id(${device_id_white}_max_color_temp)) {
+    #           // if we are at max already, no point in dimming up - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+    #           id(${device_id_white}_color_temp_direction) = '0';
+    #         }
+    #         else if (color_temp <= id(${device_id_white}_min_color_temp)) {
+    #           // if we are at min already, no point in dimming down - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+    #           id(${device_id_white}_color_temp_direction) = '1';
+    #         }
+    #         if (id(${device_id_white}_color_temp_direction) == '1') {
+    #           if ((id(step) + color_temp) <= id(${device_id_white}_max_color_temp)) { 
+    #               return(id(step));
+    #           }
+    #           else {
+    #               return(id(${device_id_white}_max_color_temp)- color_temp);
+    #           }
+    #         }
+    #         else if (id(${device_id_white}_color_temp_direction) != '1') {
+    #           if ((color_temp - id(step)) >= id(${device_id_white}_min_color_temp)) { 
+    #             return(-id(step));
+    #           }
+    #           else {
+    #             return(id(${device_id_white}_min_color_temp)- color_temp);
+    #           }  
+    #         }
+    #         // the else is strictly speaking not needed as the loop should break before this condition is true but if for whatever reason that would not happen at least we are returning something
+    #         else {
+    #           return(0);
+    #         }
+    #         // float current_temp;
+    #         // id(${device_id_white}).current_values_as_ct.get_color_temperature();
+    #         // if (current_temp >= id(${device_id_white}_max_color_temp)) {
+    #         //   // if we are at max already, no point in dimming up - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+    #         //   id(${device_id_white}_color_temp_direction) = '0';
+    #         // }
+    #         // else if (current_temp <= id(${device_id_white}_min_color_temp)) {
+    #         //   // if we are at min already, no point in dimming down - this will ever happen at loop start because of the loopstop break, so no issues with the loop
+    #         //   id(${device_id_white}_color_temp_direction = '1';
+    #         // }
+    #         // if (id(${device_id_white}_color_temp_direction) == '1') {
+    #         //   if ((id(step) + current_temp) <= id(${device_id_white}_max_color_temp)) { 
+    #         //       return(id(step));
+    #         //   }
+    #         //   else {
+    #         //       return(id(${device_id_white}_max_color_temp)- current_temp);
+    #         //   }
+    #         // }
+    #         // else if (id(${device_id_white}_color_temp_direction) != '1') {
+    #         //   if ((current_temp - id(step)) >= id(${device_id_white}_min_color_temp)) { 
+    #         //     return(-id(step));
+    #         //   }
+    #         //   else {
+    #         //     return(id(${device_id_white}_min_color_temp)- current_temp);
+    #         //   }  
+    #         // }
+    #     #   transition_length: 0.05s
+    #     # - delay: 0.04s
+    #     #   transition_length: 0.05s
+    #     # - delay: 0.04s
+    #     # now toggle the dim up/down direction so next time we do the opposite action
+    #     - globals.set:
+    #         id: ${device_id_white}_color_temp_direction
+    #         value: !lambda |-
+    #           if (id(${device_id_white}_color_temp_direction) == '1') {
+    #               return('0');
+    #           } else {
+    #             return('1');
+    #           }
+    # Switch 2 - Button 1
+    # Short Click - Toggle
+    - topic: $switch2b1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    # Hold - Brighten
+    - topic: $switch2b1_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Increase the brightness by 5%
+        - light.dim_relative:
+            id: ${device_id_white}
+            relative_brightness: 5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Increase Colour Temperature
+    - topic: $switch2b1_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+            auto call = id(${device_id_white}).turn_on();
+            call.set_color_temperature(current_temp + 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();
+    # Switch 2 - Button 2
+    # Short Click - Toggle
+    - topic: $switch2b2_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    # Hold - Dim
+    - topic: $switch2b2_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Decreases the brightness by 5%
+        - light.dim_relative:
+            id: ${device_id_white}
+            relative_brightness: -5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Decrease Colour Temperature
+    - topic: $switch2b2_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+            auto call = id(${device_id_white}).turn_on();
+            call.set_color_temperature(current_temp - 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();
+    # Switch 3 - Button 1
+    # Short Click - Toggle
+    - topic: $switch3b1_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    # Hold - Brighten
+    - topic: $switch3b1_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Increase the brightness by 5%
+        - light.dim_relative:
+            id: ${device_id_white}
+            relative_brightness: 5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Increase Colour Temperature
+    - topic: $switch3b1_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+            auto call = id(${device_id_white}).turn_on();
+            call.set_color_temperature(current_temp + 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();
+    # Switch 3 - Button 2
+    # Short Click - Toggle
+    - topic: $switch3b2_topic
+      payload: 'SHORT_CLICK'
+      qos: 0
+      then:
+        - light.toggle: ${device_id_white}
+    # Hold - Dim
+    - topic: $switch3b2_topic
+      payload: 'HOLD'
+      qos: 0
+      then:
+        # Decreases the brightness by 5%
+        - light.dim_relative:
+            id: ${device_id_white}
+            relative_brightness: -5%
+            transition_length: 0.1s
+        - delay: 0.1s
+    # Double Click - Decrease Colour Temperature
+    - topic: $switch3b2_topic
+      payload: 'DOUBLE_CLICK'
+      qos: 0
+      then:
+        - lambda: |-
+            float current_temp = id(${device_id_white}).current_values.get_color_temperature();
+            auto call = id(${device_id_white}).turn_on();
+            call.set_color_temperature(current_temp - 25);
+            call.set_transition_length(1000); // in ms
+            call.perform();

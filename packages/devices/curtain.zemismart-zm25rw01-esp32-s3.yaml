@@ -1,0 +1,86 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: um_tinys3
+  framework:
+    type: esp-idf
+
+external_components:
+  - source:
+      type: local
+      path: my_external_components/tuya_cover_custom
+
+captive_portal:
+
+web_server:
+  port: 80
+  # auth:
+  #   username: admin
+  #   password: !secret web_server_password
+  include_internal: true
+  local: true
+
+uart:
+    rx_pin: GPIO44
+    tx_pin: GPIO43
+    baud_rate: 9600
+
+# Register the Tuya MCU connection
+# tuya:
+tuya:
+
+# Tuya:
+# Datapoint 7: enum (value: 3)
+# Datapoint 3: int value (value: 75) - Position Report
+# Datapoint 102: enum (value: 3)
+# Datapoint 11: enum (value: 0)
+# Datapoint 5: enum (value: 1) - Motor Direction
+# Datapoint 103: int value (value: 100)
+# Datapoint 1: enum (value: 2) - Control
+# Product: '{"p":"crfwyri5jzt5cxec","v":"1.0.0","m":0}'
+
+cover:
+  - platform: tuya-ex
+    id: "${device_id}"
+    name: "${cover_name}"
+    control_datapoint: 1
+    position_datapoint: 2
+    position_report_datapoint: 3
+    restore_mode: NO_RESTORE
+    min_value: 0
+    max_value: 100
+    device_class: blind
+    invert_position_report: true
+
+number:
+  - platform: tuya
+    name: Set Position
+    min_value: 0
+    max_value: 100
+    step: 1
+    number_datapoint: 2
+    unit_of_measurement: "%"
+    mode: box
+    entity_category: DIAGNOSTIC
+
+select:
+- platform: tuya
+  name: Motor Direction
+  enum_datapoint: 5
+  options:
+    0: Normal
+    1: Invert
+  entity_category: CONFIG
+# - platform: tuya
+#   name: Motor Mode
+#   enum_datapoint: 106
+#   options:
+#     0: Continuous
+#     1: Stepped
+#   entity_category: CONFIG

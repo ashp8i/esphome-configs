@@ -1,0 +1,25 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    pin:
+      number: GPIO13
+      #mode: INPUT_PULLUP
+      #inverted: True
+    name: "${friendly_name} Switch 1"
+    on_state:
+      then:
+        - light.toggle: ${name}_light
+    internal: true
+    id: switchid1
+  # - platform: gpio
+  #   pin:
+  #     number: GPIO5
+  #     #mode: INPUT_PULLUP
+  #     #inverted: True
+  #   name: "${name} Switch 2"
+  #   on_state:
+  #     then:
+  #       - light.toggle: lightid2
+  #   internal: true
+  #   id: switchid2

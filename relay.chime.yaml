@@ -19,16 +19,14 @@ api:
     key: !secret chime_noise_key
   reboot_timeout: 0s
 
-<<: !include .base-debug.yaml
-# <<: !include .base-debug-switching_1.yaml
-<<: !include .base.device.relay.shelly-plus-1pm-solo-chime-arduino.yaml
-<<: !include .base.common-mqtt.yaml
-<<: !include .base.common-button.yaml
-# <<: !include .base.automation.light-mqtt-1-lonsonho.yaml
-# <<: !include .base.common-sensor.yaml
-<<: !include .base.sensor-shelly-plus-1pm.yaml
-# <<: !include .base.common-button.yaml
-<<: !include .base.switch-shelly-plus-1pm-chime.yaml
-<<: !include .base.common-text-sensor.yaml
-# <<: !include .base.binary-sensor-shelly-1-edge-switch.yaml
-<<: !include .base.binary-sensor-shelly-plus-1pm-chime-trigger.yaml
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/devices/relay.shelly-plus-1pm-solo-chime.yaml
+  - !include packages/automation/light-mqtt-2-lonsonho-toilet.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/text-sensor.yaml
+  - !include packages/binary-sensor/shelly-plus-1pm-chime-trigger.yaml
+  - !include packages/sensor/shelly-plus-1pm.yaml
+  - !include packages/switch/shelly-plus-1pm-chime.yaml

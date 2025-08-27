@@ -1,0 +1,8 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: "tuya"
+    name: "${friendly_name} Presence State"
+    sensor_datapoint: 1
+    device_class: occupancy
+    id: ${presence_binary_sensor_id}

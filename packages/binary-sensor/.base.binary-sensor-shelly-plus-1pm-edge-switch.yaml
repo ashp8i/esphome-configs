@@ -1,0 +1,12 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    pin:
+      number: GPIO4
+    name: "${friendly_name} Switch"
+    on_state:
+      then:
+        - light.toggle: ${device_id}
+    internal: true
+    id: ${device_id}_switch

@@ -1,0 +1,12 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  - platform: gpio
+    pin:
+      number: GPIO4
+    name: "Switch Shelly 1 PM"
+    on_state:
+      then:
+        - switch.turn_on: ${device_id_white}
+    internal: true
+    id: ${device_id_white}_switch

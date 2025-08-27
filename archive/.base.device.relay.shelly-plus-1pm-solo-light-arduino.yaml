@@ -1,8 +1,8 @@
 esphome:
   name: ${name}
   comment: ${device_description}
-    # platform_packages:
-    # - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
+    platform_packages:
+    - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
     board_build.f_cpu: 160000000L
   project:
     name: "${project_name}"

@@ -1,0 +1,19 @@
+mqtt:
+  broker: !secret mqtt_host
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  port: 8883
+  discovery: true
+  # discovery_prefix: ${mqtt_prefix}/homeassistant
+  # log_topic: ${mqtt_prefix}/logs
+  birth_message:
+    topic: ${name}/status
+    payload: online
+  will_message:
+    topic: ${name}/status
+    payload: offline
+  # Evaluate carefully skip_cert_cn_check
+  skip_cert_cn_check: false
+  idf_send_async: false
+  ssl_fingerprints:
+    - 99fec9f43e828014b9ef06a192c9138bdc79b215

@@ -1,0 +1,5 @@
+# Example configuration entry
+udp:
+  update_interval: 5s
+  encryption: "REPLACEME"
+  rolling_code_enable: true

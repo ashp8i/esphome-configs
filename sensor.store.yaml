@@ -15,13 +15,14 @@ substitutions:
   project_name: "diy.ac_relay-board-reed-switch-esp32-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug.yaml
-<<: !include .base.device.sensor-reed-switch-esp32-arduino.yaml
-<<: !include .base.binary-sensor-reed-switch-store.yaml
-<<: !include .base.common-api.yaml
-<<: !include .base.common-sensor.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
-<<: !include .base.common-mqtt.yaml
-<<: !include .base.switch-reed-switch-store.yaml
-<<: !include .base.udp-prescence-sensor-zy-m100.yaml
+packages:
+- !include packages/base/debug.yaml
+- !include packages/devices/sensor-bme680-bsec-esp32.yaml
+- !include packages/common/api.yaml
+- !include packages/common/mqtt.yaml
+- !include packages/common/sensor-die-temp.yaml
+- !include packages/common/button.yaml
+- !include packages/common/text-sensor.yaml
+- !include packages/binary-sensor/reed-switch-store.yaml
+- !include packages/switch/reed-switch-store.yaml
+- !include packages/udp/prescence-sensor-zy-m100.yaml

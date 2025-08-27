@@ -1,0 +1,5 @@
+globals:
+  - id: last_light_on
+    type: int
+    restore_value: no
+    initial_value: '1'

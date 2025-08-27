@@ -1,0 +1,72 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  #Shelly Switch Input 1
+  - platform: gpio
+    name: "${friendly_name} Input"
+    pin: GPIO5
+    #small delay to prevent debouncing
+    filters:
+      - delayed_on_off: 50ms
+    # config for state change of input button
+    on_state:
+      then:
+        - if:
+            condition:
+              and:
+                - wifi.connected:
+                - api.connected:
+                - switch.is_on: "relay_1"
+                # - lambda: 'return (id(ha_bulb_1).state == "on" || id(ha_bulb_1).state == "off");'
+            # toggle smart light if wifi and api are connected and relay is on
+            then:
+            #   - homeassistant.service:
+            #       service: light.toggle
+            #       data:
+            #         entity_id: "${bulb_name_1}"
+            # else:
+              - switch.toggle: "relay_1"
+    internal: true
+
+  #Shelly Switch Input 2
+  - platform: gpio
+    name: "${friendly_name} Input"
+    pin: GPIO18
+    #small delay to prevent debouncing
+    filters:
+      - delayed_on_off: 50ms
+    # config for state change of input button
+    on_state:
+      then:
+        - if:
+            condition:
+              and:
+                - wifi.connected:
+                - api.connected:
+                - switch.is_on: "relay_2"
+                # - lambda: 'return (id(ha_bulb_2).state == "on" || id(ha_bulb_2).state == "off");'
+            # toggle smart light if wifi and api are connected and relay is on
+            then:
+            #   - homeassistant.service:
+            #       service: light.toggle
+            #       data:
+            #         entity_id: "${bulb_name_2}"
+            # else:
+              - switch.toggle: "relay_2"
+    internal: true
+
+  #reset button on device
+  - platform: gpio
+    name: "${friendly_name} Button"
+    pin:
+      number: GPIO4
+      inverted: yes
+      mode:
+        input: true
+        pullup: true
+    on_press:
+      then:
+        - button.press: "restart_device"
+    filters:
+      - delayed_on_off: 5ms
+    internal: true

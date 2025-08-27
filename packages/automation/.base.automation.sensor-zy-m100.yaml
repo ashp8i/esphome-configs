@@ -1,0 +1,99 @@
+# automation:
+#   - trigger:
+#       - platform: binary_sensor
+#         id: "${presence_binary_sensor_id}"
+#         event:
+#           type: state
+#     then:
+#       - if:
+#           - condition: not api.connected
+#               - if:
+#                   - condition: mqtt.connected
+#                     then:
+#                     - mqtt.publish:
+#                         topic: "store/light/store/command"
+#                         payload: "{'ON}'}"
+automation:
+  # Automation 1: Handle PRESENCE DETECTED when API is offline
+  - id: presence_on_api_offline_fallback
+    trigger:
+      # Trigger when the presence sensor turns ON
+      - platform: state
+        entity_id: binary_sensor.${presence_binary_sensor_id}
+        to: 'ON'
+    condition:
+      # ONLY run if the native API is NOT connected
+      - not:
+          condition: api.connected
+    action:
+      - logger.log: "Presence ON detected, API offline. Executing MQTT fallback..."
+      # Check if MQTT is connected for the first level fallback
+      - if:
+          condition:
+            mqtt.connected:
+          then:
+            # MQTT is connected: Use MQTT
+            - logger.log: "MQTT connected, sending ON via MQTT."
+            - mqtt.publish:
+                topic: "${light_command_topic_1}"
+                payload: "ON" # Standard ON payload
+          else:
+            # MQTT is also disconnected: Use UDP as the second level fallback
+            - logger.log: "MQTT disconnected, sending ON via UDP."
+            # - lambda: !lambda |-
+            #     #include <WiFiUdp.h>
+            #     WiFiUDP udp;
+            #     const char* udp_target_ip = "${udp_target_ip}";
+            #     uint16_t udp_target_port = ${udp_target_port};
+            #     IPAddress remote_ip;
+            #     if (remote_ip.fromString(udp_target_ip)) {
+            #       udp.beginPacket(remote_ip, udp_target_port);
+            #       const char* payload = "ON"; // Command for ON
+            #       udp.write((const uint8_t*)payload, strlen(payload));
+            #       udp.endPacket();
+            #       ESP_LOGD("udp_fallback", "Sent UDP packet to %s:%d - Payload: %s", udp_target_ip, udp_target_port, payload);
+            #     } else {
+            #       ESP_LOGE("udp_fallback", "Failed to parse UDP target IP: %s", udp_target_ip);
+            #     }
+
+  # Automation 2: Handle PRESENCE CLEARED when API is offline
+  - id: presence_off_api_offline_fallback
+    trigger:
+      # Trigger when the presence sensor turns OFF
+      - platform: state
+        entity_id: binary_sensor.${presence_binary_sensor_id}
+        to: 'OFF'
+    condition:
+      # ONLY run if the native API is NOT connected
+      - not:
+          condition: api.connected
+    action:
+      - logger.log: "Presence OFF detected, API offline. Executing fallback..."
+      # Check if MQTT is connected for the first level fallback
+      - if:
+          condition:
+            mqtt.connected:
+          then:
+            # MQTT is connected: Use MQTT
+            - logger.log: "MQTT connected, sending OFF via MQTT."
+            - mqtt.publish:
+                topic: "${light_command_topic_1}"
+                payload: "OFF" # Standard OFF payload
+          else:
+            # MQTT is also disconnected: Use UDP as the second level fallback
+            - logger.log: "MQTT disconnected, sending OFF via UDP."
+            # - lambda: !lambda |-
+            #     #include <WiFiUdp.h>
+            #     WiFiUDP udp;
+            #     const char* udp_target_ip = "${udp_target_ip}";
+            #     uint16_t udp_target_port = ${udp_target_port};
+            #     IPAddress remote_ip;
+            #     if (remote_ip.fromString(udp_target_ip)) {
+            #       udp.beginPacket(remote_ip, udp_target_port);
+            #       const char* payload = "OFF"; // Command for OFF
+            #       udp.write((const uint8_t*)payload, strlen(payload));
+            #       udp.endPacket();
+            #       ESP_LOGD("udp_fallback", "Sent UDP packet to %s:%d - Payload: %s", udp_target_ip, udp_target_port, payload);
+            #     } else {
+            #       ESP_LOGE("udp_fallback", "Failed to parse UDP target IP: %s", udp_target_ip);
+            #     }

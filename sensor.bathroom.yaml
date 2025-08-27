@@ -10,11 +10,12 @@ substitutions:
   project_name: "diy.ac_relay_board_bme680-bsec-esp32-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug.yaml
-<<: !include .base.device.sensor-bme680-bsec-esp32-arduino.yaml
-<<: !include .base.common-api.yaml
-<<: !include .base.common-mqtt.yaml
-<<: !include .base.common-binary-sensor.yaml
-<<: !include .base.sensor-bme680-bsec.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.text-sensor-bme680-bsec.yaml
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/devices/sensor-bme680-bsec-esp32.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/binary-sensor.yaml
+  - !include packages/common/button.yaml
+  - !include packages/sensor/bme680-bsec.yaml
+  - !include packages/text-sensor/bme680-bsec.yaml

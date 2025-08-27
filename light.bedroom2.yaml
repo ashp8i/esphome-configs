@@ -11,12 +11,12 @@ substitutions:
   project_name: "miboxer.wb5-cct-esp32-c3-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug.yaml
-<<: !include .base.device.light.miboxer-wb5-esp32-c3-arduino.yaml
-<<: !include .base.common-api.yaml
-<<: !include .base.automation.light-mqtt-2-button.yaml
-<<: !include .base.common-sensor-die-temp.yaml
-# <<: !include .base.common-binary-sensor.yaml
-<<: !include .base.common-sensor.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/devices/light.miboxer-wb5-esp32-c3-bed-2.yaml
+  - !include packages/common/api.yaml
+  - !include packages/automation/light-mqtt-2-button.yaml
+  - !include packages/common/binary-sensor.yaml
+  - !include packages/common/sensor-die-temp.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/text-sensor.yaml

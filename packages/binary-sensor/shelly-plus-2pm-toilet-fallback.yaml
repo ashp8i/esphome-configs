@@ -1,0 +1,28 @@
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+  #Shelly Switch Input 1
+  - platform: gpio
+    name: "${friendly_name} Switch"
+    pin: GPIO5
+    on_state:
+      then:
+        - light.toggle: "${name}_light"
+    internal: true
+    id: ${device_id}_switch
+
+  #reset button on device
+  - platform: gpio
+    name: "${friendly_name} Button"
+    pin:
+      number: GPIO4
+      inverted: yes
+      mode:
+        input: true
+        pullup: true
+    on_press:
+      then:
+        - button.press: "restart_device"
+    filters:
+      - delayed_on_off: 5ms
+    internal: true

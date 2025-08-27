@@ -15,12 +15,13 @@ substitutions:
   project_name: "shelly.shellyplus1pm-relay-light-arduino"
   project_version: "1.0"
 
-<<: !include .base-debug.yaml
-# <<: !include .base-debug.yaml
-<<: !include .base.device.relay.shelly-plus-1pm-solo-light-arduino.yaml
-<<: !include .base.common-api.yaml
-<<: !include .base.automation.light-mqtt-2-lonsonho-bath-wall-light.yaml
-<<: !include .base.common-sensor.yaml
-<<: !include .base.common-button.yaml
-<<: !include .base.common-text-sensor.yaml
-<<: !include .base.binary-sensor-shelly-plus-1pm-light-pull-switch.yaml
+packages:
+- !include packages/base/debug.yaml
+- !include packages/devices/relay.shelly-plus-1pm-solo-light.yaml
+- !include packages/automoation/light-mqtt-2-lonsonho-bath-wall-light.yaml
+- !include packages/common/api.yaml
+- !include packages/common/mqtt.yaml
+- !include packages/common/button.yaml
+- !include packages/common/text-sensor.yaml
+- !include packages/binary-sensor/shelly-plus-1pm-light-pull-switch.yaml
+- !include packages/sensor/shelly-plus-2pm-toilet.yaml

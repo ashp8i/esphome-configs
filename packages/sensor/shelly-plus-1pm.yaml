@@ -27,69 +27,74 @@ sensor:
                 (minutes ? to_string(minutes) + "m " : "") +
                 (to_string(seconds) + "s")
               ).c_str();
-  # Shelly Plus 2PM Power Sensors
-  #temperature sensor
+  # Shelly Plus 1PM Power Sensors
   - platform: ntc
     sensor: temp_resistance_reading
     name: "${friendly_name} Temperature"
     unit_of_measurement: "°C"
     accuracy_decimals: 1
     icon: "mdi:thermometer"
-    entity_category: 'diagnostic'
     calibration:
-      #These default values don't seem accurate
       b_constant: 3350
       reference_resistance: 10kOhm
       reference_temperature: 298.15K
     on_value_range:
-      - above: ${max_temp}
+      - above: "80.0"
         then:
-          - fan.turn_off: "${name}_fan"
-          - homeassistant.service:
-                service: persistent_notification.create
-                data:
-                  title: "Message from ${friendly_name}"
-                data_template:
-                  message: "${relay_1} and ${relay_2} turned off because temperature exceeded ${max_temp}°C"
-
+          - switch.turn_off: "${device_id_white}"
   - platform: resistance
     id: temp_resistance_reading
     sensor: temp_analog_reading
     configuration: DOWNSTREAM
     resistor: 10kOhm
-
   - platform: adc
     id: temp_analog_reading
-    pin: GPIO35
-    attenuation: 12db
-    update_interval: 60s
+    pin: GPIO32
+    attenuation: 11db
 
-  #power monitoring
-  - platform: ade7953_i2c
-    irq_pin: GPIO27 # Prevent overheating by setting this
+  - platform: adc
+    name: "${friendly_name} Relay Supply Voltage"
+    pin: GPIO33
+    attenuation: 11db
+    filters:
+      - multiply: 8
+
+  - platform: hlw8012
+    model: BL0937
+    sel_pin:
+      number: GPIO23
+      inverted: true
+    cf_pin:
+      number: GPIO5
+      ignore_strapping_warning: true
+    cf1_pin: GPIO18
+    current_resistor: ${current_res}
+    voltage_divider: ${voltage_div}
+    current:
+      name: "${friendly_name} Current"
+      unit_of_measurement: A
+      accuracy_decimals: 3
+      icon: mdi:flash-outline
     voltage:
       name: "${friendly_name} Voltage"
-      entity_category: 'diagnostic'
-    # On the Shelly 2.5 channels are mixed ch1=B ch2=A
-    current_a:
-      name: "${relay_2} Current"
-      entity_category: 'diagnostic'
-    active_power_a:
-      name: "${relay_2} Power"
-      id: power_channel_2
-      entity_category: 'diagnostic'
-      # active_power_a is normal, so don't multiply by -1
+      unit_of_measurement: V
+      accuracy_decimals: 1
+      icon: mdi:flash-outline
+    power:
+      name: "${friendly_name} Power"
+      unit_of_measurement: W
+      id: power
+      icon: mdi:flash-outline
       on_value_range:
-        - above: ${max_power}
+        - above: "3600"
           then:
-            - fan.turn_off: "${name}_fan"
-            - homeassistant.service:
-                service: persistent_notification.create
-                data:
-                  title: "Message from ${friendly_name}"
-                data_template:
-                  message: "${relay_2} turned off because power exceeded ${max_power}W"
-
+            - switch.turn_off: "${device_id_white}"
+    change_mode_every: 2
+    update_interval: 10s
   - platform: total_daily_energy
-    name: "${relay_2} Daily Energy"
-    power_id: power_channel_2
+    name: "${friendly_name} Daily energy consumed"
+    power_id: power
+    filters:
+        - multiply: 0.001
+    unit_of_measurement: kWh
+    icon: mdi:clock-alert

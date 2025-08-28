@@ -18,10 +18,10 @@ substitutions:
 packages:
 - !include packages/base/debug.yaml
 - !include packages/devices/relay.shelly-plus-1pm-solo-light.yaml
-- !include packages/automoation/light-mqtt-2-lonsonho-bath-wall-light.yaml
+- !include packages/automation/light-mqtt-2-lonsonho-bath-wall-light.yaml
 - !include packages/common/api.yaml
 - !include packages/common/mqtt.yaml
 - !include packages/common/button.yaml
+- !include packages/common/sensor-die-temp.yaml
 - !include packages/common/text-sensor.yaml
 - !include packages/binary-sensor/shelly-plus-1pm-light-pull-switch.yaml
-- !include packages/sensor/shelly-plus-2pm-toilet.yaml

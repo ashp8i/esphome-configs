@@ -19,7 +19,7 @@ packages:
   - !include packages/devices/light.lumary-18w-downlight-esp32-c3.yaml
   - !include packages/global/mqtt-automation.yaml
   - !include packages/automation/light-mqtt-1-button-plus-2-button-switch.yaml
-  - !include packages/common/sensor-die-temp.yaml
-  - !include packages/common/sensor.yaml
+  - !include packages/common/binary-sensor.yaml
   - !include packages/common/button.yaml
+  - !include packages/common/sensor-die-temp.yaml
   - !include packages/common/text-sensor.yaml

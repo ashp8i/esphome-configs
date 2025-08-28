@@ -3,9 +3,9 @@ esphome:
   # name_add_mac_suffix: true
   comment: ${device_description}
   platformio_options:
-    platform_packages:
-    # - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
-    - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
+  #   platform_packages:
+  #   # - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
+  #   - framework-arduinoespressif32 @ https://github.com/tasmota/arduino-esp32/releases/download/2.0.5/framework-arduinoespressif32-solo1.zip
     board_build.f_cpu: 160000000L
   project:
     name: "${project_name}"
@@ -15,8 +15,19 @@ esp32:
   board: esp32doit-devkit-v1
   variant: esp32
   framework:
-    type: arduino
-    platform_version: 5.2.0
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_FREERTOS_UNICORE: y
+      CONFIG_ESP32_DEFAULT_CPU_FREQ_160: y
+      CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ: "160"
+    # type: arduino
+    # platform_version: 5.2.0
+
+external_components:
+  - source: github://pr#7942
+    refresh: 30s
+    components:
+      - adc
 
 captive_portal:
 
@@ -31,11 +42,6 @@ web_server:
 time:
   - platform: homeassistant
     id: homeassistant_time  
-
-# Device Specific Config
-i2c:
-  sda: GPIO12
-  scl: GPIO14
 
 output:
   - platform: gpio

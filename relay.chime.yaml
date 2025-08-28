@@ -22,7 +22,6 @@ api:
 packages:
   - !include packages/base/debug.yaml
   - !include packages/devices/relay.shelly-plus-1pm-solo-chime.yaml
-  - !include packages/automation/light-mqtt-2-lonsonho-toilet.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
   - !include packages/common/button.yaml

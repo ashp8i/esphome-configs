@@ -21,7 +21,7 @@ packages:
   - !include packages/common/api.yaml
   - !include packages/global/mqtt-automation.yaml
   - !include packages/automation/light-mqtt-1-or-2-button-3-switch.yaml
-  - !include packages/common/sensor-die-temp.yaml
-  - !include packages/common/sensor.yaml
+  - !include packages/common/binary-sensor.yaml
   - !include packages/common/button.yaml
+  - !include packages/common/sensor-die-temp.yaml
   - !include packages/common/text-sensor.yaml

@@ -1,20 +1,29 @@
 # Example configuration entry
 udp:
+  - id: udp_internal
   - id: udp_external
-    update_interval: 60s
+    port:
+      listen_port: 18511
+      broadcast_port: 18512
     # encryption: "${udp_consumer_key_1}"
     # ping_pong_enable: true
     # rolling_code_enable: true
     addresses:
       - "${external_udp_ip}"
-    # providers:
-    #   - name: "${udp_provider_device_name_1}"
-    #     encryption: "${udp_provider_key_1}"
-    # sensors:
-    #   - id: uptime_sensor
+      # providers:
+      #   - name: "${udp_provider_device_name_1}"
+      #     encryption: "${udp_provider_key_1}"
+      # sensors:
+      #   - id: uptime_sensor
+
+packet_transport:
+  - id: transport_internal
+    platform: udp
+    udp_id: udp_internal
+    update_interval: 10s
 
 binary_sensor:
-  - platform: udp
+  - platform: packet_transport
     provider: "${udp_provider_device_name_1}"
     id: "${external_presence_sensor_id}"
     # --- Automation when Sensor turns ON ---

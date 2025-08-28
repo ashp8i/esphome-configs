@@ -13,7 +13,7 @@ substitutions:
 
 packages:
   - !include packages/base/debug.yaml
-  - !include packages/devices/lumary-18w-downlight-esp32-c3.yaml
+  - !include packages/devices/light.lumary-18w-downlight-esp32-c3.yaml
   - !include packages/global/mqtt-automation.yaml
   - !include packages/automation/light-mqtt-1-button.yaml
   - !include packages/common/api.yaml

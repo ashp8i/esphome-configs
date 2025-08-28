@@ -12,14 +12,9 @@ substitutions:
   max_temp: "80.0"
   # light_icon: "hue:bulb-spot-hung"
   lonsonho_dual_topic: zigbee2mqtt/Bathroom Wall Remote/action
+  api_key: !secret bathroomrelay_noise_key
   project_name: "shelly.shellyplus2pm-relay-light-fan"
   project_version: "1.0"
-
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret bathroomrelay_noise_key
-  reboot_timeout: 0s
 
 packages:
   - !include packages/base/debug.yaml

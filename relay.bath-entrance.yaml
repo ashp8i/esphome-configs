@@ -1,7 +1,7 @@
 substitutions:
   name: bathentrancerelay
   device_ssid: "Bath Entrance"
-  device_main_description: "Shelly Plus 2 PM Exposed as Light"
+  device_main_description: "Shelly Plus 1 PM Exposed as Light"
   device_description: Bath Entrance Light with Power Monitoring
   friendly_name: "Bath Entrance" # Put the name that you want to see in Home Assistant.
   device_id: "bathentrancerelay"    # Put the name that you want to see in Home Assistant.
@@ -13,7 +13,7 @@ substitutions:
   voltage_div: "1925"
   # light_icon: "hue:bulb-spot-hung"
   api_key: !secret bathentrancerelay_noise_key
-  project_name: "shelly.shellyplus1pm-relay"
+  project_name: "shelly.plus1pm-relay"
   project_version: "1.0"
 
 packages:

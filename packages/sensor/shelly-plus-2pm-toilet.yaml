@@ -62,7 +62,7 @@ sensor:
   - platform: adc
     id: temp_analog_reading
     pin: GPIO35
-    attenuation: 11db
+    attenuation: 12db
     update_interval: 60s
 
   #power monitoring
@@ -79,7 +79,7 @@ sensor:
       name: "${relay_1} Current"
       entity_category: 'diagnostic'
     active_power_a:
-      name: "${relay_2} Power"
+      name: "Active ${relay_2} Power"
       id: power_channel_2
       entity_category: 'diagnostic'
       # active_power_a is normal, so don't multiply by -1
@@ -94,7 +94,7 @@ sensor:
                 data_template:
                   message: "${relay_2} turned off because power exceeded ${max_power}W"
     active_power_b:
-      name: "${relay_1} Power"
+      name: "Active ${relay_1} Power"
       id: power_channel_1
       entity_category: 'diagnostic'
       # active_power_b is inverted, so multiply by -1

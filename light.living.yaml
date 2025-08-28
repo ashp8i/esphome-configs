@@ -20,7 +20,7 @@ substitutions:
 
 packages:
   - !include packages/base/debug.yaml
-  - !include packages/devices/offdarks-lxd-xg68-68w-ceiling-esp32.yaml
+  - !include packages/devices/light.offdarks-lxd-xg68-68w-esp32.yaml
   - !include packages/common/api.yaml
   - !include packages/global/rgbcct.yaml
   - !include packages/automation/light-mqtt-4-button-rgbcct.yaml

@@ -1,17 +1,17 @@
 substitutions:
   name: kitchencounter1
   device_ssid: "Kitchen C 1"
-  device_description: "MiBoxer FUT039W Tuya ESP32-C3 LED Controller."
+  device_description: "MiBoxer FUT039W Tuya ESP32-C3 LED Controller in CCT Mode."
   friendly_name: "Kitchen Counter 1" # Put the name that you want to see in Home Assistant.
   device_id: "kitchencounter1" # Put the name that you want to see in Home Assistant.
   light_icon: "hue:lightstrip"
   api_key: !secret kitchencounter1_noise_key
-  project_name: "miboxer.fut039w-arduino"
+  project_name: "miboxer.fut039w"
   project_version: "1.0"
 
 packages:
   - !include packages/base/debug-tuya.yaml
-  - !include packages/device/light.miboxer-fut-039w-esp32-c3.yaml
+  - !include packages/devices/light.miboxer-fut-039w-esp32-c3.yaml
   - !include packages/common/api.yaml
   - !include packages/common/binary-sensor.yaml
   - !include packages/common/button.yaml

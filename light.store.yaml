@@ -17,7 +17,7 @@ substitutions:
 
 packages:
   - !include packages/base/debug.yaml
-  - !include packages/devices/lumary-12w-downlight-esp8684-wroom-03.yaml
+  - !include packages/devices/light.lumary-12w-downlight-esp8684-wroom-03.yaml
   - !include packages/global/mqtt-automation.yaml
   - !include packages/udp/light-zy-m100.yaml
   - !include packages/common/api.yaml

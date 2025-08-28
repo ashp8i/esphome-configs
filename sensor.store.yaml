@@ -17,7 +17,7 @@ substitutions:
 
 packages:
 - !include packages/base/debug.yaml
-- !include packages/devices/sensor-bme680-bsec-esp32.yaml
+- !include packages/devices/sensor.reed-switch-esp32.yaml
 - !include packages/common/api.yaml
 - !include packages/common/mqtt.yaml
 - !include packages/common/sensor-die-temp.yaml

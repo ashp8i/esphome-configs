@@ -6,7 +6,7 @@ substitutions:
   device_id: "bedroom2cover" # Put the name that you want to see in Home Assistant.
   cover_name: "Bedroom 2 Wardrobe Blind Motor"
   api_key: !secret bedroom2wardrobeblindmotor_noise_key
-  project_name: "zemismart.zm25rw01-esp32-s3-arduino"
+  project_name: "zemismart.zm25rw01-esp32-s3"
   project_version: "1.0"
 
 packages:

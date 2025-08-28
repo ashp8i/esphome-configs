@@ -4,7 +4,9 @@ binary_sensor:
   #Shelly Switch Input 1
   - platform: gpio
     name: "${friendly_name} Input"
-    pin: GPIO5
+    pin:
+      number: GPIO5
+      ignore_strapping_warning: true
     #small delay to prevent debouncing
     filters:
       - delayed_on_off: 50ms

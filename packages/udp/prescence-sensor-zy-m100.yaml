@@ -1,5 +1,6 @@
 # Example configuration entry
-udp:
+packet_transport:
+  platform: udp
   update_interval: 5s
   # encryption: "${udp_consumer_key_1}"
   # rolling_code_enable: true
@@ -9,3 +10,5 @@ udp:
       # encryption: "${udp_consumer_key_1}"
   binary_sensors:
     - ${presence_binary_sensor_id}
+
+udp:

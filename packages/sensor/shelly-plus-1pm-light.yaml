@@ -50,12 +50,12 @@ sensor:
   - platform: adc
     id: temp_analog_reading
     pin: GPIO32
-    attenuation: 11db
+    attenuation: 12db
 
   - platform: adc
     name: "${name} Relay Supply Voltage"
     pin: GPIO33
-    attenuation: 11db
+    attenuation: 12db
     filters:
       - multiply: 8
 
@@ -64,7 +64,9 @@ sensor:
     sel_pin:
       number: GPIO23
       inverted: true
-    cf_pin: GPIO5
+    cf_pin:
+      number: GPIO5
+      ignore_strapping_warning: true
     cf1_pin: GPIO18
     current_resistor: ${current_res}
     voltage_divider: ${voltage_div}

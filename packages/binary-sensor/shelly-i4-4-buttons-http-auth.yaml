@@ -5,6 +5,7 @@ binary_sensor:
     name: "${friendly_name} Button 1"
     pin:
       number: GPIO12
+      ignore_strapping_warning: true
       mode:
         input: true
     on_multi_click:

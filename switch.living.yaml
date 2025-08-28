@@ -12,7 +12,7 @@ packages:
   - !include packages/devices/switch.shelly-plus-i4-gen3.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
-  - !include packages/common/sensor-die-temp.yaml
+  # - !include packages/common/sensor-die-temp.yaml
   - !include packages/common/button.yaml
   - !include packages/common/text-sensor.yaml
-  - !include packages/binary-sensor/shelly-i4-4-buttons-fallback.yaml
+  - !include packages/binary-sensor/shelly-i4-gen3-4-buttons-fallback.yaml

@@ -6,7 +6,7 @@ substitutions:
   friendly_name: "Toilet" # Put the name that you want to see in Home Assistant.
   device_id: "toiletrelay"    # Put the name that you want to see in Home Assistant.
   relay_1: "Toilet"
-  relay_2: "Toilet"
+  relay_2: "Toilet Extractor"
   # Relay trip limits
   max_power: "3600.0"
   max_temp: "80.0"

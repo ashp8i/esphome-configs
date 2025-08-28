@@ -5,22 +5,13 @@ esphome:
   platformio_options:
     board_build.flash_mode: dio
     upload_speed: 921600
-    # platform: espressif32@5.2.0
-  # includes:
-  #   - .esp32-internal-temperature.h
     
 esp32:
   board: esp32-c3-devkitm-1
   framework: 
     type: arduino
-#    version: 2.0.5
-#    platform_version: 5.2.0
-# framework:
-#   type: esp-idf
 
 external_components:
-  - source: github://pr#3820
-    components: [ ledc ]
   - source:
       type: git
       url: https://github.com/KaufHA/common

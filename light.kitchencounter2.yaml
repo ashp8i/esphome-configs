@@ -11,7 +11,7 @@ substitutions:
 
 packages:
   - !include packages/base/debug-tuya.yaml
-  - !include packages/device/light.miboxer-fut-039w-esp32-c3.yaml
+  - !include packages/devices/light.miboxer-fut-035w-esp32-c3.yaml
   - !include packages/common/api.yaml
   - !include packages/common/binary-sensor.yaml
   - !include packages/common/button.yaml

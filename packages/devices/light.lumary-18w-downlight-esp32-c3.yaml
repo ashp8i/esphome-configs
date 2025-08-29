@@ -19,8 +19,6 @@ esp32:
 #   type: esp-idf
 
 external_components:
-  - source: github://pr#3820
-    components: [ ledc ]
 
 captive_portal:
 

@@ -1,0 +1,28 @@
+substitutions:
+  name: "rgbcctpanel1"
+  device_ssid: "Panel Light 1"
+  device_description: "Tuya 40W RGBCCT Panel ESP32-C3"
+  friendly_name: "Panel Light 1"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Panel Light 1 RGB"    # Put the name that you want to see in Home Assistant.
+  device_id_white: "panellight1"    # Put the name that you want to see in Home Assistant.
+  rgb_device_id: "panellight1rgb" # Put the name that you want to see in Home Assistant.
+  # switch1b1_topic: bedroom2switch2/button/1/command
+  # switch1b2_topic: bedroom2switch2/button/2/command
+  # switch1b3_topic: bedroom2switch2/button/3/command
+  # switch1b4_topic: bedroom2switch2/button/4/command
+  light_icon: "hue:ceiling-aurelle-circle"
+  light_icon_2: "hue:ceiling-aurelle-circle"
+  api_key: !secret diningnew2_noise_key
+  project_name: "tuya.40w-rgbcw-panel-esp32-c3"
+  project_version: "1.0"
+
+packages:
+  - !include packages/base/debug.yaml
+  - !include packages/devices/light.tuya-40w-rgbcw-panel-esp32-c3.yaml
+  - !include packages/common/api.yaml
+  - !include packages/global/mqtt-automation.yaml
+  # - !include packages/automation/light-mqtt-4-button-rgbcct.yaml
+  - !include packages/common/binary-sensor.yaml
+  - !include packages/common/sensor.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/text-sensor.yaml

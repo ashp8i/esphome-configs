@@ -1,0 +1,32 @@
+esphome:
+  name: t3
+  friendly_name: t3
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "Rw1GLBLzg6Zxe6mnSYlJv0fYxMOIldgcDMKsj2MF4Oc="
+
+ota:
+  - platform: esphome
+    password: "5b65bc6d6d224217da5a075feb0bfe7a"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "T3 Fallback Hotspot"
+    password: "AEYK25nO5ZbB"
+
+captive_portal:
+    

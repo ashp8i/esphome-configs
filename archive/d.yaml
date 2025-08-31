@@ -1,0 +1,30 @@
+esphome:
+  name: d
+  friendly_name: d
+
+bk72xx:
+  board: cb3l
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "PYBm24ESpuf9UVqTSVXJ/7HQVQu7i/EaTXa/dkp9YGo="
+
+ota:
+  - platform: esphome
+    password: "e630abe787886c04fdc76b50e9fcaeae"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "D Fallback Hotspot"
+    password: "4J7XU5UhO8Kj"
+
+captive_portal:
+    

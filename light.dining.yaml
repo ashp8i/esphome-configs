@@ -3,7 +3,7 @@ substitutions:
   device_ssid: "Dining RGBCCT"
   device_description: "Tuya 40W RGBCCT Panel ESP32-C3"
   friendly_name: "Dining Room"    # Put the name that you want to see in Home Assistant.
-  friendly_name_rgb: "DIning Room RGB"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Dining Room RGB"    # Put the name that you want to see in Home Assistant.
   device_id_white: "diningroom"    # Put the name that you want to see in Home Assistant.
   rgb_device_id: "diningroomrgb" # Put the name that you want to see in Home Assistant.
   # switch1b1_topic: bedroom2switch2/button/1/command

@@ -9,14 +9,8 @@ esphome:
   # includes:
   #   - .esp32-internal-temperature.h
     
-esp32:
-  board: esp32-c3-devkitm-1
-  framework: 
-    type: arduino
-#    version: 2.0.5
-#    platform_version: 5.2.0
-# framework:
-#   type: esp-idf
+bk72xx:
+  board: cb3l
 
 external_components:
 
@@ -30,29 +24,35 @@ web_server:
   include_internal: true
   local: true
 
+# Output pins
 output:
-  - platform: ledc
-    id: output_red
-    pin: GPIO3
-    frequency: 16000Hz
-  - platform: ledc
-    id: output_green
-    pin: GPIO10
-    frequency: 16000Hz
-  - platform: ledc
-    id: output_blue
-    pin: GPIO7
-    frequency: 16000Hz
-  - platform: ledc
-    id: output_cold_white
-    pin: GPIO6
-    max_power: 65%
-    frequency: 16000Hz
-  - platform: ledc
-    id: output_warm_white
-    pin: GPIO5
-    max_power: 65%
-    frequency: 16000Hz
+- platform: libretiny_pwm
+  id: output_red
+  pin: P7
+  inverted: False
+  frequency: 16000Hz
+- platform: libretiny_pwm
+  id: output_green
+  pin: P8
+  inverted: False
+  frequency: 16000Hz
+- platform: libretiny_pwm
+  id: output_blue
+  pin: P9
+  inverted: False
+  frequency: 16000Hz
+- platform: libretiny_pwm
+  id: output_cold_white
+  pin: P6
+  inverted: False
+  frequency: 16000Hz
+  max_power: 75%
+- platform: libretiny_pwm
+  id: output_warm_white
+  pin: P24
+  inverted: False
+  frequency: 16000Hz
+  max_power: 75%
 
 light:
   - platform: cwww
@@ -93,11 +93,12 @@ light:
 # - LED Warm (Channel 5) on P24
 # Device seems to be using CB3L module, which is using BK7231N.
 # And the Tuya section starts, as usual, at 2023424
+# frome esphome devices
+# - LED Green (Channel 2) on P8
 
 # ESP8685-WROOM-04
 # Cool is GPIO6
 # Blue is GPIO7
 # PWM Frequency 16000
 # Red is GPIO3
-# Warm is GPIO5
-# Green is GPIO10
+# Warm is GPIO10

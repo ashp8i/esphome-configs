@@ -1,11 +1,11 @@
 esphome:
   name: t
-  friendly_name: T
+  friendly_name: t
 
 esp32:
-  board: esp32dev
+  board: esp32-c3-devkitm-1
   framework:
-    type: arduino
+    type: esp-idf
 
 # Enable logging
 logger:
@@ -13,11 +13,11 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "tZE5El/Zg0tGr4DTsBA3G4Yq4QF/IcLisM36aUnTy1I="
+    key: "pfp1XfzcctY1o+1O2iReKxTeineT94mPSsqcQOi0xYk="
 
 ota:
   - platform: esphome
-    password: "b0e604e45ee5155712c08fec317a5756"
+    password: "c048525cc270e7d5f2cec0486ee12513"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -26,7 +26,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "T Fallback Hotspot"
-    password: "OwI3rBvsjuYO"
+    password: "CUME05AOXDez"
 
 captive_portal:
     

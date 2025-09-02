@@ -10,7 +10,7 @@ substitutions:
   project_version: "1.0"
 
 packages:
-  - !include packages/base/debug.yaml
+  - !include packages/base/rename.yaml
   - !include packages/common/api.yaml
   - !include packages/devices/light.miboxer-tri-c1wr-esp32-c3.yaml
   - !include packages/common/api.yaml

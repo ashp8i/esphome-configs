@@ -13,12 +13,12 @@ safe_mode:
 wifi:
     ssid: !secret wifi_all_ssid
     password: !secret wifi_all_password
-    use_address: livingspotstemp.local
 
     # Enable fallback hotspot (captive portal) in case wifi connection fails
     ap:
       ssid: ${device_ssid} Fallback Hotspot
       password: !secret ap_password
+    power_save_mode: none
 
 network:
     enable_ipv6: true

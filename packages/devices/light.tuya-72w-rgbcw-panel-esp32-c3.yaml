@@ -26,24 +26,24 @@ web_server:
 output:
   - platform: ledc
     id: output_red
-    pin: GPIO3
+    pin: GPIO6
     frequency: 16000Hz
   - platform: ledc
     id: output_green
-    pin: GPIO10
+    pin: GPIO5
     frequency: 16000Hz
   - platform: ledc
     id: output_blue
-    pin: GPIO7
+    pin: GPIO4
     frequency: 16000Hz
   - platform: ledc
     id: output_cold_white
-    pin: GPIO6
+    pin: GPIO10
     max_power: 80%
     frequency: 16000Hz
   - platform: ledc
     id: output_warm_white
-    pin: GPIO5
+    pin: GPIO3
     max_power: 80%
     frequency: 16000Hz
 
@@ -78,19 +78,12 @@ light:
         value: '2'
     icon: "hue:ceiling-aurelle-circle"
 
-# Device configuration, as extracted from Tuya: 
-# - LED Cool (Channel 4) on P6
-# - LED Blue (Channel 3) on P9
-# - PWM Frequency 16000
-# - LED Red (Channel 1) on P7
-# - LED Warm (Channel 5) on P24
-# Device seems to be using CB3L module, which is using BK7231N.
-# And the Tuya section starts, as usual, at 2023424
-
-# ESP8685-WROOM-04
-# Cool is GPIO6
-# Blue is GPIO7
-# PWM Frequency 16000
-# Red is GPIO3
-# Warm is GPIO5
-# Green is GPIO10
+# ESP8685-WROOM-04 - Conversion
+# IR - GPIO02
+# PWM-Y - GPIO03
+# PWM-W - GPIO10
+# PWM-B - GPIO04
+# PWM-G-/SPI - GPIO05
+# PWM-R - GPIO06
+# GND
+# 5V

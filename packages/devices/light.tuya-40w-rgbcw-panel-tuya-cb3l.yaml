@@ -46,13 +46,13 @@ output:
   pin: P6
   inverted: False
   frequency: 16000Hz
-  max_power: 75%
+  max_power: 80%
 - platform: libretiny_pwm
   id: output_warm_white
   pin: P24
   inverted: False
   frequency: 16000Hz
-  max_power: 75%
+  max_power: 80%
 
 light:
   - platform: cwww

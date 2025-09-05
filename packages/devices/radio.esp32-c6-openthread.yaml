@@ -1,0 +1,21 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  board: esp32-c6-devkitm-1
+  framework:
+    type: esp-idf
+
+openthread:
+  device_type: FTD
+  force_dataset: true
+  tlv: !secret tlv
+
+# captive_portal:
+
+# web_server:

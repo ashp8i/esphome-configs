@@ -1,7 +1,7 @@
 substitutions:
   name: "tuya-sparelight"
   device_ssid: "Tuya-Spare"
-  device_description: "Tuya 40W RGBCCT Panel ESP32-C3"
+  device_description: "Tuya 72W RGBCCT Retrofit ESP32-C3"
   friendly_name: "Tuya Spare"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Tuya Spare RGB"    # Put the name that you want to see in Home Assistant.
   device_id_white: "tuya_spare"    # Put the name that you want to see in Home Assistant.
@@ -13,7 +13,7 @@ substitutions:
   light_icon: "hue:ceiling-aurelle-circle"
   light_icon_2: "hue:ceiling-aurelle-circle"
   api_key: !secret tuyaspare_noise_key
-  project_name: "tuya.40w-rgbcw-panel-esp32-c3"
+  project_name: "tuya.72w-rgbcw-retrofit-esp32-c3"
   project_version: "1.0"
 
 packages:

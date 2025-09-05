@@ -1,0 +1,10 @@
+text_sensor:
+  # Expose ESPHome information as sensors.
+  - platform: version
+    name: ESPHome Version
+    entity_category: DIAGNOSTIC
+  # Expose Uptime
+  - platform: template
+    name: ${friendly_name} Uptime Human Readable
+    id: uptime_human
+    icon: mdi:clock-start

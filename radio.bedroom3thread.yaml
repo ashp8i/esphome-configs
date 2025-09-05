@@ -1,0 +1,17 @@
+substitutions:
+  name: "bedroom3thread"
+  device_ssid: "Bed 3 Thread"
+  device_description: "Epressif ESP32-C6 DevKit Used as Thread Router"
+  friendly_name: "Bedroom 3 OpenThread" # Put the name that you want to see in Home Assistant.
+  api_key: !secret bedroom3thread_new_noise_key
+  project_name: "espressif.esp32-c6-openthread"
+  project_version: "1.0"
+
+packages:
+  - !include packages/base/debug-thread.yaml
+  - !include packages/devices/radio.esp32-c6-openthread.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/binary-sensor.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/sensor-thread.yaml
+  - !include packages/common/text-sensor-thread.yaml

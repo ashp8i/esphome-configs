@@ -1,0 +1,32 @@
+esphome:
+  name: pft
+  friendly_name: pft
+
+esp32:
+  board: esp32-c6-devkitc-1
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "OKzRf8DDypyG94hGSzvceqlwyGs9F3w4pcTnxLpc7+w="
+
+ota:
+  - platform: esphome
+    password: "bc0d8fc6ef2482c14c1bee80dc5268c0"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Pft Fallback Hotspot"
+    password: "YApcOFZDORPb"
+
+captive_portal:
+    

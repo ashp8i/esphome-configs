@@ -14,10 +14,10 @@ esp32:
 external_components:
   - source: github://jesserockz/wizmote-esphome
     components:
-      - esp_now
+      # - esp_now
       - wizmote
 
-esp_now:
+espnow:
 
 wizmote:
   on_button:

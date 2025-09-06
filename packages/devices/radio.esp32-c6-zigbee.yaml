@@ -1,0 +1,43 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  platformio_options:
+    platform: https://github.com/luar123/platform-espressif32H2/archive/refs/tags/v6.5.1.zip
+  includes:
+    - esphome_zb.h
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+esp32:
+  # ESP32-C6-DevKitC-1-N8
+  board: esp32-c6-devkitc-1
+  flash_size: 8MB
+  partitions: partitions_zb.csv
+  framework:
+    type: esp-idf
+    version: 5.1.2
+    platform_version: 6.5.1
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_8MB: y
+      CONFIG_ZB_ENABLED: y
+      CONFIG_ZB_ZED: y
+      CONFIG_ZB_RADIO_NATIVE: y
+      ZB_ED_ROLE: y
+  variant: esp32c6
+
+# external_components:
+#   - source: github://luar123/zigbee_esphome
+#     components: [zigbee]
+
+# zigbee:
+#   router: true
+#   endpoints:
+#   on_join:
+#     then:
+#       - logger.log: "Joined network"
+
+# captive_portal:
+
+# web_server:

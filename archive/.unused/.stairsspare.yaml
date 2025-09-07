@@ -1,0 +1,84 @@
+substitutions:
+  name: stairsspare
+  device_ssid: "Stairs Spare"
+  device_main_id: stairs_spare
+  device_description: "UT55509-RGBCW - Novostella UT55509 13W 1300lm RGBCCT Bulb."
+  friendly_name: "Stairs Spare"    # Put the name that you want to see in Home Assistant.
+  device_name_rgb: stairs_spare_rgb
+  device_description_rgb: "Stairs Spare"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Stairs Spare RGB"
+  project_name: "novostella.ut55509-rgbcw-light"
+  project_version: "1.0"
+  
+esphome:
+  name: "${name}"
+  # name_add_mac_suffix: true
+  comment: ${device_description}
+  platform: ESP8266
+  board: modwifi
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+    use_address: stairs.local
+
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid} Fallback Hotspot
+      password: !secret ap_password
+
+captive_portal:
+
+# Enable logging
+# Example configuration entry
+debug:
+
+# Logger must be at least debug (default)
+logger:
+  level: debug
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  password: !secret ota_password
+
+web_server:
+  port: 80
+
+
+output:
+  - platform: esp8266_pwm
+    id: output_red
+    pin: GPIO4
+  - platform: esp8266_pwm
+    id: output_green
+    pin: GPIO12
+  - platform: esp8266_pwm
+    id: output_blue
+    pin: GPIO14
+  - platform: esp8266_pwm
+    id: output_cold_white
+    pin: GPIO5
+  - platform: esp8266_pwm
+    id: output_warm_white
+    pin: GPIO13
+
+light:
+  - platform: rgbww
+    name: ${friendly_name}    # Put the name that you want to see in Home Assistant.
+    red: output_red
+    green: output_green
+    blue: output_blue
+    cold_white: output_cold_white
+    warm_white: output_warm_white
+    cold_white_color_temperature: 6200 K
+    warm_white_color_temperature: 3100 K
+    default_transition_length: 0.5s
+    constant_brightness: false
+    gamma_correct: 0

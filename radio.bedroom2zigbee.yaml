@@ -1,7 +1,7 @@
 substitutions:
   name: "bedroom2zigbee"
   device_ssid: "Bed 2 Zigbee"
-  device_description: "Epressif ESP32-C6 DevKit Used as Thread Router"
+  device_description: "Espressif ESP32-C6 DevKit Used as Zigbee Router"
   friendly_name: "Bedroom 2 Zigbee Router" # Put the name that you want to see in Home Assistant.
   api_key: !secret bedroom3thread_new_noise_key
   project_name: "espressif.esp32-c6-zigbee"

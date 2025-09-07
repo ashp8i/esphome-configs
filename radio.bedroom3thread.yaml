@@ -1,7 +1,7 @@
 substitutions:
   name: "bedroom3thread"
   device_ssid: "Bed 3 Thread"
-  device_description: "Epressif ESP32-C6 DevKit Used as Thread Router"
+  device_description: "Espressif ESP32-C6 DevKit Used as Thread Router"
   friendly_name: "Bedroom 3 OpenThread" # Put the name that you want to see in Home Assistant.
   api_key: !secret bedroom3thread_new_noise_key
   project_name: "espressif.esp32-c6-openthread"

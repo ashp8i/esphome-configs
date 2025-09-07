@@ -1,0 +1,1492 @@
+substitutions:
+  device_ssid: "Ashish Room Light"
+  device_name: ashishroomlight
+  device_main_id: ashishroomlightcct
+  device_description: "Ceiling LED light with IR remote located in Ashish Room with discreet Tunable White & RGB Front Light (shows up as separate lights)."
+  friendly_name: "Ashish Room Light"    # Put the name that you want to see in Home Assistant.
+  device_name_rgb: ashishroomlightrgb
+  device_description_rgb: "Ashish Room Light RGB."    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Ashish Room Light RGB"
+  # frequency_rgb: 250 Hz
+  frequency_cw: 1000 Hz
+  frequency_ww: 1000 Hz
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP32
+  board: esp32dev
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid} Fallback Hotspot
+      password: !secret ap_password
+
+captive_portal:
+
+# Enable logging
+# Example configuration entry
+debug:
+
+# Logger must be at least debug (default)
+logger:
+  level: debug
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  safe_mode: true
+  password: !secret ota_password
+
+web_server:
+  port: 80
+
+output:
+  - platform: ledc
+    id: output_red
+    pin: GPIO5
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_green
+    pin: GPIO14
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_blue
+    pin: GPIO16
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_cold_white
+    max_power: 100%
+    frequency: ${frequency_cw}
+    pin: GPIO17
+  - platform: ledc
+    id: output_warm_white
+    pin: GPIO18
+    max_power: 100%
+    frequency: ${frequency_ww}
+
+globals:
+  - id: last_light_on
+    type: int
+    restore_value: no
+    initial_value: '1'
+
+remote_receiver:
+  pin:
+    number: GPIO27
+    inverted: True
+    mode: INPUT_PULLUP
+  dump: lg
+  # tolerance: 60%
+  # filter: 4us
+  # idle: 4ms
+  
+# IR Remote Binary Sensors
+binary_sensor:
+
+# On, Off, Brightness Buttons 
+  - platform: remote_receiver
+    id: "toggle"
+    internal: true
+    lg:
+      data: 0x00FF02FD
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - lambda: |-
+            if(id(last_light_on) == 1)
+            {
+            auto call = id(${device_main_id}).toggle();
+            call.perform();
+            }
+            else if (id(last_light_on) == 2)
+            {
+            auto call = id(${device_name_rgb}).toggle();
+            call.perform();
+            }
+  - platform: remote_receiver
+    id: "playpause"
+    internal: true
+    lg:
+      data: 0x00FF827D
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - lambda: |-
+            if(id(last_light_on) == 1)
+            {
+            auto call = id(${device_name_rgb}).turn_on();
+            call.set_transition_length(500);
+            call.perform();
+            call = id(${device_main_id}).turn_off();
+            call.perform();
+            }
+            else if (id(last_light_on) == 2)
+            {
+            auto call = id(${device_main_id}).turn_on();
+            call.set_transition_length(500);
+            call.perform();
+            call = id(${device_name_rgb}).turn_off();
+            call.perform();
+            }
+  - platform: remote_receiver
+    id: brightness_up
+    internal: true
+    lg:
+      data: 0x00FF3AC5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - lambda: |-
+            if(id(last_light_on) == 1)
+            {
+            float brightness;
+            auto call = id(${device_main_id}).turn_on();
+            id(${device_main_id}).remote_values.as_brightness( &brightness );
+            brightness += 0.1f;
+            if( brightness > 1.0f )
+            {
+              brightness = 1.0f;
+            }
+            call.set_brightness( brightness );
+            call.set_transition_length(500);
+            call.perform();
+            }
+            else if (id(last_light_on) == 2)
+            {
+            float brightness;
+            auto call = id(${device_name_rgb}).turn_on();
+            id(${device_name_rgb}).remote_values.as_brightness( &brightness );
+            brightness += 0.1f;
+            if( brightness > 1.0f )
+            {
+              brightness = 1.0f;
+            }
+            call.set_brightness( brightness );
+            call.set_transition_length(500);
+            call.perform();
+            }
+        - delay: 0.01s
+  - platform: remote_receiver
+    id: brightness_down
+    internal: true
+    lg:
+      data: 0x00FFBA45
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - lambda: |-
+            if(id(last_light_on) == 1)
+            {
+            float brightness;
+            auto call = id(${device_main_id}).turn_on();
+            id(${device_main_id}).remote_values.as_brightness( &brightness );
+            brightness -= 0.1f;
+            if( brightness < 0.0f )
+            {
+              brightness = 0.0f;
+            }
+            call.set_brightness( brightness );
+            call.set_transition_length(500);
+            call.perform();
+            }
+            else if (id(last_light_on) == 2)
+            {
+            float brightness;
+            auto call = id(${device_name_rgb}).turn_on();
+            id(${device_name_rgb}).remote_values.as_brightness( &brightness );
+            brightness -= 0.1f;
+            if( brightness < 0.0f )
+            {
+              brightness = 0.0f;
+            }
+            call.set_brightness( brightness );
+            call.set_transition_length(500);
+            call.perform();
+            }
+        - delay: 0.01s
+
+# Main Colours
+  - platform: remote_receiver
+    id: red
+    internal: true
+    lg:
+      data: 0x00FF1AE5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 100%
+            green: 0
+            blue: 0
+            effect: none
+  - platform: remote_receiver
+    id: green
+    internal: true
+    lg:
+      data: 0x00FF9A65
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 0
+            green: 100%
+            blue: 0
+            effect: none
+  - platform: remote_receiver
+    id: blue
+    internal: true
+    lg:
+      data: 0x00FFA25D
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 0
+            green: 0
+            blue: 100%
+            effect: none
+  - platform: remote_receiver
+    id: white
+    internal: true
+    lg:
+      data: 0x00FF22DD
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(last_light_on) != 2;'
+            then:
+              - light.turn_on:
+                  id: ${device_name_rgb}
+                  red: 100%
+                  green: 100%
+                  blue: 65%
+                  effect: none
+            else:
+              - lambda: |-
+                  auto call = id(${device_name_rgb}).turn_off();
+                  call.perform();
+                  call = id(${device_main_id}).turn_on();
+                  call.set_transition_length(500);
+                  call.set_color_temperature(100);
+                  call.perform();
+
+# Reds
+  - platform: remote_receiver
+    id: Tomato
+    internal: true
+    lg:
+      data: 0x00FF2AD5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 100%
+            green: 35%
+            blue: 14%
+            effect: none
+  - platform: remote_receiver
+    id: orange
+    internal: true
+    lg:
+      data: 0x00FF0AF5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 100%
+            green: 57%
+            blue: 14%
+            effect: none
+            
+  - platform: remote_receiver
+    id: yellowish
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 100%
+            green: 68%
+            blue: 23%
+            effect: none
+            
+  - platform: remote_receiver
+    id: yellow
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 100%
+            green: 78%
+            blue: 28%
+            effect: none
+
+# Greens
+  - platform: remote_receiver
+    id: lightgreen
+    internal: true
+    lg:
+      data: 0x00FFAA55
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 28%
+            green: 100%
+            blue: 28%
+            effect: none
+  - platform: remote_receiver
+    id: turquoise
+    internal: true
+    lg:
+      data: 0x00FF8A75
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 28%
+            green: 100%
+            blue: 64%
+            effect: none
+            
+  - platform: remote_receiver
+    id: cyan
+    internal: true
+    lg:
+      data: 0x00FFB847
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 28%
+            green: 100%
+            blue: 64%
+            effect: none
+            
+  - platform: remote_receiver
+    id: aqua
+    internal: true
+    lg:
+      data: 0x00FF9867
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 28%
+            green: 100%
+            blue: 64%
+            effect: none
+
+# Blues
+  - platform: remote_receiver
+    id: deepblue
+    internal: true
+    lg:
+      data: 0x00FF926D
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 14%
+            green: 14%
+            blue: 100%
+            effect: none
+  - platform: remote_receiver
+    id: purple
+    internal: true
+    lg:
+      data: 0x00FFB24D
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 46%
+            green: 28%
+            blue: 100%
+            effect: none
+            
+  - platform: remote_receiver
+    id: magenta
+    internal: true
+    lg:
+      data: 0x00FF7887
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 46%
+            green: 28%
+            blue: 100%
+            effect: none
+
+  - platform: remote_receiver
+    id: pink
+    internal: true
+    lg:
+      data: 0x00FF58A7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 46%
+            green: 28%
+            blue: 100%
+            effect: none
+
+# Others
+  - platform: remote_receiver
+    id: warmwhitefloralwhite
+    internal: true
+    lg:
+      data: 0x00FF12ED
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(last_light_on) != 2;'
+            then:
+              - light.turn_on:
+                  id: ${device_name_rgb}
+                  red: 100%
+                  green: 67%
+                  blue: 23%
+                  effect: none
+            else:
+              - lambda: |-
+                  auto call = id(${device_name_rgb}).turn_off();
+                  call.perform();
+                  call = id(${device_main_id}).turn_on();
+                  call.set_transition_length(500);
+                  call.set_color_temperature(500);
+                  call.perform();
+  - platform: remote_receiver
+    id: lavenderblush
+    internal: true
+    lg:
+      data: 0x00FF32CD
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 46%
+            green: 28%
+            blue: 100%
+            effect: none
+            
+  - platform: remote_receiver
+    id: ghostwhite
+    internal: true
+    lg:
+      data: 0x00FFF807
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 46%
+            green: 28%
+            blue: 100%
+            effect: none
+
+  - platform: remote_receiver
+    id: lightcyan
+    internal: true
+    lg:
+      data: 0x00FFD827
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_name_rgb}
+            red: 46%
+            green: 28%
+            blue: 100%
+            effect: none
+
+# RGB UP/DOWN Buttons
+
+# "Red Up" Button - Red Increase
+  - platform: remote_receiver
+    id: redincrease
+    internal: true
+    lg:
+      data: 0x00FF28D7
+      nbits: 32
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return (id(${device_main_id}).get_effect_name() == "Flash");'
+            then:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: None
+            else:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: flash
+
+
+# "Red Down" Button - Red Decrease
+  - platform: remote_receiver
+    id: reddecrease
+    internal: true
+    lg:
+      data: 0x00FF08F7
+      nbits: 32
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return (id(${device_main_id}).get_effect_name() == "Strobe");'
+            then:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: None
+            else:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: strobe
+
+
+# "Green Up" Button - Green Increase
+  - platform: remote_receiver
+    id: greenincrease
+    internal: true
+    lg:
+      data: 0x00FFA857
+      nbits: 32
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+            then:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: None
+            else:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: fade
+
+
+# "Green Down" Button - Green Decrease
+  - platform: remote_receiver
+    id: greendecrease
+    internal: true
+    lg:
+      data: 0x00FF8877
+      nbits: 32
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+            then:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: None
+            else:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: smooth
+
+# "Blue Up" Button - Blue Increase
+  - platform: remote_receiver
+    id: blueincrease
+    internal: true
+    lg:
+      data: 0x00FF897
+      nbits: 32
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+            then:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: None
+            else:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: fade
+
+
+# "Blue Down" Button - Blue Decrease
+  - platform: remote_receiver
+    id: bluedecrease
+    internal: true
+    lg:
+      data: 0x00FF48B7
+      nbits: 32
+    on_press:
+      then:
+        - if:
+            condition:
+              lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+            then:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: None
+            else:
+              - light.turn_on:
+                  id: ${device_main_id}
+                  effect: smooth# Effect Buttons
+
+# # DIY Buttons
+
+# # "DIY1" Button - Not Used
+#   - platform: remote_receiver
+#     id: diy1
+#     internal: true
+#     lg:
+#       data: 0x00FF30CF
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Flash");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: flash
+
+
+# # "DIY2" Button - Not Used
+#   - platform: remote_receiver
+#     id: diy2
+#     internal: true
+#     lg:
+#       data: 0x00FF708F
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Strobe");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: strobe
+
+# # "DIY3" Button - Not Used
+#   - platform: remote_receiver
+#     id: diy3
+#     internal: true
+#     lg:
+#       data: 0x00FF708F
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: fade
+
+# # "DIY4" Button - Not Used
+#   - platform: remote_receiver
+#     id: diy4
+#     internal: true
+#     lg:
+#       data: 0x00FF10EF
+#      nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: smooth
+
+# # "DIY5" Button - Not Used
+#   - platform: remote_receiver
+#     id: diy5
+#     internal: true
+#     lg:
+#       data: 0x00FF906F
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: fade
+
+# # "DIY6" Button - Not Used
+#   - platform: remote_receiver
+#     id: diy6
+#     internal: true
+#     lg:
+#       data: 0x00FF50AF
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: smooth
+
+# # Effect Buttons
+
+# # "Quick" Button - Flicker Effect (Not Used)
+#   - platform: remote_receiver
+#     id: quick
+#     internal: true
+#     lg:
+#       data: 0x00FFE817
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Flash");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: flash
+
+
+# # "Slow" Button - Strobe Effect (Not Used)
+#   - platform: remote_receiver
+#     id: slow
+#     internal: true
+#     lg:
+#       data: 0x00FFC837
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Strobe");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: strobe
+
+
+# # "Auto" Button - Toggle Preset (Not Used)
+#   - platform: remote_receiver
+#     id: auto
+#     internal: true
+#     lg:
+#       data: 0x0FFF00F
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: fade
+
+
+# # "Flash" Button - Cycle Effects (Not Used)
+#   - platform: remote_receiver
+#     id: flash
+#     internal: true
+#     lg:
+#       data: 0x00FFD02F
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: smooth
+
+# # "Jump3" Button - Slow Random Effect
+# - platform: remote_receiver
+# id: jump3
+# internal: true
+# lg:
+#   data: 0x00FF20DF
+#   nbits: 32
+# on_press:
+#   then:
+#     - if:
+#         condition:
+#           lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+#         then:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: None
+#         else:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: fade
+
+
+# # "Jump7" Button - Not Used
+# - platform: remote_receiver
+# id: jump7
+# internal: true
+# lg:
+#   data: 0x00FFA05F
+#   nbits: 32
+# on_press:
+#   then:
+#     - if:
+#         condition:
+#           lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+#         then:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: None
+#         else:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: smooth
+
+# # "Fade3" Button - Not Used
+# - platform: remote_receiver
+# id: fade3
+# internal: true
+#     lg:
+#       data: 0x00FF609F
+#      nbits: 32
+# on_press:
+#   then:
+#     - if:
+#         condition:
+#           lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+#         then:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: None
+#         else:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: fade
+
+
+# # "Fade7" Button - Not Used
+# - platform: remote_receiver
+# id: fade7
+# internal: true
+# lg:
+#   data: 0x00FFE01F
+#   nbits: 32
+# on_press:
+#   then:
+#     - if:
+#         condition:
+#           lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+#         then:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: None
+#         else:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: smooth
+
+# CCT Remote
+# On  Buttons 
+  - platform: remote_receiver
+    id: "On"
+    internal: true
+    lg:
+      data: 0x00F7C03F
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            
+# Off Buttons 
+  - platform: remote_receiver
+    id: "Off"
+    internal: true
+    lg:
+      data: 0x00F740BF
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_off:
+            id: ${device_main_id}
+# Brightness Up Buttons
+  - platform: remote_receiver
+    id: brightness_up_cct
+    internal: true
+    lg:
+      data: 0x00F700FF
+      nbits: 32
+    on_press:
+      then:
+        - light.dim_relative:
+            id: ${device_main_id}
+            relative_brightness: 20%
+# Brightness Down Buttons
+  - platform: remote_receiver
+    id: brightness_down_cct
+    internal: true
+    lg:
+      data: 0x00F7807F
+      nbits: 32
+    on_press:
+      then:
+        - light.dim_relative:
+            id: ${device_main_id}
+            relative_brightness: -20%
+# Cold White Increase Button
+  - platform: remote_receiver
+    id: cold_white_up
+    internal: true
+    lg:
+      data: 0x00F740BF
+      nbits: 32
+    on_press:
+      then:
+        - light.dim_relative:
+            id: ${device_main_id}
+            relative_brightness: 20%
+# Cold White Decrease Button
+  - platform: remote_receiver
+    id: cold_white_down
+    internal: true
+    lg:
+      data: 0x00F740BF
+      nbits: 32
+    on_press:
+      then:
+        - light.dim_relative:
+            id: ${device_main_id}
+            relative_brightness: -20%
+# Warm White Increase Button
+  - platform: remote_receiver
+    id: warm_white_up
+    internal: true
+    lg:
+      data: 0x00F740BF
+      nbits: 32
+    on_press:
+      then:
+        - light.dim_relative:
+            id: ${device_main_id}
+            relative_brightness: 20%
+# Warm White Decrease Button
+  - platform: remote_receiver
+    id: warm_white_down
+    internal: true
+    lg:
+      data: 0x00F740BF
+      nbits: 32
+    on_press:
+      then:
+        - light.dim_relative:
+            id: ${device_main_id}
+            relative_brightness: -20%
+# Whites
+# "Cool White" Button
+  - platform: remote_receiver
+    id: coolwhite
+    internal: true
+    lg:
+      data: 0x00FF2AD5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 35%
+            blue: 14%
+            effect: none
+# "Less Cool White" Button
+  - platform: remote_receiver
+    id: lesscoolwhite
+    internal: true
+    lg:
+      data: 0x00FF0AF5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 57%
+            blue: 14%
+            effect: none
+# "Daylight1" Button
+  - platform: remote_receiver
+    id: daylight1
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 68%
+            blue: 23%
+            effect: none
+            
+  - platform: remote_receiver
+    id: warmdaylight
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 78%
+            blue: 28%
+            effect: none
+# Daylights
+# "Daylight2" Button
+  - platform: remote_receiver
+    id: daylight2
+    internal: true
+    lg:
+      data: 0x00FF2AD5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 35%
+            blue: 14%
+            effect: none
+# "Daylight3" Button
+  - platform: remote_receiver
+    id: daylight3
+    internal: true
+    lg:
+      data: 0x00FF0AF5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 57%
+            blue: 14%
+            effect: none
+# "Daylight4" Button
+  - platform: remote_receiver
+    id: daylight4
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 68%
+            blue: 23%
+            effect: none
+# "Amber Daylight" Button
+  - platform: remote_receiver
+    id: amberdaylight
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 78%
+            blue: 28%
+            effect: none
+# Warm White
+# "Daylight1" Button
+  - platform: remote_receiver
+    id: daylight
+    internal: true
+    lg:
+      data: 0x00FF2AD5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 35%
+            blue: 14%
+            effect: none
+# "Daylight1" Button
+  - platform: remote_receiver
+    id: warmdaylight1
+    internal: true
+    lg:
+      data: 0x00FF0AF5
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 57%
+            blue: 14%
+            effect: none
+# "Daylight1" Button   
+  - platform: remote_receiver
+    id: lesswarmwhite
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 68%
+            blue: 23%
+            effect: none
+# "Daylight1" Button   
+  - platform: remote_receiver
+    id: warmwhite
+    internal: true
+    lg:
+      data: 0x00FF18E7
+      nbits: 32
+    filters:
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.turn_on:
+            id: ${device_main_id}
+            red: 100%
+            green: 78%
+            blue: 28%
+            effect: none
+
+# # "Flash" Button - Cycle Effects (Not Used)
+#   - platform: remote_receiver
+#     id: flash
+#     internal: true
+#     lg:
+#       data: 0x00FFD02F
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Smooth");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: smooth
+
+# # "Fade" Button - Cycle Effects (Not Used)
+#   - platform: remote_receiver
+#     id: fade
+# internal: true
+#     lg:
+#       data: 0x00FF609F
+#      nbits: 32
+# on_press:
+#   then:
+#     - if:
+#         condition:
+#           lambda: 'return (id(${device_main_id}).get_effect_name() == "Fade");'
+#         then:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: None
+#         else:
+#           - light.turn_on:
+#               id: ${device_main_id}
+#               effect: fade
+
+# # "Quick" Button - Flicker Effect (Not Used)
+#   - platform: remote_receiver
+#     id: quick
+#     internal: true
+#     lg:
+#       data: 0x00FFE817
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Flash");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: flash
+
+# # "Slow" Button - Strobe Effect (Not Used)
+#   - platform: remote_receiver
+#     id: slow
+#     internal: true
+#     lg:
+#       data: 0x00FFC837
+#       nbits: 32
+#     on_press:
+#       then:
+#         - if:
+#             condition:
+#               lambda: 'return (id(${device_main_id}).get_effect_name() == "Strobe");'
+#             then:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: None
+#             else:
+#               - light.turn_on:
+#                   id: ${device_main_id}
+#                   effect: strobe
+
+# Sensors with general information.
+sensor:
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+    
+text_sensor:
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${friendly_name} IP
+    ssid:
+      name: ${friendly_name} SSID
+    bssid:
+      name: ${friendly_name} BSSID
+  # Expose Uptime
+  - platform: template
+    name: ${friendly_name} Uptime
+    id: uptime_HA
+    icon: mdi:clock-start
+    
+switch:
+    # this provides for a possibility to restart from the web console or Home automation should we ever need it
+  - platform: restart
+    name: "Restart"
+
+wled:
+
+e131:
+  method: multicast # default: register E1.31 to Multicast group
+
+light:
+  - platform: cwww
+    name: ${friendly_name}
+    id: ${device_main_id}
+    cold_white: output_cold_white
+    warm_white: output_warm_white
+    default_transition_length: 0.5s
+    restore_mode: RESTORE_DEFAULT_OFF
+    cold_white_color_temperature: 6500 K
+    warm_white_color_temperature: 2700 K
+    constant_brightness: true # Brightness & Temp NOT Cool White Bright & Warm White Brights
+    on_turn_on:
+    - light.turn_off: ${device_name_rgb}
+    - globals.set:
+        id: last_light_on
+        value: '1'
+  - platform: rgb
+    name: internal_rgb
+    id: internal_rgb
+    red: output_red
+    green: output_green
+    blue: output_blue
+    restore_mode: RESTORE_DEFAULT_OFF
+    internal: true
+  - platform: partition
+    name: ${friendly_name_rgb}
+    id: ${device_name_rgb}
+    segments:
+      # Use internal_rgb as a single light partition for WLED and e1.31
+      - single_light_id: internal_rgb
+    default_transition_length: 0.25s
+    on_turn_on:
+    - light.turn_off: ${device_main_id}
+    - globals.set:
+        id: last_light_on
+        value: '2'
+    # internal: true
+    effects:
+      - wled:
+          # port: 21324
+      - e131:
+          universe: 1
+          channels: RGB
+      

@@ -1,0 +1,112 @@
+substitutions:
+  device_ssid: "433testc3"
+  device_name: 433testc3
+  device_main_id: 433testc3
+  device_description: "433testc3."
+  friendly_name: "433testc3"    # Put the name that you want to see in Home Assistant.
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platformio_options:
+    board_build.flash_mode: dio
+  # platform: ESP32
+  # board: esp32dev
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    # type: arduino
+    # version: 2.0.2
+    # platform_version: 4.3.0
+  # framework:
+    type: esp-idf
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid} Fallback Hotspot
+      password: !secret ap_password
+
+# captive_portal:
+
+# Enable logging
+# Example configuration entry
+debug:
+
+# Logger must be at least debug (default)
+logger:
+  level: debug
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  safe_mode: true
+  password: !secret ota_password
+
+# web_server:
+#   port: 80
+
+
+remote_receiver:
+  - id: dummy1
+    pin:
+      number: GPIO6
+      inverted: true
+      mode: INPUT_PULLUP
+  - id: main433
+    pin:
+      number: GPIO19
+      inverted: true
+      mode: INPUT_PULLUP
+    dump:
+      - lg
+      - midea
+      - nec
+      - panasonic
+      - pioneer
+      - jvc
+      - samsung
+      - samsung36
+      - sony
+      - toshiba_ac
+      - rc_switch 
+      - rc5
+    filter: 50us
+    idle: 5ms
+    tolerance: 50
+  
+# IR Remote Binary Sensors
+
+# Sensors with general information.
+sensor:
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+    
+text_sensor:
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${friendly_name} IP
+    ssid:
+      name: ${friendly_name} SSID
+    bssid:
+      name: ${friendly_name} BSSID
+  # Expose Uptime
+  - platform: template
+    name: ${friendly_name} Uptime
+    id: uptime_HA
+    icon: mdi:clock-start
+    
+switch:
+    # this provides for a possibility to restart from the web console or Home automation should we ever need it
+  - platform: restart
+    name: "Restart"

@@ -1,0 +1,148 @@
+substitutions:
+  device_ssid: "Spare Lumary"
+  device_name: sparelumary
+  device_description: "Lumary 18W RGBCW Slim Downlight"
+  friendly_name: "Spare Lumary"    # Put the name that you want to see in Home Assistant.
+  friendly_name_rgb: "Spare Lumary RGB"    # Put the name that you want to see in Home Assistant.
+  main_device_id: "sparelumary"    # Put the name that you want to see in Home Assistant.
+  rgb_device_id: "sparelumaryrgb" # Put the name that you want to see in Home Assistant.
+  project_name: "lumary.18w-rgbcw-slim-downlight-esp32-c3-arduino"
+  project_version: "1.0"
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platformio_options:
+    board_build.flash_mode: dio
+  # platform: ESP32
+  # board: esp32dev
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    # type: arduino
+    # version: 2.0.2
+    # platform_version: 4.3.0
+  # framework:
+    type: esp-idf
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+    # use_address: masterbedroom1test.local
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid}
+      password: !secret ap_password
+
+# captive_portal:
+
+# Enable logging
+# Example configuration entry
+debug:
+
+# Logger must be at least debug (default)
+logger:
+  level: DEBUG
+    # baud_rate: 0
+  
+# uart:
+#   rx_pin: GPIO21
+#   tx_pin: GPIO20
+#   # baud_rate: 9600
+#   baud_rate: 115200
+#   stop_bits: 1
+#   debug:
+#     direction: BOTH
+
+# Register the Tuya MCU connection
+# tuya:
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  safe_mode: true
+  password: !secret ota_password
+
+# web_server:
+#   port: 80
+
+# Sensors with general information.
+sensor:
+  - platform: uptime
+    name: "${friendly_name} Uptime"
+    id: uptime_sensor
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+    
+text_sensor:
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${friendly_name} IP
+    ssid:
+      name: ${friendly_name} SSID
+    bssid:
+      name: ${friendly_name} BSSID
+#  - platform: template
+#    name: Uptime Human Readable
+#    id: uptime_human
+#    icon: mdi:clock-start
+    
+switch:
+    # this provides fr a possibility to restart from the web console or Home automation should we ever need it
+  - platform: restart
+    name: "Restart"
+
+output:
+  - platform: ledc
+    id: output_red
+    pin: GPIO3
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_green
+    pin: GPIO10
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_blue
+    pin: GPIO6
+    # max_power: 100%
+    # frequency: ${frequency_rgb}
+  - platform: ledc
+    id: output_cold_white
+    max_power: 100%
+    # frequency: ${frequency_cw}
+    pin: GPIO4
+  - platform: ledc
+    id: output_warm_white
+    pin: GPIO5
+    max_power: 100%
+    # frequency: ${frequency_ww}
+
+light:
+  - platform: cwww
+    name: ${friendly_name}
+    id: ${main_device_id}
+    cold_white: output_cold_white
+    warm_white: output_warm_white
+    cold_white_color_temperature: 6536 K
+    warm_white_color_temperature: 2000 K
+    constant_brightness: false
+    gamma_correct: 0
+    default_transition_length: 1s
+  - platform: rgb
+    name: ${friendly_name_rgb}
+    id: ${rgb_device_id}
+    red: output_red
+    green: output_green
+    blue: output_blue
+    default_transition_length: 0.5s
+    restore_mode: RESTORE_DEFAULT_OFF

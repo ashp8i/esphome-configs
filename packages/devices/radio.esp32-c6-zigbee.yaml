@@ -2,23 +2,26 @@
 esphome:
   name: ${name}
   comment: ${device_description}
-  platformio_options:
-    platform: https://github.com/luar123/platform-espressif32H2/archive/refs/tags/v6.5.1.zip
-  includes:
-    - esphome_zb.h
+  # platformio_options:
+  #   platform: https://github.com/luar123/platform-espressif32H2/archive/refs/tags/v6.5.1.zip
+  # includes:
+  #   - esphome_zb.h
+  #   - esp_zb_light.c
+  #   - esp_zb_light.h
+
   project:
     name: "${project_name}"
     version: "${project_version}"
 
 esp32:
   # ESP32-C6-DevKitC-1-N8
-  board: esp32-c6-devkitc-1
+  board: esp32-c6-devkitm-1
   flash_size: 8MB
   partitions: partitions_zb.csv
   framework:
     type: esp-idf
-    version: 5.1.2
-    platform_version: 6.5.1
+    # version: 5.1.2
+    # platform_version: 6.5.1
     sdkconfig_options:
       CONFIG_ESPTOOLPY_FLASHSIZE_8MB: y
       CONFIG_ZB_ENABLED: y
@@ -27,16 +30,30 @@ esp32:
       ZB_ED_ROLE: y
   variant: esp32c6
 
-# external_components:
-#   - source: github://luar123/zigbee_esphome
-#     components: [zigbee]
+external_components:
+  - source: github://luar123/zigbee_esphome
+    components: [zigbee]
 
-# zigbee:
-#   router: true
-#   endpoints:
-#   on_join:
-#     then:
-#       - logger.log: "Joined network"
+zigbee:
+  router: true
+  endpoints:
+    # - num: 1
+    #   device_type: COLOR_DIMMABLE_LIGHT
+    #   clusters:
+    #     - id: ON_OFF
+    #       attributes:
+    #         - attribute_id: 0
+    # - rangeExtender
+  # on_join:
+  #   then:
+  #     - logger.log: "Joined network"
+
+# custom_component:
+# - lambda: |-
+#     auto my_zb = new esphomeZB();
+#     return {my_zb};
+#   components:
+#   - id: zb
 
 # captive_portal:
 

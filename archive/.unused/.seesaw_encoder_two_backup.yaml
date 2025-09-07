@@ -1,0 +1,376 @@
+substitutions:
+  device_ssid: "Ashish Seesaw Controller Testing"
+  device_name: seesawencoders2testing
+  device_main_description: "DIY ESPHOME Seesaw Rotary"
+  device_description: DIY ESPHOME Seesaw Rotary
+  friendly_name: "DIY ESPHome Seesaw Rotary"    # Put the name that you want to see in Home Assistant.
+  
+external_components:
+  # use seesaw local by ssieb
+  - source:
+      type: local
+      path: ssieb_custom_components
+
+esphome:
+  name: ${device_name}
+  platform: ESP32
+  board: esp32dev
+  # board: esp32-s2-saola-1
+  # platformio_options:
+  #   board_build.mcu: esp32s2
+  #   platform_packages: framework-arduinoespressif32 @ https://github.com/espressif/arduino-esp32.git#idf-release/v4.2
+  # platformio_options:
+  #   platform_packages:
+  #     - framework-arduinoespressif32 @ https://github.com/espressif/arduino-esp32.git#2.0.1
+  #   platform:
+  #     - https://github.com/platformio/platform-espressif32.git#feature/arduino-upstream
+
+# esp32:
+#   framework:
+#     type: esp-idf
+#     version: recommended
+#   Custom sdkconfig options
+#   sdkconfig_options:
+#     CONFIG_COMPILER_OPTIMIZATION_SIZE: y
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+    power_save_mode: none
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid}
+      password: !secret ap_password
+
+captive_portal:
+
+# Enable logging
+# Example configuration entry
+# debug:
+
+# Logger must be at least debug (default)
+logger:
+  level: debug
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+  
+globals:
+  - id: new_brightness_1
+    type: float
+    initial_value: "0"
+  - id: new_brightness_2
+    type: float
+    initial_value: "0"
+
+  - id: percent_brightness_1
+    type: int
+    initial_value: "0"
+  
+  - id: percent_brightness_2
+    type: int
+    initial_value: "0"
+
+  - id: percent_warmth_1
+    type: int
+    initial_value: "0"
+
+  - id: percent_warmth_2
+    type: int
+    initial_value: "0"
+
+  - id: lastAct_1
+    type: int
+    initial_value: "0"
+
+  - id: uptimeSecs_1
+    type: int
+    initial_value: "0"
+
+  - id: oneShot_1
+    type: int
+    initial_value: "0"
+    
+  - id: lastAct_2
+    type: int
+    initial_value: "0"
+
+  - id: uptimeSecs_2
+    type: int
+    initial_value: "0"
+
+  - id: oneShot_2
+    type: int
+    initial_value: "0"
+
+interval:
+  - interval: 1sec
+    then:
+      - lambda: "id(uptimeSecs_1) += 1;"
+      - if:
+          condition:
+            lambda: "return (id(uptimeSecs_1) > (id(lastAct_1) + 30)) && id(oneShot_1) == 1;"
+          then:
+            - logger.log: "Turning Off Ring 1"
+            - lambda: "id(oneShot_1) = 0;"
+            - light.turn_off:
+                id: pixel_ring_1
+  - interval: 1sec
+    then:
+      - lambda: "id(uptimeSecs_2) += 1;"
+      - if:
+          condition:
+            lambda: "return (id(uptimeSecs_2) > (id(lastAct_2) + 30)) && id(oneShot_2) == 1;"
+          then:
+            - logger.log: "Turning Off Ring 2"
+            - lambda: "id(oneShot_1) = 0;"
+            - light.turn_off:
+                id: pixel_ring_2
+
+script:
+  - id: lastAction_1
+    then:
+      - lambda: "id(oneShot_1) = 1;"
+      - lambda: "id(lastAct_1) = id(uptimeSecs_1);"
+  - id: lastAction_2
+    then:
+      - lambda: "id(oneShot_2) = 1;"
+      - lambda: "id(lastAct_2) = id(uptimeSecs_2);"
+
+ota:
+  safe_mode: true
+  password: !secret ota_password
+
+web_server:
+  port: 80
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  
+seesaw:
+  - id: seesaw_1
+    address: 0x36
+  - id: seesaw_2
+    address: 0x37
+
+sensor:
+  - platform: seesaw
+    id: encoder1s2
+    type: encoder
+    seesaw: seesaw_1
+    name: "Seesaw Encoder Two 1 S2"
+    min_value: 0
+    max_value: 100
+    # resolution: 4
+    on_value:
+      then:
+        - homeassistant.service:
+            service: light.turn_on
+            data_template:
+              entity_id: light.ashish_room_light_rgb
+              brightness_pct: "{{ brightness_1 | int }}"
+            variables:
+              brightness_1: !lambda 'return id(encoder1s2).state;'
+  - platform: seesaw
+    id: encoder2s2
+    type: encoder
+    seesaw: seesaw_2
+    name: "Seesaw Encoder Two 2 S2"
+    min_value: 0
+    max_value: 100
+    # filters:
+    #   - invert:
+    on_value:
+      then:
+        - homeassistant.service:
+            service: light.turn_on
+            data_template:
+              entity_id: light.ashish_room_light
+              brightness_pct: "{{ brightness_1 | int }}"
+            variables:
+              brightness_1: !lambda 'return id(encoder2s2).state;'
+
+
+  - platform: homeassistant
+    id: light_brightness_1
+    entity_id: sensor.ashish_room_light_rgb_brightness
+    internal: true
+    on_value:
+      then:
+        - globals.set:
+            id: percent_brightness_1
+            value: !lambda 'return (x / 256) * 100;'
+        # - sensor.rotary_encoder.set_value:
+        #     value: !lambda "return x;"
+        - light.turn_on:
+            id: pixel_ring_1
+            brightness: 60%
+            effect: "Light Brightness 1"
+        - script.execute: lastAction_1
+
+  - platform: homeassistant
+    id: light_warmth_1
+    entity_id: sensor.ashish_room_light_rgb_warmth
+    on_value:
+      then:
+        - globals.set:
+            id: percent_warmth_1
+            value: !lambda 'return ((x - 153) / (465 - 153)) * 100;' 
+            
+  - platform: homeassistant
+    id: light_brightness_2
+    entity_id: sensor.ashish_room_light_brightness
+    internal: true
+    on_value:
+      then:
+        - globals.set:
+            id: percent_brightness_2
+            value: !lambda 'return (x / 256) * 100;'
+        # - sensor.rotary_encoder.set_value:
+        #     value: !lambda "return x;"
+        - light.turn_on:
+            id: pixel_ring_2
+            brightness: 60%
+            effect: "Light Brightness 2"
+        - script.execute: lastAction_2
+
+  - platform: homeassistant
+    id: light_warmth_2
+    entity_id: sensor.ashish_room_light_warmth
+    on_value:
+      then:
+        - globals.set:
+            id: percent_warmth_2
+            value: !lambda 'return ((x - 153) / (465 - 153)) * 100;' 
+    
+binary_sensor:
+  - platform: seesaw
+    id: button1s2
+    seesaw: seesaw_1
+    name: "Seesaw Encoder Two Button 1"
+    filters:
+      - invert:
+    on_press:
+      then:
+        - homeassistant.service:
+            service: light.toggle
+            data:
+              entity_id: light.ashish_room_light_rgb
+  - platform: seesaw
+    id: button2s2
+    seesaw: seesaw_2
+    name: "Seesaw Encoder Two Button 2"
+    filters:
+      - invert:
+    on_press:
+      then:
+        - homeassistant.service:
+            service: light.toggle
+            data:
+              entity_id: light.ashish_room_light
+
+# power_supply:
+#   - id: 'ring_mosfet'
+#     pin: GPIO23
+    
+switch:
+  - platform: restart
+    name: "Restart ESP32 ${device_name}"
+
+light:
+  - platform: seesaw
+    id: pixel1
+    seesaw: seesaw_1
+    name: "Seesaw neopixel LED 1"
+  - platform: seesaw
+    id: pixel2
+    seesaw: seesaw_2
+    name: "Seesaw neopixel LED 2"
+  - platform: fastled_spi
+    chipset: APA102
+    data_pin: GPIO16
+    clock_pin: GPIO17
+    id: pixel_ring
+    name: pixel_ring
+    num_leds: 40
+    rgb_order: BGR
+    color_correct: [50%, 50%, 50%]
+    gamma_correct: 0
+    default_transition_length: 0.3s
+    internal: true
+    # power_supply: ring_mosfet
+  - platform: partition
+    name: pixel_ring_1
+    id: pixel_ring_1
+    segments:
+      - id: pixel_ring
+        from: 0
+        to: 19
+    color_correct: [30%, 30%, 30%]
+    gamma_correct: 0
+    effects:
+      - addressable_lambda:
+          name: "Light Brightness 1"
+          update_interval: 50ms
+          lambda: |-
+            it.all() = ESPColor::BLACK;
+
+            // GET THE UPDATED CLIMATE SETPOINT VALUE
+            int brightness_1 = id(light_brightness_1).state;
+
+            // MAP THAT VALUE AGAINST THE 16 LEDS (RANGE 0-100%)
+            // FROM ARDUINO MAP FUNCTION: return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+            int outRange = (brightness_1 - 1) * (it.size() - 1) / (100 - 1) + 1; 
+
+            // INVERT IT TO GO CLOCKWISE
+            outRange = it.size() - outRange;
+
+            int red = 0;
+            int blue = 0;
+            int green = 0;
+            for (int i = it.size() - 1; i > outRange - 1; i--) {
+              red = (15 - i) * 8;
+              blue = (15 - i) * 8;
+              green = 230;
+              
+              it[i] = ESPColor(red, green, blue);
+            }
+            
+  - platform: partition
+    name: "pixel_ring_2"
+    id: pixel_ring_2
+    segments:
+      - id: pixel_ring
+        from: 20
+        to: 39
+    color_correct: [30%, 30%, 30%]
+    gamma_correct: 0
+    effects:
+      - addressable_lambda:
+          name: "Light Brightness 2"
+          update_interval: 50ms
+          lambda: |-
+            it.all() = ESPColor::BLACK;
+
+            // GET THE UPDATED CLIMATE SETPOINT VALUE
+            int brightness_2 = id(light_brightness_2).state;
+
+            // MAP THAT VALUE AGAINST THE 16 LEDS (RANGE 0-100%)
+            // FROM ARDUINO MAP FUNCTION: return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+            int outRange = (brightness_2 - 1) * (it.size() - 1) / (100 - 1) + 1; 
+
+            // INVERT IT TO GO CLOCKWISE
+            outRange = it.size() - outRange;
+
+            int red = 0;
+            int blue = 0;
+            int green = 0;
+            for (int i = it.size() - 1; i > outRange - 1; i--) {
+              red = (15 - i) * 8;
+              blue = (15 - i) * 8;
+              green = 230;
+              
+              it[i] = ESPColor(red, green, blue);
+            }

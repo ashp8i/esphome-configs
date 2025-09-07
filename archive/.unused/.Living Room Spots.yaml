@@ -1,0 +1,100 @@
+substitutions:
+  device_ssid: "Living Room Spots"
+  device_name: livingroomspots
+  device_description: "Skydance S1-B(WT) Tuya ESP32-C3 Dimmer."
+  friendly_name: "Living Spots"    # Put the name that you want to see in Home Assistant.
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platformio_options:
+    board_build.flash_mode: dio
+  # platform: ESP32
+  # board: esp32dev
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    # type: arduino
+    # version: 2.0.2
+    # platform_version: 4.3.0
+  # framework:
+    type: esp-idf
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+    # use_address: ashishc3dimmerrunpilot.local
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid}
+      password: !secret ap_password
+
+# captive_portal:
+
+# Enable logging
+# Example configuration entry
+debug:
+
+# Logger must be at least debug (default)
+logger:
+    baud_rate: 0
+  
+uart:
+  rx_pin: GPIO20
+  tx_pin: GPIO21
+  # baud_rate: 9600
+  baud_rate: 115200
+  stop_bits: 1
+  debug:
+    direction: BOTH
+
+# Register the Tuya MCU connection
+tuya:
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  safe_mode: true
+  password: !secret ota_password
+
+# web_server:
+#   port: 80
+
+# Sensors with general information.
+sensor:
+  # WiFi Signal sensor.
+  - platform: wifi_signal
+    name: ${friendly_name} Signal strength
+    update_interval: 60s
+    internal: true
+    
+text_sensor:
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${friendly_name} IP
+    ssid:
+      name: ${friendly_name} SSID
+    bssid:
+      name: ${friendly_name} BSSID
+  # Expose Uptime
+  - platform: template
+    name: ${friendly_name} Uptime
+    id: uptime_HA
+    icon: mdi:clock-start
+    
+switch:
+    # this provides for a possibility to restart from the web console or Home automation should we ever need it
+  - platform: restart
+    name: "Restart"
+
+light:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    dimmer_datapoint: 3
+    min_value_datapoint: 2
+    switch_datapoint: 1

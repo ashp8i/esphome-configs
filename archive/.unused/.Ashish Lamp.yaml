@@ -1,0 +1,517 @@
+substitutions:
+  device_ssid: "Ashish Lamp"
+  device_name: ashishlamp
+  device_main_description: "RGBCW Athom 5W LED bulb LB02-5W-GU10-TAS/LB10-5W-TAS-1."
+  device_description: Ashish Lamp
+  friendly_name: "Ashish Lamp"    # Put the name that you want to see in Home Assistant.
+  frequency_rgb: 100 Hz
+  frequency_cw: 1000 Hz
+  frequency_ww: 1000 Hz
+
+esphome:
+  name: ${device_name}
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid} Fallback Hotspot
+      password: !secret ap_password
+
+captive_portal:
+
+# Enable logging
+debug:
+
+# Logger must be at least debug (default)
+logger:
+  level: debug
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  safe_mode: true
+  password: !secret ota_password
+  
+web_server:
+  port: 80
+
+output:
+  - platform: esp8266_pwm
+    id: output_red
+    pin: GPIO4
+    max_power: 100%
+    frequency: ${frequency_rgb}
+  - platform: esp8266_pwm
+    id: output_green
+    pin: GPIO12
+    max_power: 100%
+    frequency: ${frequency_rgb}
+  - platform: esp8266_pwm
+    id: output_blue
+    pin: GPIO14
+    max_power: 100%
+    frequency: ${frequency_rgb}
+  - platform: esp8266_pwm
+    id: output_cold_white
+    pin: GPIO5
+    inverted: false
+    max_power: 100%
+    frequency: ${frequency_cw}
+  - platform: esp8266_pwm
+    id: output_warm_white
+    pin: GPIO13
+    inverted: false
+    max_power: 100%
+    frequency: ${frequency_ww}
+    
+
+
+light:
+  - platform: rgbww
+    name: ${friendly_name}    # Put the name that you want to see in Home Assistant.
+    id: ${device_name}
+    red: output_red
+    green: output_green
+    blue: output_blue
+    cold_white: output_cold_white
+    warm_white: output_warm_white
+    cold_white_color_temperature: 6200 K
+    warm_white_color_temperature: 3100 K
+    default_transition_length: 0.6s
+    restore_mode: RESTORE_DEFAULT_OFF
+    constant_brightness: true
+    color_interlock: true
+#    color_mode: RGB_COLOR_TEMPERATURE
+    gamma_correct: 1.4
+    effects:
+      - random:
+      - strobe:
+      - flicker:
+      - lambda:
+          name: 3 Colour Fade
+          update_interval: 0.25s
+          lambda: |-
+            static int state = 0;
+            static int color_fade = 1;
+            auto call = id(${device_name}).turn_on(); //put the id for your light in here
+            call.set_transition_length(100);
+            if (state == 0) 
+            {
+            call.set_brightness(0.09);
+            
+            }
+            else if (state == 1)
+            {
+              switch(color_fade)
+              {
+                case 1: call.set_rgb(1.0, 0.0, 0.0);
+                        break;
+                case 2: call.set_rgb(0.0, 1.0, 0.0);
+                        break;
+                case 3: call.set_rgb(0.0, 0.0, 1.0);
+                        break;
+              }
+              call.set_brightness(1.0);
+            }
+            state ++;
+            if (state == 2){
+            state = 0;
+            }
+            color_fade++;
+            if(color_fade == 4)
+            {
+              color_fade = 1;
+            }
+            call.perform();
+      - random:
+          name: smooth
+          transition_length: 4s
+          update_interval: 5s
+      - strobe:
+          name: strobe
+          colors:
+            - state: True
+              brightness: 80%
+              red: 100%
+              green: 90%
+              blue: 0%
+              white: 0%
+              duration: 500ms
+            - state: False
+              duration: 250ms
+            - state: True
+              brightness: 80%
+              red: 0%
+              green: 100%
+              blue: 0%
+              white: 0%
+              duration: 500ms
+            - state: False
+              duration: 250ms
+            - state: True
+              brightness: 80%
+              red: 0%
+              green: 100%
+              blue: 60%  
+              white: 0%
+              duration: 500ms
+      - flicker:
+          name: flash
+          alpha: 95%
+          intensity: 1.5%
+      - lambda:
+          name: fade
+          update_interval: 1s
+          lambda: |-
+            static int state = 0;
+            auto call = id(${device_name}).turn_on();
+            // Transtion of 1000ms = 1s
+            call.set_transition_length(1000);
+            if (state == 0) {
+              call.set_rgb(1.0, 1.0, 1.0);
+            } else if (state == 1) {
+              call.set_rgb(1.0, 0.0, 1.0);
+            } else if (state == 2) {
+              call.set_rgb(0.0, 0.0, 1.0);
+            } else {
+              call.set_rgb(1.0, 0.0, 0.0);
+            }
+            call.perform();
+            state += 1;
+            if (state == 4)
+              state = 0;
+      - lambda:
+          name: My Custom Effect
+          update_interval: 1s
+          lambda: |-
+            static int state = 0;
+            auto call = id(${device_name}).turn_on();
+            // Transtion of 1000ms = 1s
+            call.set_transition_length(1000);
+            if (state == 0) {
+              call.set_rgb(1.0, 1.0, 1.0);
+            } else if (state == 1) {
+              call.set_rgb(1.0, 0.0, 1.0);
+            } else if (state == 2) {
+              call.set_rgb(0.0, 0.0, 1.0);
+            } else {
+              call.set_rgb(1.0, 0.0, 0.0);
+            }
+            call.perform();
+            state += 1;
+            if (state == 4)
+              state = 0;
+      - lambda:
+          name: My Custom Effect 2
+          update_interval: 1s
+          lambda: |-
+            static int state = 0;
+            auto call = id(${device_name}).turn_on();
+            // Transtion of 1000ms = 1s
+            call.set_transition_length(1000);
+            if (state == 0) {
+              call.set_rgb(1.0, 1.0, 1.0);
+            } else if (state == 1) {
+              call.set_rgb(0.5, 0.0, 1.0);
+            } else if (state == 2) {
+              call.set_rgb(0.0, 0.5, 1.0);
+            } else {
+              call.set_rgb(1.0, 0.0, 0.0);
+            }
+            call.perform();
+            state += 1;
+            if (state == 4)
+              state = 0;
+      - lambda:
+          name: randomflicker
+          update_interval: 200 ms
+          lambda: |-
+            auto call = id(${device_name}).turn_on();
+            float r = random_float() * 2.0f - 1.0f; 
+            r =  r * r * r;
+            call.set_transition_length(r);
+            //static double br=id(global_brightness);
+            call.set_brightness(0.7 + r/10);
+            call.set_publish(false);
+            call.set_save(false);
+            call.perform();
+      - lambda:
+          name: Chill Mode
+          update_interval: 70s
+          lambda: |-
+            auto call = id(${device_name}).turn_on();
+            call.set_transition_length(55000);
+            call.set_white(0.0);
+            light::ESPColor c = light::ESPColor::random_color();
+            call.set_rgb((c.red%255)/255.0, (c.green%255)/255.0, (c.blue%255)/255.0);
+            call.set_publish(false);
+            call.set_save(false);
+            call.perform();
+      - lambda:
+          name: Chill Mode (Vibrant)
+          update_interval: 120s
+          lambda: |-
+            auto call = id(${device_name}).turn_on();
+            call.set_transition_length(800);
+            call.set_white(0.0);
+            light::ESPColor c = light::ESPColor::random_color();
+            call.set_rgb((c.red%128)/255.0, (c.green%128)/255.0, (c.blue%128)/255.0);
+            call.set_publish(false);
+            call.set_save(false);
+            call.perform();
+      - lambda:
+          name: Disco
+          update_interval: 500ms
+          lambda: |-
+            auto call = id(${device_name}).turn_on();
+            //call.set_transition_length(rand() % 400 + 1);
+            call.set_transition_length(500);
+            call.set_white(0.0);
+            light::ESPColor c = light::ESPColor::random_color();
+            call.set_rgb((c.red)/255.0, (c.green)/255.0, (c.blue)/255.0);
+            call.set_publish(false);
+            call.set_save(false);
+            call.perform();
+      - lambda:
+          name: WTF
+          update_interval: 200ms
+          lambda: |-
+            auto call = id(${device_name}).turn_on();
+            call.set_transition_length(200);
+            call.set_white(0.0);
+            call.set_brightness((rand() % 255 + 1) / 255.0);
+            call.set_color_temperature(rand() % 2 == 0 ? 0: 512);
+            call.perform();
+      - strobe:
+          name: Lightning
+          colors:
+            - state: True
+              brightness: 100%
+              red: 90%
+              green: 90%
+              blue: 100%
+              white: 0%
+              duration: 50ms
+            - state: False
+              duration: 50ms
+            - state: True
+              brightness: 100%
+              red: 90%
+              green: 90%
+              blue: 100%
+              white: 0%
+              duration: 160ms
+            - state: False
+              duration: 50ms
+            - state: True
+              brightness: 100%
+              red: 90%
+              green: 90%
+              blue: 100%
+              white: 0%
+              duration: 50ms
+            - state: False
+              duration: 3000ms
+      - random:
+          name: "Slow Random Colors"
+          transition_length: 30s
+          update_interval: 30s
+      - random:
+          name: "Fast Random Colors"
+          transition_length: 4s
+          update_interval: 5s
+      - strobe:
+          name: In Alarm
+          colors:
+            - state: True
+              red: 100%
+              blue: 0%
+              green: 0%
+              white: 0%
+              duration: 150ms
+            - state: False
+              duration: 100ms
+            - state: True
+              red: 100%
+              blue: 0%
+              green: 0%
+              white: 0%  
+              duration: 150ms
+            - state: False
+              duration: 100ms
+            - state: True
+              red: 0%
+              blue: 100%
+              green: 0%
+              white: 0%
+              duration: 150ms
+            - state: False
+              duration: 100ms
+            - state: True
+              red: 0%
+              blue: 100%
+              green: 0%
+              white: 0%
+              duration: 150ms
+            - state: False
+              duration: 100ms
+      - strobe:
+          name: Strobe Effect
+          colors:
+            - state: True
+              red: 100%
+              green: 90%
+              blue: 0%
+              white: 0%
+              duration: 50ms
+            - state: False
+              duration: 25ms
+            - state: True
+              red: 0%
+              green: 100%
+              blue: 0%
+              white: 0%
+              duration: 50ms
+      - lambda:
+          name: Breathing
+          update_interval: 16s
+          lambda: |-
+            static int state = 0;
+            static int color = 1;
+            auto call = id(${device_name}).turn_on(); //the id of your light
+            call.set_transition_length(15000);
+            if (state == 0) 
+            {
+            call.set_brightness(1.0);
+            }
+            else if (state == 1)
+            {
+            call.set_brightness(0.01);
+            }
+            call.perform();
+            state ++;
+            if (state == 2){
+            state = 0;
+            }
+      - lambda:
+          name: RGB Breathing
+          update_interval: 16s
+          lambda: |-
+            #define Color1 1.0, 0.0, 0.0 //These are the colors defined, feel free to change or extend the list
+            #define Color2 1.0, 0.5, 0.0 //if you extend the list, dont forget to add them in the switch loop below
+            #define Color3 1.0, 1.0, 0.0 //and remember to adjust the reset counter at the bottom
+            #define Color4 0.5, 1.0, 0.0
+            #define Color5 0.0, 1.0, 0.0
+            #define Color6 0.0, 1.0, 0.5
+            #define Color7 0.0, 1.0, 1.0
+            #define Color8 0.0, 0.5, 1.0
+            #define Color9 0.0, 0.0, 1.0
+            #define Color10 0.5, 0.0, 1.0
+            #define Color11 0.5, 0.0, 1.0
+            #define Color12 1.0, 0.0, 0.5
+            static int state = 0;
+            static int color = 1;
+            auto call = id(${device_name}).turn_on(); //put the id for your light in here
+            call.set_transition_length(15000);
+            if (state == 0) 
+            {
+            call.set_brightness(0.01);
+            
+            }
+            else if (state == 1)
+            {
+              switch(color)
+              {
+                case 1: call.set_rgb(Color1);
+                        break;
+                case 2: call.set_rgb(Color2);
+                        break;
+                case 3: call.set_rgb(Color3);
+                        break;
+                case 4: call.set_rgb(Color4);
+                        break;
+                case 5: call.set_rgb(Color5);
+                        break;
+                case 6: call.set_rgb(Color6);
+                        break;
+                case 7: call.set_rgb(Color7);
+                        break;
+                case 8: call.set_rgb(Color8);
+                        break;
+                case 9: call.set_rgb(Color9);
+                        break;
+                case 10: call.set_rgb(Color10);
+                          break;
+                case 11: call.set_rgb(Color11);
+                          break;
+                case 12: call.set_rgb(Color12);
+                          break;
+              }
+              call.set_brightness(1.0);
+            }
+            
+            state ++;
+            if (state == 2){
+            state = 0;
+            }
+            color++;
+            if(color == 7)
+            {
+              color = 1;
+            }
+            call.perform();
+      - random:          
+          name: "Slow Random Effect"
+          transition_length: 20s
+          update_interval: 20s
+      - random:
+          name: "Fast Random Effect"
+          transition_length: 4s
+          update_interval: 5s
+      - random:
+          name: "Insane Random Effect"
+          transition_length: 1s
+          update_interval: 1s
+      - random:          
+          name: "Totally Loco Random Effect"
+          transition_length: 300ms
+          update_interval: 250ms
+      - lambda:
+          name: "Random colour fade"
+          update_interval: 3s
+          lambda: |-
+            auto call = id(${device_name}).turn_on();    
+            call.set_red_if_supported(random_float());
+            call.set_green_if_supported(random_float());
+            call.set_blue_if_supported(random_float());
+            call.set_white_if_supported(0.0);
+            call.set_transition_length_if_supported(2000);
+            call.set_publish(true);
+      - lambda:
+          name: "Red Green Blue Fade"
+          update_interval: 4s
+          lambda: |-
+            static int state = 0;
+            auto call = id(${device_name}).turn_on();                                                                           
+            call.set_transition_length(3000);                                                                      
+            if (state == 0) {                                                                             
+              call.set_rgb(1.0, 0.0, 0.0);
+            } else if (state == 1) {                                                                          
+              call.set_rgb(0.0, 1.0, 0.0);
+            } else if (state == 2) {                               
+              call.set_rgb(0.0, 0.0, 1.0);
+            } else {                                                       
+              call.set_rgb(1.0, 0.0, 0.0);
+            }                             
+            call.set_white(0.0);
+            call.perform();                                                                        
+            state += 1;                                                                                           
+            if (state == 3)
+              state = 0;

@@ -1,0 +1,213 @@
+substitutions:
+  device_ssid: "Ashish Seesaw Controller"
+  device_name: testencoderseesaw
+  device_main_description: "DIY ESPHOME Seesaw Buttons"
+  device_description: DIY ESPHOME Seesaw Buttons
+  friendly_name: "DIY ESPHome Seesaw Buttons"    # Put the name that you want to see in Home Assistant.
+  
+external_components:
+  # use seesaw local by ssieb
+  - source:
+      type: local
+      path: ssieb_custom_components
+
+esphome:
+  name: ${device_name}
+  platform: ESP32
+  board: esp32dev
+
+wifi:
+    ssid: !secret wifi_all_ssid
+    password: !secret wifi_all_password
+    power_save_mode: none
+    # Enable fallback hotspot (captive portal) in case wifi connection fails
+    ap:
+      ssid: ${device_ssid}
+      password: !secret ap_password
+
+captive_portal:
+
+# Enable logging
+# Example configuration entry
+debug:
+
+# Logger must be at least debug (default)
+logger:
+  level: debug
+
+# Enable Home Assistant API
+api:
+  password: !secret api_password
+
+ota:
+  password: !secret ota_password
+
+web_server:
+  port: 80
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  
+seesaw:
+  - id: seesaw_1
+    address: 0x36
+  - id: seesaw_2
+    address: 0x37
+
+sensor:
+  - platform: seesaw
+    id: encoder1
+    type: encoder
+    seesaw: seesaw_1
+    name: "Seesaw encoder 1"
+    min_value: 0
+    max_value: 100
+    # resolution: 4
+    on_value:
+      then:
+        - homeassistant.service:
+            service: light.turn_on
+            data_template:
+              entity_id: light.living_spot
+              brightness_pct: "{{ brightness_1 | int }}"
+            variables:
+              brightness_1: !lambda 'return id(encoder1).state;'
+  - platform: seesaw
+    id: encoder2
+    type: encoder
+    seesaw: seesaw_2
+    name: "Seesaw encoder 2"
+    min_value: 0
+    max_value: 100
+    # filters:
+    #   - invert:
+    on_value:
+      then:
+        - homeassistant.service:
+            service: light.turn_on
+            data_template:
+              entity_id: light.dining_room_spot
+              brightness_pct: "{{ brightness_1 | int }}"
+            variables:
+              brightness_1: !lambda 'return id(encoder2).state;'
+    
+binary_sensor:
+  - platform: seesaw
+    id: button1
+    seesaw: seesaw_1
+    name: "Seesaw encoder button 1"
+    filters:
+      - invert:
+    on_press:
+      then:
+        - homeassistant.service:
+            service: light.toggle
+            data:
+              entity_id: light.living_spot
+  - platform: seesaw
+    id: button2
+    seesaw: seesaw_2
+    name: "Seesaw encoder button 2"
+    filters:
+      - invert:
+    on_press:
+      then:
+        - homeassistant.service:
+            service: light.toggle
+            data:
+              entity_id: light.dining_room_spot
+
+light:
+  - platform: seesaw
+    id: pixel1
+    seesaw: seesaw_1
+    name: "Seesaw neopixel LED 1"
+  - platform: seesaw
+    id: pixel2
+    seesaw: seesaw_2
+    name: "Seesaw neopixel LED 2"
+#   - platform: partition
+#     name: "Left LED ring"
+#     id: left_brightness
+#     segments:
+#       # Use first 10 LEDs from the light with ID light1
+#       - id: left_led_ring
+#         from: 0
+#         to: 7
+#         reversed: True
+#       # Use first 10 LEDs from light with ID light2
+#       # they become LEDs 11-20 in the joined partition
+#       - id: left_led_ring
+#         from: 8
+#         to: 19
+#         reversed: True
+#     color_correct: [37%, 68%, 68%]
+#     gamma_correct: 0
+#     effects:
+#       - addressable_color_wipe:
+#       - addressable_color_wipe:
+#           name: Color Wipe Effect With Custom Values
+#           colors:
+#             - red: 100%
+#               green: 100%
+#               blue: 100%
+#               num_leds: 1
+#             - red: 0%
+#               green: 0%
+#               blue: 0%
+#               num_leds: 1
+#           add_led_interval: 100ms
+#   - platform: partition
+#     name: "Right LED ring"
+#     id: right_brightness
+#     segments:
+#       # Use first 10 LEDs from the light with ID light1
+#       - id: right_led_ring
+#         from: 0
+#         to: 7
+#         reversed: True
+#       # Use first 10 LEDs from light with ID light2
+#       # they become LEDs 11-20 in the joined partition
+#       - id: right_led_ring
+#         from: 8
+#         to: 19
+#         reversed: True
+#     color_correct: [37%, 68%, 68%]
+#     gamma_correct: 0
+#     effects:
+#       - addressable_color_wipe:
+#       - addressable_color_wipe:
+#           name: Color Wipe Effect With Custom Values
+#           colors:
+#             - red: 100%
+#               green: 100%
+#               blue: 100%
+#               num_leds: 1
+#             - red: 0%
+#               green: 0%
+#               blue: 0%
+#               num_leds: 1
+#           add_led_interval: 100ms
+#   - platform: fastled_spi
+#     id: left_led_ring
+#     internal: true
+#     chipset: APA102
+#     data_pin: 14
+#     clock_pin: 13
+#     num_leds: 20
+#     rgb_order: BGR
+#     color_correct: [37%, 68%, 68%]
+#     gamma_correct: 0
+#     name: "Internal Left LED Ring"
+#   - platform: fastled_spi
+#     id: right_led_ring
+#     internal: true
+#     chipset: APA102
+#     data_pin: 16
+#     clock_pin: 15
+#     num_leds: 20
+#     rgb_order: BGR
+#     color_correct: [37%, 68%, 68%]
+#     gamma_correct: 0
+#     name: "Internal Right LED Ring"

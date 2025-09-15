@@ -1,0 +1,32 @@
+esphome:
+  name: q
+  friendly_name: q
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "+7fXw8w3l0ri51CBSmNNWE5oUcKsRBVyL6XVtJDQemk="
+
+ota:
+  - platform: esphome
+    password: "0190a5d58e3398f51077c1d7cf0726ef"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Q Fallback Hotspot"
+    password: "ZNnp47cYRDhX"
+
+captive_portal:
+    

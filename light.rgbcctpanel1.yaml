@@ -12,7 +12,7 @@ substitutions:
   # switch1b4_topic: bedroom2switch2/button/4/command
   light_icon: "hue:ceiling-aurelle-circle"
   light_icon_2: "hue:ceiling-aurelle-circle"
-  api_key: !secret diningnew2_noise_key
+  api_key: !secret panelspare_noise_key
   project_name: "tuya.40w-rgbcw-panel-esp32-c3"
   project_version: "1.0"
 

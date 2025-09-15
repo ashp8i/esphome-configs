@@ -1,7 +1,7 @@
 substitutions:
   name: "livingroomlight"
   device_ssid: "Living RGBCCT"
-  device_description: "Tuya 40W RGBCCT Panel ESP32-C3"
+  device_description: "Tuya 72W RGBCCT Panel ESP32-C3"
   friendly_name: "Living Room"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Living Room RGB"    # Put the name that you want to see in Home Assistant.
   device_id_white: "Livingroom"    # Put the name that you want to see in Home Assistant.
@@ -13,12 +13,12 @@ substitutions:
   light_icon: "hue:ceiling-aurelle-circle"
   light_icon_2: "hue:ceiling-aurelle-circle"
   api_key: !secret livingnew2_noise_key
-  project_name: "tuya.40w-rgbcw-panel-esp32-c3"
+  project_name: "tuya.72w-rgbcw-panel-esp32-c3"
   project_version: "1.0"
 
 packages:
   - !include packages/base/debug.yaml
-  - !include packages/devices/light.tuya-40w-rgbcw-panel-esp32-c3.yaml
+  - !include packages/devices/light.tuya-72w-rgbcw-panel-esp32-c3.yaml
   - !include packages/common/api.yaml
   - !include packages/global/mqtt-automation.yaml
   # - !include packages/automation/light-mqtt-4-button-rgbcct.yaml

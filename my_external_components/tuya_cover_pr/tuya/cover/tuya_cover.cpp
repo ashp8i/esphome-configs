@@ -2,11 +2,7 @@
 #include "tuya_cover.h"
 
 namespace esphome {
-namespace tuya_custom {
-
-const uint8_t COMMAND_OPEN = 0x01;
-const uint8_t COMMAND_CLOSE = 0x00;
-const uint8_t COMMAND_STOP = 0x02;
+namespace tuya {
 
 using namespace esphome::cover;
 
@@ -51,7 +47,7 @@ void TuyaCover::setup() {
       return;
     }
     auto pos = float(datapoint.value_uint - this->min_value_) / this->value_range_;
-    this->position = 1.0f - pos;
+    this->position = this->invert_position_report_ ? pos : 1.0f - pos;
     this->publish_state();
   });
 }
@@ -59,10 +55,10 @@ void TuyaCover::setup() {
 void TuyaCover::control(const cover::CoverCall &call) {
   if (call.get_stop()) {
     if (this->control_id_.has_value()) {
-      this->parent_->force_set_enum_datapoint_value(*this->control_id_, COMMAND_STOP);
+      this->parent_->force_set_enum_datapoint_value(*this->control_id_, this->stop_value_);
     } else {
       auto pos = this->position;
-      pos = 1.0f - pos;
+      pos = this->invert_position_report_ ? pos : 1.0f - pos;
       auto position_int = static_cast<uint32_t>(pos * this->value_range_);
       position_int = position_int + this->min_value_;
 
@@ -73,12 +69,12 @@ void TuyaCover::control(const cover::CoverCall &call) {
     auto pos = *call.get_position();
     if (this->control_id_.has_value() && (pos == COVER_OPEN || pos == COVER_CLOSED)) {
       if (pos == COVER_OPEN) {
-        this->parent_->force_set_enum_datapoint_value(*this->control_id_, COMMAND_OPEN);
+        this->parent_->force_set_enum_datapoint_value(*this->control_id_, this->open_value_);
       } else {
-        this->parent_->force_set_enum_datapoint_value(*this->control_id_, COMMAND_CLOSE);
+        this->parent_->force_set_enum_datapoint_value(*this->control_id_, this->close_value_);
       }
     } else {
-      pos = 1.0f - pos;
+      pos = this->invert_position_report_ ? pos : 1.0f - pos;
       auto position_int = static_cast<uint32_t>(pos * this->value_range_);
       position_int = position_int + this->min_value_;
 
@@ -105,6 +101,9 @@ void TuyaCover::set_direction_(bool inverted) {
 
 void TuyaCover::dump_config() {
   ESP_LOGCONFIG(TAG, "Tuya Cover:");
+  ESP_LOGCONFIG(TAG, "   Open Value: 0x%02X", this->open_value_);
+  ESP_LOGCONFIG(TAG, "   Close Value: 0x%02X", this->close_value_);
+  ESP_LOGCONFIG(TAG, "   Stop Value: 0x%02X", this->stop_value_);
   if (this->invert_position_) {
     if (this->direction_id_.has_value()) {
       ESP_LOGCONFIG(TAG, "   Inverted");
@@ -136,5 +135,5 @@ cover::CoverTraits TuyaCover::get_traits() {
   return traits;
 }
 
-}  // namespace tuya_custom
+}  // namespace tuya
 }  // namespace esphome

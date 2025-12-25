@@ -1,4 +1,4 @@
-#include "tuya_custom.h"
+#include "tuya.h"
 #include "esphome/components/network/util.h"
 #include "esphome/core/gpio.h"
 #include "esphome/core/helpers.h"
@@ -14,7 +14,7 @@
 #endif
 
 namespace esphome {
-namespace tuya_custom {
+namespace tuya {
 
 static const char *const TAG = "tuya";
 static const int COMMAND_DELAY = 10;
@@ -735,5 +735,5 @@ void Tuya::register_listener(uint8_t datapoint_id, const std::function<void(Tuya
 
 TuyaInitState Tuya::get_init_state() { return this->init_state_; }
 
-}  // namespace tuya_custom
+}  // namespace tuya
 }  // namespace esphome

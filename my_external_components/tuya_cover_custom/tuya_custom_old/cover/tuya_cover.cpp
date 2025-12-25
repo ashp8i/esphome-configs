@@ -112,9 +112,6 @@ void TuyaCover::dump_config() {
       ESP_LOGCONFIG(TAG, "   Configured as Inverted, but direction_datapoint isn't configured");
     }
   }
-  if (this->invert_position_report_) {
-    ESP_LOGCONFIG(TAG, "   Position Reporting Inverted");
-  }
   if (this->control_id_.has_value()) {
     ESP_LOGCONFIG(TAG, "   Control has datapoint ID %u", *this->control_id_);
   }
@@ -131,7 +128,6 @@ void TuyaCover::dump_config() {
 
 cover::CoverTraits TuyaCover::get_traits() {
   auto traits = cover::CoverTraits();
-  traits.set_supports_stop(true);
   traits.set_supports_position(true);
   return traits;
 }

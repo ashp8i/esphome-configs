@@ -1,11 +1,11 @@
 #pragma once
 
 #include "esphome/core/component.h"
-#include "esphome/components/tuya_custom/tuya_custom.h"
+#include "esphome/components/tuya/tuya.h"
 #include "esphome/components/cover/cover.h"
 
 namespace esphome {
-namespace tuya_custom {
+namespace tuya {
 
 enum TuyaCoverRestoreMode {
   COVER_NO_RESTORE,
@@ -27,6 +27,9 @@ class TuyaCover : public cover::Cover, public Component {
   void set_invert_position(bool invert_position) { invert_position_ = invert_position; }
   void set_invert_position_report(bool invert_position_report) { invert_position_report_ = invert_position_report; }
   void set_restore_mode(TuyaCoverRestoreMode restore_mode) { restore_mode_ = restore_mode; }
+  void set_open_value(uint8_t value) { this->open_value_ = value; }
+  void set_close_value(uint8_t value) { this->close_value_ = value; }
+  void set_stop_value(uint8_t value) { this->stop_value_ = value; }
 
  protected:
   void control(const cover::CoverCall &call) override;
@@ -44,6 +47,9 @@ class TuyaCover : public cover::Cover, public Component {
   uint32_t value_range_;
   bool invert_position_;
   bool invert_position_report_;
+  uint8_t open_value_;
+  uint8_t close_value_;
+  uint8_t stop_value_;
 };
 
 }  // namespace tuya

@@ -5,7 +5,7 @@ from esphome.const import CONF_MAX_VALUE, CONF_MIN_VALUE, CONF_RESTORE_MODE
 
 from .. import CONF_TUYA_ID, Tuya, tuya_ns
 
-DEPENDENCIES = ["tuya_custom"]
+DEPENDENCIES = ["tuya"]
 
 CONF_CONTROL_DATAPOINT = "control_datapoint"
 CONF_DIRECTION_DATAPOINT = "direction_datapoint"
@@ -13,6 +13,9 @@ CONF_POSITION_DATAPOINT = "position_datapoint"
 CONF_POSITION_REPORT_DATAPOINT = "position_report_datapoint"
 CONF_INVERT_POSITION = "invert_position"
 CONF_INVERT_POSITION_REPORT = "invert_position_report"
+CONF_OPEN_VALUE = "open_value"
+CONF_CLOSE_VALUE = "close_value"
+CONF_STOP_VALUE = "stop_value"
 
 TuyaCover = tuya_ns.class_("TuyaCover", cover.Cover, cg.Component)
 
@@ -48,6 +51,9 @@ CONFIG_SCHEMA = cv.All(
             cv.Optional(CONF_RESTORE_MODE, default="RESTORE"): cv.enum(
                 RESTORE_MODES, upper=True
             ),
+            cv.Optional(CONF_OPEN_VALUE, default=0x00): cv.hex_uint8_t,
+            cv.Optional(CONF_CLOSE_VALUE, default=0x02): cv.hex_uint8_t,
+            cv.Optional(CONF_STOP_VALUE, default=0x01): cv.hex_uint8_t,
         },
     )
     .extend(cv.COMPONENT_SCHEMA),
@@ -71,5 +77,8 @@ async def to_code(config):
     cg.add(var.set_invert_position(config[CONF_INVERT_POSITION]))
     cg.add(var.set_invert_position_report(config[CONF_INVERT_POSITION_REPORT]))
     cg.add(var.set_restore_mode(config[CONF_RESTORE_MODE]))
+    cg.add(var.set_open_value(config[CONF_OPEN_VALUE]))
+    cg.add(var.set_close_value(config[CONF_CLOSE_VALUE]))
+    cg.add(var.set_stop_value(config[CONF_STOP_VALUE]))
     paren = await cg.get_variable(config[CONF_TUYA_ID])
     cg.add(var.set_tuya_parent(paren))

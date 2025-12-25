@@ -11,10 +11,10 @@ esp32:
   framework:
     type: esp-idf
 
-external_components:
-  - source:
-      type: local
-      path: my_external_components/tuya_cover_custom
+# external_components:
+#   - source:
+#       type: local
+#       path: my_external_components/tuya_cover_pr
 
 captive_portal:
 

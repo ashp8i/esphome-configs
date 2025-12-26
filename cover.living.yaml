@@ -12,9 +12,9 @@ substitutions:
 packages:
   - !include packages/base/debug-tuya-verbose.yaml
   - !include packages/devices/curtain.zemismart-bcm500ds-tyw-esp32-s3-pr.yaml
+  - !include packages/button/curtain-diagnostic.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
   - !include packages/common/binary-sensor.yaml
   - !include packages/common/sensor.yaml
-  - !include packages/common/button.yaml
   - !include packages/common/text-sensor.yaml

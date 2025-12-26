@@ -150,6 +150,12 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
 
   switch (command_type) {
     case TuyaCommandType::HEARTBEAT:
+      if (this->low_power_mode_) {
+          this->init_state_ = TuyaInitState::INIT_DONE;
+          this->command_queue_.clear(); // Wipe the queue to stop any pending INIT spams
+          this->send_wifi_status_(); 
+          return; // Exit early to avoid the standard heartbeat logic below
+      }
       ESP_LOGV(TAG, "MCU Heartbeat (0x%02X)", buffer[0]);
       this->protocol_version_ = version;
       if (buffer[0] == 0) {
@@ -216,6 +222,20 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       }
       break;
     case TuyaCommandType::WIFI_SELECT:
+      if (this->low_power_mode_) {
+          ESP_LOGV(TAG, "Low Power DP Report (0x05) received");
+          this->handle_datapoints_(buffer, len);
+          this->init_state_ = TuyaInitState::INIT_DONE;
+      } else {
+          // This is the original V3 behavior for WIFI_SELECT
+          const bool is_select = (len >= 1);
+          TuyaCommand ack;
+          ack.cmd = TuyaCommandType::WIFI_SELECT;
+          ack.payload.clear();
+          this->send_command_(ack);
+          // ... include the rest of the original WIFI_SELECT code here ...
+      }
+      break;
     case TuyaCommandType::WIFI_RESET: {
       const bool is_select = (len >= 1);
       // Send WIFI_SELECT ACK
@@ -444,7 +464,8 @@ void Tuya::send_raw_command_(TuyaCommand command) {
   this->last_command_timestamp_ = millis();
   switch (command.cmd) {
     case TuyaCommandType::HEARTBEAT:
-      this->expected_response_ = TuyaCommandType::HEARTBEAT;
+      if (!this->low_power_mode_) // Only expect response if NOT low power
+          this->expected_response_ = TuyaCommandType::HEARTBEAT;
       break;
     case TuyaCommandType::PRODUCT_QUERY:
       this->expected_response_ = TuyaCommandType::PRODUCT_QUERY;
@@ -477,30 +498,56 @@ void Tuya::process_command_queue_() {
   uint32_t now = millis();
   uint32_t delay = now - this->last_command_timestamp_;
 
+  // 1. Cleanup stale partial messages to prevent buffer starvation
   if (now - this->last_rx_char_timestamp_ > RECEIVE_TIMEOUT) {
     this->rx_message_.clear();
   }
 
+  // 2. Handle the "Handshake/Retry" logic (The Gatekeeper)
   if (this->expected_response_.has_value() && delay > RECEIVE_TIMEOUT) {
     this->expected_response_.reset();
-    if (init_state_ != TuyaInitState::INIT_DONE) {
-      if (++this->init_retries_ >= MAX_RETRIES) {
-        this->init_failed_ = true;
-        ESP_LOGE(TAG, "Initialization failed at init_state %u", static_cast<uint8_t>(this->init_state_));
-        this->command_queue_.erase(command_queue_.begin());
-        this->init_retries_ = 0;
+    
+    if (this->low_power_mode_) {
+      // In Low Power, if we timed out, just drop it and move on
+      if (!this->command_queue_.empty()) {
+        this->command_queue_.erase(this->command_queue_.begin());
       }
     } else {
-      this->command_queue_.erase(command_queue_.begin());
+      // Standard ESPHome logic: Retry during INIT, otherwise erase
+      if (this->init_state_ != TuyaInitState::INIT_DONE) {
+        if (++this->init_retries_ >= MAX_RETRIES) {
+          this->init_failed_ = true;
+          this->command_queue_.erase(this->command_queue_.begin());
+          this->init_retries_ = 0;
+        }
+      } else {
+        this->command_queue_.erase(this->command_queue_.begin());
+      }
     }
   }
 
-  // Left check of delay since last command in case there's ever a command sent by calling send_raw_command_ directly
-  if (delay > COMMAND_DELAY && !this->command_queue_.empty() && this->rx_message_.empty() &&
-      !this->expected_response_.has_value()) {
-    this->send_raw_command_(command_queue_.front());
-    if (!this->expected_response_.has_value())
-      this->command_queue_.erase(command_queue_.begin());
+  // 3. The Dispatcher (The Work-Release Program)
+  // Ensure we have a command, aren't waiting for a response, and have met the time gap
+  if (delay > COMMAND_DELAY && !this->command_queue_.empty() && 
+      this->rx_message_.empty() && !this->expected_response_.has_value()) {
+    
+    // Get a reference to the command at the front
+    auto &cmd = this->command_queue_.front();
+    
+    // Send it to the UART bus
+    this->send_raw_command_(cmd);
+    
+    // Update timestamp immediately to enforce the COMMAND_DELAY gap
+    this->last_command_timestamp_ = now;
+
+    if (this->low_power_mode_) {
+      // MODE A: Just pop the command immediately so the next one can flow
+      this->command_queue_.erase(this->command_queue_.begin());
+    } else {
+      // MODE B: Set the expected response to "Lock" the queue until the motor replies
+      // Note: In ESPHome's TuyaCommand struct, the member is named 'cmd'
+      this->expected_response_ = cmd.cmd; 
+    }
   }
 }
 

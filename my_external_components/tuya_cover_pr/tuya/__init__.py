@@ -11,6 +11,7 @@ CONF_IGNORE_MCU_UPDATE_ON_DATAPOINTS = "ignore_mcu_update_on_datapoints"
 CONF_ON_DATAPOINT_UPDATE = "on_datapoint_update"
 CONF_DATAPOINT_TYPE = "datapoint_type"
 CONF_STATUS_PIN = "status_pin"
+CONF_LOW_POWER = "low_power"
 
 tuya_ns = cg.esphome_ns.namespace("tuya")
 TuyaDatapointType = tuya_ns.enum("TuyaDatapointType", is_class=True)
@@ -102,6 +103,7 @@ CONFIG_SCHEMA = (
                 },
                 extra_validators=assign_declare_id,
             ),
+            cv.Optional(CONF_LOW_POWER, default=False): cv.boolean,
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -113,6 +115,8 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
+    if CONF_LOW_POWER in config:
+        cg.add(var.set_low_power(config[CONF_LOW_POWER]))
     if CONF_TIME_ID in config:
         time_ = await cg.get_variable(config[CONF_TIME_ID])
         cg.add(var.set_time_id(time_))

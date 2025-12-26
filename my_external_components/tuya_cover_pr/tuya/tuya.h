@@ -115,8 +115,14 @@ class Tuya : public Component, public uart::UARTDevice {
   void add_on_initialized_callback(std::function<void()> callback) {
     this->initialized_callback_.add(std::move(callback));
   }
+  void query_mcu_status() { this->send_empty_command_(TuyaCommandType::DATAPOINT_QUERY); }// can be removed when work done
+  void send_command_(const TuyaCommand &command);// revert to protected before PR
+  void set_low_power(bool low_power) { this->low_power_mode_ = low_power; }
 
  protected:
+  bool low_power_mode_{false};
+  // We need a way to skip the standard init sequence
+  void set_init_done_();
   void handle_char_(uint8_t c);
   void handle_datapoints_(const uint8_t *buffer, size_t len);
   optional<TuyaDatapoint> get_datapoint_(uint8_t datapoint_id);
@@ -125,7 +131,6 @@ class Tuya : public Component, public uart::UARTDevice {
   void handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len);
   void send_raw_command_(TuyaCommand command);
   void process_command_queue_();
-  void send_command_(const TuyaCommand &command);
   void send_empty_command_(TuyaCommandType command);
   void set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, uint32_t value,
                                     uint8_t length, bool forced);

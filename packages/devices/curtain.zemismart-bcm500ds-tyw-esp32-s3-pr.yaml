@@ -44,6 +44,8 @@ uart:
 # Register the Tuya MCU connection
 # tuya:
 tuya:
+    id: tuyamcu
+    # low_power: true
 
 cover:
   - platform: "tuya"

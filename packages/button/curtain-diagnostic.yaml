@@ -1,0 +1,41 @@
+# this provides for a possibility to restart from the web console or Home automation should we ever need it
+button:
+  - platform: restart
+    id: "restart_device"
+    name: "${friendly_name} Restart"
+    entity_category: 'diagnostic'
+  - platform: safe_mode
+    id: "restart_device_safe_mode"
+    name: "${friendly_name} Restart (Safe Mode)"
+    entity_category: 'diagnostic'
+  # - platform: template
+  #   name: "Force MCU Status Query"
+  #   id: query_mcu_btn
+  #   icon: "mdi:refresh-auto"
+  #   internal: true  # Keeps it off Home Assistant/MQTT 
+  #   on_press:
+  #     - logger.log: "Sending 0x08 via Public Bridge..."
+  #     - lambda: |-
+  #         id(tuyamcu).query_mcu_status();
+  # Test 1: Low Power State Request (Tasmota 0x05)
+  # If this works, the MCU should reply with a 0x05 or 0x07 packet
+  - platform: template
+    name: "Test V0 State Request (0x05)"
+    on_press:
+      lambda: |-
+        esphome::tuya::TuyaCommand tc;
+        // In your tuya.cpp line 421: static_cast<uint8_t>(command.cmd)
+        tc.cmd = esphome::tuya::TuyaCommandType(0x05);
+        tc.payload = {}; 
+        id(tuyamcu).send_command_(tc);
+        ESP_LOGI("TEST", "Sent Command 0x05 - Low Power Status Request");
+
+  - platform: template
+    name: "Test V0 WiFi State (0x02)"
+    on_press:
+      lambda: |-
+        esphome::tuya::TuyaCommand tc;
+        tc.cmd = esphome::tuya::TuyaCommandType(0x02);
+        tc.payload = {0x03}; 
+        id(tuyamcu).send_command_(tc);
+        ESP_LOGI("TEST", "Sent Command 0x02 - Setting WiFi Connected Dialect");

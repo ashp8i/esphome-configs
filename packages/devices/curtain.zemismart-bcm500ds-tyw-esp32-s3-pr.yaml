@@ -45,7 +45,18 @@ uart:
 # tuya:
 tuya:
     id: tuyamcu
-    # low_power: true
+    # low_power: auto
+    low_power: true
+    # low_power: false
+    # compatibility_mode:
+    #     # Stop the [E][tuya:XXX] log spam when initialization is slow/sleepy
+    #     silent_init: true
+    #     # Don't give up; just wait indefinitely for the first valid DP
+    #     infinite_timeout: true
+    #     # Treat 0x05 as data for older battery sensors
+    #     legacy_v0_parsing: true
+    #     # Accept 0x08 as valid status data (stripping timestamps)
+    #     handle_historical_records: true
 
 cover:
   - platform: "tuya"

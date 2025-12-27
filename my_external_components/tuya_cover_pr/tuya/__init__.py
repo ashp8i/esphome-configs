@@ -12,6 +12,11 @@ CONF_ON_DATAPOINT_UPDATE = "on_datapoint_update"
 CONF_DATAPOINT_TYPE = "datapoint_type"
 CONF_STATUS_PIN = "status_pin"
 CONF_LOW_POWER = "low_power"
+CONF_COMPATIBILITY_MODE = "compatibility_mode"
+CONF_SILENT_INIT = "silent_init"
+CONF_IGNORE_INITIALIZATION = "ignore_initialization"
+CONF_LEGACY_V0_PARSING = "legacy_v0_parsing"
+CONF_HANDLE_HISTORICAL_RECORDS = "handle_historical_records"
 
 tuya_ns = cg.esphome_ns.namespace("tuya")
 TuyaDatapointType = tuya_ns.enum("TuyaDatapointType", is_class=True)
@@ -104,6 +109,12 @@ CONFIG_SCHEMA = (
                 extra_validators=assign_declare_id,
             ),
             cv.Optional(CONF_LOW_POWER, default=False): cv.boolean,
+            cv.Optional(CONF_COMPATIBILITY_MODE): cv.Schema({
+                cv.Optional(CONF_SILENT_INIT, default=False): cv.boolean,
+                cv.Optional(CONF_IGNORE_INITIALIZATION, default=False): cv.boolean,
+                cv.Optional(CONF_LEGACY_V0_PARSING, default=False): cv.boolean,
+                cv.Optional(CONF_HANDLE_HISTORICAL_RECORDS, default=True): cv.boolean,
+            }),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -133,3 +144,9 @@ async def to_code(config):
         await automation.build_automation(
             trigger, [(DATAPOINT_TYPES[conf[CONF_DATAPOINT_TYPE]], "x")], conf
         )
+    if CONF_COMPATIBILITY_MODE in config:
+            conf = config[CONF_COMPATIBILITY_MODE]
+            cg.add(var.set_silent_init(conf[CONF_SILENT_INIT]))
+            cg.add(var.set_ignore_initialization(conf[CONF_IGNORE_INITIALIZATION]))
+            cg.add(var.set_legacy_v0_parsing(conf[CONF_LEGACY_V0_PARSING]))
+            cg.add(var.set_handle_historical_records(conf[CONF_HANDLE_HISTORICAL_RECORDS]))

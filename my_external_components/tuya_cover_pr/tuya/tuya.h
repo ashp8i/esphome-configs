@@ -113,8 +113,9 @@ class Tuya : public Component, public uart::UARTDevice {
   void set_low_power(bool low_power) { this->low_power_mode_ = low_power; }
   void set_silent_init(bool silent) { this->silent_init_ = silent; }
   void set_ignore_initialization(bool ignore) { this->ignore_init_ = ignore; }
-  void set_legacy_v0_parsing(bool legacy) { this->legacy_v0_ = legacy; }
+  void set_low_power_sensor(bool low_power) { this->low_power_sensor_ = low_power; }
   void set_handle_historical_records(bool handle) { this->handle_historical_ = handle; }
+  void set_trace_mode(bool enable) { trace_mode_ = enable; }
 
   TuyaInitState get_init_state();
 #ifdef USE_TIME
@@ -132,8 +133,9 @@ class Tuya : public Component, public uart::UARTDevice {
   bool low_power_mode_{false};
   bool silent_init_{false};
   bool ignore_init_{false};
-  bool legacy_v0_{false};
+  bool low_power_sensor_{false};
   bool handle_historical_{true};
+  bool trace_mode_{false};
 
   // --- Internal State Machine ---
   TuyaInitState init_state_ = TuyaInitState::INIT_HEARTBEAT;

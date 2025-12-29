@@ -83,89 +83,81 @@ void Tuya::dump_config() {
 }
 
 bool Tuya::validate_message_() {
-  uint32_t at = this->rx_message_.size() - 1;
+  uint32_t total_len = this->rx_message_.size();
   auto *data = &this->rx_message_[0];
-  uint8_t new_byte = data[at];
 
-  // Byte 0: HEADER1 (always 0x55)
-  if (at == 0)
-    return new_byte == 0x55;
-  // Byte 1: HEADER2 (always 0xAA)
-  if (at == 1)
-    return new_byte == 0xAA;
-
-  // Byte 2: VERSION
-  // no validation for the following fields:
   uint8_t version = data[2];
-  if (at == 2)
-    return true;
-  // Byte 3: COMMAND
   uint8_t command = data[3];
-  if (at == 3)
-    return true;
-
-  // Byte 4: LENGTH1
-  // Byte 5: LENGTH2
-  if (at <= 5) {
-    // no validation for these fields
-    return true;
-  }
-
   uint16_t length = (uint16_t(data[4]) << 8) | (uint16_t(data[5]));
 
-  // wait until all data is read
-  if (at - 6 < length)
-    return true;
-
-  // Byte 6+LEN: CHECKSUM - sum of all bytes (including header) modulo 256
-  uint8_t rx_checksum = new_byte;
+  // The checksum is always the last byte
+  uint8_t rx_checksum = data[total_len - 1];
   uint8_t calc_checksum = 0;
-  for (uint32_t i = 0; i < 6 + length; i++)
+
+  // Sum everything EXCEPT the last byte
+  for (uint32_t i = 0; i < total_len - 1; i++)
     calc_checksum += data[i];
 
   if (rx_checksum != calc_checksum) {
     ESP_LOGW(TAG, "Tuya Received invalid message checksum %02X!=%02X", rx_checksum, calc_checksum);
+    this->rx_message_.clear();
     return false;
   }
 
-  // valid message
+  // Valid message
   const uint8_t *message_data = data + 6;
-  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", command, version,
-           format_hex_pretty(message_data, length).c_str(), static_cast<uint8_t>(this->init_state_));
+
+  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u",
+           command, version, format_hex_pretty(message_data, length).c_str(),
+           static_cast<uint8_t>(this->init_state_));
+
+  // Process the command logic
   this->handle_command_(command, version, message_data, length);
 
-  // return false to reset rx buffer
-  return false;
+  // Reset the buffer for the next packet
+  this->rx_message_.clear();
+  return true;
 }
 
 void Tuya::handle_char_(uint8_t c) {
+  if (this->raw_trace_) {
+    ESP_LOGI(TAG, "RAW: 0x%02X", c);
+  }
+
   this->rx_message_.push_back(c);
+  this->last_rx_char_timestamp_ = millis();
 
-  // --- TRACE MODE ---
-  // Intercepting packets before the state machine judges them.
+  // Sliding Window: Ensure we start with 0x55 0xAA
+  if (this->rx_message_[0] != 0x55) {
+    this->rx_message_.clear();
+    return;
+  }
+  if (this->rx_message_.size() >= 2 && this->rx_message_[1] != 0xAA) {
+    this->rx_message_.clear();
+    return;
+  }
+
   if (this->rx_message_.size() >= 6) {
-    if (this->rx_message_[0] == 0x55 && this->rx_message_[1] == 0xAA) {
-      uint16_t payload_len = (uint16_t(this->rx_message_[4]) << 8) | this->rx_message_[5];
-      uint16_t total_expected = payload_len + 7;
+    uint16_t payload_len = (uint16_t(this->rx_message_[4]) << 8) | this->rx_message_[5];
+    uint16_t total_expected = payload_len + 7;
 
-      if (this->rx_message_.size() == total_expected) {
-        if (this->trace_mode_) {
-          uint8_t cmd = this->rx_message_[3];
-          ESP_LOGI(TAG, "Trace: [Command 0x%02X] Packet: %s", cmd, format_hex_pretty(this->rx_message_).c_str());
+    // Safety: prevent RAM exhaustion
+    if (total_expected > 512) {
+      this->rx_message_.clear();
+      return;
+    }
 
-          // Contextual hint for the user
-          if (cmd == 0x05 || cmd == 0x00) {
-            ESP_LOGD(TAG, "  ^ Note: This command often carries event data in battery sensors.");
-          }
-        }
-
-        // Pass to standard validation (Checksum etc.)
-        if (!this->validate_message_()) {
-          this->rx_message_.clear();
-        }
+    if (this->rx_message_.size() == total_expected) {
+      // TRACE MODE: Log full packet before validation
+      if (this->trace_mode_ && !this->raw_trace_) {
+        uint8_t cmd = this->rx_message_[3];
+        ESP_LOGI(TAG, "Trace: [Command 0x%02X] Packet: %s",
+                 cmd, format_hex_pretty(this->rx_message_).c_str());
       }
-    } else {
-      // Not a Tuya header, clear junk
+
+      this->validate_message_();
+
+    } else if (this->rx_message_.size() > total_expected) {
       this->rx_message_.clear();
     }
   }
@@ -173,18 +165,6 @@ void Tuya::handle_char_(uint8_t c) {
 
 void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len) {
   TuyaCommandType command_type = static_cast<TuyaCommandType>(command);
-
-  if (this->ignore_init_ && this->init_state_ != TuyaInitState::INIT_DONE) {
-    // Use low_power_sensor_
-    if (command_type == TuyaCommandType::DATAPOINT_REPORT_ASYNC ||
-        (this->low_power_sensor_ && command_type == TuyaCommandType::WIFI_SELECT)) {
-
-      this->init_state_ = TuyaInitState::INIT_DONE;
-      if (!this->silent_init_) {
-        ESP_LOGD(TAG, "Initialization bypassed via incoming data packet (0x%02X)", command);
-      }
-    }
-  }
 
   // --- ASYNC QUEUE CLEANUP ---
   // Check if this incoming packet is the response to the command at the front of our queue
@@ -265,45 +245,34 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       break;
     case TuyaCommandType::WIFI_SELECT:
     case TuyaCommandType::WIFI_RESET: {
-      // Logic: If user forced V0 mode OR auto-detected low_power,
-      // treat 0x05 as data, not a WiFi command.
-      if (this->low_power_sensor_ || this->low_power_mode_) {
-        ESP_LOGD(TAG, "V0/Low-Power DP Report (0x05) received");
-        this->handle_datapoints_(buffer, len);
-        this->init_state_ = TuyaInitState::INIT_DONE;
-      } else {
-        const bool is_select = (command_type == TuyaCommandType::WIFI_SELECT);
-
-        // Send WIFI_SELECT/WIFI_RESET ACK
-        TuyaCommand ack;
-        ack.cmd = is_select ? TuyaCommandType::WIFI_SELECT : TuyaCommandType::WIFI_RESET;
-        ack.payload.clear();
-        this->send_command_(ack);
-
-        // Establish pairing mode for correct first WIFI_STATE byte
-        uint8_t first = 0x00;
-        const char *mode_str = "EZ";
-        if (is_select && buffer[0] == 0x01) {
-          first = 0x01;
-          mode_str = "AP";
-        }
-
-        // Send WIFI_STATE sequence
-        TuyaCommand st;
-        st.cmd = TuyaCommandType::WIFI_STATE;
-        st.payload.resize(1);
-        st.payload[0] = first;
-        this->send_command_(st);
-        st.payload[0] = 0x02;
-        this->send_command_(st);
-        st.payload[0] = 0x03;
-        this->send_command_(st);
-        st.payload[0] = 0x04;
-        this->send_command_(st);
-
-        ESP_LOGI(TAG, "%s received (%s), replied with WIFI_STATE confirming connection established",
-                is_select ? "WIFI_SELECT" : "WIFI_RESET", mode_str);
+      const bool is_select = (len >= 1);
+      // Send WIFI_SELECT ACK
+      TuyaCommand ack;
+      ack.cmd = is_select ? TuyaCommandType::WIFI_SELECT : TuyaCommandType::WIFI_RESET;
+      ack.payload.clear();
+      this->send_command_(ack);
+      // Establish pairing mode for correct first WIFI_STATE byte, EZ (0x00) default
+      uint8_t first = 0x00;
+      const char *mode_str = "EZ";
+      if (is_select && buffer[0] == 0x01) {
+        first = 0x01;
+        mode_str = "AP";
       }
+      // Send WIFI_STATE response, MCU exits pairing mode
+      TuyaCommand st;
+      st.cmd = TuyaCommandType::WIFI_STATE;
+      st.payload.resize(1);
+      st.payload[0] = first;
+      this->send_command_(st);
+      st.payload[0] = 0x02;
+      this->send_command_(st);
+      st.payload[0] = 0x03;
+      this->send_command_(st);
+      st.payload[0] = 0x04;
+      this->send_command_(st);
+
+      ESP_LOGI(TAG, "%s received (%s), replied with WIFI_STATE confirming connection established",
+                is_select ? "WIFI_SELECT" : "WIFI_RESET", mode_str);
       break;
     }
     case TuyaCommandType::DATAPOINT_DELIVER:
@@ -340,17 +309,13 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
         this->initialized_callback_.call();
       }
       this->handle_datapoints_(buffer, len);
-      this->send_command_(
-          TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_REPORT_ACK, .payload = std::vector<uint8_t>{0x01}});
+
+      if (command_type == TuyaCommandType::DATAPOINT_REPORT_SYNC) {
+        this->send_command_(
+            TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_REPORT_ACK, .payload = std::vector<uint8_t>{0x01}});
+      }
       break;
     case TuyaCommandType::DATAPOINT_QUERY:
-      if (this->handle_historical_ && len > 0) {
-        // This activates the helper you added
-        this->process_record_report_(buffer, len);
-      } else {
-        // Optional: Keep a log for debugging covers that use 0x08
-        ESP_LOGV(TAG, "Standard Datapoint Query (0x08) received");
-      }
       break;
     case TuyaCommandType::WIFI_TEST:
       this->send_command_(TuyaCommand{.cmd = TuyaCommandType::WIFI_TEST, .payload = std::vector<uint8_t>{0x00, 0x00}});
@@ -531,85 +496,104 @@ void Tuya::send_raw_command_(TuyaCommand command) {
 
   this->last_command_timestamp_ = millis();
   if (!this->low_power_mode_) {
-    switch (command.cmd) {
-      case TuyaCommandType::HEARTBEAT:
-        this->expected_response_ = TuyaCommandType::HEARTBEAT;
-        break;
-      case TuyaCommandType::PRODUCT_QUERY:
-        this->expected_response_ = TuyaCommandType::PRODUCT_QUERY;
-        break;
-      case TuyaCommandType::CONF_QUERY:
-        this->expected_response_ = TuyaCommandType::CONF_QUERY;
+  switch (command.cmd) {
+    case TuyaCommandType::HEARTBEAT:
+      this->expected_response_ = TuyaCommandType::HEARTBEAT;
+      break;
+    case TuyaCommandType::PRODUCT_QUERY:
+      this->expected_response_ = TuyaCommandType::PRODUCT_QUERY;
+      break;
+    case TuyaCommandType::CONF_QUERY:
+      this->expected_response_ = TuyaCommandType::CONF_QUERY;
         break;
       case TuyaCommandType::WIFI_STATE:
       case TuyaCommandType::WIFI_SELECT:
       case TuyaCommandType::WIFI_RESET:
         this->expected_response_ = command.cmd;
         break;
-      case TuyaCommandType::DATAPOINT_DELIVER:
-      case TuyaCommandType::DATAPOINT_QUERY:
-        this->expected_response_ = TuyaCommandType::DATAPOINT_REPORT_ASYNC;
-        break;
-      default:
-        break;
+    case TuyaCommandType::DATAPOINT_DELIVER:
+    case TuyaCommandType::DATAPOINT_QUERY:
+      this->expected_response_ = TuyaCommandType::DATAPOINT_REPORT_ASYNC;
+      break;
+    default:
+      break;
     }
   }
 
-  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", static_cast<uint8_t>(command.cmd),
-           version, format_hex_pretty(command.payload).c_str(), static_cast<uint8_t>(this->init_state_));
+  // Verbose logging (Standard ESPHome)
+  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u",
+           static_cast<uint8_t>(command.cmd), version,
+           format_hex_pretty(command.payload).c_str(),
+           static_cast<uint8_t>(this->init_state_));
 
+  // Write the packet
   this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo});
   if (!command.payload.empty())
     this->write_array(command.payload.data(), command.payload.size());
 
-  uint8_t checksum = 0x55 + 0xAA + (uint8_t) command.cmd + len_hi + len_lo;
+  // Checksum calculation matching existing logic
+  uint8_t checksum = 0x55 + 0xAA + version + (uint8_t) command.cmd + len_hi + len_lo;
   for (auto &data : command.payload)
     checksum += data;
   this->write_byte(checksum);
+
+  // Phase 1 Trace Logic: Log outgoing packets when trace_mode is active
+  if (this->trace_mode_ && !this->raw_trace_) {
+    std::vector<uint8_t> full_packet = {0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo};
+    full_packet.insert(full_packet.end(), command.payload.begin(), command.payload.end());
+    full_packet.push_back(checksum);
+
+    ESP_LOGI(TAG, "Trace: [Sent 0x%02X] Full Packet: %s",
+             static_cast<uint8_t>(command.cmd),
+             format_hex_pretty(full_packet).c_str());
+  }
 }
 
 void Tuya::process_command_queue_() {
   uint32_t now = millis();
   uint32_t delay = now - this->last_command_timestamp_;
 
-  // --- 1. HANDLE TIMEOUTS (The "Sleepy" Principle) ---
-  if (this->expected_response_.has_value() && delay > 500) {
-    // If we've waited 500ms and no response...
+  // 1. Handle RX Timeout
+  if (!this->rx_message_.empty() && (now - this->last_rx_char_timestamp_ > RECEIVE_TIMEOUT)) {
+    this->rx_message_.clear();
+  }
 
-    if (this->init_state_ != TuyaInitState::INIT_DONE) {
-       // We are in INIT. Instead of a hard fail, we just clear the block.
-       // This allows the queue to move even if the MCU is silent.
-       if (++this->init_retries_ >= MAX_RETRIES) {
-         ESP_LOGV(TAG, "MCU silent during init, clearing expectation...");
-         this->expected_response_.reset();
-         if (!this->command_queue_.empty())
-            this->command_queue_.erase(this->command_queue_.begin());
-         this->init_retries_ = 0;
-       }
-    } else {
-       // Already initialized. If a command (like 'Set Position') isn't ACKed,
-       // we just drop it and move on so the next command isn't stuck.
-       this->expected_response_.reset();
-       if (!this->command_queue_.empty())
-          this->command_queue_.erase(this->command_queue_.begin());
+  // 2. Handle Response/ACK Timeout
+  if (this->expected_response_.has_value() && delay > 500) {
+    this->expected_response_.reset();
+
+    // On timeout, we must pop the failed command to unblock the queue
+    if (!this->command_queue_.empty()) {
+      if (this->init_state_ != TuyaInitState::INIT_DONE) {
+         if (++this->init_retries_ >= MAX_RETRIES) {
+           ESP_LOGV(TAG, "MCU silent during init, dropping command");
+           this->command_queue_.pop_front(); // Cleaner for deque
+           this->init_retries_ = 0;
+         }
+      } else {
+        this->command_queue_.pop_front();
+      }
     }
   }
 
-  // --- 2. SEND NEXT COMMAND ---
-  // Original check: delay must be > 100ms, queue not empty, no RX in progress,
-  // and NOT waiting for an expected response.
+  // 3. Dispatch Logic
   if (delay > COMMAND_DELAY && !this->command_queue_.empty() &&
       this->rx_message_.empty() && !this->expected_response_.has_value()) {
+
+    // Low Power Gate
+    if (this->low_power_mode_) {
+      if (now - this->last_rx_char_timestamp_ > 2000) {
+        return; // MCU is likely asleep
+      }
+    }
 
     auto &cmd = this->command_queue_.front();
     this->send_raw_command_(cmd);
     this->last_command_timestamp_ = now;
 
     if (this->low_power_mode_) {
-      // If we've detected it's a battery device, don't wait for ACKs.
-      this->command_queue_.erase(this->command_queue_.begin());
+      this->command_queue_.pop_front();
     } else {
-      // Original V3 behavior: set the expectation and wait.
       this->expected_response_ = cmd.cmd;
     }
   }
@@ -842,37 +826,6 @@ void Tuya::register_listener(uint8_t datapoint_id, const std::function<void(Tuya
     if (datapoint.id == datapoint_id)
       func(datapoint);
   }
-}
-
-void Tuya::process_record_report_(const uint8_t *buffer, size_t len) {
-  // Detection: Historical packets prefix data with time.
-  // 7 bytes = YY MM DD HH MM SS + Sub-second/Type
-  // 13 bytes = Unix Millisecond Epoch (found on newer Zigbee/Bluetooth gateways)
-  size_t offset = (len > 13) ? 13 : 7;
-
-  if (len <= offset) {
-    ESP_LOGW(TAG, "Historical packet (0x08) too short to contain timestamp (len: %zu)", len);
-    return;
-  }
-
-  size_t data_len = len - offset;
-
-  // Logic Safety: A Tuya DP needs at least 4 bytes (ID, Type, Len_Hi, Len_Lo)
-  if (data_len < 4) {
-    ESP_LOGW(TAG, "Short historical packet: After stripping %zu-byte timestamp, only %zu bytes remain (need 4+)",
-             offset, data_len);
-    // Still send the ACK so the MCU doesn't loop forever
-    this->send_empty_command_(TuyaCommandType::DATAPOINT_QUERY);
-    return;
-  }
-
-  ESP_LOGD(TAG, "Stripping %zu-byte timestamp. Parsing %zu bytes of historical sensor data.", offset, data_len);
-
-  // Pass the 'cleaned' buffer to the standard parser
-  this->handle_datapoints_(buffer + offset, data_len);
-
-  // Mandatory ACK for 0x08 to allow MCU to sleep
-  this->send_empty_command_(TuyaCommandType::DATAPOINT_QUERY);
 }
 
 TuyaInitState Tuya::get_init_state() { return this->init_state_; }

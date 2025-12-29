@@ -19,6 +19,11 @@ esp32:
 #   - source: github://pr#3820
 #     components: [ ledc ]
 
+external_components:
+  - source:
+      type: local
+      path: my_external_components/tuya_commit_2_low_power_core
+
 captive_portal:
 
 web_server:
@@ -42,17 +47,18 @@ uart:
 #   uart_id: mcu
 
 tuya:
-  trace_mode: true  # Watch the "Truth" logs to verify your new buffer
-  compatibility_mode:
-    handle_historical_records: true
-    # DO NOT enable force_low_power or ignore_init here
-    # as the ZY-M100 needs the full handshake to function correctly.
+  standard_trace_mode: true
+  # raw_trace_mode: true
+  # compatibility_mode:
+  #   handle_historical_records: true
+  #   # DO NOT enable force_low_power or ignore_init here
+  #   # as the ZY-M100 needs the full handshake to function correctly.
 
-  on_datapoint_update:
-    - sensor_datapoint: 1  # Standard Presence DP for many sensors
-      datapoint_type: bool
-      then:
-        - logger.log: "Testing my new on_datapoint_update hook!"
+  # on_datapoint_update:
+  #   - sensor_datapoint: 1  # Standard Presence DP for many sensors
+  #     datapoint_type: bool
+  #     then:
+  #       - logger.log: "Testing my new on_datapoint_update hook!"
 
 number:
   - platform: "tuya"

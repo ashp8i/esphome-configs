@@ -18,7 +18,7 @@ esp32:
 external_components:
   - source:
       type: local
-      path: my_external_components/tuya_cover_pr
+      path: my_external_components/tuya_commit_7_covers
 
 captive_portal:
 
@@ -48,17 +48,17 @@ tuya:
     # low_power: auto
     low_power: true
     # low_power: false
-    trace_mode: true 
+    standard_trace_mode: true
     # This enables the "Live Trace" in your logs
-    compatibility_mode:
-        # Stop the [E][tuya:XXX] log spam when initialization is slow/sleepy
-        silent_init: true
-        # Don't give up; just wait indefinitely for the first valid DP
-        ignore_initialization: true
-        # Treat 0x05 as data for older battery sensors
-        force_low_power_reporting_datapoints: true
-        # Accept 0x08 as valid status data (stripping timestamps)
-        handle_historical_records: true
+    # compatibility_mode:
+    #     # Stop the [E][tuya:XXX] log spam when initialization is slow/sleepy
+    #     silent_init: true
+    #     # Don't give up; just wait indefinitely for the first valid DP
+    #     ignore_initialization: true
+    #     # Treat 0x05 as data for older battery sensors
+    #     force_low_power_reporting_datapoints: true
+    #     # Accept 0x08 as valid status data (stripping timestamps)
+    #     handle_historical_records: true
 
 cover:
   - platform: "tuya"

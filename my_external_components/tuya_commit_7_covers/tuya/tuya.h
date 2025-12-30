@@ -26,7 +26,6 @@ enum class TuyaDatapointType : uint8_t {
   BITMASK = 0x05,  // 1/2/4 bytes
 };
 
-
 struct TuyaDatapoint {
   uint8_t id;
   TuyaDatapointType type;
@@ -113,8 +112,13 @@ class Tuya : public Component, public uart::UARTDevice {
   // --- Overrides & Handlers ---
   void set_status_pin(InternalGPIOPin *status_pin) { this->status_pin_ = status_pin; }
   void set_low_power(bool low_power) { this->low_power_mode_ = low_power; }
+  void set_silent_init(bool silent) { this->silent_init_ = silent; }
+  void set_ignore_initialization(bool ignore) { this->ignore_init_ = ignore; }
+  void set_low_power_sensor(bool low_power) { this->force_low_power_reporting_ = low_power; }
+  void set_handle_historical_records(bool handle) { this->handle_historical_ = handle; }
   void set_std_trace_mode(bool enable) { trace_mode_ = enable; }
   void set_raw_trace_mode(bool enable) { raw_trace_ = enable; }
+  void set_low_power_keep_alive(bool enable) { this->low_power_keep_alive_ = enable; }
 
   TuyaInitState get_init_state();
 #ifdef USE_TIME
@@ -130,13 +134,24 @@ class Tuya : public Component, public uart::UARTDevice {
  protected:
   // --- Robust State Flags ---
   bool low_power_mode_{false};
+  bool silent_init_{false};
+  bool ignore_init_{false};
+  bool force_low_power_reporting_{false};
+  bool handle_historical_{true};
   bool trace_mode_{false};
   bool raw_trace_{false};
+  bool low_power_keep_alive_{false};
 
   // Robust timing & queue
   std::deque<TuyaCommand> command_queue_;
   uint32_t last_command_timestamp_{0};
   uint32_t last_rx_char_timestamp_{0};
+  uint32_t last_heartbeat_timestamp_{0};
+
+  // --- Data Management ---
+  std::string product_ = "";
+  std::vector<TuyaDatapoint> datapoints_;
+  std::vector<uint8_t> rx_message_;
 
   // --- Internal State Machine ---
   TuyaInitState init_state_ = TuyaInitState::INIT_HEARTBEAT;
@@ -144,7 +159,6 @@ class Tuya : public Component, public uart::UARTDevice {
   int init_retries_{0};
   uint8_t protocol_version_ = -1;
   uint8_t wifi_status_ = -1;
-  std::string product_ = "";
 
   // --- Low Level UART & Parsing ---
   void handle_char_(uint8_t c);
@@ -186,8 +200,6 @@ class Tuya : public Component, public uart::UARTDevice {
 
   // --- Containers ---
   std::vector<TuyaDatapointListener> listeners_;
-  std::vector<TuyaDatapoint> datapoints_;
-  std::vector<uint8_t> rx_message_;
   std::vector<uint8_t> ignore_mcu_update_on_datapoints_{};
   optional<TuyaCommandType> expected_response_{};
   CallbackManager<void()> initialized_callback_{};

@@ -287,7 +287,6 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
           first = 0x01;
           mode_str = "AP";
         }
-
         // Send WIFI_STATE sequence
         TuyaCommand st;
         st.cmd = TuyaCommandType::WIFI_STATE;

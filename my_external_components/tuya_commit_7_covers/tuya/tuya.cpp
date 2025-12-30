@@ -22,7 +22,8 @@ static const int RECEIVE_TIMEOUT = 300;
 static const int MAX_RETRIES = 5;
 
 void Tuya::setup() {
-  if (!this->low_power_mode_) {
+  // Only use the standard interval if NOT in our custom keep-alive mode
+  if (!this->low_power_mode_ && !this->low_power_keep_alive_) {
     this->set_interval("heartbeat", 15000, [this] {
       this->send_empty_command_(TuyaCommandType::HEARTBEAT);
     });
@@ -34,14 +35,25 @@ void Tuya::setup() {
 }
 
 void Tuya::loop() {
-  // 1. Existing: Read incoming bytes
+  // 1. Always process incoming UART data
   while (this->available()) {
     uint8_t c;
     this->read_byte(&c);
     this->handle_char_(c);
   }
 
-  // 2. New: Process outgoing commands
+  // 2. Passive Heartbeat Logic for Low Power Keep Alive
+  // This bypasses the state machine to keep the MCU from falling asleep.
+  if (this->low_power_keep_alive_) {
+    uint32_t now = millis();
+    // Use a 15-second interval
+    if (now - this->last_heartbeat_timestamp_ > 15000) {
+      this->send_empty_command_(TuyaCommandType::HEARTBEAT);
+      this->last_heartbeat_timestamp_ = now;
+    }
+  }
+
+  // 3. Process the outgoing queue (respecting the COMMAND_DELAY)
   this->process_command_queue_();
 }
 
@@ -82,82 +94,116 @@ void Tuya::dump_config() {
   ESP_LOGCONFIG(TAG, "  Product: '%s'", this->product_.c_str());
 }
 
-bool Tuya::validate_message_() {
-  uint32_t total_len = this->rx_message_.size();
-  auto *data = &this->rx_message_[0];
+// bool Tuya::validate_message_() {
+//   if (this->rx_message_.size() < 7)
+//     return true; // Not enough data to even check length
 
-  uint8_t version = data[2];
-  uint8_t command = data[3];
+//   auto *data = &this->rx_message_[0];
+//   uint16_t length = (uint16_t(data[4]) << 8) | (uint16_t(data[5]));
+//   uint32_t total_expected_size = length + 7;
+
+//   if (this->rx_message_.size() < total_expected_size)
+//     return true; // Still waiting for the full payload
+
+//   // We have a full packet. Now check the checksum.
+//   uint8_t rx_checksum = data[total_expected_size - 1];
+//   uint8_t calc_checksum = 0;
+//   for (uint32_t i = 0; i < total_expected_size - 1; i++) {
+//     calc_checksum += data[i];
+//   }
+
+//   if (rx_checksum != calc_checksum) {
+//     ESP_LOGW(TAG, "Tuya Checksum Fail: Expected %02X, got %02X", rx_checksum, calc_checksum);
+//     // Return false so handle_char_ knows to erase the first byte and try again
+//     return false;
+//   }
+
+//   // Valid Packet Found!
+//   uint8_t version = data[2];
+//   uint8_t command = data[3];
+//   const uint8_t *message_data = data + 6;
+
+//   ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s]",
+//            command, version, format_hex_pretty(message_data, length).c_str());
+
+//   this->handle_command_(command, version, message_data, length);
+
+//   return true; // Success
+// }
+
+bool Tuya::validate_message_() {
+  uint32_t at = this->rx_message_.size() - 1;
+  auto *data = &this->rx_message_[0];
+  uint8_t new_byte = data[at];
+
+  // Byte 0 & 1: Header (Standard 0x55 0xAA)
+  if (at == 0) return new_byte == 0x55;
+  if (at == 1) return new_byte == 0xAA;
+  if (at == 2) return true; // Version
+  if (at == 3) return true; // Command
+
+  // Byte 4 & 5: Length
+  if (at <= 5) return true;
+
   uint16_t length = (uint16_t(data[4]) << 8) | (uint16_t(data[5]));
 
-  // The checksum is always the last byte
-  uint8_t rx_checksum = data[total_len - 1];
-  uint8_t calc_checksum = 0;
-
-  // Sum everything EXCEPT the last byte
-  for (uint32_t i = 0; i < total_len - 1; i++)
-    calc_checksum += data[i];
-
-  if (rx_checksum != calc_checksum) {
-    ESP_LOGW(TAG, "Tuya Received invalid message checksum %02X!=%02X", rx_checksum, calc_checksum);
-    this->rx_message_.clear();
-    return false;
+  // Check 1: Wait until we have the full payload + 1 byte for checksum
+  if (at - 6 < length) {
+    return true;
   }
 
-  // Valid message
+  // Check 2: Checksum Validation
+  uint8_t rx_checksum = new_byte;
+  uint8_t calc_checksum = 0;
+  // Tuya checksum is the sum of all bytes except the checksum itself, mod 256
+  for (uint32_t i = 0; i < 6 + length; i++) {
+    calc_checksum += data[i];
+  }
+
+  if (rx_checksum != calc_checksum) {
+    ESP_LOGW(TAG, "Tuya Received invalid message checksum %02X != %02X", rx_checksum, calc_checksum);
+    return false; // This triggers rx_message.clear() in handle_char_
+  }
+
+  // --- VALID MESSAGE REACHED ---
+  uint8_t version = data[2];
+  uint8_t command = data[3];
   const uint8_t *message_data = data + 6;
 
-  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u",
-           command, version, format_hex_pretty(message_data, length).c_str(),
-           static_cast<uint8_t>(this->init_state_));
+  // Change logging to Debug so we can see the "Conversation" clearly
+  ESP_LOGD(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s]",
+           command, version, format_hex_pretty(message_data, length).c_str());
 
-  // Process the command logic
   this->handle_command_(command, version, message_data, length);
 
-  // Reset the buffer for the next packet
-  this->rx_message_.clear();
-  return true;
+  // Return false to reset buffer for the next message
+  return false;
 }
 
 void Tuya::handle_char_(uint8_t c) {
-  if (this->raw_trace_) {
-    ESP_LOGI(TAG, "RAW: 0x%02X", c);
-  }
-
   this->rx_message_.push_back(c);
-  this->last_rx_char_timestamp_ = millis();
 
-  // Sliding Window: Ensure we start with 0x55 0xAA
-  if (this->rx_message_[0] != 0x55) {
-    this->rx_message_.clear();
-    return;
-  }
-  if (this->rx_message_.size() >= 2 && this->rx_message_[1] != 0xAA) {
-    this->rx_message_.clear();
-    return;
-  }
-
-  if (this->rx_message_.size() >= 6) {
-    uint16_t payload_len = (uint16_t(this->rx_message_[4]) << 8) | this->rx_message_[5];
-    uint16_t total_expected = payload_len + 7;
-
-    // Safety: prevent RAM exhaustion
-    if (total_expected > 512) {
-      this->rx_message_.clear();
-      return;
+  if (this->raw_trace_) {
+    // Only log raw bytes if we are struggling to find a header
+    if (this->rx_message_.size() < 2) {
+       ESP_LOGD(TAG, "RX Raw: %02X", c);
     }
+  }
 
-    if (this->rx_message_.size() == total_expected) {
-      // TRACE MODE: Log full packet before validation
-      if (this->trace_mode_ && !this->raw_trace_) {
-        uint8_t cmd = this->rx_message_[3];
-        ESP_LOGI(TAG, "Trace: [Command 0x%02X] Packet: %s",
-                 cmd, format_hex_pretty(this->rx_message_).c_str());
-      }
+  while (this->rx_message_.size() >= 2 && (this->rx_message_[0] != 0x55 || this->rx_message_[1] != 0xAA)) {
+    if (this->raw_trace_) {
+       ESP_LOGV(TAG, "Dropping non-header byte: %02X", this->rx_message_[0]);
+    }
+    this->rx_message_.erase(this->rx_message_.begin());
+  }
 
-      this->validate_message_();
-
-    } else if (this->rx_message_.size() > total_expected) {
+  // 2. Length Check & Validation
+  if (this->rx_message_.size() >= 7) {
+    if (!this->validate_message_()) {
+      // Checksum failed? Erase the "false" header and keep searching.
+      this->rx_message_.erase(this->rx_message_.begin());
+    } else {
+      // Success? validate_message_ already called handle_command_, so clear it.
       this->rx_message_.clear();
     }
   }
@@ -166,25 +212,51 @@ void Tuya::handle_char_(uint8_t c) {
 void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len) {
   TuyaCommandType command_type = static_cast<TuyaCommandType>(command);
 
+  if (this->ignore_init_ && this->init_state_ != TuyaInitState::INIT_DONE) {
+      // If we see literally anything valid from the MCU, we are 'Done' enough to work.
+      this->init_state_ = TuyaInitState::INIT_DONE;
+      if (!this->silent_init_) {
+        ESP_LOGD(TAG, "Link Alive: Initialization bypassed via command 0x%02X", command);
+      }
+  }
+
   // --- ASYNC QUEUE CLEANUP ---
-  // Check if this incoming packet is the response to the command at the front of our queue
-  if (this->expected_response_.has_value() && this->expected_response_ == command_type) {
-    this->expected_response_.reset();
-    if (!this->command_queue_.empty()) {
-      this->command_queue_.erase(this->command_queue_.begin());
+  if (this->expected_response_.has_value()) {
+    // Logic: If we got the EXACT response OR if we are in ignore_init and got ANY data (0x05/0x08/0x07)
+    bool is_match = (this->expected_response_ == command_type);
+    bool is_passive_ack = (this->ignore_init_ && (command_type == TuyaCommandType::DATAPOINT_REPORT_ASYNC ||
+                                                  command_type == TuyaCommandType::DATAPOINT_QUERY));
+
+    if (is_match || is_passive_ack) {
+      this->expected_response_.reset();
+      if (!this->command_queue_.empty()) {
+          this->command_queue_.pop_front();
+      }
+      this->init_retries_ = 0;
     }
-    this->init_retries_ = 0; // Reset retry counter on success
   }
 
   switch (command_type) {
+    // case TuyaCommandType::HEARTBEAT:
+    //   ESP_LOGV(TAG, "MCU Heartbeat (0x%02X)", buffer[0]);
+    //   this->protocol_version_ = version;
+    //   if (buffer[0] == 0) {
+    //     ESP_LOGI(TAG, "MCU restarted");
+    //     this->init_state_ = TuyaInitState::INIT_HEARTBEAT;
+    //   }
+    //   if (this->init_state_ == TuyaInitState::INIT_HEARTBEAT) {
+    //     this->init_state_ = TuyaInitState::INIT_PRODUCT;
+    //     this->send_empty_command_(TuyaCommandType::PRODUCT_QUERY);
+    //   }
+    //   break;
     case TuyaCommandType::HEARTBEAT:
-      ESP_LOGV(TAG, "MCU Heartbeat (0x%02X)", buffer[0]);
+      ESP_LOGV(TAG, "MCU Heartbeat Received (Payload: 0x%02X)", buffer[0]);
       this->protocol_version_ = version;
-      if (buffer[0] == 0) {
-        ESP_LOGI(TAG, "MCU restarted");
-        this->init_state_ = TuyaInitState::INIT_HEARTBEAT;
-      }
+
+      // REASONABLE CHECK: If we get ANY heartbeat, the link is alive.
+      // We move to INIT_PRODUCT even if the MCU says it's still 'initializing' (0x01)
       if (this->init_state_ == TuyaInitState::INIT_HEARTBEAT) {
+        ESP_LOGD(TAG, "Link established, proceeding to Product Query...");
         this->init_state_ = TuyaInitState::INIT_PRODUCT;
         this->send_empty_command_(TuyaCommandType::PRODUCT_QUERY);
       }
@@ -245,20 +317,29 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       break;
     case TuyaCommandType::WIFI_SELECT:
     case TuyaCommandType::WIFI_RESET: {
-      const bool is_select = (len >= 1);
-      // Send WIFI_SELECT ACK
-      TuyaCommand ack;
+      // Logic: If user forced V0 mode OR auto-detected low_power,
+      // treat 0x05 as data, not a WiFi command.
+      if (this->force_low_power_reporting_ || this->low_power_mode_) {
+        ESP_LOGD(TAG, "V0/Low-Power DP Report (0x05) received");
+        this->handle_datapoints_(buffer, len);
+        this->init_state_ = TuyaInitState::INIT_DONE;
+      } else {
+        const bool is_select = (command_type == TuyaCommandType::WIFI_SELECT);
+
+        // Send WIFI_SELECT/WIFI_RESET ACK
+        TuyaCommand ack;
       ack.cmd = is_select ? TuyaCommandType::WIFI_SELECT : TuyaCommandType::WIFI_RESET;
       ack.payload.clear();
       this->send_command_(ack);
-      // Establish pairing mode for correct first WIFI_STATE byte, EZ (0x00) default
+
+        // Establish pairing mode for correct first WIFI_STATE byte
       uint8_t first = 0x00;
       const char *mode_str = "EZ";
       if (is_select && buffer[0] == 0x01) {
         first = 0x01;
         mode_str = "AP";
       }
-      // Send WIFI_STATE response, MCU exits pairing mode
+        // Send WIFI_STATE sequence
       TuyaCommand st;
       st.cmd = TuyaCommandType::WIFI_STATE;
       st.payload.resize(1);
@@ -271,8 +352,9 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       st.payload[0] = 0x04;
       this->send_command_(st);
 
-      ESP_LOGI(TAG, "%s received (%s), replied with WIFI_STATE confirming connection established",
+        ESP_LOGI(TAG, "%s received (%s), replied with WIFI_STATE confirming connection established",
                 is_select ? "WIFI_SELECT" : "WIFI_RESET", mode_str);
+      }
       break;
     }
     case TuyaCommandType::DATAPOINT_DELIVER:
@@ -309,13 +391,17 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
         this->initialized_callback_.call();
       }
       this->handle_datapoints_(buffer, len);
-
-      if (command_type == TuyaCommandType::DATAPOINT_REPORT_SYNC) {
-        this->send_command_(
-            TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_REPORT_ACK, .payload = std::vector<uint8_t>{0x01}});
-      }
+      this->send_command_(
+          TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_REPORT_ACK, .payload = std::vector<uint8_t>{0x01}});
       break;
     case TuyaCommandType::DATAPOINT_QUERY:
+      if (this->handle_historical_ && len > 0) {
+        // This activates the helper you added
+        this->process_record_report_(buffer, len);
+      } else {
+        // Optional: Keep a log for debugging covers that use 0x08
+        ESP_LOGV(TAG, "Standard Datapoint Query (0x08) received");
+      }
       break;
     case TuyaCommandType::WIFI_TEST:
       this->send_command_(TuyaCommand{.cmd = TuyaCommandType::WIFI_TEST, .payload = std::vector<uint8_t>{0x00, 0x00}});
@@ -382,6 +468,233 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
   }
 }
 
+// void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
+//   while (len >= 4) {
+//     TuyaDatapoint datapoint{};
+//     datapoint.id = buffer[0];
+//     datapoint.type = (TuyaDatapointType) buffer[1];
+//     datapoint.value_uint = 0;
+
+//     size_t data_size = (buffer[2] << 8) + buffer[3];
+//     const uint8_t *data = buffer + 4;
+//     size_t data_len = len - 4;
+//     if (data_size > data_len) {
+//       ESP_LOGW(TAG, "Datapoint %u is truncated and cannot be parsed (%zu > %zu)", datapoint.id, data_size, data_len);
+//       return;
+//     }
+
+//     datapoint.len = data_size;
+
+//     switch (datapoint.type) {
+//       case TuyaDatapointType::RAW:
+//         datapoint.value_raw = std::vector<uint8_t>(data, data + data_size);
+//         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, format_hex_pretty(datapoint.value_raw).c_str());
+//         break;
+//       case TuyaDatapointType::BOOLEAN:
+//         if (data_size != 1) {
+//           ESP_LOGW(TAG, "Datapoint %u has bad boolean len %zu", datapoint.id, data_size);
+//           return;
+//         }
+//         datapoint.value_bool = data[0];
+//         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, ONOFF(datapoint.value_bool));
+//         break;
+//       case TuyaDatapointType::INTEGER:
+//         if (data_size != 4) {
+//           ESP_LOGW(TAG, "Datapoint %u has bad integer len %zu", datapoint.id, data_size);
+//           return;
+//         }
+//         datapoint.value_uint = encode_uint32(data[0], data[1], data[2], data[3]);
+//         ESP_LOGD(TAG, "Datapoint %u update to %d", datapoint.id, datapoint.value_int);
+//         break;
+//       case TuyaDatapointType::STRING:
+//         datapoint.value_string = std::string(reinterpret_cast<const char *>(data), data_size);
+//         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, datapoint.value_string.c_str());
+//         break;
+//       case TuyaDatapointType::ENUM:
+//         if (data_size != 1) {
+//           ESP_LOGW(TAG, "Datapoint %u has bad enum len %zu", datapoint.id, data_size);
+//           return;
+//         }
+//         datapoint.value_enum = data[0];
+//         ESP_LOGD(TAG, "Datapoint %u update to %d", datapoint.id, datapoint.value_enum);
+//         break;
+//       case TuyaDatapointType::BITMASK:
+//         switch (data_size) {
+//           case 1:
+//             datapoint.value_bitmask = encode_uint32(0, 0, 0, data[0]);
+//             break;
+//           case 2:
+//             datapoint.value_bitmask = encode_uint32(0, 0, data[0], data[1]);
+//             break;
+//           case 4:
+//             datapoint.value_bitmask = encode_uint32(data[0], data[1], data[2], data[3]);
+//             break;
+//           default:
+//             ESP_LOGW(TAG, "Datapoint %u has bad bitmask len %zu", datapoint.id, data_size);
+//             return;
+//         }
+//         ESP_LOGD(TAG, "Datapoint %u update to %#08" PRIX32, datapoint.id, datapoint.value_bitmask);
+//         break;
+//       default:
+//         ESP_LOGW(TAG, "Datapoint %u has unknown type %#02hhX", datapoint.id, static_cast<uint8_t>(datapoint.type));
+//         return;
+//     }
+
+//     len -= data_size + 4;
+//     buffer = data + data_size;
+
+//     // drop update if datapoint is in ignore_mcu_datapoint_update list
+//     bool skip = false;
+//     for (auto i : this->ignore_mcu_update_on_datapoints_) {
+//       if (datapoint.id == i) {
+//         ESP_LOGV(TAG, "Datapoint %u found in ignore_mcu_update_on_datapoints list, dropping MCU update", datapoint.id);
+//         skip = true;
+//         break;
+//       }
+//     }
+//     if (skip)
+//       continue;
+
+//     // 1. Dynamic Discovery (Already robust in your code)
+//     bool found = false;
+//     for (auto &other : this->datapoints_) {
+//       if (other.id == datapoint.id) {
+//         // Optimization: Only update and trigger if the value actually CHANGED
+//         // This prevents the S3 from wasting power/WiFi cycles on redundant reports
+//         if (other.value_uint == datapoint.value_uint &&
+//             other.value_raw == datapoint.value_raw &&
+//             !this->force_low_power_reporting_) { // Unless forced by our custom flag
+//            found = true;
+//            skip = true;
+//            break;
+//         }
+//         other = datapoint;
+//         found = true;
+//         break;
+//       }
+//     }
+
+//     if (!found) {
+//       this->datapoints_.push_back(datapoint);
+//       ESP_LOGI(TAG, "New Datapoint %u discovered via passive report", datapoint.id);
+//     }
+
+//     if (skip) continue;
+
+//     // 2. Trigger Listeners (The bridge to the Cover/Sensors)
+//     for (auto &listener : this->listeners_) {
+//       if (listener.datapoint_id == datapoint.id)
+//         listener.on_datapoint(datapoint);
+//     }
+//   }
+// }
+
+// void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
+//   while (len >= 4) {
+//     TuyaDatapoint datapoint{};
+//     datapoint.id = buffer[0];
+//     datapoint.type = (TuyaDatapointType) buffer[1];
+//     datapoint.value_uint = 0;
+
+//     size_t data_size = (buffer[2] << 8) + buffer[3];
+//     const uint8_t *data = buffer + 4;
+//     size_t data_len = len - 4;
+//     if (data_size > data_len) {
+//       ESP_LOGW(TAG, "Datapoint %u is truncated and cannot be parsed (%zu > %zu)", datapoint.id, data_size, data_len);
+//       return;
+//     }
+
+//     datapoint.len = data_size;
+
+//     switch (datapoint.type) {
+//       case TuyaDatapointType::RAW:
+//         datapoint.value_raw = std::vector<uint8_t>(data, data + data_size);
+//         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, format_hex_pretty(datapoint.value_raw).c_str());
+//         break;
+//       case TuyaDatapointType::BOOLEAN:
+//         if (data_size != 1) {
+//           ESP_LOGW(TAG, "Datapoint %u has bad boolean len %zu", datapoint.id, data_size);
+//           return;
+//         }
+//         datapoint.value_bool = data[0];
+//         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, ONOFF(datapoint.value_bool));
+//         break;
+//       case TuyaDatapointType::INTEGER:
+//         if (data_size != 4) {
+//           ESP_LOGW(TAG, "Datapoint %u has bad integer len %zu", datapoint.id, data_size);
+//           return;
+//         }
+//         datapoint.value_uint = encode_uint32(data[0], data[1], data[2], data[3]);
+//         ESP_LOGD(TAG, "Datapoint %u update to %d", datapoint.id, datapoint.value_int);
+//         break;
+//       case TuyaDatapointType::STRING:
+//         datapoint.value_string = std::string(reinterpret_cast<const char *>(data), data_size);
+//         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, datapoint.value_string.c_str());
+//         break;
+//       case TuyaDatapointType::ENUM:
+//         if (data_size != 1) {
+//           ESP_LOGW(TAG, "Datapoint %u has bad enum len %zu", datapoint.id, data_size);
+//           return;
+//         }
+//         datapoint.value_enum = data[0];
+//         ESP_LOGD(TAG, "Datapoint %u update to %d", datapoint.id, datapoint.value_enum);
+//         break;
+//       case TuyaDatapointType::BITMASK:
+//         switch (data_size) {
+//           case 1:
+//             datapoint.value_bitmask = encode_uint32(0, 0, 0, data[0]);
+//             break;
+//           case 2:
+//             datapoint.value_bitmask = encode_uint32(0, 0, data[0], data[1]);
+//             break;
+//           case 4:
+//             datapoint.value_bitmask = encode_uint32(data[0], data[1], data[2], data[3]);
+//             break;
+//           default:
+//             ESP_LOGW(TAG, "Datapoint %u has bad bitmask len %zu", datapoint.id, data_size);
+//             return;
+//         }
+//         ESP_LOGD(TAG, "Datapoint %u update to %#08" PRIX32, datapoint.id, datapoint.value_bitmask);
+//         break;
+//       default:
+//         ESP_LOGW(TAG, "Datapoint %u has unknown type %#02hhX", datapoint.id, static_cast<uint8_t>(datapoint.type));
+//         return;
+//     }
+
+//     len -= data_size + 4;
+//     buffer = data + data_size;
+
+//     // drop update if datapoint is in ignore_mcu_datapoint_update list
+//     bool skip = false;
+//     for (auto i : this->ignore_mcu_update_on_datapoints_) {
+//       if (datapoint.id == i) {
+//         ESP_LOGV(TAG, "Datapoint %u found in ignore_mcu_update_on_datapoints list, dropping MCU update", datapoint.id);
+//         skip = true;
+//         break;
+//       }
+//     }
+//     if (skip)
+//       continue;
+
+//     // Update internal datapoints
+//     bool found = false;
+//     for (auto &other : this->datapoints_) {
+//       if (other.id == datapoint.id) {
+//         other = datapoint;
+//         found = true;
+//       }
+//     }
+//     if (!found) {
+//       this->datapoints_.push_back(datapoint);
+//     }
+
+//     // Run through listeners
+//     for (auto &listener : this->listeners_) {
+//       if (listener.datapoint_id == datapoint.id)
+//         listener.on_datapoint(datapoint);
+//     }
+//   }
+// }
 void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
   while (len >= 4) {
     TuyaDatapoint datapoint{};
@@ -399,24 +712,19 @@ void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
 
     datapoint.len = data_size;
 
+    // --- PARSING SECTION ---
     switch (datapoint.type) {
       case TuyaDatapointType::RAW:
         datapoint.value_raw = std::vector<uint8_t>(data, data + data_size);
         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, format_hex_pretty(datapoint.value_raw).c_str());
         break;
       case TuyaDatapointType::BOOLEAN:
-        if (data_size != 1) {
-          ESP_LOGW(TAG, "Datapoint %u has bad boolean len %zu", datapoint.id, data_size);
-          return;
-        }
+        if (data_size != 1) { return; }
         datapoint.value_bool = data[0];
         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, ONOFF(datapoint.value_bool));
         break;
       case TuyaDatapointType::INTEGER:
-        if (data_size != 4) {
-          ESP_LOGW(TAG, "Datapoint %u has bad integer len %zu", datapoint.id, data_size);
-          return;
-        }
+        if (data_size != 4) { return; }
         datapoint.value_uint = encode_uint32(data[0], data[1], data[2], data[3]);
         ESP_LOGD(TAG, "Datapoint %u update to %d", datapoint.id, datapoint.value_int);
         break;
@@ -425,63 +733,51 @@ void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
         ESP_LOGD(TAG, "Datapoint %u update to %s", datapoint.id, datapoint.value_string.c_str());
         break;
       case TuyaDatapointType::ENUM:
-        if (data_size != 1) {
-          ESP_LOGW(TAG, "Datapoint %u has bad enum len %zu", datapoint.id, data_size);
-          return;
-        }
+        if (data_size != 1) { return; }
         datapoint.value_enum = data[0];
         ESP_LOGD(TAG, "Datapoint %u update to %d", datapoint.id, datapoint.value_enum);
         break;
       case TuyaDatapointType::BITMASK:
-        switch (data_size) {
-          case 1:
-            datapoint.value_bitmask = encode_uint32(0, 0, 0, data[0]);
-            break;
-          case 2:
-            datapoint.value_bitmask = encode_uint32(0, 0, data[0], data[1]);
-            break;
-          case 4:
-            datapoint.value_bitmask = encode_uint32(data[0], data[1], data[2], data[3]);
-            break;
-          default:
-            ESP_LOGW(TAG, "Datapoint %u has bad bitmask len %zu", datapoint.id, data_size);
-            return;
-        }
-        ESP_LOGD(TAG, "Datapoint %u update to %#08" PRIX32, datapoint.id, datapoint.value_bitmask);
+        // ... (Keep your bitmask switch here)
         break;
       default:
         ESP_LOGW(TAG, "Datapoint %u has unknown type %#02hhX", datapoint.id, static_cast<uint8_t>(datapoint.type));
         return;
     }
 
+    // Move pointers for next iteration
     len -= data_size + 4;
     buffer = data + data_size;
 
-    // drop update if datapoint is in ignore_mcu_datapoint_update list
+    // --- FILTER SECTION ---
     bool skip = false;
     for (auto i : this->ignore_mcu_update_on_datapoints_) {
       if (datapoint.id == i) {
-        ESP_LOGV(TAG, "Datapoint %u found in ignore_mcu_update_on_datapoints list, dropping MCU update", datapoint.id);
         skip = true;
         break;
       }
     }
-    if (skip)
-      continue;
+    if (skip) continue;
 
-    // Update internal datapoints
+    // --- THE ELECTRON MICROSCOPE INTEGRATION ---
     bool found = false;
     for (auto &other : this->datapoints_) {
       if (other.id == datapoint.id) {
         other = datapoint;
         found = true;
+        break; // Found it, stop looking
       }
     }
+
     if (!found) {
+      // This is a brand new DP discovered during a report
+      ESP_LOGI(TAG, "Discovery: MCU reported UNKNOWN Datapoint %u (Type: %u, Len: %zu). Values: %s",
+               datapoint.id, static_cast<uint8_t>(datapoint.type), datapoint.len,
+               format_hex_pretty(data, data_size).c_str());
       this->datapoints_.push_back(datapoint);
     }
 
-    // Run through listeners
+    // --- LISTENER SECTION ---
     for (auto &listener : this->listeners_) {
       if (listener.datapoint_id == datapoint.id)
         listener.on_datapoint(datapoint);
@@ -489,13 +785,244 @@ void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
   }
 }
 
+// void Tuya::process_command_queue_() {
+//   uint32_t now = millis();
+//   uint32_t delay = now - this->last_command_timestamp_;
+
+//   // 1. Throttling Gate: Always respect the 100ms gap to prevent serial flooding
+//   if (delay < COMMAND_DELAY)
+//     return;
+
+//   // 2. The Lock Bypass
+//   // If we are in "Ignore Init" mode, we don't care about expected_response_
+//   if (!this->command_queue_.empty() && this->rx_message_.empty()) {
+
+//     // In "Dumb/Passive" mode, we never wait for ACKs
+//     if (this->ignore_init_ || !this->expected_response_.has_value()) {
+//       auto &cmd = this->command_queue_.front();
+//       this->send_raw_command_(cmd);
+//       this->command_queue_.pop_front();
+//       this->last_command_timestamp_ = now;
+//     }
+//     // Otherwise, handle the V3 "Smart" timeout logic
+//     else if (delay > 500) {
+//       ESP_LOGV(TAG, "Timeout waiting for 0x%02X, skipping.", static_cast<uint8_t>(*this->expected_response_));
+//       this->expected_response_.reset();
+//     }
+//   }
+// }
+
+// void Tuya::process_command_queue_() {
+//   uint32_t now = millis();
+//   uint32_t delay = now - this->last_command_timestamp_;
+
+//   // 1. Handle RX Timeout (Reset buffer if MCU hanging)
+//   if (now - this->last_rx_char_timestamp_ > RECEIVE_TIMEOUT) {
+//     this->rx_message_.clear();
+//   }
+
+//   // 2. Handle Response Timeout (ACK/Response missing)
+//   if (this->expected_response_.has_value() && delay > RECEIVE_TIMEOUT) {
+//     this->expected_response_.reset();
+
+//     // If we are still in the Init sequence, handle retries
+//     if (this->init_state_ != TuyaInitState::INIT_DONE) {
+//       if (++this->init_retries_ >= MAX_RETRIES) {
+//         this->init_failed_ = true;
+//         ESP_LOGE(TAG, "Initialization failed at init_state %u", static_cast<uint8_t>(this->init_state_));
+//         this->command_queue_.erase(this->command_queue_.begin());
+//         this->init_retries_ = 0;
+//       }
+//     } else {
+//       // Not in init, just drop the failed command from queue and move on
+//       this->command_queue_.erase(this->command_queue_.begin());
+//     }
+//   }
+
+//   // 3. Dispatch Logic
+//   // Only send if:
+//   // - Delay met AND Queue not empty AND Not mid-reception AND Not waiting for a response
+//   if (delay > COMMAND_DELAY && !this->command_queue_.empty() &&
+//       this->rx_message_.empty() && !this->expected_response_.has_value()) {
+
+//     this->send_raw_command_(this->command_queue_.front());
+//     this->last_command_timestamp_ = now; // Update timestamp here for accurate spacing
+
+//     // If the command doesn't expect a response (fire-and-forget), remove it immediately
+//     if (!this->expected_response_.has_value()) {
+//       this->command_queue_.erase(this->command_queue_.begin());
+//     }
+//   }
+// }
+
+// void Tuya::process_command_queue_() {
+//   uint32_t now = millis();
+//   uint32_t delay = now - this->last_command_timestamp_;
+
+//   // Check 1: Buffer Timeout (Transparency)
+//   if (now - this->last_rx_char_timestamp_ > RECEIVE_TIMEOUT && !this->rx_message_.empty()) {
+//     ESP_LOGV(TAG, "Cleanup: Clearing stale RX buffer (%zu bytes)", this->rx_message_.size());
+//     this->rx_message_.clear();
+//   }
+
+//   // Check 2: The "Expectation" Lock (Leaky vs Transparent)
+//   if (this->expected_response_.has_value() && delay > RECEIVE_TIMEOUT) {
+//     ESP_LOGW(TAG, "Timeout: No response for CMD 0x%02X. State: %u, Retries: %u",
+//              static_cast<uint8_t>(this->expected_response_.value()),
+//              static_cast<uint8_t>(this->init_state_), this->init_retries_);
+
+//     this->expected_response_.reset();
+//     if (this->init_state_ != TuyaInitState::INIT_DONE) {
+//       if (++this->init_retries_ >= MAX_RETRIES) {
+//         this->init_failed_ = true;
+//         ESP_LOGE(TAG, "Infrastructure Failure: Critical timeout at init_state %u", static_cast<uint8_t>(this->init_state_));
+//         this->command_queue_.erase(this->command_queue_.begin());
+//         this->init_retries_ = 0;
+//       }
+//     } else {
+//       // For non-init commands, just drop and move on
+//       ESP_LOGD(TAG, "Queue: Dropping timed-out non-critical command");
+//       this->command_queue_.erase(this->command_queue_.begin());
+//     }
+//   }
+
+//   // Check 3: The "Dunce" Gate (Why aren't we sending?)
+//   if (!this->command_queue_.empty() && !this->expected_response_.has_value()) {
+//     if (delay <= COMMAND_DELAY) return; // Standard pacing
+
+//     if (!this->rx_message_.empty()) {
+//       ESP_LOGV(TAG, "Gate: Command blocked, RX buffer currently busy");
+//       return;
+//     }
+
+//     ESP_LOGD(TAG, "Infrastructure: Pushing front of queue (Size: %zu)", this->command_queue_.size());
+//     this->send_raw_command_(command_queue_.front());
+
+//     if (!this->expected_response_.has_value())
+//       this->command_queue_.erase(this->command_queue_.begin());
+//   }
+// }
+
+void Tuya::process_command_queue_() {
+  uint32_t now = millis();
+  uint32_t delay = now - this->last_command_timestamp_;
+
+  // WINDOW ADAPTATION:
+  // If we are in initialization, give the MCU 1500ms (Passive Mode).
+  // If we are finished init, give it 500ms (Active Mode).
+  uint32_t current_timeout = (this->init_state_ == TuyaInitState::INIT_DONE) ? 500 : 1500;
+
+  // // 1. Buffer Timeout (Adaptive)
+  // if (!this->rx_message_.empty() && (now - this->last_rx_char_timestamp_ > current_timeout)) {
+  //   ESP_LOGV(TAG, "Cleanup: Clearing stale RX buffer (%zu bytes)", this->rx_message_.size());
+  //   this->rx_message_.clear();
+  // }
+
+  // 2. The Expectation Gate (Adaptive)
+  if (this->expected_response_.has_value() && delay > current_timeout) {
+    // Declare it here so it's available for the whole block
+    uint8_t timed_out_cmd = static_cast<uint8_t>(this->expected_response_.value());
+
+    ESP_LOGW(TAG, "Gate Timeout: No response for 0x%02X within %ums", timed_out_cmd, current_timeout);
+
+    this->expected_response_.reset();
+
+    if (this->init_state_ != TuyaInitState::INIT_DONE) {
+      if (++this->init_retries_ >= MAX_RETRIES) {
+        this->init_failed_ = true;
+        ESP_LOGE(TAG, "Infrastructure: Critical stall at init_state %u", static_cast<uint8_t>(this->init_state_));
+        if (!this->command_queue_.empty()) this->command_queue_.pop_front();
+        this->init_retries_ = 0;
+      }
+    } else {
+      if (!this->command_queue_.empty()) {
+        // Now timed_out_cmd is in scope here!
+        ESP_LOGV(TAG, "Queue: Dropping unacknowledged command 0x%02X", timed_out_cmd);
+        this->command_queue_.pop_front();
+      }
+    }
+  }
+
+  // 3. The Transmission Gate
+  if (!this->command_queue_.empty() && !this->expected_response_.has_value()) {
+    // Standard Pacing
+    if (delay <= COMMAND_DELAY) return;
+
+    // Don't interrupt a potential incoming message
+    if (!this->rx_message_.empty()) return;
+
+    // Send the next command in the deque
+    ESP_LOGD(TAG, "Infrastructure: Sending 0x%02X (Queue size: %zu)",
+             static_cast<uint8_t>(this->command_queue_.front().cmd), this->command_queue_.size());
+
+    this->send_raw_command_(this->command_queue_.front());
+
+    // If the command we just sent doesn't require a response, pop it immediately
+    if (!this->expected_response_.has_value()) {
+      this->command_queue_.pop_front();
+    }
+  }
+}
+
+// void Tuya::send_raw_command_(TuyaCommand command) {
+//   uint8_t len_hi = (uint8_t) (command.payload.size() >> 8);
+//   uint8_t len_lo = (uint8_t) (command.payload.size() & 0xFF);
+//   uint8_t version = 0;
+
+//   // 1. PRE-CALCULATE CHECKSUM (Minimize CPU work during UART streaming)
+//   uint8_t checksum = 0x55 + 0xAA + version + (uint8_t) command.cmd + len_hi + len_lo;
+//   for (auto &data : command.payload)
+//     checksum += data;
+
+//   this->last_command_timestamp_ = millis();
+
+//   // 2. STATE MANAGEMENT (Set expectations BEFORE physical write)
+//   if (!this->low_power_mode_ && !this->ignore_init_) {
+//     switch (command.cmd) {
+//       case TuyaCommandType::HEARTBEAT:
+//       case TuyaCommandType::PRODUCT_QUERY:
+//       case TuyaCommandType::CONF_QUERY:
+//       case TuyaCommandType::WIFI_STATE:
+//       case TuyaCommandType::WIFI_SELECT:
+//       case TuyaCommandType::WIFI_RESET:
+//         this->expected_response_ = command.cmd;
+//         break;
+//       case TuyaCommandType::DATAPOINT_DELIVER:
+//       case TuyaCommandType::DATAPOINT_QUERY:
+//         this->expected_response_ = TuyaCommandType::DATAPOINT_REPORT_ASYNC;
+//         break;
+//       default:
+//         this->expected_response_.reset();
+//         break;
+//     }
+//   } else {
+//     this->expected_response_.reset();
+//   }
+
+//   // 3. PHYSICAL WRITE (High-speed burst)
+//   this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo});
+//   if (!command.payload.empty()) {
+//     this->write_array(command.payload.data(), command.payload.size());
+//   }
+//   this->write_byte(checksum);
+
+//   // 4. LOGGING (Lowest priority - executed only after hardware FIFO is handed the data)
+//   if (this->trace_mode_ && !this->raw_trace_) {
+//     ESP_LOGI(TAG, "Trace: [Sent 0x%02X] Checksum: 0x%02X Payload: %s",
+//              static_cast<uint8_t>(command.cmd),
+//              checksum,
+//              format_hex_pretty(command.payload).c_str());
+//   }
+// }
+
 void Tuya::send_raw_command_(TuyaCommand command) {
   uint8_t len_hi = (uint8_t) (command.payload.size() >> 8);
   uint8_t len_lo = (uint8_t) (command.payload.size() & 0xFF);
-  uint8_t version = 0;
+  uint8_t version = 0; // Or this->protocol_version_ if you prefer
 
   this->last_command_timestamp_ = millis();
-  if (!this->low_power_mode_) {
+
+  // Update the "Expected Response" contract based on the command sent
   switch (command.cmd) {
     case TuyaCommandType::HEARTBEAT:
       this->expected_response_ = TuyaCommandType::HEARTBEAT;
@@ -505,98 +1032,27 @@ void Tuya::send_raw_command_(TuyaCommand command) {
       break;
     case TuyaCommandType::CONF_QUERY:
       this->expected_response_ = TuyaCommandType::CONF_QUERY;
-        break;
-      case TuyaCommandType::WIFI_STATE:
-      case TuyaCommandType::WIFI_SELECT:
-      case TuyaCommandType::WIFI_RESET:
-        this->expected_response_ = command.cmd;
-        break;
+      break;
     case TuyaCommandType::DATAPOINT_DELIVER:
     case TuyaCommandType::DATAPOINT_QUERY:
       this->expected_response_ = TuyaCommandType::DATAPOINT_REPORT_ASYNC;
       break;
     default:
       break;
-    }
   }
 
-  // Verbose logging (Standard ESPHome)
-  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u",
+  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s]",
            static_cast<uint8_t>(command.cmd), version,
-           format_hex_pretty(command.payload).c_str(),
-           static_cast<uint8_t>(this->init_state_));
+           format_hex_pretty(command.payload).c_str());
 
-  // Write the packet
   this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo});
   if (!command.payload.empty())
     this->write_array(command.payload.data(), command.payload.size());
 
-  // Checksum calculation matching existing logic
   uint8_t checksum = 0x55 + 0xAA + version + (uint8_t) command.cmd + len_hi + len_lo;
   for (auto &data : command.payload)
     checksum += data;
   this->write_byte(checksum);
-
-  // Phase 1 Trace Logic: Log outgoing packets when trace_mode is active
-  if (this->trace_mode_ && !this->raw_trace_) {
-    std::vector<uint8_t> full_packet = {0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo};
-    full_packet.insert(full_packet.end(), command.payload.begin(), command.payload.end());
-    full_packet.push_back(checksum);
-
-    ESP_LOGI(TAG, "Trace: [Sent 0x%02X] Full Packet: %s",
-             static_cast<uint8_t>(command.cmd),
-             format_hex_pretty(full_packet).c_str());
-  }
-}
-
-void Tuya::process_command_queue_() {
-  uint32_t now = millis();
-  uint32_t delay = now - this->last_command_timestamp_;
-
-  // 1. Handle RX Timeout
-  if (!this->rx_message_.empty() && (now - this->last_rx_char_timestamp_ > RECEIVE_TIMEOUT)) {
-    this->rx_message_.clear();
-  }
-
-  // 2. Handle Response/ACK Timeout
-  if (this->expected_response_.has_value() && delay > 500) {
-    this->expected_response_.reset();
-
-    // On timeout, we must pop the failed command to unblock the queue
-    if (!this->command_queue_.empty()) {
-      if (this->init_state_ != TuyaInitState::INIT_DONE) {
-         if (++this->init_retries_ >= MAX_RETRIES) {
-           ESP_LOGV(TAG, "MCU silent during init, dropping command");
-           this->command_queue_.pop_front(); // Cleaner for deque
-           this->init_retries_ = 0;
-         }
-      } else {
-        this->command_queue_.pop_front();
-      }
-    }
-  }
-
-  // 3. Dispatch Logic
-  if (delay > COMMAND_DELAY && !this->command_queue_.empty() &&
-      this->rx_message_.empty() && !this->expected_response_.has_value()) {
-
-    // Low Power Gate
-    if (this->low_power_mode_) {
-      if (now - this->last_rx_char_timestamp_ > 2000) {
-        return; // MCU is likely asleep
-      }
-    }
-
-    auto &cmd = this->command_queue_.front();
-    this->send_raw_command_(cmd);
-    this->last_command_timestamp_ = now;
-
-    if (this->low_power_mode_) {
-      this->command_queue_.pop_front();
-    } else {
-      this->expected_response_ = cmd.cmd;
-    }
-  }
 }
 
 void Tuya::send_command_(const TuyaCommand &command) {
@@ -738,34 +1194,148 @@ optional<TuyaDatapoint> Tuya::get_datapoint_(uint8_t datapoint_id) {
   return {};
 }
 
+// void Tuya::set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, const uint32_t value,
+//                                         uint8_t length, bool forced) {
+//   ESP_LOGD(TAG, "Setting datapoint %u to %" PRIu32, datapoint_id, value);
+
+//   optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
+
+//   if (!datapoint.has_value()) {
+//     // In V0/Passive mode, we don't want to stop just because the MCU hasn't 'introduced' itself.
+//     if (this->ignore_init_) {
+//        ESP_LOGV(TAG, "Datapoint %u unknown, but proceeding due to ignore_initialization", datapoint_id);
+//     } else {
+//        ESP_LOGW(TAG, "Setting unknown datapoint %u. This might fail if the MCU isn't ready.", datapoint_id);
+//     }
+//   } else {
+//     // Type checking only if we actually have the DP metadata
+//     if (datapoint->type != datapoint_type) {
+//       ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
+//       return;
+//     }
+//     // Optimization: Don't send if value hasn't changed
+//     if (!forced && datapoint->value_uint == value) {
+//       ESP_LOGV(TAG, "Not sending unchanged value %" PRIu32 " for DP %u", value, datapoint_id);
+//       return;
+//     }
+//   }
+
+//   std::vector<uint8_t> data;
+//   switch (length) {
+//     case 4:
+//       data.push_back(static_cast<uint8_t>(value >> 24));
+//       data.push_back(static_cast<uint8_t>(value >> 16));
+//       // fallthrough
+//     case 2:
+//       data.push_back(static_cast<uint8_t>(value >> 8));
+//       // fallthrough
+//     case 1:
+//       data.push_back(static_cast<uint8_t>(value >> 0));
+//       break;
+//     default:
+//       ESP_LOGE(TAG, "Unexpected datapoint length %u", length);
+//       return;
+//   }
+
+//   this->send_datapoint_command_(datapoint_id, datapoint_type, data);
+// }
+
+// void Tuya::set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, const uint32_t value,
+//                                         uint8_t length, bool forced) {
+//   ESP_LOGD(TAG, "Setting datapoint %u to %" PRIu32, datapoint_id, value);
+//   optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
+//   if (!datapoint.has_value()) {
+//     ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
+//   } else if (datapoint->type != datapoint_type) {
+//     ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
+//     return;
+//   } else if (!forced && datapoint->value_uint == value) {
+//     ESP_LOGV(TAG, "Not sending unchanged value");
+//     return;
+//   }
+
+//   std::vector<uint8_t> data;
+//   switch (length) {
+//     case 4:
+//       data.push_back(value >> 24);
+//       data.push_back(value >> 16);
+//     case 2:
+//       data.push_back(value >> 8);
+//     case 1:
+//       data.push_back(value >> 0);
+//       break;
+//     default:
+//       ESP_LOGE(TAG, "Unexpected datapoint length %u", length);
+//       return;
+//   }
+//   this->send_datapoint_command_(datapoint_id, datapoint_type, data);
+// }
+
+// void Tuya::set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, const uint32_t value,
+//                                         uint8_t length, bool forced) {
+//   // 1. Check for existing knowledge of this DP
+//   optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
+
+//   if (datapoint.has_value()) {
+//     // Validation: Only error out if we KNOW the type is wrong
+//     if (datapoint->type != datapoint_type) {
+//       ESP_LOGE(TAG, "Type Mismatch for DP %u: expected %u, got %u",
+//                datapoint_id, static_cast<uint8_t>(datapoint->type), static_cast<uint8_t>(datapoint_type));
+//       return;
+//     }
+
+//     // Optimization: Skip if value is identical (unless 'forced' or 'ignore_init' is active)
+//     if (!forced && !this->ignore_init_ && datapoint->value_uint == value) {
+//       ESP_LOGV(TAG, "DP %u: Value %" PRIu32 " unchanged, skipping", datapoint_id, value);
+//       return;
+//     }
+//   } else {
+//     // If we don't know the DP, we warn but DO NOT return if we are in passive/ignore mode
+//     if (this->ignore_init_) {
+//       ESP_LOGV(TAG, "DP %u unknown, forcing send in passive mode", datapoint_id);
+//     } else {
+//       ESP_LOGW(TAG, "DP %u unknown, sending anyway (initialization may be incomplete)", datapoint_id);
+//     }
+//   }
+
+//   ESP_LOGD(TAG, "Setting DP %u to %" PRIu32 " (type %u, len %u)",
+//            datapoint_id, value, static_cast<uint8_t>(datapoint_type), length);
+
+//   // 2. Build the Payload
+//   std::vector<uint8_t> data;
+//   switch (length) {
+//     case 4:
+//       data.push_back(static_cast<uint8_t>(value >> 24));
+//       data.push_back(static_cast<uint8_t>(value >> 16));
+//       // fallthrough
+//     case 2:
+//       data.push_back(static_cast<uint8_t>(value >> 8));
+//       // fallthrough
+//     case 1:
+//       data.push_back(static_cast<uint8_t>(value & 0xFF));
+//       break;
+//     default:
+//       ESP_LOGE(TAG, "Invalid payload length %u for DP %u", length, datapoint_id);
+//       return;
+//   }
+
+//   this->send_datapoint_command_(datapoint_id, datapoint_type, data);
+// }
+
 void Tuya::set_numeric_datapoint_value_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, const uint32_t value,
                                         uint8_t length, bool forced) {
-  ESP_LOGD(TAG, "Setting datapoint %u to %" PRIu32, datapoint_id, value);
-  optional<TuyaDatapoint> datapoint = this->get_datapoint_(datapoint_id);
-  if (!datapoint.has_value()) {
-    ESP_LOGW(TAG, "Setting unknown datapoint %u", datapoint_id);
-  } else if (datapoint->type != datapoint_type) {
-    ESP_LOGE(TAG, "Attempt to set datapoint %u with incorrect type", datapoint_id);
-    return;
-  } else if (!forced && datapoint->value_uint == value) {
-    ESP_LOGV(TAG, "Not sending unchanged value");
-    return;
-  }
+  // LOG EVERYTHING
+  ESP_LOGI(TAG, "Direct-Write Request: DP %u, Value %u", datapoint_id, value);
 
   std::vector<uint8_t> data;
   switch (length) {
-    case 4:
-      data.push_back(value >> 24);
-      data.push_back(value >> 16);
-    case 2:
-      data.push_back(value >> 8);
-    case 1:
-      data.push_back(value >> 0);
-      break;
-    default:
-      ESP_LOGE(TAG, "Unexpected datapoint length %u", length);
-      return;
+    case 4: data.push_back(value >> 24); data.push_back(value >> 16);
+    case 2: data.push_back(value >> 8);
+    case 1: data.push_back(value & 0xFF); break;
+    default: return;
   }
+
+  // Bypass the get_datapoint_ check entirely
   this->send_datapoint_command_(datapoint_id, datapoint_type, data);
 }
 
@@ -803,14 +1373,44 @@ void Tuya::set_string_datapoint_value_(uint8_t datapoint_id, const std::string &
   this->send_datapoint_command_(datapoint_id, TuyaDatapointType::STRING, data);
 }
 
+// void Tuya::send_datapoint_command_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, std::vector<uint8_t> data) {
+//   std::vector<uint8_t> buffer;
+//   buffer.push_back(datapoint_id);
+//   buffer.push_back(static_cast<uint8_t>(datapoint_type));
+//   buffer.push_back(data.size() >> 8);
+//   buffer.push_back(data.size() >> 0);
+//   buffer.insert(buffer.end(), data.begin(), data.end());
+
+//   this->send_command_(TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_DELIVER, .payload = buffer});
+// }
+
+
+// void Tuya::send_datapoint_command_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, std::vector<uint8_t> data) {
+//   std::vector<uint8_t> buffer;
+//   buffer.push_back(datapoint_id);
+//   buffer.push_back(static_cast<uint8_t>(datapoint_type));
+//   buffer.push_back(data.size() >> 8);
+//   buffer.push_back(data.size() >> 0);
+//   buffer.insert(buffer.end(), data.begin(), data.end());
+
+//   this->send_command_(TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_DELIVER, .payload = buffer});
+// }
+
 void Tuya::send_datapoint_command_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, std::vector<uint8_t> data) {
+  // NUCLEAR: Ignore init_state, ignore "ready" checks.
+  // If we have data, we send it.
+
+  uint16_t length = data.size() + 2;
   std::vector<uint8_t> buffer;
   buffer.push_back(datapoint_id);
   buffer.push_back(static_cast<uint8_t>(datapoint_type));
-  buffer.push_back(data.size() >> 8);
-  buffer.push_back(data.size() >> 0);
+  buffer.push_back(length >> 8);
+  buffer.push_back(length & 0xFF);
   buffer.insert(buffer.end(), data.begin(), data.end());
 
+  ESP_LOGD(TAG, "NUCLEAR: Forcing Command Out -> DP: %u", datapoint_id);
+
+  // Directly call the low-level send without checking the queue state
   this->send_command_(TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_DELIVER, .payload = buffer});
 }
 
@@ -826,6 +1426,37 @@ void Tuya::register_listener(uint8_t datapoint_id, const std::function<void(Tuya
     if (datapoint.id == datapoint_id)
       func(datapoint);
   }
+}
+
+void Tuya::process_record_report_(const uint8_t *buffer, size_t len) {
+  // Detection: Historical packets prefix data with time.
+  // 7 bytes = YY MM DD HH MM SS + Sub-second/Type
+  // 13 bytes = Unix Millisecond Epoch (found on newer Zigbee/Bluetooth gateways)
+  size_t offset = (len > 13) ? 13 : 7;
+
+  if (len <= offset) {
+    ESP_LOGW(TAG, "Historical packet (0x08) too short to contain timestamp (len: %zu)", len);
+    return;
+  }
+
+  size_t data_len = len - offset;
+
+  // Logic Safety: A Tuya DP needs at least 4 bytes (ID, Type, Len_Hi, Len_Lo)
+  if (data_len < 4) {
+    ESP_LOGW(TAG, "Short historical packet: After stripping %zu-byte timestamp, only %zu bytes remain (need 4+)",
+             offset, data_len);
+    // Still send the ACK so the MCU doesn't loop forever
+    this->send_empty_command_(TuyaCommandType::DATAPOINT_QUERY);
+    return;
+  }
+
+  ESP_LOGD(TAG, "Stripping %zu-byte timestamp. Parsing %zu bytes of historical sensor data.", offset, data_len);
+
+  // Pass the 'cleaned' buffer to the standard parser
+  this->handle_datapoints_(buffer + offset, data_len);
+
+  // Mandatory ACK for 0x08 to allow MCU to sleep
+  this->send_empty_command_(TuyaCommandType::DATAPOINT_QUERY);
 }
 
 TuyaInitState Tuya::get_init_state() { return this->init_state_; }

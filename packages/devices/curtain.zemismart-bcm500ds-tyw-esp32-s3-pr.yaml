@@ -19,6 +19,7 @@ external_components:
   - source:
       type: local
       path: my_external_components/tuya_commit_7_covers
+      # path: my_external_components/tuya_cover_pr
 
 captive_portal:
 
@@ -35,6 +36,7 @@ uart:
     rx_pin: GPIO6
     tx_pin: GPIO7
     baud_rate: 9600
+    rx_buffer_size: 1024
     debug:
       direction: BOTH
       dummy_receiver: false
@@ -45,11 +47,15 @@ uart:
 # tuya:
 tuya:
     id: tuyamcu
-    # low_power: auto
+    # # low_power: auto
     low_power: true
-    # low_power: false
-    standard_trace_mode: true
-    # This enables the "Live Trace" in your logs
+    # # low_power: false
+    low_power_keep_alive: true
+    # This ignores the init sequence but allows heartbeats to be sent
+    # standard_trace_mode: true
+    # # This enables the "Live Trace" in your logs
+    # raw_trace_mode: true
+    # # This enables the "Raw Trace" in your logs
     # compatibility_mode:
     #     # Stop the [E][tuya:XXX] log spam when initialization is slow/sleepy
     #     silent_init: true

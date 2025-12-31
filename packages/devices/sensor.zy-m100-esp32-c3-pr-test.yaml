@@ -22,7 +22,8 @@ esp32:
 external_components:
   - source:
       type: local
-      path: my_external_components/tuya_commit_2_low_power_core
+      path: my_external_components/tuya_commit_2_tuya_core_2_version_handling
+      # path: my_external_components/tuya_commit_1_tuya_core
 
 captive_portal:
 
@@ -41,13 +42,12 @@ uart:
     # baud_rate: 9600
     baud_rate: 115200
 
-
 # # Register the Tuya MCU connection
 # tuya:
 #   uart_id: mcu
 
 tuya:
-  standard_trace_mode: true
+  # standard_trace_mode: true
   # raw_trace_mode: true
   # compatibility_mode:
   #   handle_historical_records: true
@@ -100,8 +100,8 @@ number:
   #   step: 1
   #   unit_of_measurement: "cm"
   #   icon: "mdi:eye"
-    # device_class: "distance"
-    # state_class: "measurement"
+  # device_class: "distance"
+  # state_class: "measurement"
   - platform: "tuya"
     name: "${friendly_name} Detection Delay"
     number_datapoint: 101
@@ -174,4 +174,3 @@ select:
       3: Others
       4: Comm Fault
       5: Radar Fault
-

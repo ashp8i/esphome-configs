@@ -12,7 +12,7 @@ substitutions:
 packages:
   - !include packages/base/debug.yaml
   - !include packages/common/api.yaml
-  - !include packages/devices/light.miboxer-tri-c1wr-esp32-c3.yaml
+  - !include packages/devices/light.miboxer-tri-c1wr-esp32-c3-pr-test.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
   - !include packages/common/sensor-die-temp.yaml

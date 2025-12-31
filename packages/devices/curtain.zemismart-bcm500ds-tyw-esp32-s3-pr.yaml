@@ -18,7 +18,9 @@ esp32:
 external_components:
   - source:
       type: local
-      path: my_external_components/tuya_commit_7_covers
+      path: my_external_components/tuya_commit_2_tuya_core_2_version_handling
+      # path: my_external_components/tuya_commit_1_tuya_core
+      # path: my_external_components/tuya_commit_7_covers
       # path: my_external_components/tuya_cover_pr
 
 captive_portal:
@@ -42,15 +44,18 @@ uart:
       dummy_receiver: false
       sequence:
         - lambda: UARTDebug::log_hex(direction, bytes, ':');
+      after:
+        bytes: 150
+        timeout: 100ms
 
 # Register the Tuya MCU connection
 # tuya:
 tuya:
     id: tuyamcu
-    # # low_power: auto
-    low_power: true
-    # # low_power: false
-    low_power_keep_alive: true
+    # # # low_power: auto
+    # low_power: true
+    # # # low_power: false
+    # low_power_keep_alive: true
     # This ignores the init sequence but allows heartbeats to be sent
     # standard_trace_mode: true
     # # This enables the "Live Trace" in your logs
@@ -81,7 +86,7 @@ cover:
     max_value: 100
     invert_position: false
     device_class: curtain
-    open_value: 0x01
-    close_value: 0x00
-    stop_value: 0x02
+    # open_value: 0x01
+    # close_value: 0x00
+    # stop_value: 0x02
 

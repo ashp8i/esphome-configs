@@ -5,19 +5,19 @@ esphome:
   platformio_options:
     board_build.flash_mode: dio
     upload_speed: 921600
-    
+
 esp32:
   board: esp32-c3-devkitm-1
-  framework: 
+  framework:
     type: arduino
 
 external_components:
   - source: github://jesserockz/wizmote-esphome
     components:
-      # - esp_now
+      - esp_now
       - wizmote
 
-espnow:
+esp_now:
 
 wizmote:
   on_button:
@@ -28,16 +28,16 @@ wizmote:
         - homeassistant.event:
             event: esphome.wizmote_choose
             data:
-              mac: !lambda 'return format_hex(data.bssid, 6);'
-              button: !lambda 'return data.button - 15;'
-              sequence: !lambda 'return data.sequence;'
+              mac: !lambda "return format_hex(data.bssid, 6);"
+              button: !lambda "return data.button - 15;"
+              sequence: !lambda "return data.sequence;"
       else:
         - homeassistant.event:
             event: esphome.wizmote_action
             data:
-              mac: !lambda 'return format_hex(data.bssid, 6);'
-              button: !lambda 'return data.button;'
-              sequence: !lambda 'return data.sequence;'
+              mac: !lambda "return format_hex(data.bssid, 6);"
+              button: !lambda "return data.button;"
+              sequence: !lambda "return data.sequence;"
 
 captive_portal:
 
@@ -86,9 +86,9 @@ light:
     default_transition_length: 1s
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
-    - globals.set:
-        id: last_light_on
-        value: '1'
+      - globals.set:
+          id: last_light_on
+          value: "1"
     icon: "hue:ceiling-aurelle-circle"
   - platform: rgb
     name: ${friendly_name_rgb}
@@ -99,12 +99,11 @@ light:
     default_transition_length: 0.5s
     restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
-    - globals.set:
-        id: last_light_on
-        value: '2'
+      - globals.set:
+          id: last_light_on
+          value: "2"
     icon: "hue:ceiling-aurelle-circle"
-
-# Device configuration, as extracted from Tuya: 
+# Device configuration, as extracted from Tuya:
 # - LED Cool (Channel 4) on P6
 # - LED Blue (Channel 3) on P9
 # - PWM Frequency 16000

@@ -22,27 +22,19 @@ static const int RECEIVE_TIMEOUT = 300;
 static const int MAX_RETRIES = 5;
 
 void Tuya::setup() {
-  if (!this->low_power_mode_) {
-    this->set_interval("heartbeat", 15000, [this] {
-      this->send_empty_command_(TuyaCommandType::HEARTBEAT);
-    });
-  }
-
+  this->set_interval("heartbeat", 15000, [this] { this->send_empty_command_(TuyaCommandType::HEARTBEAT); });
   if (this->status_pin_ != nullptr) {
     this->status_pin_->digital_write(false);
   }
 }
 
 void Tuya::loop() {
-  // 1. Existing: Read incoming bytes
   while (this->available()) {
     uint8_t c;
     this->read_byte(&c);
     this->handle_char_(c);
   }
-
-  // 2. New: Process outgoing commands
-  this->process_command_queue_();
+  process_command_queue_();
 }
 
 void Tuya::dump_config() {
@@ -83,97 +75,65 @@ void Tuya::dump_config() {
 }
 
 bool Tuya::validate_message_() {
-  uint32_t total_len = this->rx_message_.size();
-  auto *data = &this->rx_message_[0];
+  uint32_t at = this->rx_message_.size();
+  if (at < 6) return false;
 
-  uint8_t version = data[2];
-  uint8_t command = data[3];
-  uint16_t length = (uint16_t(data[4]) << 8) | (uint16_t(data[5]));
+  // Copying to a temp buffer or accessing elements individually is safer with deque
+  uint16_t length = (uint16_t(this->rx_message_[4]) << 8) | (uint16_t(this->rx_message_[5]));
+  uint32_t total_size = 6 + length + 1;
 
-  // The checksum is always the last byte
-  uint8_t rx_checksum = data[total_len - 1];
+  if (at < total_size) return false;
+
+  // Verify Checksum
+  uint8_t rx_checksum = this->rx_message_[total_size - 1];
   uint8_t calc_checksum = 0;
-
-  // Sum everything EXCEPT the last byte
-  for (uint32_t i = 0; i < total_len - 1; i++)
-    calc_checksum += data[i];
+  for (uint32_t i = 0; i < total_size - 1; i++) {
+    calc_checksum += this->rx_message_[i];
+  }
 
   if (rx_checksum != calc_checksum) {
-    ESP_LOGW(TAG, "Tuya Received invalid message checksum %02X!=%02X", rx_checksum, calc_checksum);
+    ESP_LOGE(TAG, "Tuya Checksum Fail");
     this->rx_message_.clear();
     return false;
   }
 
-  // Valid message
-  const uint8_t *message_data = data + 6;
+  // Extract payload for processing
+  std::vector<uint8_t> payload;
+  for (uint32_t i = 6; i < 6 + length; i++) {
+    payload.push_back(this->rx_message_[i]);
+  }
 
-  ESP_LOGV(TAG, "Received Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u",
-           command, version, format_hex_pretty(message_data, length).c_str(),
-           static_cast<uint8_t>(this->init_state_));
+  this->handle_command_(this->rx_message_[3], this->rx_message_[2], payload.data(), length);
 
-  // Process the command logic
-  this->handle_command_(command, version, message_data, length);
+  // Surgical erase using deque's efficient iterator-based erase
+  this->rx_message_.erase(this->rx_message_.begin(), this->rx_message_.begin() + total_size);
 
-  // Reset the buffer for the next packet
-  this->rx_message_.clear();
   return true;
 }
 
 void Tuya::handle_char_(uint8_t c) {
-  if (this->raw_trace_) {
-    ESP_LOGI(TAG, "RAW: 0x%02X", c);
-  }
-
   this->rx_message_.push_back(c);
   this->last_rx_char_timestamp_ = millis();
 
-  // Sliding Window: Ensure we start with 0x55 0xAA
-  if (this->rx_message_[0] != 0x55) {
-    this->rx_message_.clear();
-    return;
-  }
-  if (this->rx_message_.size() >= 2 && this->rx_message_[1] != 0xAA) {
-    this->rx_message_.clear();
-    return;
-  }
-
-  if (this->rx_message_.size() >= 6) {
-    uint16_t payload_len = (uint16_t(this->rx_message_[4]) << 8) | this->rx_message_[5];
-    uint16_t total_expected = payload_len + 7;
-
-    // Safety: prevent RAM exhaustion
-    if (total_expected > 512) {
-      this->rx_message_.clear();
-      return;
-    }
-
-    if (this->rx_message_.size() == total_expected) {
-      // TRACE MODE: Log full packet before validation
-      if (this->trace_mode_ && !this->raw_trace_) {
-        uint8_t cmd = this->rx_message_[3];
-        ESP_LOGI(TAG, "Trace: [Command 0x%02X] Packet: %s",
-                 cmd, format_hex_pretty(this->rx_message_).c_str());
+  while (this->rx_message_.size() >= 2) {
+    if (this->rx_message_[0] == 0x55 && this->rx_message_[1] == 0xAA) {
+      if (!this->validate_message_()) {
+        break;
       }
-
-      this->validate_message_();
-
-    } else if (this->rx_message_.size() > total_expected) {
-      this->rx_message_.clear();
+    } else {
+      // Deque handles pop_front much faster than vector erase
+      this->rx_message_.pop_front();
     }
   }
 }
 
 void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len) {
-  TuyaCommandType command_type = static_cast<TuyaCommandType>(command);
+  TuyaCommandType command_type = (TuyaCommandType) command;
 
-  // --- ASYNC QUEUE CLEANUP ---
-  // Check if this incoming packet is the response to the command at the front of our queue
   if (this->expected_response_.has_value() && this->expected_response_ == command_type) {
     this->expected_response_.reset();
-    if (!this->command_queue_.empty()) {
-      this->command_queue_.erase(this->command_queue_.begin());
-    }
-    this->init_retries_ = 0; // Reset retry counter on success
+    this->command_queue_.erase(command_queue_.begin());
+    this->init_retries_ = 0;
   }
 
   switch (command_type) {
@@ -193,7 +153,7 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       // check it is a valid string made up of printable characters
       bool valid = true;
       for (size_t i = 0; i < len; i++) {
-        if (!std::isprint(static_cast<unsigned char>(buffer[i]))) {
+        if (!std::isprint(buffer[i])) {
           valid = false;
           break;
         }
@@ -270,38 +230,13 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       this->send_command_(st);
       st.payload[0] = 0x04;
       this->send_command_(st);
-
       ESP_LOGI(TAG, "%s received (%s), replied with WIFI_STATE confirming connection established",
-                is_select ? "WIFI_SELECT" : "WIFI_RESET", mode_str);
+               is_select ? "WIFI_SELECT" : "WIFI_RESET", mode_str);
       break;
     }
     case TuyaCommandType::DATAPOINT_DELIVER:
       break;
     case TuyaCommandType::DATAPOINT_REPORT_ASYNC:
-      // Auto-detect whether this is a low-power device (only valid after init)
-      if (!this->low_power_mode_ && this->init_state_ == TuyaInitState::INIT_DONE) {
-        static uint32_t last_dp_time = 0;
-        static uint8_t dp_count = 0;
-        uint32_t now = millis();
-
-        // Only consider recent bursts
-        if ((now - last_dp_time) < 30000) {
-          dp_count++;
-        } else {
-          dp_count = 1;  // reset count if spaced out
-        }
-        last_dp_time = now;
-
-        // If we see 3+ async packets in 30s without heartbeat → low power likely
-        if (dp_count >= 3) {
-          ESP_LOGW(TAG, "Auto-detected Tuya device as low-power (no heartbeat, frequent DP packets)");
-          this->low_power_mode_ = true;
-          dp_count = 0;  // reset to avoid future triggers
-        }
-      }
-
-      this->handle_datapoints_(buffer, len);
-      break;
     case TuyaCommandType::DATAPOINT_REPORT_SYNC:
       if (this->init_state_ == TuyaInitState::INIT_DATAPOINT) {
         this->init_state_ = TuyaInitState::INIT_DONE;
@@ -495,7 +430,6 @@ void Tuya::send_raw_command_(TuyaCommand command) {
   uint8_t version = 0;
 
   this->last_command_timestamp_ = millis();
-  if (!this->low_power_mode_) {
   switch (command.cmd) {
     case TuyaCommandType::HEARTBEAT:
       this->expected_response_ = TuyaCommandType::HEARTBEAT;
@@ -505,96 +439,68 @@ void Tuya::send_raw_command_(TuyaCommand command) {
       break;
     case TuyaCommandType::CONF_QUERY:
       this->expected_response_ = TuyaCommandType::CONF_QUERY;
-        break;
-      case TuyaCommandType::WIFI_STATE:
-      case TuyaCommandType::WIFI_SELECT:
-      case TuyaCommandType::WIFI_RESET:
-        this->expected_response_ = command.cmd;
-        break;
+      break;
     case TuyaCommandType::DATAPOINT_DELIVER:
     case TuyaCommandType::DATAPOINT_QUERY:
       this->expected_response_ = TuyaCommandType::DATAPOINT_REPORT_ASYNC;
       break;
     default:
       break;
-    }
   }
 
-  // Verbose logging (Standard ESPHome)
-  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u",
-           static_cast<uint8_t>(command.cmd), version,
-           format_hex_pretty(command.payload).c_str(),
-           static_cast<uint8_t>(this->init_state_));
+  ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u", static_cast<uint8_t>(command.cmd),
+           version, format_hex_pretty(command.payload).c_str(), static_cast<uint8_t>(this->init_state_));
 
-  // Write the packet
   this->write_array({0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo});
   if (!command.payload.empty())
     this->write_array(command.payload.data(), command.payload.size());
 
-  // Checksum calculation matching existing logic
-  uint8_t checksum = 0x55 + 0xAA + version + (uint8_t) command.cmd + len_hi + len_lo;
+  uint8_t checksum = 0x55 + 0xAA + (uint8_t) command.cmd + len_hi + len_lo;
   for (auto &data : command.payload)
     checksum += data;
   this->write_byte(checksum);
-
-  // Phase 1 Trace Logic: Log outgoing packets when trace_mode is active
-  if (this->trace_mode_ && !this->raw_trace_) {
-    std::vector<uint8_t> full_packet = {0x55, 0xAA, version, (uint8_t) command.cmd, len_hi, len_lo};
-    full_packet.insert(full_packet.end(), command.payload.begin(), command.payload.end());
-    full_packet.push_back(checksum);
-
-    ESP_LOGI(TAG, "Trace: [Sent 0x%02X] Full Packet: %s",
-             static_cast<uint8_t>(command.cmd),
-             format_hex_pretty(full_packet).c_str());
-  }
 }
 
 void Tuya::process_command_queue_() {
   uint32_t now = millis();
   uint32_t delay = now - this->last_command_timestamp_;
 
-  // 1. Handle RX Timeout
-  if (!this->rx_message_.empty() && (now - this->last_rx_char_timestamp_ > RECEIVE_TIMEOUT)) {
+  // Adaptive timeout: Passive MCUs need more time (1500ms) during initialization
+  uint32_t current_timeout = (this->init_state_ == TuyaInitState::INIT_DONE) ? 500 : 1500;
+
+  // 1. Buffer Cleanup: Flush stale noise or incomplete frames
+  if (!this->rx_message_.empty() && (now - this->last_rx_char_timestamp_ > current_timeout)) {
     this->rx_message_.clear();
   }
 
-  // 2. Handle Response/ACK Timeout
-  if (this->expected_response_.has_value() && delay > 500) {
+  // 2. Expectation Gate: Handle missing responses and retries
+  if (this->expected_response_.has_value() && delay > current_timeout) {
+    uint8_t timed_out_cmd = static_cast<uint8_t>(this->expected_response_.value());
+    ESP_LOGW(TAG, "Gate Timeout: No response for 0x%02X within %ums", timed_out_cmd, current_timeout);
+
     this->expected_response_.reset();
 
-    // On timeout, we must pop the failed command to unblock the queue
-    if (!this->command_queue_.empty()) {
-      if (this->init_state_ != TuyaInitState::INIT_DONE) {
-         if (++this->init_retries_ >= MAX_RETRIES) {
-           ESP_LOGV(TAG, "MCU silent during init, dropping command");
-           this->command_queue_.pop_front(); // Cleaner for deque
-           this->init_retries_ = 0;
-         }
-      } else {
-        this->command_queue_.pop_front();
+    if (this->init_state_ != TuyaInitState::INIT_DONE) {
+      if (++this->init_retries_ >= MAX_RETRIES) {
+        this->init_failed_ = true;
+        ESP_LOGE(TAG, "Infrastructure: Critical stall at init_state %u", static_cast<uint8_t>(this->init_state_));
+        if (!this->command_queue_.empty()) this->command_queue_.pop_front();
+        this->init_retries_ = 0;
       }
+    } else {
+      if (!this->command_queue_.empty()) this->command_queue_.pop_front();
     }
   }
 
-  // 3. Dispatch Logic
-  if (delay > COMMAND_DELAY && !this->command_queue_.empty() &&
-      this->rx_message_.empty() && !this->expected_response_.has_value()) {
+  // 3. Transmission: Send next command if the link is clear
+  if (!this->command_queue_.empty() && !this->expected_response_.has_value()) {
+    if (delay <= COMMAND_DELAY) return;
+    if (!this->rx_message_.empty()) return; // Don't interrupt incoming data
 
-    // Low Power Gate
-    if (this->low_power_mode_) {
-      if (now - this->last_rx_char_timestamp_ > 2000) {
-        return; // MCU is likely asleep
-      }
-    }
+    this->send_raw_command_(this->command_queue_.front());
 
-    auto &cmd = this->command_queue_.front();
-    this->send_raw_command_(cmd);
-    this->last_command_timestamp_ = now;
-
-    if (this->low_power_mode_) {
+    if (!this->expected_response_.has_value()) {
       this->command_queue_.pop_front();
-    } else {
-      this->expected_response_ = cmd.cmd;
     }
   }
 }

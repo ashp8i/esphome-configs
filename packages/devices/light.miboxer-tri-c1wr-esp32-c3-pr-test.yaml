@@ -1,0 +1,113 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+#    version: 2.0.5
+#    platform_version: 5.2.0
+
+external_components:
+  - source:
+      type: local
+      path: my_external_components/tuya_commit_2_tuya_core_2_version_handling
+
+captive_portal:
+
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_server_password
+  include_internal: true
+  # local: true
+
+uart:
+  - id: mcu
+    rx_pin: GPIO20
+    tx_pin: GPIO21
+    baud_rate: 9600
+    rx_buffer_size: 1024
+    debug:
+      direction: BOTH
+      dummy_receiver: false
+      sequence:
+        - lambda: UARTDebug::log_hex(direction, bytes, ':');
+      after:
+        bytes: 150
+        timeout: 100ms
+
+# Register the Tuya MCU connection
+tuya:
+  uart_id: mcu
+
+light:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    id: ${device_id_white}
+    dimmer_datapoint: 22
+    # min_value_datapoint: 26
+    # color_temperature_datapoint: 23
+    # color_temperature_max_value: 1000
+    # color_temperature_invert: true
+    switch_datapoint: 20
+    min_value: 10
+    max_value: 1000
+    # cold_white_color_temperature: 153 mireds
+    # warm_white_color_temperature: 500 mireds
+    icon: "${light_icon}"
+# Tuya:
+#   Datapoint 20: switch (value: OFF)
+#   Datapoint 21: enum (value: 0)
+#   Datapoint 22: int value (value: 50)
+#   Datapoint 103: int value (value: 20)
+#   Datapoint 102: switch (value: OFF)
+#   Datapoint 104: switch (value: ON)
+#   Datapoint 105: enum (value: 1)
+#   Product: '{"p":"ws3odtueeha5yjln","v":"1.0.1","m":0}'
+# Backlog TuyaMCU 11,20; TuyaMCU 98,21; TuyaMCU 21,22; TuyaMCU 12,102; TuyaMCU 22,103; TuyaMCU 13,104; DimmerRange 10,1000
+# cmd/tas Switch/Relay#; enum#########; Dimmer#######; CCT##########; String#######; String#######; DimmerMinMax
+# Template
+# {"NAME":"Miboxer-TRI-C1WR","GPIO":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2304,2272],"FLAG":0,"BASE":54,"CMND":"SO97 1 | TuyaMCU 11,20 | TuyaMCU 98,21 | TuyaMCU 21,22 | TuyaMCU 12,102 | TuyaMCU 22,103 | TuyaMCU 13,104 | DimmerRange 10,1000"}
+
+# Minimum Brightness
+number:
+  - platform: "tuya"
+    name: "${friendly_name} Minimum Brightness"
+    number_datapoint: 103
+    min_value: 0
+    max_value: 255
+    step: 1
+# select:
+#   - platform: "tuya"
+#     # tuya_id: "mcu"
+#     name: "${friendly_name} Mode Test"
+#     icon: mdi:eye
+#     enum_datapoint: 21
+#     options:
+#       0: Mode 1
+#       1: Mode 2
+#       2: Mode 3
+#       3: Mode 4
+#       4: Mode 5
+#       5: Mode 6
+#   - platform: "tuya"
+#     # tuya_id: "mcu"
+#     name: "${friendly_name} Mode 2 Test"
+#     icon: mdi:eye
+#     enum_datapoint: 105
+#     options:
+#       0: Mode 1
+#       1: Mode 2
+#       2: Mode 3
+#       3: Mode 4
+#       4: Mode 5
+#       5: Mode 6

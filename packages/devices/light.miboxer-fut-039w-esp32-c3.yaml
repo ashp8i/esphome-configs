@@ -23,6 +23,8 @@ uart:
 tuya:
   uart_id: mcu
 
+time:
+
 light:
   - platform: "tuya"
     name: "${friendly_name}"

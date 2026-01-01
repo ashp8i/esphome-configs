@@ -118,7 +118,6 @@ class Tuya : public Component, public uart::UARTDevice {
   }
 
  protected:
-  void handle_char_(uint8_t c);
   void handle_datapoints_(const uint8_t *buffer, size_t len);
   optional<TuyaDatapoint> get_datapoint_(uint8_t datapoint_id);
   bool validate_message_();
@@ -135,6 +134,8 @@ class Tuya : public Component, public uart::UARTDevice {
   void send_datapoint_command_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, std::vector<uint8_t> data);
   void set_status_pin_();
   void send_wifi_status_();
+  void process_input_buffer_();
+  void process_frames_();
   uint8_t get_wifi_status_code_();
   uint8_t get_wifi_rssi_();
 

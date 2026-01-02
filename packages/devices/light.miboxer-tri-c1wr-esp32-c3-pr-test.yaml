@@ -41,9 +41,9 @@ uart:
       dummy_receiver: false
       sequence:
         - lambda: UARTDebug::log_hex(direction, bytes, ':');
-      after:
-        bytes: 150
-        timeout: 100ms
+      # after:
+      #   bytes: 150
+      #   timeout: 100ms
 
 # Register the Tuya MCU connection
 tuya:

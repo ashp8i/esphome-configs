@@ -5,7 +5,7 @@ esphome:
   platformio_options:
     board_build.flash_mode: dio
     board_build.extra_flags:
-      - "-DARDUINO_USB_CDC_ON_BOOT=0"  # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
+      - "-DARDUINO_USB_CDC_ON_BOOT=0" # Override, defaults to '-DARDUINO_USB_CDC_ON_BOOT=1'
   project:
     name: "${project_name}"
     version: "${project_version}"
@@ -33,43 +33,42 @@ web_server:
   include_internal: true
   local: true
 
-
 uart:
-    rx_pin: GPIO6
-    tx_pin: GPIO7
-    baud_rate: 9600
-    rx_buffer_size: 1024
-    debug:
-      direction: BOTH
-      dummy_receiver: false
-      sequence:
-        - lambda: UARTDebug::log_hex(direction, bytes, ':');
-      after:
-        bytes: 150
-        timeout: 100ms
+  rx_pin: GPIO6
+  tx_pin: GPIO7
+  baud_rate: 9600
+  rx_buffer_size: 1024
+  debug:
+    direction: BOTH
+    dummy_receiver: false
+    sequence:
+      - lambda: UARTDebug::log_hex(direction, bytes, ':');
+    after:
+      bytes: 150
+      timeout: 100ms
 
 # Register the Tuya MCU connection
 # tuya:
 tuya:
-    id: tuyamcu
-    # # # low_power: auto
-    # low_power: true
-    # # # low_power: false
-    # low_power_keep_alive: true
-    # This ignores the init sequence but allows heartbeats to be sent
-    # standard_trace_mode: true
-    # # This enables the "Live Trace" in your logs
-    # raw_trace_mode: true
-    # # This enables the "Raw Trace" in your logs
-    # compatibility_mode:
-    #     # Stop the [E][tuya:XXX] log spam when initialization is slow/sleepy
-    #     silent_init: true
-    #     # Don't give up; just wait indefinitely for the first valid DP
-    #     ignore_initialization: true
-    #     # Treat 0x05 as data for older battery sensors
-    #     force_low_power_reporting_datapoints: true
-    #     # Accept 0x08 as valid status data (stripping timestamps)
-    #     handle_historical_records: true
+  id: tuyamcu
+  # # # low_power: auto
+  # low_power: true
+  # # # low_power: false
+  # low_power_keep_alive: true
+  # This ignores the init sequence but allows heartbeats to be sent
+  # standard_trace_mode: true
+  # # This enables the "Live Trace" in your logs
+  # raw_trace_mode: true
+  # # This enables the "Raw Trace" in your logs
+  # compatibility_mode:
+  #     # Stop the [E][tuya:XXX] log spam when initialization is slow/sleepy
+  #     silent_init: true
+  #     # Don't give up; just wait indefinitely for the first valid DP
+  #     ignore_initialization: true
+  #     # Treat 0x05 as data for older battery sensors
+  #     force_low_power_reporting_datapoints: true
+  #     # Accept 0x08 as valid status data (stripping timestamps)
+  #     handle_historical_records: true
 
 cover:
   - platform: "tuya"
@@ -89,4 +88,3 @@ cover:
     # open_value: 0x01
     # close_value: 0x00
     # stop_value: 0x02
-

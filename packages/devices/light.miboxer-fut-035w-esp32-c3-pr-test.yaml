@@ -19,6 +19,7 @@ external_components:
   - source:
       type: local
       path: my_external_components/tuya_commit_2_tuya_core_2_version_handling
+      # path: my_external_components/tuya_commit_1_tuya_core
 
 captive_portal:
 
@@ -39,15 +40,19 @@ uart:
     debug:
       direction: BOTH
       dummy_receiver: false
-      sequence:
-        - lambda: UARTDebug::log_hex(direction, bytes, ':');
       after:
-        bytes: 150
-        timeout: 100ms
+        bytes: 1 # Change from 150 to 1
+        timeout: 1ms # Change from 100ms to 1ms
+      sequence:
+        - then:
+            - lambda: !lambda |-
+                UARTDebug::log_hex(direction, bytes, ':');
 
 # Register the Tuya MCU connection
 tuya:
   uart_id: mcu
+  # protocol_version: 0
+  protocol_version: 3
 
 time:
 

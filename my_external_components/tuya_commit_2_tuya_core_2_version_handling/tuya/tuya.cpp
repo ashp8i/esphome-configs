@@ -22,6 +22,26 @@ static const int RECEIVE_TIMEOUT = 300;
 static const int MAX_RETRIES = 5;
 static const int HANDSHAKE_TIMEOUT = 15000;  // 15 seconds for v0 handshake
 
+std::string command_type_to_string(TuyaCommandType cmd) {
+  switch (cmd) {
+    case TuyaCommandType::HEARTBEAT: return "HEARTBEAT";
+    case TuyaCommandType::PRODUCT_QUERY: return "PRODUCT_QUERY";
+    case TuyaCommandType::CONF_QUERY: return "CONF_QUERY";
+    case TuyaCommandType::WIFI_STATE: return "WIFI_STATE";
+    case TuyaCommandType::DATAPOINT_DELIVER: return "DATAPOINT_DELIVER/REPORT_ASYNC";
+    case TuyaCommandType::DATAPOINT_REPORT_SYNC: return "DATAPOINT_REPORT_SYNC";
+    case TuyaCommandType::DATAPOINT_QUERY: return "DATAPOINT_QUERY";
+    case TuyaCommandType::DATAPOINT_REPORT_ACK: return "DATAPOINT_REPORT_ACK";
+    case TuyaCommandType::WIFI_TEST: return "WIFI_TEST";
+    case TuyaCommandType::WIFI_RSSI: return "WIFI_RSSI";
+    case TuyaCommandType::LOCAL_TIME_QUERY: return "LOCAL_TIME_QUERY";
+    case TuyaCommandType::GET_NETWORK_STATUS: return "GET_NETWORK_STATUS";
+    case TuyaCommandType::EXTENDED_SERVICES: return "EXTENDED_SERVICES";
+    case TuyaCommandType::VACUUM_MAP_UPLOAD: return "VACUUM_MAP_UPLOAD";
+    default: return "UNKNOWN";
+  }
+}
+
 void Tuya::setup() {
   this->init_state_ = TuyaInitState::INIT_HEARTBEAT;
   this->init_failed_ = false;
@@ -39,62 +59,338 @@ void Tuya::setup() {
       this->send_empty_command_(TuyaCommandType::HEARTBEAT);
     }
   });
+    // Initialize protocol detection
+  this->protocol_detected_ = false;
+  this->protocol_version_ = 0xFF;  // Unknown initially
+  this->init_state_ = TuyaInitState::INIT_HEARTBEAT;
+  this->handshake_start_time_ = millis();
+
+  ESP_LOGI(TAG, "Tuya component initialized - waiting for protocol detection");
 }
 
 void Tuya::loop() {
-  // Process input buffer
-  static uint32_t last_read_time = 0;
-  uint32_t now = millis();
-
-  if (now - last_read_time < 10) {
-    return;
-  }
-  last_read_time = now;
-
-  uint8_t buffer[64];
-  int bytes_available = this->available();
-  int read_size = std::min(bytes_available, 64);
-
-  if (read_size > 0) {
-    this->read_array(buffer, read_size);
-    for (int i = 0; i < read_size; i++) {
-      this->rx_message_.push_back(buffer[i]);
+  // CRITICAL: Read UART data FIRST - This is what's missing!
+  while (this->available()) {
+    uint8_t byte;
+    if (this->read_byte(&byte)) {
+      this->rx_message_.push_back(byte);
+      ESP_LOGD(TAG, "UART BYTE RECEIVED: 0x%02X", byte);  // Debug incoming data
     }
   }
 
-  // Process command queue
-  this->process_command_queue_();
+  // Always process incoming frames first
+  this->process_frames_();
+
+  // Protocol detection phase
+  if (!this->protocol_detected_) {
+    this->detect_protocol_version_();
+
+    if (this->protocol_detected_ || this->protocol_version_override_ != 0xFF) {
+      this->start_initialization_();
+    }
+    return;
+  }
+
+  // Initialization and operation phase
+  if (this->init_state_ != TuyaInitState::INIT_DONE) {
+    this->handle_initialization_();
+  } else {
+    // Normal operation - just process frames
+    // Device will send commands when needed
+  }
 }
 
-void Tuya::process_input_buffer_() {
-  static uint32_t last_read_time = 0;
-  uint32_t now = millis();
+void Tuya::start_initialization_() {
+  // Set up the appropriate initialization based on protocol
+  if (this->protocol_version_ == 3) {
+    this->init_state_ = TuyaInitState::INIT_HEARTBEAT;
+    this->handshake_start_time_ = millis();
+    ESP_LOGI(TAG, "Starting v3 initialization sequence");
+  } else {
+    this->init_state_ = TuyaInitState::INIT_HEARTBEAT;
+    this->handshake_start_time_ = millis();
+    ESP_LOGI(TAG, "Starting v0/v1 initialization sequence");
+  }
+}
 
-  if (now - last_read_time < 10) {
+void Tuya::handle_initialization_() {
+  uint32_t now = millis();
+  uint32_t init_duration = now - this->handshake_start_time_;
+
+  // Check for completion timeouts and fallback strategies
+  switch (this->init_state_) {
+    case TuyaInitState::INIT_HEARTBEAT: {
+      // Send heartbeat every 1-2 seconds during init
+      if (now - this->last_command_timestamp_ > 1500) {
+        this->send_empty_command_(TuyaCommandType::HEARTBEAT);
+
+        // Check for handshake-only devices that need product query
+        if (init_duration > 3000 && this->product_.empty()) {
+          // Device responded to heartbeat but hasn't sent product data
+          // Try sending product query for handshake devices
+          ESP_LOGD(TAG, "No product data received, sending product query");
+          this->send_empty_command_(TuyaCommandType::PRODUCT_QUERY);
+        }
+      }
+
+      // If we get heartbeats but no handshake response after 10 seconds,
+      // assume it's a heartbeat-only device
+      if (init_duration > 10000 && this->product_.empty()) {
+        ESP_LOGI(TAG, "Heartbeat-only device detected - completing init without handshake");
+        this->complete_initialization_(TuyaInitType::HEARTBEAT_ONLY);
+      }
+      break;
+    }
+
+    case TuyaInitState::INIT_PRODUCT: {
+      // v0/v1 handshake - waiting for product response
+      if (now - this->last_command_timestamp_ > 1000) {
+        if (init_duration > 5000) {
+          // Product query timeout - might be heartbeat-only device
+          ESP_LOGD(TAG, "Product query timeout, checking if device is heartbeat-only");
+          if (this->has_received_heartbeats_()) {
+            ESP_LOGI(TAG, "Heartbeat-only device detected during handshake");
+            this->complete_initialization_(TuyaInitType::HEARTBEAT_ONLY);
+          } else {
+            // Retry product query
+            this->send_empty_command_(TuyaCommandType::PRODUCT_QUERY);
+          }
+        } else {
+          // Retry product query
+          this->send_empty_command_(TuyaCommandType::PRODUCT_QUERY);
+        }
+      }
+      break;
+    }
+
+    case TuyaInitState::INIT_CONF: {
+      // v0/v1 handshake - waiting for config response
+      if (now - this->last_command_timestamp_ > 1000) {
+        if (init_duration > 5000) {
+          // Config query timeout - complete with partial info
+          ESP_LOGI(TAG, "Config query timeout, completing with partial handshake");
+          this->complete_initialization_(TuyaInitType::PARTIAL_HANDSHAKE);
+        } else {
+          this->send_empty_command_(TuyaCommandType::CONF_QUERY);
+        }
+      }
+      break;
+    }
+
+    case TuyaInitState::INIT_WIFI_STATUS: {
+      // v3 handshake - waiting for WiFi status response
+      if (now - this->last_command_timestamp_ > 1000) {
+        if (init_duration > 5000) {
+          // WiFi status timeout
+          ESP_LOGI(TAG, "WiFi status timeout, completing v3 init");
+          this->complete_initialization_(TuyaInitType::PARTIAL_HANDSHAKE);
+        } else {
+          this->send_command_(TuyaCommand{TuyaCommandType::GET_NETWORK_STATUS, {this->get_wifi_status_code_()}});
+        }
+      }
+      break;
+    }
+
+    default:
+      break;
+  }
+}
+
+void Tuya::complete_initialization_(TuyaInitType init_type) {
+  this->init_state_ = TuyaInitState::INIT_DONE;
+  this->init_type_ = init_type;
+
+  switch (init_type) {
+    case TuyaInitType::FULL_HANDSHAKE:
+      ESP_LOGI(TAG, "Initialization complete: Full handshake");
+      break;
+    case TuyaInitType::PARTIAL_HANDSHAKE:
+      ESP_LOGI(TAG, "Initialization complete: Partial handshake");
+      break;
+    case TuyaInitType::HEARTBEAT_ONLY:
+      ESP_LOGI(TAG, "Initialization complete: Heartbeat-only device");
+      break;
+  }
+
+  // Set up appropriate heartbeat interval based on device type
+  this->setup_heartbeat_interval_();
+
+  // Call completion callbacks
+  this->initialized_callback_.call();
+  this->dump_config();
+}
+
+void Tuya::setup_heartbeat_interval_() {
+  // Remove existing heartbeat interval if any
+  this->cancel_interval("heartbeat");
+
+  // Set up heartbeat based on device type
+  uint32_t interval_ms = 15000; // Default 15 seconds
+
+  switch (this->init_type_) {
+    case TuyaInitType::FULL_HANDSHAKE:
+      interval_ms = 15000; // Standard devices
+      break;
+    case TuyaInitType::PARTIAL_HANDSHAKE:
+      interval_ms = 30000; // Slower for problematic devices
+      break;
+    case TuyaInitType::HEARTBEAT_ONLY:
+      interval_ms = 15000; // Standard for heartbeat-only
+      break;
+  }
+
+  // Set up heartbeat interval
+  this->set_interval("heartbeat", interval_ms, [this] {
+    if (this->init_state_ == TuyaInitState::INIT_DONE) {
+      this->send_empty_command_(TuyaCommandType::HEARTBEAT);
+    }
+  });
+}
+
+bool Tuya::has_received_heartbeats_() {
+  // Check if we've received any heartbeats in the last 30 seconds
+  return (millis() - this->last_heartbeat_time_ < 30000);
+}
+
+void Tuya::handle_v0_v1_initialization_() {
+  // Your proven v0/v1 initialization sequence
+  ESP_LOGI(TAG, "Starting v0/v1 initialization sequence");
+
+  switch (this->init_state_) {
+    case TuyaInitState::INIT_HEARTBEAT:
+      if (millis() - this->handshake_start_time_ > 1000) {
+        ESP_LOGD(TAG, "Sending v0/v1 heartbeat");
+        this->send_empty_command_(TuyaCommandType::HEARTBEAT);  // 0x00
+        this->handshake_start_time_ = millis();
+      }
+      break;
+
+    case TuyaInitState::INIT_PRODUCT:
+      if (millis() - this->handshake_start_time_ > 1000) {
+        ESP_LOGD(TAG, "Sending v0/v1 product query");
+        this->send_empty_command_(TuyaCommandType::PRODUCT_QUERY);
+        this->handshake_start_time_ = millis();
+      }
+      break;
+
+    case TuyaInitState::INIT_CONF:
+      if (millis() - this->handshake_start_time_ > 1000) {
+        ESP_LOGD(TAG, "Sending v0/v1 config query");
+        this->send_empty_command_(TuyaCommandType::CONF_QUERY);
+        this->handshake_start_time_ = millis();
+      }
+      break;
+
+    case TuyaInitState::INIT_DONE:
+      ESP_LOGI(TAG, "v0/v1 initialization complete");
+      this->protocol_detected_ = true;
+      break;
+  }
+}
+
+void Tuya::handle_v3_initialization_() {
+  // V3 initialization sequence for learning
+  ESP_LOGI(TAG, "Starting v3 initialization sequence");
+
+  switch (this->init_state_) {
+    case TuyaInitState::INIT_HEARTBEAT:
+      if (millis() - this->handshake_start_time_ > 1000) {
+        ESP_LOGD(TAG, "Sending v3 heartbeat");
+        this->send_command_(TuyaCommand{.cmd = TuyaCommandType::HEARTBEAT});  // Will use 0x1C
+        this->handshake_start_time_ = millis();
+      }
+      break;
+
+    case TuyaInitState::INIT_PRODUCT:
+      if (millis() - this->handshake_start_time_ > 1000) {
+        ESP_LOGD(TAG, "Sending v3 product query");
+        this->send_command_(TuyaCommand{.cmd = TuyaCommandType::PRODUCT_QUERY});
+        this->handshake_start_time_ = millis();
+      }
+      break;
+
+    case TuyaInitState::INIT_CONF:
+      if (millis() - this->handshake_start_time_ > 1000) {
+        ESP_LOGD(TAG, "Sending v3 network status request");
+        this->send_command_(TuyaCommand{.cmd = TuyaCommandType::GET_NETWORK_STATUS});
+        this->handshake_start_time_ = millis();
+      }
+      break;
+
+    case TuyaInitState::INIT_DONE:
+      ESP_LOGI(TAG, "v3 initialization complete");
+      this->protocol_detected_ = true;
+      break;
+  }
+}
+
+void Tuya::detect_protocol_version_() {
+  // Check if we have an override
+  if (this->protocol_version_override_ != 0xFF) {
+    this->protocol_version_ = this->protocol_version_override_;
+    ESP_LOGI(TAG, "Protocol version forced to: %u", this->protocol_version_);
     return;
   }
-  last_read_time = now;
 
-  uint8_t buffer[64];
-  int bytes_available = this->available();
-  int read_size = std::min(bytes_available, 64);
+  // Auto-detect based on received commands
+  if (this->protocol_version_ != 0xFF) {
+    // Already detected
+    return;
+  }
 
-  if (read_size > 0) {
-    this->read_array(buffer, read_size);
-    for (int i = 0; i < read_size; i++) {
-      this->rx_message_.push_back(buffer[i]);
-    }
+  // If we receive a v3 heartbeat (0x1C), force v3
+  // If we receive a v0/v1 heartbeat (0x00), force v0/v1
+  // If no commands received after timeout, default to v0/v1 (which you know works)
+
+  if (millis() - this->handshake_start_time_ > 3000) {
+    // 3 second timeout for auto-detection
+    this->protocol_version_ = 0;  // Default to v0/v1 (reliable)
+    ESP_LOGI(TAG, "Protocol auto-detection timeout - defaulting to v0/v1");
   }
 }
 
 void Tuya::process_frames_() {
   int processed_frames = 0;
   const int MAX_FRAMES_PER_LOOP = 5;
+  static uint32_t partial_frame_timeout = 0;
+
+  // CONTROLLED LOGGING: Only log buffer size changes or when we have data
+  static size_t last_logged_size = 0;
+  static bool logged_no_data = false;
+
+  if (this->rx_message_.empty()) {
+    if (!logged_no_data) {
+      ESP_LOGD("Tuya", "PROCESSING FRAMES - Buffer size: %zu (no new data)", this->rx_message_.size());
+      logged_no_data = true;
+    }
+    return;  // Skip processing if no data
+  }
+
+  // Reset flag when we have data
+  logged_no_data = false;
+
+  // Only log buffer size changes
+  if (this->rx_message_.size() != last_logged_size) {
+    ESP_LOGD("Tuya", "PROCESSING FRAMES - Buffer size: %zu", this->rx_message_.size());
+    last_logged_size = this->rx_message_.size();
+  }
 
   while (processed_frames < MAX_FRAMES_PER_LOOP && this->rx_message_.size() >= 7) {
+    // Smart header search instead of single-byte removal
+    size_t header_pos = find_frame_header();
+    if (header_pos != std::string::npos && header_pos > 0) {
+      ESP_LOGD("Tuya", "Found header at position %zu, discarding %zu garbage bytes",
+               header_pos, header_pos);
+      this->rx_message_.erase(this->rx_message_.begin(),
+                             this->rx_message_.begin() + header_pos);
+      continue;  // Start over with clean buffer
+    }
+
     if (this->rx_message_[0] != 0x55 || this->rx_message_[1] != 0xAA) {
-      this->rx_message_.pop_front();
-      continue;
+      ESP_LOGD("Tuya", "No valid header found, clearing buffer");
+      this->rx_message_.clear();
+      partial_frame_timeout = 0;
+      return;
     }
 
     uint8_t version = this->rx_message_[2];
@@ -108,26 +404,115 @@ void Tuya::process_frames_() {
       return;
     }
 
+    // Timeout for partial frames
     if (this->rx_message_.size() < total_len) {
-      break;
+      if (partial_frame_timeout == 0) {
+        partial_frame_timeout = millis();
+        ESP_LOGD("Tuya", "Incomplete frame - need %zu bytes, have %zu", total_len, this->rx_message_.size());
+      } else if (millis() - partial_frame_timeout > 1000) {  // 1 second timeout
+        ESP_LOGW(TAG, "Partial frame timeout, clearing buffer");
+        this->rx_message_.clear();
+        partial_frame_timeout = 0;
+      }
+      break;  // Still waiting for data
     }
+    partial_frame_timeout = 0;  // Reset timeout on complete frame
 
+    // Validate checksum
     uint8_t checksum = 0;
     for (size_t i = 0; i < total_len - 1; i++) {
       checksum += this->rx_message_[i];
     }
 
     if (checksum != this->rx_message_[total_len - 1]) {
-      ESP_LOGW(TAG, "Checksum Fail! Expected 0x%02X", checksum);
-      this->rx_message_.pop_front();
-      continue;
+      ESP_LOGW(TAG, "Checksum Fail! Expected 0x%02X, got 0x%02X", checksum, this->rx_message_[total_len - 1]);
+      ESP_LOGD(TAG, "Removing entire corrupted frame (%zu bytes)", total_len);
+      this->rx_message_.erase(this->rx_message_.begin(),
+                             this->rx_message_.begin() + total_len);
+      continue;  // Start over
     }
+
+    // Your excellent debugging - KEEP THIS (events only!)
+    ESP_LOGD("Tuya", "=== COMPLETE FRAME DETECTED ===");
+    ESP_LOGD("Tuya", "  Command: 0x%02X", command);
+    ESP_LOGD("Tuya", "  Version: %u", version);
+    ESP_LOGD("Tuya", "  Length: %u", length);
+    ESP_LOGD("Tuya", "  Total Length: %zu", total_len);
+    ESP_LOGD("Tuya", "  Checksum: 0x%02X", checksum);
 
     const uint8_t *payload_ptr = &this->rx_message_[6];
     this->handle_command_(command, version, payload_ptr, length);
 
     this->rx_message_.erase(this->rx_message_.begin(), this->rx_message_.begin() + total_len);
     processed_frames++;
+
+    ESP_LOGD("Tuya", "Frame processed successfully, %u frames processed this loop", processed_frames);
+  }
+
+  // CONTROLLED LOGGING: Only log completion when we actually processed frames
+  if (processed_frames > 0) {
+    ESP_LOGD("Tuya", "Frame processing complete - processed %u frames, remaining buffer size: %zu",
+             processed_frames, this->rx_message_.size());
+  }
+}
+
+// Helper function to add (unchanged)
+size_t Tuya::find_frame_header() {
+  for (size_t i = 0; i < this->rx_message_.size() - 1; i++) {
+    if (this->rx_message_[i] == 0x55 && this->rx_message_[i + 1] == 0xAA) {
+      return i;
+    }
+  }
+  return std::string::npos;
+}
+
+bool Tuya::validate_frame(const std::vector<uint8_t>& frame) {
+  // Check minimum size
+  if (frame.size() < 8) return false;
+
+  // Validate header
+  if (frame[0] != 0x55 || frame[1] != 0xAA) return false;
+
+  // Validate checksum
+  uint8_t checksum = 0;
+  for (size_t i = 0; i < frame.size() - 1; i++) {
+    checksum ^= frame[i];
+  }
+  if (checksum != frame.back()) {
+    ESP_LOGW(TAG, "Invalid checksum: expected 0x%02X, got 0x%02X",
+             checksum, frame.back());
+    return false;
+  }
+
+  // Validate command
+  uint8_t command = frame[3];
+  if (!is_valid_tuya_command(command)) {
+    ESP_LOGW(TAG, "Unknown command: 0x%02X", command);
+    return false;
+  }
+
+  return true;
+}
+
+bool Tuya::is_valid_tuya_command(uint8_t command) {
+  switch (command) {
+    case TuyaCommandType::HEARTBEAT:
+    case TuyaCommandType::PRODUCT_QUERY:
+    case TuyaCommandType::CONF_QUERY:
+    case TuyaCommandType::WIFI_STATE:
+    case TuyaCommandType::DATAPOINT_DELIVER:  // Covers both 0x07 uses
+    case TuyaCommandType::DATAPOINT_REPORT_SYNC:
+    case TuyaCommandType::DATAPOINT_QUERY:
+    case TuyaCommandType::DATAPOINT_REPORT_ACK:
+    case TuyaCommandType::WIFI_TEST:
+    case TuyaCommandType::WIFI_RSSI:
+    case TuyaCommandType::LOCAL_TIME_QUERY:
+    case TuyaCommandType::GET_NETWORK_STATUS:
+    case TuyaCommandType::EXTENDED_SERVICES:
+    case TuyaCommandType::VACUUM_MAP_UPLOAD:
+      return true;
+    default:
+      return false;
   }
 }
 
@@ -177,37 +562,137 @@ void Tuya::dump_config() {
 
   LOG_PIN("  Status Pin: ", this->status_pin_);
 
-  // Add device type detection info
+  // Enhanced device type detection info
+  ESP_LOGCONFIG(TAG, "  Initialization Type: %u", static_cast<uint8_t>(this->init_type_));
+
+  switch (this->init_type_) {
+    case TuyaInitType::FULL_HANDSHAKE:
+      ESP_LOGCONFIG(TAG, "  Device Behavior: Full handshake (standard v0/v1)");
+      ESP_LOGCONFIG(TAG, "  Heartbeat Interval: 15s");
+      break;
+    case TuyaInitType::PARTIAL_HANDSHAKE:
+      ESP_LOGCONFIG(TAG, "  Device Behavior: Partial handshake (problematic)");
+      ESP_LOGCONFIG(TAG, "  Heartbeat Interval: 30s");
+      break;
+    case TuyaInitType::HEARTBEAT_ONLY:
+      ESP_LOGCONFIG(TAG, "  Device Behavior: Heartbeat-only (no handshake)");
+      ESP_LOGCONFIG(TAG, "  Heartbeat Interval: 15s");
+      break;
+  }
+
+  // Protocol-specific device type info
   if (this->protocol_version_ == 0) {
-    ESP_LOGCONFIG(TAG, "  Device Type: Legacy v0 (requires periodic heartbeats)");
+    ESP_LOGCONFIG(TAG, "  Protocol Type: Legacy v0 (requires periodic heartbeats)");
   } else if (this->protocol_version_ == 3) {
-    ESP_LOGCONFIG(TAG, "  Device Type: Modern v3 (heartbeat-free after init)");
+    ESP_LOGCONFIG(TAG, "  Protocol Type: Modern v3 (heartbeat-free after init)");
   } else {
-    ESP_LOGCONFIG(TAG, "  Device Type: Unknown protocol version %u", this->protocol_version_);
+    ESP_LOGCONFIG(TAG, "  Protocol Type: Unknown protocol version %u", this->protocol_version_);
   }
 }
 
-void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len) {
-  ESP_LOGD(TAG, "HANDLE COMMAND: cmd=0x%02X, version=%u, len=%zu, init_state=%u, expected_response=%s",
-           command, version, len, static_cast<uint8_t>(this->init_state_),
-           this->expected_response_.has_value() ?
-             std::to_string((uint8_t)*this->expected_response_).c_str() : "NONE");
+void Tuya::process_init_step_() {
+  static uint32_t last_init_time = 0;
+  uint32_t now = millis();
 
-  // FIX: Detect protocol version from ANY command, not just heartbeats
+  // Only process one init step every 20ms to avoid blocking
+  if (now - last_init_time < 20) return;
+  last_init_time = now;
+
+  switch (this->init_state_) {
+    case TuyaInitState::INIT_HEARTBEAT:
+      if (this->rx_message_.empty()) {
+        this->send_empty_command_(TuyaCommandType::HEARTBEAT);
+        this->init_state_ = TuyaInitState::INIT_PRODUCT;
+      }
+      break;
+    case TuyaInitState::INIT_PRODUCT:
+      if (this->product_ != "") {  // Product received
+        this->send_empty_command_(TuyaCommandType::CONF_QUERY);
+        this->init_state_ = TuyaInitState::INIT_CONF;
+      }
+      break;
+    case TuyaInitState::INIT_CONF:
+      if (this->status_pin_reported_ != -1) {  // Config received
+        this->init_state_ = TuyaInitState::INIT_DONE;
+        ESP_LOGI(TAG, "Init complete - switching to event-driven mode");
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+// In handle_command_(), move the protocol detection to the VERY START
+void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buffer, size_t len) {
+  // Add protocol detection
+  if (!this->protocol_detected_) {
+    if (command == 0x1C && version != 0xFF) {
+      this->protocol_version_ = 3;
+      this->protocol_detected_ = true;
+      ESP_LOGI(TAG, "Auto-detected protocol version: 3 (v3 device)");
+    } else if (command == 0x00 && version != 0xFF) {
+      this->protocol_version_ = 0;
+      this->protocol_detected_ = true;
+      ESP_LOGI(TAG, "Auto-detected protocol version: 0 (v0/v1 device)");
+    }
+  }
+
+  // ADD THIS BLOCK AT THE VERY START - Detect protocol version immediately
   if (version != 0xFF && this->protocol_version_ == 0xFF) {
     this->protocol_version_ = version;
     ESP_LOGI(TAG, "Detected protocol version: %u", version);
   }
 
-  // DEBUG: Show what we're expecting vs what we got
+  // ADD THIS BLOCK IMMEDIATELY AFTER - Detect protocol from heartbeat command
+  if (command == 0x1C && this->protocol_version_ != 3) {
+    this->protocol_version_ = 3;
+    ESP_LOGI(TAG, "Forced protocol version to 3 (detected v3 heartbeat command)");
+  } else if (command == 0x00 && this->protocol_version_ == 0xFF) {
+    this->protocol_version_ = 0;
+    ESP_LOGI(TAG, "Detected protocol version: 0 (v0/v1 heartbeat)");
+  }
+
+  // Track heartbeat timing for device type detection
+  if (command == 0x00 || command == 0x1C) {
+    this->last_heartbeat_time_ = millis();
+  }
+
+  // ADD THIS BLOCK - Debug what we received with dual-purpose awareness
+  ESP_LOGD(TAG, "=== RECEIVED COMMAND ===");
+  ESP_LOGD(TAG, "  Command: 0x%02X (%s)", command, command_type_to_string((TuyaCommandType)command).c_str());
+  ESP_LOGD(TAG, "  Version: %u", version);
+  ESP_LOGD(TAG, "  Len: %zu", len);
+  ESP_LOGD(TAG, "  Dual-purpose 0x07: %s", (command == 0x07) ? "YES" : "NO");
+  ESP_LOGD(TAG, "  Init State: %u", static_cast<uint8_t>(this->init_state_));
+  ESP_LOGD(TAG, "  Protocol Version: %u", this->protocol_version_);
+  ESP_LOGD(TAG, "======================");
+
+  ESP_LOGD(TAG, "HANDLE COMMAND: cmd=0x%02X, version=%u, len=%zu, init_state=%u, expected_response=%s",
+           command, version, len, static_cast<uint8_t>(this->init_state_),
+           this->expected_response_.has_value() ?
+             std::to_string((uint8_t)*this->expected_response_).c_str() : "NONE");
+
+  // Only log expected response changes (not every heartbeat)
   if (this->expected_response_.has_value()) {
-    ESP_LOGD(TAG, "  EXPECTED: 0x%02X, GOT: 0x%02X",
-             (uint8_t)*this->expected_response_, command);
+    if (this->expected_response_.value() != this->last_expected_response_) {
+      ESP_LOGD(TAG, "Expected response changed: 0x%02X", (uint8_t)*this->expected_response_);
+      this->last_expected_response_ = this->expected_response_.value();
+    }
   }
 
   // Handle heartbeats (both v0/v1 0x00 and v3 0x1C)
   if (command == 0x00 || command == 0x1C) {
-    ESP_LOGD(TAG, "HEARTBEAT DETECTED: cmd=0x%02X, init_state=%u", command, static_cast<uint8_t>(this->init_state_));
+    ESP_LOGD(TAG, "=== HEARTBEAT DETECTED ===");
+    ESP_LOGD(TAG, "  Command: 0x%02X", command);
+    ESP_LOGD(TAG, "  Protocol Version: %u", this->protocol_version_);
+    ESP_LOGD(TAG, "  Init State: %u", static_cast<uint8_t>(this->init_state_));
+
+    if (command == 0x00) {
+      ESP_LOGD(TAG, "  Type: V0/V1 Heartbeat");
+    } else if (command == 0x1C) {
+      ESP_LOGD(TAG, "  Type: V3 Heartbeat");
+    }
+    ESP_LOGD(TAG, "========================");
 
     // Clear heartbeat timeout regardless of state
     if (this->expected_response_.has_value() && *this->expected_response_ == TuyaCommandType::HEARTBEAT) {
@@ -226,34 +711,52 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       this->send_empty_command_(TuyaCommandType::PRODUCT_QUERY);
     }
   } else {
-    // Check if this response matches what we expected
+    // Check if this response matches what we expected (only log mismatches)
     if (this->expected_response_.has_value() && command == *this->expected_response_) {
       ESP_LOGD(TAG, "RESPONSE MATCHES EXPECTED: 0x%02X", command);
       this->expected_response_.reset();
       this->last_command_timestamp_ = 0;
       this->init_retries_ = 0;
-    } else if (this->expected_response_.has_value()) {
+    } else if (this->expected_response_.has_value() && command != *this->expected_response_) {
       ESP_LOGD(TAG, "RESPONSE DOESN'T MATCH EXPECTED: expected=0x%02X, got=0x%02X",
                (uint8_t)*this->expected_response_, command);
     }
   }
 
+  // Handle dual-purpose 0x07 command (DATAPOINT_DELIVER/DATAPOINT_REPORT_ASYNC)
+  bool is_dual_purpose_07 = (command == 0x07);
+
   // Rest of the switch statement...
   switch (command) {
     case TuyaCommandType::PRODUCT_QUERY: {
-      // check it is a valid string made up of printable characters
-      bool valid = true;
-      for (size_t i = 0; i < len; i++) {
-        if (!std::isprint(buffer[i])) {
-          valid = false;
-          break;
+      // FIX: Handle both JSON and plain text responses
+      std::string product_data(reinterpret_cast<const char *>(buffer), len);
+
+      // Check if it's a JSON response
+      bool is_json = (len >= 2 && buffer[0] == '{' && buffer[len-1] == '}');
+
+      if (is_json) {
+        // JSON response - use as-is
+        this->product_ = product_data;
+        ESP_LOGD(TAG, "JSON product data: %s", product_data.c_str());
+      } else {
+        // Plain text response - validate printable chars
+        bool valid = true;
+        for (size_t i = 0; i < len; i++) {
+          if (!std::isprint(buffer[i])) {
+            valid = false;
+            break;
+          }
+        }
+        if (valid) {
+          this->product_ = product_data;
+          ESP_LOGD(TAG, "Plain product data: %s", product_data.c_str());
+        } else {
+          this->product_ = "UNKNOWN";
+          ESP_LOGW(TAG, "Invalid product data received");
         }
       }
-      if (valid) {
-        this->product_ = std::string(reinterpret_cast<const char *>(buffer), len);
-      } else {
-        this->product_ = R"({"p":"INVALID"})";
-      }
+
       if (this->init_state_ == TuyaInitState::INIT_PRODUCT) {
         this->init_state_ = TuyaInitState::INIT_CONF;
         this->send_empty_command_(TuyaCommandType::CONF_QUERY);
@@ -293,17 +796,22 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       break;
     }
 
-    case TuyaCommandType::DATAPOINT_REPORT_ASYNC:
-    case TuyaCommandType::DATAPOINT_REPORT_SYNC: {
+    case TuyaCommandType::DATAPOINT_DELIVER: {
+      // Handle dual-purpose 0x07 command
+      ESP_LOGD(TAG, "Processing dual-purpose 0x07 command: %s",
+               is_dual_purpose_07 ? "DATAPOINT_DELIVER/REPORT_ASYNC" : "DATAPOINT_DELIVER");
+
       // Handle datapoints and complete initialization
       this->handle_datapoints_(buffer, len);
 
-      if (command == TuyaCommandType::DATAPOINT_REPORT_SYNC) {
+      // For DATAPOINT_DELIVER, send ACK if needed
+      if (this->expected_response_.has_value() && *this->expected_response_ == TuyaCommandType::DATAPOINT_DELIVER) {
         this->send_command_(
             TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_REPORT_ACK, .payload = std::vector<uint8_t>{0x01}});
+        this->expected_response_.reset();
       }
 
-      // If we haven't completed initialization yet, do it now
+      // Complete initialization if needed
       if (this->init_state_ != TuyaInitState::INIT_DONE) {
         this->init_state_ = TuyaInitState::INIT_DONE;
         this->initialized_callback_.call();
@@ -312,8 +820,31 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       break;
     }
 
+    case TuyaCommandType::DATAPOINT_REPORT_SYNC: {
+      // Handle sync reports separately
+      ESP_LOGD(TAG, "Processing DATAPOINT_REPORT_SYNC");
+      this->handle_datapoints_(buffer, len);
+      this->send_command_(
+          TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_REPORT_ACK, .payload = std::vector<uint8_t>{0x01}});
+      break;
+    }
+
+    case TuyaCommandType::DATAPOINT_QUERY: {
+      ESP_LOGD(TAG, "Processing DATAPOINT_QUERY");
+      // Handle queries - typically just respond with current datapoint values
+      this->send_command_(TuyaCommand{.cmd = TuyaCommandType::DATAPOINT_DELIVER, .payload = std::vector<uint8_t>{}});
+      break;
+    }
+
     default: {
-      // Silently ignore unknown commands
+      // Handle unknown commands gracefully
+      if (command == 0x07) {
+        // This is the dual-purpose 0x07 command that we might not have handled yet
+        ESP_LOGD(TAG, "Received unexpected 0x07 command (dual-purpose), handling as datapoint");
+        this->handle_datapoints_(buffer, len);
+      } else {
+        ESP_LOGD(TAG, "Unknown command: 0x%02X", command);
+      }
       break;
     }
   }
@@ -459,24 +990,39 @@ void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
 // }
 
 void Tuya::send_raw_command_(TuyaCommand command) {
+  // ADD THIS BLOCK - Debug what we're sending
+  ESP_LOGD(TAG, "=== SENDING COMMAND ===");
+  ESP_LOGD(TAG, "  Command: 0x%02X (%s)", (uint8_t)command.cmd,
+           command_type_to_string(command.cmd).c_str());
+  ESP_LOGD(TAG, "  Protocol Version: %u", this->protocol_version_);
+  ESP_LOGD(TAG, "  Using Version: %u", (this->protocol_version_ == 0xFF) ? 0x00 : this->protocol_version_);
+  ESP_LOGD(TAG, "  Payload Size: %zu", command.payload.size());
+  ESP_LOGD(TAG, "  Dual-purpose 0x07: %s", (command.cmd == TuyaCommandType::DATAPOINT_DELIVER) ? "YES" : "NO");
+  ESP_LOGD(TAG, "======================");
+
+  // DECLARE cmd_byte ONCE HERE
+  uint8_t cmd_byte = (uint8_t) command.cmd;
+
+  // Handle protocol-specific command mapping
+  if (command.cmd == TuyaCommandType::HEARTBEAT) {
+    if (this->protocol_version_ == 3) {
+      cmd_byte = 0x1C;  // v3 heartbeat
+      ESP_LOGD(TAG, "SENDING V3 HEARTBEAT: 0x%02X", cmd_byte);
+    } else {
+      cmd_byte = 0x00;  // v0/v1 heartbeat
+      ESP_LOGD(TAG, "SENDING V0/V1 HEARTBEAT: 0x%02X", cmd_byte);
+    }
+  }
+
+  ESP_LOGD(TAG, "  Final Cmd Byte: 0x%02X", cmd_byte);
+
   uint8_t len_hi = (uint8_t) (command.payload.size() >> 8);
   uint8_t len_lo = (uint8_t) (command.payload.size() & 0xFF);
   uint8_t version = (this->protocol_version_ == 0xFF) ? 0x00 : this->protocol_version_;
 
   this->last_command_timestamp_ = millis();
 
-  // FIX: Use correct heartbeat command based on protocol version
-  uint8_t cmd_byte = (uint8_t) command.cmd;
-  if (command.cmd == TuyaCommandType::HEARTBEAT) {
-    if (this->protocol_version_ == 3) {
-      cmd_byte = 0x1C;  // v3 heartbeat command
-      ESP_LOGD(TAG, "SENDING V3 HEARTBEAT: 0x%02X", cmd_byte);
-    } else {
-      cmd_byte = 0x00;  // v0/v1 heartbeat command
-      ESP_LOGD(TAG, "SENDING V0/V1 HEARTBEAT: 0x%02X", cmd_byte);
-    }
-  }
-
+  // Set expected response with dual-purpose awareness
   switch (command.cmd) {
     case TuyaCommandType::HEARTBEAT:
       this->expected_response_ = TuyaCommandType::HEARTBEAT;
@@ -489,7 +1035,11 @@ void Tuya::send_raw_command_(TuyaCommand command) {
       break;
     case TuyaCommandType::DATAPOINT_DELIVER:
     case TuyaCommandType::DATAPOINT_QUERY:
-      this->expected_response_ = TuyaCommandType::DATAPOINT_REPORT_ASYNC;
+      // For 0x07, expect either DATAPOINT_DELIVER or DATAPOINT_REPORT_ASYNC response
+      this->expected_response_ = TuyaCommandType::DATAPOINT_DELIVER;
+      break;
+    case TuyaCommandType::GET_NETWORK_STATUS:
+      this->expected_response_ = TuyaCommandType::GET_NETWORK_STATUS;
       break;
     default:
       break;
@@ -499,75 +1049,110 @@ void Tuya::send_raw_command_(TuyaCommand command) {
            cmd_byte, version, format_hex_pretty(command.payload).c_str(),
            static_cast<uint8_t>(this->init_state_));
 
+  // ADD THIS BLOCK - Log raw bytes being sent
+  ESP_LOGD(TAG, "RAW TX: 55:AA:%02X:%02X:%02X:%02X",
+           version, cmd_byte, len_hi, len_lo);
+
   this->write_array({0x55, 0xAA, version, cmd_byte, len_hi, len_lo});
-  if (!command.payload.empty())
+
+  // ADD THIS BLOCK - Log payload if present
+  if (!command.payload.empty()) {
+    ESP_LOGD(TAG, "RAW TX PAYLOAD: %s", format_hex_pretty(command.payload).c_str());
     this->write_array(command.payload.data(), command.payload.size());
+  }
 
   uint8_t checksum = 0x55 + 0xAA + cmd_byte + len_hi + len_lo;
   for (auto &data : command.payload)
     checksum += data;
   this->write_byte(checksum);
+
+  // ADD THIS BLOCK - Log final checksum
+  ESP_LOGD(TAG, "RAW TX CHECKSUM: %02X", checksum);
 }
+
+// void Tuya::process_command_queue_() {
+//   uint32_t now = millis();
+//   static uint32_t last_process_time = 0;
+
+//   // Only process every 5ms to avoid CPU churn
+//   if (now - last_process_time < 5) {
+//     return;
+//   }
+//   last_process_time = now;
+
+//   // Always process incoming frames (this is essential)
+//   this->process_frames_();
+
+//   // Only handle command queue and timeouts during initialization
+//   if (this->init_state_ != TuyaInitState::INIT_DONE) {
+//     // Handle timeouts for initialization commands
+//     if (this->expected_response_.has_value()) {
+//       if (now - this->last_command_timestamp_ > 2000) {
+//         ESP_LOGD(TAG, "Init timeout for 0x%02X, continuing", (uint8_t)*this->expected_response_);
+
+//         if (*this->expected_response_ == TuyaCommandType::HEARTBEAT) {
+//           ESP_LOGD(TAG, "Heartbeat timeout - clearing expected response and continuing");
+//           this->expected_response_.reset();
+//           this->last_command_timestamp_ = 0;
+//           return;  // Don't retry, just continue
+//         }
+
+//         this->expected_response_.reset();
+
+//         if (this->init_state_ != TuyaInitState::INIT_DONE) {
+//           this->init_retries_++;
+//           if (this->init_retries_ >= MAX_RETRIES) {
+//             this->init_failed_ = true;
+//             ESP_LOGE(TAG, "Initialization failed after %d retries", MAX_RETRIES);
+//           }
+//         }
+//       }
+//     }
+
+//     // Send queued commands during init
+//     if (!this->command_queue_.empty()) {
+//       if (now - this->last_command_timestamp_ > COMMAND_DELAY) {
+//         this->send_raw_command_(this->command_queue_.front());
+//         this->command_queue_.pop_front();
+//       }
+//     }
+
+//     // Send heartbeats only during INIT_HEARTBEAT state
+//     if (this->init_state_ == TuyaInitState::INIT_HEARTBEAT && this->command_queue_.empty()) {
+//       if (this->expected_response_ != TuyaCommandType::HEARTBEAT) {
+//         // FIX: Use 0x1C for heartbeat instead of 0x00 for v3 devices
+//         this->send_raw_command_(TuyaCommand{
+//           TuyaCommandType::HEARTBEAT,
+//           std::vector<uint8_t>()
+//         });
+//       }
+//     }
+//   }
+//   // After INIT_DONE: DO NOTHING - just process frames silently
+// }
 
 void Tuya::process_command_queue_() {
   uint32_t now = millis();
-  static uint32_t last_process_time = 0;
+  uint32_t delay = now - this->last_command_timestamp_;
 
-  // Only process every 5ms to avoid CPU churn
-  if (now - last_process_time < 5) {
-    return;
-  }
-  last_process_time = now;
-
-  // Always process incoming frames (this is essential)
-  this->process_frames_();
-
-  // Only handle command queue and timeouts during initialization
-  if (this->init_state_ != TuyaInitState::INIT_DONE) {
-    // Handle timeouts for initialization commands
-    if (this->expected_response_.has_value()) {
-      if (now - this->last_command_timestamp_ > 2000) {
-        ESP_LOGD(TAG, "Init timeout for 0x%02X, continuing", (uint8_t)*this->expected_response_);
-
-        if (*this->expected_response_ == TuyaCommandType::HEARTBEAT) {
-          ESP_LOGD(TAG, "Heartbeat timeout - clearing expected response and continuing");
-          this->expected_response_.reset();
-          this->last_command_timestamp_ = 0;
-          return;  // Don't retry, just continue
-        }
-
-        this->expected_response_.reset();
-
-        if (this->init_state_ != TuyaInitState::INIT_DONE) {
-          this->init_retries_++;
-          if (this->init_retries_ >= MAX_RETRIES) {
-            this->init_failed_ = true;
-            ESP_LOGE(TAG, "Initialization failed after %d retries", MAX_RETRIES);
-          }
-        }
-      }
-    }
-
-    // Send queued commands during init
-    if (!this->command_queue_.empty()) {
-      if (now - this->last_command_timestamp_ > COMMAND_DELAY) {
-        this->send_raw_command_(this->command_queue_.front());
-        this->command_queue_.pop_front();
-      }
-    }
-
-    // Send heartbeats only during INIT_HEARTBEAT state
-    if (this->init_state_ == TuyaInitState::INIT_HEARTBEAT && this->command_queue_.empty()) {
-      if (this->expected_response_ != TuyaCommandType::HEARTBEAT) {
-        // FIX: Use 0x1C for heartbeat instead of 0x00 for v3 devices
-        this->send_raw_command_(TuyaCommand{
-          TuyaCommandType::HEARTBEAT,
-          std::vector<uint8_t>()
-        });
+  // Handle timeouts
+  if (this->expected_response_.has_value() && delay > RECEIVE_TIMEOUT) {
+    this->expected_response_.reset();
+    if (this->init_state_ != TuyaInitState::INIT_DONE) {
+      this->init_retries_++;
+      if (this->init_retries_ >= MAX_RETRIES) {
+        this->init_failed_ = true;
+        ESP_LOGE(TAG, "Initialization failed at init_state %u", static_cast<uint8_t>(this->init_state_));
       }
     }
   }
-  // After INIT_DONE: DO NOTHING - just process frames silently
+
+  // Send commands
+  if (delay > COMMAND_DELAY && !this->command_queue_.empty() && this->rx_message_.empty()) {
+    this->send_raw_command_(command_queue_.front());
+    if (!this->expected_response_.has_value())
+      this->command_queue_.erase(command_queue_.begin());
+  }
 }
 
 void Tuya::send_command_(const TuyaCommand &command) {
@@ -710,6 +1295,16 @@ void Tuya::force_set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value) {
 
 void Tuya::force_set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value) {
   this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::INTEGER, value, 4, true);
+}
+
+/// Set enum datapoint value (for select components)
+void Tuya::set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value) {
+  this->set_numeric_datapoint_value_(datapoint_id, TuyaDatapointType::ENUM, value, 1, false);
+}
+
+/// Set raw datapoint value (for binary_sensor, climate raw data)
+void Tuya::set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value) {
+  this->set_raw_datapoint_value_(datapoint_id, value, false);
 }
 
 void Tuya::send_datapoint_command_(uint8_t datapoint_id, TuyaDatapointType datapoint_type, const std::vector<uint8_t> &data) {

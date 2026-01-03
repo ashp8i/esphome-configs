@@ -11,6 +11,7 @@ CONF_IGNORE_MCU_UPDATE_ON_DATAPOINTS = "ignore_mcu_update_on_datapoints"
 CONF_ON_DATAPOINT_UPDATE = "on_datapoint_update"
 CONF_DATAPOINT_TYPE = "datapoint_type"
 CONF_STATUS_PIN = "status_pin"
+CONF_PROTOCOL_VERSION = "protocol_version"
 
 tuya_ns = cg.esphome_ns.namespace("tuya")
 TuyaDatapointType = tuya_ns.enum("TuyaDatapointType", is_class=True)
@@ -102,6 +103,7 @@ CONFIG_SCHEMA = (
                 },
                 extra_validators=assign_declare_id,
             ),
+            cv.Optional(CONF_PROTOCOL_VERSION): cv.one_of(0, 1, 3, int=True),
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
@@ -122,6 +124,8 @@ async def to_code(config):
     if CONF_IGNORE_MCU_UPDATE_ON_DATAPOINTS in config:
         for dp in config[CONF_IGNORE_MCU_UPDATE_ON_DATAPOINTS]:
             cg.add(var.add_ignore_mcu_update_on_datapoints(dp))
+    if CONF_PROTOCOL_VERSION in config:
+        cg.add(var.set_protocol_version_override(config[CONF_PROTOCOL_VERSION]))
     for conf in config.get(CONF_ON_DATAPOINT_UPDATE, []):
         trigger = cg.new_Pvariable(
             conf[CONF_TRIGGER_ID], var, conf[CONF_SENSOR_DATAPOINT]

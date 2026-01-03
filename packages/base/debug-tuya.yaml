@@ -1,7 +1,9 @@
 # Enable logging
 # Logger must be at least debug (default)
 logger:
-  level: debug
+  level: DEBUG
+  # level: VERBOSE
+  # level: VERY_VERBOSE
   baud_rate: 0
 
 ota:
@@ -12,14 +14,14 @@ ota:
 safe_mode:
 
 wifi:
-    ssid: !secret wifi_all_ssid
-    password: !secret wifi_all_password
+  ssid: !secret wifi_all_ssid
+  password: !secret wifi_all_password
 
-    # Enable fallback hotspot (captive portal) in case wifi connection fails
-    ap:
-      ssid: ${device_ssid} Fallback Hotspot
-      password: !secret ap_password
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${device_ssid} Fallback Hotspot
+    password: !secret ap_password
 
 network:
-    enable_ipv6: true
-    min_ipv6_addr_count: 2
+  enable_ipv6: true
+  min_ipv6_addr_count: 2

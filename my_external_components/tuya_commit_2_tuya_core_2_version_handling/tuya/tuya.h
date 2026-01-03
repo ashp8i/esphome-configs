@@ -3,6 +3,9 @@
 #include <cinttypes>
 #include <vector>
 #include <deque>
+#include <functional>
+#include <string>
+#include <cstddef>
 
 #include "esphome/core/component.h"
 #include "esphome/core/defines.h"
@@ -19,11 +22,18 @@ namespace tuya {
 
 using namespace uart;  // Add this
 
+enum TuyaInitType {
+  FULL_HANDSHAKE = 0,
+  PARTIAL_HANDSHAKE = 1,
+  HEARTBEAT_ONLY = 2,
+};  // ADD MISSING SEMICOLON
+
 enum TuyaInitState {
   INIT_HEARTBEAT = 0,
   INIT_PRODUCT = 1,
   INIT_CONF = 2,
-  INIT_DONE = 3,
+  INIT_WIFI_STATUS = 3,
+  INIT_DONE = 4,
 };
 
 enum TuyaDatapointType {
@@ -40,8 +50,8 @@ enum TuyaCommandType {
   PRODUCT_QUERY = 0x01,
   CONF_QUERY = 0x02,
   WIFI_STATE = 0x03,
-  DATAPOINT_DELIVER = 0x07,
-  DATAPOINT_REPORT_ASYNC = 0x07,
+  // Keep only one definition for 0x07
+  DATAPOINT_DELIVER = 0x07,  // This covers both cases
   DATAPOINT_REPORT_SYNC = 0x08,
   DATAPOINT_QUERY = 0x09,
   DATAPOINT_REPORT_ACK = 0x0A,
@@ -146,8 +156,31 @@ class Tuya : public Component, public uart::UARTDevice {
   void set_string_datapoint_value(uint8_t datapoint_id, const std::string &value);
   void force_set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value);
   void force_set_integer_datapoint_value(uint8_t datapoint_id, uint32_t value);
+  // Additional Public Methods for Complete API Coverage
+  /// Set enum datapoint value (for select, climate modes, cover position)
+  void set_enum_datapoint_value(uint8_t datapoint_id, uint8_t value);
+  /// Set raw datapoint value (for binary_sensor, climate raw data)
+  void set_raw_datapoint_value(uint8_t datapoint_id, const std::vector<uint8_t> &value);
+    // Add override capability
+  void set_protocol_version_override(uint8_t version) {
+    this->protocol_version_override_ = version;
+  }
 
  protected:
+  // Add these new members - REMOVED DUPLICATE DECLARATIONS
+  TuyaInitType init_type_{TuyaInitType::FULL_HANDSHAKE};
+  uint32_t last_heartbeat_time_{0};
+
+  // ADD THIS LINE - This member variable was missing
+  uint8_t protocol_version_override_{0xFF};  // 0xFF = auto-detect, 0/1/3 = forced
+
+  // Add method declarations
+  void start_initialization_();
+  void handle_initialization_();
+  void complete_initialization_(TuyaInitType init_type);
+  void setup_heartbeat_interval_();
+  bool has_received_heartbeats_();
+
   // Internal methods
   void process_input_buffer_();
   void process_frames_();
@@ -172,7 +205,7 @@ class Tuya : public Component, public uart::UARTDevice {
 
   // State management
   optional<TuyaCommandType> expected_response_;
-  std::deque<uint8_t> rx_message_;
+  std::vector<uint8_t> rx_message_;
   std::deque<TuyaCommand> command_queue_;
   std::vector<TuyaDatapoint> datapoints_;
   std::vector<TuyaDatapointListener> listeners_;
@@ -202,7 +235,23 @@ class Tuya : public Component, public uart::UARTDevice {
   bool time_sync_callback_registered_{false};
 #endif
   // bool frames_processed_{false};
-};
+  // ADD THESE METHODS RIGHT AFTER the existing private methods
+  void process_init_step_();           // NEW: Non-blocking init processing
+  size_t find_frame_header();
+  bool validate_frame(const std::vector<uint8_t>& frame);
+  bool is_valid_tuya_command(uint8_t command);
 
+  // Add method declarations
+  void detect_protocol_version_();
+  void handle_v3_initialization_();
+  void handle_v0_v1_initialization_();
+  bool protocol_detected_{false};
+
+  size_t last_buffer_size_{0};
+  uint8_t last_protocol_version_{0xFF};
+  TuyaCommandType last_expected_response_{TuyaCommandType::HEARTBEAT};
+  bool logged_no_data_{false};
+
+};
 }  // namespace tuya
 }  // namespace esphome

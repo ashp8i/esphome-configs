@@ -52,7 +52,7 @@ uart:
 tuya:
   uart_id: mcu
   # protocol_version: 0
-  protocol_version: 3
+  # protocol_version: 3
 
 time:
 

@@ -325,27 +325,35 @@ void Tuya::handle_v3_initialization_() {
 }
 
 void Tuya::detect_protocol_version_() {
-  // Check if we have an override
-  if (this->protocol_version_override_ != 0xFF) {
-    this->protocol_version_ = this->protocol_version_override_;
-    ESP_LOGI(TAG, "Protocol version forced to: %u", this->protocol_version_);
-    return;
-  }
-
-  // Auto-detect based on received commands
+  // Auto-detect based on what the device actually sends
   if (this->protocol_version_ != 0xFF) {
-    // Already detected
-    return;
+    return; // Already detected
   }
 
-  // If we receive a v3 heartbeat (0x1C), force v3
-  // If we receive a v0/v1 heartbeat (0x00), force v0/v1
-  // If no commands received after timeout, default to v0/v1 (which you know works)
+  // Look for v3 heartbeats (0x1C) - indicates v3 device
+  if (this->rx_message_.size() >= 7) {
+    for (size_t i = 0; i < this->rx_message_.size() - 6; i++) {
+      if (this->rx_message_[i] == 0x55 &&
+          this->rx_message_[i+1] == 0xAA &&
+          this->rx_message_[i+3] == 0x1C) {
+        this->protocol_version_ = 3;
+        ESP_LOGI(TAG, "Auto-detected v3 device from 0x1C heartbeats");
+        return;
+      }
+    }
+  }
 
-  if (millis() - this->handshake_start_time_ > 3000) {
-    // 3 second timeout for auto-detection
-    this->protocol_version_ = 0;  // Default to v0/v1 (reliable)
-    ESP_LOGI(TAG, "Protocol auto-detection timeout - defaulting to v0/v1");
+  // Look for v0/v1 heartbeats (0x00) - indicates v0/v1 device
+  if (this->rx_message_.size() >= 7) {
+    for (size_t i = 0; i < this->rx_message_.size() - 6; i++) {
+      if (this->rx_message_[i] == 0x55 &&
+          this->rx_message_[i+1] == 0xAA &&
+          this->rx_message_[i+3] == 0x00) {
+        this->protocol_version_ = 0;
+        ESP_LOGI(TAG, "Auto-detected v0/v1 device from 0x00 heartbeats");
+        return;
+      }
+    }
   }
 }
 
@@ -994,8 +1002,21 @@ void Tuya::send_raw_command_(TuyaCommand command) {
   ESP_LOGD(TAG, "=== SENDING COMMAND ===");
   ESP_LOGD(TAG, "  Command: 0x%02X (%s)", (uint8_t)command.cmd,
            command_type_to_string(command.cmd).c_str());
-  ESP_LOGD(TAG, "  Protocol Version: %u", this->protocol_version_);
-  ESP_LOGD(TAG, "  Using Version: %u", (this->protocol_version_ == 0xFF) ? 0x00 : this->protocol_version_);
+
+  // CORRECT THE PROTOCOL VERSION LOGIC
+  uint8_t version;
+  if (this->protocol_version_override_ != 0xFF) {
+    version = this->protocol_version_override_;  // Use override version
+    ESP_LOGD(TAG, "  Protocol Version: Override forced to %u", version);
+  } else if (this->protocol_version_ != 0xFF) {
+    version = this->protocol_version_;  // Use detected version
+    ESP_LOGD(TAG, "  Protocol Version: Auto-detected %u", version);
+  } else {
+    version = 0x00;  // Default to v0
+    ESP_LOGD(TAG, "  Protocol Version: Defaulting to 0");
+  }
+
+  ESP_LOGD(TAG, "  Using Version: %u", version);
   ESP_LOGD(TAG, "  Payload Size: %zu", command.payload.size());
   ESP_LOGD(TAG, "  Dual-purpose 0x07: %s", (command.cmd == TuyaCommandType::DATAPOINT_DELIVER) ? "YES" : "NO");
   ESP_LOGD(TAG, "======================");
@@ -1005,7 +1026,7 @@ void Tuya::send_raw_command_(TuyaCommand command) {
 
   // Handle protocol-specific command mapping
   if (command.cmd == TuyaCommandType::HEARTBEAT) {
-    if (this->protocol_version_ == 3) {
+    if (version == 3) {
       cmd_byte = 0x1C;  // v3 heartbeat
       ESP_LOGD(TAG, "SENDING V3 HEARTBEAT: 0x%02X", cmd_byte);
     } else {
@@ -1018,7 +1039,6 @@ void Tuya::send_raw_command_(TuyaCommand command) {
 
   uint8_t len_hi = (uint8_t) (command.payload.size() >> 8);
   uint8_t len_lo = (uint8_t) (command.payload.size() & 0xFF);
-  uint8_t version = (this->protocol_version_ == 0xFF) ? 0x00 : this->protocol_version_;
 
   this->last_command_timestamp_ = millis();
 

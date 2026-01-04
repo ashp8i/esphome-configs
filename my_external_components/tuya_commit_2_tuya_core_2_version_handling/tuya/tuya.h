@@ -252,6 +252,16 @@ class Tuya : public Component, public uart::UARTDevice {
   TuyaCommandType last_expected_response_{TuyaCommandType::HEARTBEAT};
   bool logged_no_data_{false};
 
+  // Add these new helper methods:
+  bool has_v3_heartbeat_response_();
+  bool has_v3_product_response_();
+  bool has_v3_config_response_();
+
+  // Add these new member variables:
+  bool received_v3_heartbeat_since_last_command_;
+  bool received_v3_product_response_since_last_command_;
+  bool received_v3_config_response_since_last_command_;
+
 };
 }  // namespace tuya
 }  // namespace esphome

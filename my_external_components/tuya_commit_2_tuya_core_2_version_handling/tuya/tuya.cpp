@@ -737,18 +737,32 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
   // Rest of the switch statement...
   switch (command) {
     case TuyaCommandType::PRODUCT_QUERY: {
-      // FIX: Handle both JSON and plain text responses
+      // ADD THIS BLOCK - Debug raw response
+      ESP_LOGD(TAG, "=== PRODUCT QUERY RESPONSE ===");
+      ESP_LOGD(TAG, "  Raw data: %s", format_hex_pretty(buffer, len).c_str());
+      ESP_LOGD(TAG, "  As string: '%.*s'", (int)len, buffer);
+
+      // Check for common JSON patterns
+      bool starts_with_brace = (len > 0 && buffer[0] == '{');
+      bool ends_with_brace = (len > 0 && buffer[len-1] == '}');
+      bool has_quotes = (len > 0 && std::find(buffer, buffer + len, '"') != buffer + len);
+
+      ESP_LOGD(TAG, "  JSON indicators: starts_with_brace=%s, ends_with_brace=%s, has_quotes=%s",
+              starts_with_brace ? "YES" : "NO",
+              ends_with_brace ? "YES" : "NO",
+              has_quotes ? "YES" : "NO");
+
+      // Try multiple parsing approaches
       std::string product_data(reinterpret_cast<const char *>(buffer), len);
 
-      // Check if it's a JSON response
+      // Method 1: JSON parsing
       bool is_json = (len >= 2 && buffer[0] == '{' && buffer[len-1] == '}');
-
       if (is_json) {
-        // JSON response - use as-is
         this->product_ = product_data;
         ESP_LOGD(TAG, "JSON product data: %s", product_data.c_str());
-      } else {
-        // Plain text response - validate printable chars
+      }
+      // Method 2: Plain text validation
+      else {
         bool valid = true;
         for (size_t i = 0; i < len; i++) {
           if (!std::isprint(buffer[i])) {
@@ -756,14 +770,19 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
             break;
           }
         }
-        if (valid) {
+        if (valid && len > 0) {
           this->product_ = product_data;
           ESP_LOGD(TAG, "Plain product data: %s", product_data.c_str());
-        } else {
-          this->product_ = "UNKNOWN";
-          ESP_LOGW(TAG, "Invalid product data received");
+        }
+        // Method 3: Fallback if parsing fails
+        else {
+          this->product_ = "unknown_v3_device";
+          ESP_LOGW(TAG, "Product parsing failed, using fallback");
         }
       }
+
+      ESP_LOGD(TAG, "  Final product value: '%s'", this->product_.c_str());
+      ESP_LOGD(TAG, "=============================");
 
       if (this->init_state_ == TuyaInitState::INIT_PRODUCT) {
         this->init_state_ = TuyaInitState::INIT_CONF;
@@ -771,6 +790,7 @@ void Tuya::handle_command_(uint8_t command, uint8_t version, const uint8_t *buff
       }
       break;
     }
+
 
     case TuyaCommandType::CONF_QUERY: {
       // Parse status and reset pins if provided
@@ -995,6 +1015,99 @@ void Tuya::handle_datapoints_(const uint8_t *buffer, size_t len) {
 //     checksum += data;
 //   }
 //   this->write_byte(checksum);
+// }
+
+// void Tuya::send_raw_command_(TuyaCommand command) {
+//   // ADD THIS BLOCK - Debug what we're sending
+//   ESP_LOGD(TAG, "=== SENDING COMMAND ===");
+//   ESP_LOGD(TAG, "  Command: 0x%02X (%s)", (uint8_t)command.cmd,
+//            command_type_to_string(command.cmd).c_str());
+
+//   // CORRECT THE PROTOCOL VERSION LOGIC
+//   uint8_t version;
+//   if (this->protocol_version_override_ != 0xFF) {
+//     version = this->protocol_version_override_;  // Use override version
+//     ESP_LOGD(TAG, "  Protocol Version: Override forced to %u", version);
+//   } else if (this->protocol_version_ != 0xFF) {
+//     version = this->protocol_version_;  // Use detected version
+//     ESP_LOGD(TAG, "  Protocol Version: Auto-detected %u", version);
+//   } else {
+//     version = 0x00;  // Default to v0
+//     ESP_LOGD(TAG, "  Protocol Version: Defaulting to 0");
+//   }
+
+//   ESP_LOGD(TAG, "  Using Version: %u", version);
+//   ESP_LOGD(TAG, "  Payload Size: %zu", command.payload.size());
+//   ESP_LOGD(TAG, "  Dual-purpose 0x07: %s", (command.cmd == TuyaCommandType::DATAPOINT_DELIVER) ? "YES" : "NO");
+//   ESP_LOGD(TAG, "======================");
+
+//   // DECLARE cmd_byte ONCE HERE
+//   uint8_t cmd_byte = (uint8_t) command.cmd;
+
+//   // Handle protocol-specific command mapping
+//   if (command.cmd == TuyaCommandType::HEARTBEAT) {
+//     if (version == 3) {
+//       cmd_byte = 0x1C;  // v3 heartbeat
+//       ESP_LOGD(TAG, "SENDING V3 HEARTBEAT: 0x%02X", cmd_byte);
+//     } else {
+//       cmd_byte = 0x00;  // v0/v1 heartbeat
+//       ESP_LOGD(TAG, "SENDING V0/V1 HEARTBEAT: 0x%02X", cmd_byte);
+//     }
+//   }
+
+//   ESP_LOGD(TAG, "  Final Cmd Byte: 0x%02X", cmd_byte);
+
+//   uint8_t len_hi = (uint8_t) (command.payload.size() >> 8);
+//   uint8_t len_lo = (uint8_t) (command.payload.size() & 0xFF);
+
+//   this->last_command_timestamp_ = millis();
+
+//   // Set expected response with dual-purpose awareness
+//   switch (command.cmd) {
+//     case TuyaCommandType::HEARTBEAT:
+//       this->expected_response_ = TuyaCommandType::HEARTBEAT;
+//       break;
+//     case TuyaCommandType::PRODUCT_QUERY:
+//       this->expected_response_ = TuyaCommandType::PRODUCT_QUERY;
+//       break;
+//     case TuyaCommandType::CONF_QUERY:
+//       this->expected_response_ = TuyaCommandType::CONF_QUERY;
+//       break;
+//     case TuyaCommandType::DATAPOINT_DELIVER:
+//     case TuyaCommandType::DATAPOINT_QUERY:
+//       // For 0x07, expect either DATAPOINT_DELIVER or DATAPOINT_REPORT_ASYNC response
+//       this->expected_response_ = TuyaCommandType::DATAPOINT_DELIVER;
+//       break;
+//     case TuyaCommandType::GET_NETWORK_STATUS:
+//       this->expected_response_ = TuyaCommandType::GET_NETWORK_STATUS;
+//       break;
+//     default:
+//       break;
+//   }
+
+//   ESP_LOGV(TAG, "Sending Tuya: CMD=0x%02X VERSION=%u DATA=[%s] INIT_STATE=%u",
+//            cmd_byte, version, format_hex_pretty(command.payload).c_str(),
+//            static_cast<uint8_t>(this->init_state_));
+
+//   // ADD THIS BLOCK - Log raw bytes being sent
+//   ESP_LOGD(TAG, "RAW TX: 55:AA:%02X:%02X:%02X:%02X",
+//            version, cmd_byte, len_hi, len_lo);
+
+//   this->write_array({0x55, 0xAA, version, cmd_byte, len_hi, len_lo});
+
+//   // ADD THIS BLOCK - Log payload if present
+//   if (!command.payload.empty()) {
+//     ESP_LOGD(TAG, "RAW TX PAYLOAD: %s", format_hex_pretty(command.payload).c_str());
+//     this->write_array(command.payload.data(), command.payload.size());
+//   }
+
+//   uint8_t checksum = 0x55 + 0xAA + cmd_byte + len_hi + len_lo;
+//   for (auto &data : command.payload)
+//     checksum += data;
+//   this->write_byte(checksum);
+
+//   // ADD THIS BLOCK - Log final checksum
+//   ESP_LOGD(TAG, "RAW TX CHECKSUM: %02X", checksum);
 // }
 
 void Tuya::send_raw_command_(TuyaCommand command) {

@@ -1,0 +1,188 @@
+{
+  "sensor.passage.yaml": {
+    "mac_address": "48:27:E2:AB:BF:88"
+  },
+  "light.livingspots.yaml": {
+    "mac_address": "10:91:A8:03:5E:58"
+  },
+  "light.master2.yaml": {
+    "mac_address": "48:27:E2:A8:25:0C"
+  },
+  "cover.living.yaml": {
+    "mac_address": "DC:54:75:CA:FB:40"
+  },
+  "relay.chime.yaml": {
+    "mac_address": "44:17:93:A6:7D:2C"
+  },
+  "switch.front.yaml": {
+    "mac_address": "0C:DC:7E:F6:97:B0"
+  },
+  "radio.bedroom3thread.yaml": {
+    "mac_address": "40:4C:CA:41:F7:48"
+  },
+  "light.kitchencounter2.yaml": {
+    "mac_address": "A0:76:4E:4E:6A:74"
+  },
+  "relay.toilet.yaml": {
+    "mac_address": "44:17:93:AD:51:80"
+  },
+  "light.stairs.yaml": {
+    "mac_address": "7C:DF:A1:40:CF:6E"
+  },
+  "switch.master.yaml": {
+    "mac_address": "08:3A:F2:00:F1:2C"
+  },
+  "light.bathroom.yaml": {
+    "mac_address": "A0:76:4E:4E:7A:70"
+  },
+  "light.bedroom3.yaml": {
+    "mac_address": "90:38:0C:EA:CB:EC"
+  },
+  "light.miteshspot2.yaml": {
+    "mac_address": "4C:EB:D6:02:4A:D4"
+  },
+  "light.miteshspot3.yaml": {
+    "mac_address": "D8:F1:5B:FE:D7:06"
+  },
+  "light.miteshspot4.yaml": {
+    "mac_address": "D8:F1:5B:FE:D6:55"
+  },
+  "light.miteshspot5.yaml": {
+    "mac_address": "D8:F1:5B:FE:D4:52"
+  },
+  "light.miteshspot1.yaml": {
+    "mac_address": "D8:F1:5B:FE:D4:58"
+  },
+  "sensor.front-entrance.yaml": {
+    "mac_address": "84:F7:03:3A:01:08"
+  },
+  "light.front-porch.yaml": {
+    "mac_address": "10:91:A8:02:36:C4"
+  },
+  "light.lower-loft-stairs.yaml": {
+    "mac_address": "10:91:A8:00:7E:38"
+  },
+  "switch.loft.yaml": {
+    "mac_address": "08:3A:F2:00:E4:20"
+  },
+  "switch.mitesh.yaml": {
+    "mac_address": "A8:03:2A:B0:D2:90"
+  },
+  "relay.bathroom-wall.yaml": {
+    "mac_address": "48:55:19:9D:30:44"
+  },
+  "light.front-passage2.yaml": {
+    "mac_address": "10:91:A8:00:4B:B0"
+  },
+  "light.front-entrance.yaml": {
+    "mac_address": "10:91:A8:03:47:F8"
+  },
+  "relay.bath-entrance.yaml": {
+    "mac_address": "48:55:19:9C:C3:C0"
+  },
+  "light.kitchencounter1.yaml": {
+    "mac_address": "A0:76:4E:4E:5B:48"
+  },
+  "switch.passage1.yaml": {
+    "mac_address": "A8:03:2A:B6:27:BC"
+  },
+  "switch.passage2.yaml": {
+    "mac_address": "0C:DC:7E:F6:78:C8"
+  },
+  "light.front-passage1.yaml": {
+    "mac_address": "10:91:A8:02:57:54"
+  },
+  "sensor.bathroom.yaml": {
+    "mac_address": "08:3A:8D:20:36:B4"
+  },
+  "relay.bathroom.yaml": {
+    "mac_address": "44:17:93:AC:C6:58"
+  },
+  "switch.living.yaml": {
+    "mac_address": "30:30:F9:EC:E5:B4"
+  },
+  "light.store.yaml": {
+    "mac_address": "48:27:E2:AA:33:54"
+  },
+  "light.mandir.yaml": {
+    "mac_address": "48:27:E2:AB:C0:50"
+  },
+  "switch.stairs2.yaml": {
+    "mac_address": "0C:DC:7E:F6:9C:D4"
+  },
+  "light.living.yaml": {
+    "mac_address": "48:27:E2:AB:BF:60"
+  },
+  "switch.stairs1.yaml": {
+    "mac_address": "90:38:0C:37:FE:68"
+  },
+  "switch.dining.yaml": {
+    "mac_address": "30:30:F9:EC:F7:F8"
+  },
+  "light.bedroom2light2.yaml": {
+    "mac_address": "60:55:F9:92:25:A4"
+  },
+  "cover.dining.yaml": {
+    "mac_address": "DC:54:75:CA:FA:98"
+  },
+  "light.bedroom2light1.yaml": {
+    "mac_address": "60:55:F9:92:81:98"
+  },
+  "switch.stairs3.yaml": {
+    "mac_address": "A8:03:2A:B6:28:D8"
+  },
+  "switch.bedroom2switch1.yaml": {
+    "mac_address": "08:3A:F2:00:E3:E8"
+  },
+  "light.dining.yaml": {
+    "mac_address": "48:27:E2:AB:C0:5C"
+  },
+  "light.bedroom2.yaml": {
+    "mac_address": "84:F7:03:3A:35:18"
+  },
+  "light.bedroom2light5.yaml": {
+    "mac_address": "60:55:F9:92:71:08"
+  },
+  "light.bedroom2light3.yaml": {
+    "mac_address": "60:55:F9:92:59:88"
+  },
+  "sensor.stairs.yaml": {
+    "mac_address": "48:27:E2:AB:C0:7C"
+  },
+  "light.diningspots.yaml": {
+    "mac_address": "10:91:A8:03:39:08"
+  },
+  "switch.bedroom2switch2.yaml": {
+    "mac_address": "08:3A:F2:01:45:E4"
+  },
+  "light.bedroom2light4.yaml": {
+    "mac_address": "60:55:F9:91:CC:94"
+  },
+  "light.kitchenspots.yaml": {
+    "mac_address": "48:27:E2:A8:22:98"
+  },
+  "switch.bedroom3.yaml": {
+    "mac_address": "A8:03:2A:B6:0F:74"
+  },
+  "sensor.store.yaml": {
+    "mac_address": "A0:B7:65:E4:BF:BC"
+  },
+  "light.bedroom2light6.yaml": {
+    "mac_address": "60:55:F9:92:35:88"
+  },
+  "light.firstfloorestoreroom.yaml": {
+    "mac_address": "A0:76:4E:4B:EB:28"
+  },
+  "sensor.toilet.yaml": {
+    "mac_address": "08:3A:8D:21:0D:48"
+  },
+  "_remote_build": {
+    "dashboard_id": "9bYsME_hx5tCSz1YUuOU0A61JP3f_BYw"
+  },
+  "light.master1.yaml": {
+    "mac_address": "84:F7:03:52:C9:18"
+  },
+  "light.upper-loft-stairs.yaml": {
+    "mac_address": "10:91:A8:03:9A:40"
+  }
+}

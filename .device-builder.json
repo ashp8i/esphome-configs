@@ -184,5 +184,8 @@
   },
   "light.upper-loft-stairs.yaml": {
     "mac_address": "10:91:A8:03:9A:40"
+  },
+  "light.rgbcctpanel1.yaml": {
+    "mac_address": "48:27:E2:AB:C0:68"
   }
 }

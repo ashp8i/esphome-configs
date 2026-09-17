@@ -6,7 +6,7 @@ substitutions:
   friendly_name_rgb: "Store RGB"    # Put the name that you want to see in Home Assistant.
   device_id_white: "store"    # Put the name that you want to see in Home Assistant.
   rgb_device_id: "storergb" # Put the name that you want to see in Home Assistant.
-  external_udp_ip: 10.100.
+  external_udp_ip: 10.100.1.1
   udp_provider_device_name_1: storesensor
   udp_consumer_key_1: !secret udp_key_2
   udp_provider_key_1: !secret udp_key_1

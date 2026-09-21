@@ -3,11 +3,6 @@
 logger:
   level: debug
 
-ota:
-  - platform: esphome
-    version: 2
-    password: !secret ota_password
-
 safe_mode:
 
 wifi:

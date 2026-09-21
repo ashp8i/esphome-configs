@@ -12,7 +12,6 @@ esphome:
     version: "${project_version}"
 
 esp32:
-  board: esp32doit-devkit-v1
   variant: esp32
   framework:
     type: esp-idf
@@ -20,14 +19,13 @@ esp32:
       CONFIG_FREERTOS_UNICORE: y
       CONFIG_ESP32_DEFAULT_CPU_FREQ_160: y
       CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ: "160"
-    # type: arduino
-    # platform_version: 5.2.0
 
-external_components:
-  - source: github://pr#7942
-    refresh: 30s
-    components:
-      - adc
+
+# external_components:
+#  - source: github://pr#7942
+#    refresh: 30s
+#    components:
+#      - adc
 
 captive_portal:
 
@@ -36,6 +34,7 @@ web_server:
   auth:
     username: admin
     password: !secret web_server_password
+    type: digest
   include_internal: true
   # local: true
 

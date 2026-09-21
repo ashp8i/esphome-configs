@@ -6,10 +6,6 @@ logger:
   logs:
     onewirebus.component: VERBOSE
 
-ota:
-  - platform: esphome
-    version: 2
-    password: !secret ota_password
 
 safe_mode:
 

@@ -1,15 +1,20 @@
 # Enable logging
 # Logger must be at least debug (default)
 logger:
-  baud_rate: 0
+  level: debug
 
+ota:
+  - platform: esphome
+    allow_partition_access: true
+    version: 2
+    password: !secret ota_password
 
 safe_mode:
 
 wifi:
+    power_save_mode: none
     ssid: !secret wifi_all_ssid
     password: !secret wifi_all_password
-    use_address: toiletrelay.local
 
     # Enable fallback hotspot (captive portal) in case wifi connection fails
     ap:

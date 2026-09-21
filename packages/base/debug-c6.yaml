@@ -5,8 +5,9 @@
 
 ota:
   - platform: esphome
+    allow_partition_access: true
     version: 2
-    password: !secret ota_password
+    encryption:
 
 safe_mode:
 

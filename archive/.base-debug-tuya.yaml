@@ -4,10 +4,6 @@ logger:
   level: debug
   baud_rate: 0
 
-ota:
-  - platform: esphome
-    version: 2
-    password: !secret ota_password
 
 safe_mode:
 

@@ -20,6 +20,7 @@ web_server:
   auth:
     username: admin
     password: !secret web_server_password
+    type: digest
   include_internal: true
   # local: true
 

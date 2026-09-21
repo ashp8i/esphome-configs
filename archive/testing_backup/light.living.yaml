@@ -28,10 +28,6 @@ api:
 logger:
   level: debug
 
-ota:
-  - platform: esphome
-    version: 2
-    password: !secret ota_password
 
 safe_mode:
 
@@ -68,6 +64,7 @@ web_server:
   auth:
     username: admin
     password: !secret web_server_password
+    type: digest
   include_internal: true
   # local: true
 
@@ -722,7 +719,7 @@ sensor:
         - text_sensor.template.publish:
             id: uptime_human
             state: !lambda |-
-              int seconds = round(id(uptime_sensor).raw_state);
+              int seconds = round(id(uptime_sensor).get_raw_state());
               int days = seconds / (24 * 3600);
               seconds = seconds % (24 * 3600);
               int hours = seconds / 3600;

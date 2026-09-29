@@ -10,6 +10,7 @@ substitutions:
   # Lower value gives lower voltage readout
   voltage_div: "1925"
   chime_icon: "mdi:bell-ring"
+  api_key: !secret toiletrelay_noise_key
   project_name: "shelly.shellyplus1pm-relay-chime-arduino"
   project_version: "1.0"
 

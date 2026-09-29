@@ -15,8 +15,8 @@ substitutions:
   project_version: "1.0"
 
 packages:
-#  - !include packages/base/debug.yaml
-  - !include packages/base/debug-ota-enc-enabled.yaml
+  - !include packages/base/debug.yaml
+#  - !include packages/base/debug-ota-enc-enabled.yaml
   - !include packages/devices/relay.shelly-plus-1pm-solo-chime.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml

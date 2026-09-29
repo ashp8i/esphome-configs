@@ -103,7 +103,7 @@ light:
     effects:
       - lambda:
           name: DDP
-          update_interval: 0s
+          update_interval: 1ms
           lambda: |-
             // our statics
             static float scaled_r = 0.0;

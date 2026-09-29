@@ -42,6 +42,7 @@ sensor:
       - above: "80.0"
         then:
           - light.turn_off: ${device_id}
+          
   - platform: resistance
     id: temp_resistance_reading
     sensor: temp_analog_reading

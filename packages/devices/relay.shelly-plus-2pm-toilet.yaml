@@ -20,12 +20,6 @@ esp32:
       CONFIG_ESP32_DEFAULT_CPU_FREQ_160: y
       CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ: "160"
 
-external_components:
-  - source: github://pr#7942
-    refresh: 30s
-    components:
-      - adc
-
 captive_portal:
 
 web_server:

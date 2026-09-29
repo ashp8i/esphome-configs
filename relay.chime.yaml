@@ -14,12 +14,6 @@ substitutions:
   project_name: "shelly.shellyplus1pm-relay-chime-arduino"
   project_version: "1.0"
 
-# Enable Home Assistant API
-api:
-  encryption:
-    key: !secret chime_noise_key
-  reboot_timeout: 0s
-
 packages:
 #  - !include packages/base/debug.yaml
   - !include packages/base/debug-ota-enc-enabled.yaml

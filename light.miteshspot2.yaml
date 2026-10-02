@@ -21,7 +21,7 @@ substitutions:
   frequency_ww: 1000 Hz
 
 packages:
-#  - !include packages/base/debug-ota-enc-enabled.yaml
+  - !include packages/base/debug-ota-enc-enabled.yaml
 #  - !include packages/base/production-esp8266.yaml
   - !include packages/devices/bulb.athom-gu10.yaml
   - !include packages/automation/light-mqtt-4-button-rgbcct.yaml

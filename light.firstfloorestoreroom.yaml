@@ -10,7 +10,8 @@ substitutions:
   project_version: "1.0"
 
 packages:
-  - !include packages/base/debug-tuya.yaml
+  - !include packages/base/debug-ota-enc-enabled.yaml
+#  - !include packages/base/debug-tuya.yaml
   - !include packages/devices/light.miboxer-fut-035w-esp32-c3.yaml    
 #  - !include packages/devices/light.miboxer-fut-035w-esp32-c3-pr-test.yaml
   - !include packages/common/api.yaml

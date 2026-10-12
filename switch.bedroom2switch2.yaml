@@ -18,4 +18,5 @@ packages:
   - !include packages/common/sensor-die-temp.yaml
   - !include packages/common/button.yaml
   - !include packages/common/text-sensor.yaml
-  - !include packages/binary-sensor/shelly-i4-4-buttons-http-auth.yaml
+#  - !include packages/binary-sensor/shelly-i4-4-buttons-http-auth.yaml
+  - !include packages/binary-sensor/shelly-i4-4-buttons-fallback.yaml

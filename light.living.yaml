@@ -1,11 +1,11 @@
 substitutions:
-  name: "living1"
-  device_ssid: "Living Panel 1"
+  name: "living"
+  device_ssid: "Living Centre"
   device_description: "Tuya 40W RGBCCT Panel ESP32-C3"
   friendly_name: "Living"    # Put the name that you want to see in Home Assistant.
   friendly_name_rgb: "Living RGB"    # Put the name that you want to see in Home Assistant.
-  device_id_white: "livinglight1"    # Put the name that you want to see in Home Assistant.
-  rgb_device_id: "livinglight1rgb" # Put the name that you want to see in Home Assistant.
+  device_id_white: "livinglight"    # Put the name that you want to see in Home Assistant.
+  rgb_device_id: "livinglightrgb" # Put the name that you want to see in Home Assistant.
   # switch1b1_topic: bedroom2switch2/button/1/command
   # switch1b2_topic: bedroom2switch2/button/2/command
   # switch1b3_topic: bedroom2switch2/button/3/command

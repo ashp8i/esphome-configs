@@ -9,6 +9,7 @@ substitutions:
 
 packages:
   - !include packages/base/debug.yaml
+#  - !include packages/base/debug-ota-enc-enabled.yaml
   - !include packages/devices/switch.shelly-plus-i4-gen3.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml

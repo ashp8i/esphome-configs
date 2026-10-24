@@ -12,8 +12,8 @@ ota:
 safe_mode:
 
 wifi:
-    ssid: !secret wifi_all_ssid
-    password: !secret wifi_all_password
+    ssid: !secret wifi_iot_ssid
+    password: !secret wifi_iot_password
 
     # Enable fallback hotspot (captive portal) in case wifi connection fails
     ap:

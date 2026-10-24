@@ -3,7 +3,7 @@
   "theme": "system",
   "navigator_visible": true,
   "device_editor_layout": "both",
-  "secrets_editor_layout": "visual",
+  "secrets_editor_layout": "yaml",
   "table_page_size": 25,
   "table_column_visibility": {},
   "table_sort_column": null,

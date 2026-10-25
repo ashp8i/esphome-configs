@@ -21,7 +21,7 @@ substitutions:
   project_version: "1.0"
 
 packages:
-  - !include packages/base/debug.yaml
+  - !include packages/base/production.yaml
   - !include packages/devices/light.offdarks-lxd-xgp-28w-esp32.yaml
   - !include packages/global/rgbcct.yaml
   - !include packages/automation/light-mqtt-4-button-rgbcct.yaml

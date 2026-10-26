@@ -11,12 +11,12 @@ esp32:
   framework: 
     type: arduino
 
-external_components:
-  - source:
-      type: git
-      url: https://github.com/KaufHA/common
-    components: [ ddp ]
-    refresh: always
+#external_components:
+#  - source:
+#      type: git
+#      url: https://github.com/KaufHA/common
+#    components: [ ddp ]
+#    refresh: always
 
 captive_portal:
 
@@ -58,7 +58,7 @@ output:
 
 # wled:
 
-ddp:
+#ddp:
 
 # e131:
 #   method: multicast # default: register E1.31 to Multicast group
@@ -94,11 +94,11 @@ light:
         value: '2'
     icon: "${light_icon_2}"
     effects:
-      - ddp:
-          name: DDP
-          timeout: 10s
-          disable_gamma: true
-          brightness_scaling: none
+#      - ddp:
+#          name: DDP
+#          timeout: 10s
+#          disable_gamma: true
+#          brightness_scaling: none
       # - wled:
       #     # port: 21324
       # - e131:

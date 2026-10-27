@@ -16,7 +16,7 @@ substitutions:
   project_version: "1.0"
 
 packages:
-  - !include packages/base/debug-tuya.yaml
+  - !include packages/base/production.yaml
   - !include packages/devices/sensor.zy-m100-esp32-c3-pr-test.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml

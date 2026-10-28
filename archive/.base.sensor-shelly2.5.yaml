@@ -2,7 +2,7 @@ sensor:
   # WiFi Signal sensor.
   - platform: wifi_signal
     name: ${friendly_name} Signal strength
-    update_interval: 60s
+    update_interval: 300s
     internal: true
   # Uptime Sensor
   - platform: uptime
@@ -39,9 +39,15 @@ sensor:
       name: ${friendly_name} Current A
     active_power_a:
       name: ${friendly_name} Active Power B
+      filters:
+        - delta: 2.0
+        - throttle: 30s
       # active_power_a is normal, so don't multiply by -1
     active_power_b:
       name: ${friendly_name} Active Power A
+      filters:
+        - delta: 2.0
+        - throttle: 30s
       # active_power_b is inverted, so multiply by -1
       filters:
         - multiply: -1

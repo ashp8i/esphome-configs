@@ -2,7 +2,7 @@ sensor:
   # WiFi Signal sensor.
   - platform: wifi_signal
     name: ${friendly_name} Signal strength
-    update_interval: 60s
+    update_interval: 300s
     internal: true
   # Uptime Sensor
   - platform: uptime
@@ -82,6 +82,9 @@ sensor:
       name: "${relay_2} Power"
       id: power_channel_2
       entity_category: 'diagnostic'
+      filters:
+        - delta: 2.0
+        - throttle: 30s
       # active_power_a is normal, so don't multiply by -1
       on_value_range:
         - above: ${max_power}
@@ -97,6 +100,9 @@ sensor:
       name: "${relay_1} Power"
       id: power_channel_1
       entity_category: 'diagnostic'
+      filters:
+        - delta: 2.0
+        - throttle: 30s
       # active_power_b is inverted, so multiply by -1
       filters:
         - multiply: -1

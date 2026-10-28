@@ -89,7 +89,7 @@ sensor:
   # WiFi Signal sensor.
   - platform: wifi_signal
     name: ${friendly_name} Signal strength
-    update_interval: 60s
+    update_interval: 300s
     internal: true
     
 text_sensor:

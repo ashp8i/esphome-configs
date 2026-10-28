@@ -11,7 +11,7 @@ text_sensor:
       name: ${friendly_name} SSID
     bssid:
       name: ${friendly_name} BSSID
-    # update_interval: 1h
+#    update_interval: 6h
   # Expose Uptime
   - platform: template
     name: ${friendly_name} Uptime Human Readable

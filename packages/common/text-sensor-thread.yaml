@@ -3,8 +3,10 @@ text_sensor:
   - platform: version
     name: ESPHome Version
     entity_category: DIAGNOSTIC
+#    update_interval: 6h
   # Expose Uptime
   - platform: template
     name: ${friendly_name} Uptime Human Readable
     id: uptime_human
     icon: mdi:clock-start
+#    update_interval: 6h

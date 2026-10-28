@@ -11,7 +11,7 @@ substitutions:
 
 packages:
   - !include packages/base/debug-tuya-verbose.yaml
-  - !include packages/devices/curtain.zemismart-bcm500ds-tyw-esp32-s3.yaml
+  - !include packages/devices/curtain.zemismart-bcm500ds-tyw-esp32-s3-tweaks.yaml
 #  - !include packages/devices/curtain.zemismart-bcm500ds-tyw-esp32-s3-pr.yaml
 #  - !include packages/button/curtain-diagnostic.yaml
   - !include packages/common/button.yaml

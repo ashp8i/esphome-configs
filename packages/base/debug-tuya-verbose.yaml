@@ -1,10 +1,19 @@
 # Enable logging
 # Logger must be at least debug (default)
+#logger:
+#  level: VERBOSE
+#  baud_rate: 0
+#  logs:
+#    tuya.component: VERBOSE
+
 logger:
-  level: VERBOSE
+  level: VERBOSE                 # <--- Ensure this matches framework log_level
+  hardware_uart: USB_SERIAL_JTAG # <--- Keep this (Tuya UART is busy)
   baud_rate: 0
   logs:
     tuya.component: VERBOSE
+    wifi: VERBOSE                # <--- Add explicit WiFi verbosity
+    esp_wifi: VERBOSE            # <--- Add IDF WiFi verbosity
 
 ota:
   - platform: esphome
@@ -14,14 +23,28 @@ ota:
 
 safe_mode:
 
-wifi:
-    ssid: !secret wifi_iot_ssid
-    password: !secret wifi_iot_password
+#wifi:
+#    ssid: !secret wifi_iot_ssid
+#    password: !secret wifi_iot_password
+#
+#    # Enable fallback hotspot (captive portal) in case wifi connection fails
+#    ap:
+#      ssid: ${device_ssid} Fallback Hotspot
+#      password: !secret ap_password
 
-    # Enable fallback hotspot (captive portal) in case wifi connection fails
-    ap:
-      ssid: ${device_ssid} Fallback Hotspot
-      password: !secret ap_password
+
+wifi:
+  output_power: 14dB             # <--- CHANGE: Match SDK config. Reduces VSWR stress in metal housing.
+  power_save_mode: "NONE"           # <--- CHANGE: Was LIGHT. Prevents sleep states during unstable connect.
+  fast_connect: false            # Force full handshake to verify new RF path.
+  ap:
+    ssid: ${device_ssid} Fallback Hotspot
+    password: !secret 'ap_password'
+    ap_timeout: 90s
+  networks:
+    - ssid: !secret 'wifi_iot_ssid'
+      password: !secret 'wifi_iot_password'
+      priority: 0
 
 network:
     enable_ipv6: true

@@ -1,5 +1,5 @@
 substitutions:
-  name: stairsensor
+  name: stairsmegasensor
   device_ssid: "Store Sensor"
   device_description: "Reed Switch Sensor ESP32 AC Relay Board Arduino"
   friendly_name: "Store" # Put the name that you want to see in Home Assistant.

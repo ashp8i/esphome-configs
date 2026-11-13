@@ -1,0 +1,34 @@
+substitutions:
+  name: toiletmegasensor
+  device_ssid: "Toilet Sensor"
+  device_description: "Toilet Mega Sensor ESP32-S3 Pico"
+  friendly_name: "Toilet Sensor" # Put the name that you want to see in Home Assistant.
+  presence_binary_sensor_id: ToiletMotion
+  # switch1b1_topic: ashishswitch1/button/1/command
+  # switch1b2_topic: ashishswitch1/button/2/command presence_binary_sensor_id: storeroompresence
+  #light_command_topic_1: store/light/store/command
+  #udp_consumer_device_name_1: store
+  #udp_consumer_key_1: !secret udp_key_1
+  #udp_provider_key_1: !secret udp_key_2
+  sensor_icon: "hue:ceiling-aurelle"
+  api_key: !secret toiletmegasensor_noise_key
+  project_name: "diy.ac_megasensor_rugged"
+  project_version: "1.0"
+
+packages:
+#  - !include packages/base/production.yaml
+  - !include packages/base/debug-ota-enc-enabled.yaml
+  - !include packages/devices/sensor.megasensor-esp32-s3-pico.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/button.yaml
+#  - !include packages/common/text-sensor.yaml
+  - !include packages/sensor/megasensor.yaml
+  - !include packages/text-sensor/megasensor.yaml
+#  - !include packages/button/hlk-ld2450.yaml
+#  - !include packages/number/hlk-ld2450.yaml
+#  - !include packages/select/hlk-ld2450.yaml
+#  - !include packages/sensor/hlk-ld2450.yaml
+#  - !include packages/switch/hlk-ld2450.yaml
+#  - !include packages/binary-sensor/hlk-ld2450.yaml
+#  - !include packages/text-sensor/hlk-ld2450.yaml

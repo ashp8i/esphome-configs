@@ -1,0 +1,52 @@
+# Device Specific Config
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  project:
+    name: "${project_name}"
+    version: "${project_version}"
+  platformio_options:
+    board_build.flash_mode: dio
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+captive_portal:
+
+web_server:
+  port: 80
+  # auth:
+  #   username: admin
+  #   password: !secret web_server_password
+  #   type: digest
+  include_internal: true
+  local: true
+
+#uart:
+#  - id: mcu
+#    rx_pin: GPIO17
+#    tx_pin: GPIO18
+#    # baud_rate: 9600
+#    baud_rate: 256000
+
+# ld2450 configuration
+#ld2450:
+#  id: ld2450_radar
+
+#I2C
+#SHT40 - Humidity and Temperature
+#BMP388 - Pressure
+#SGP41 - VOC and NOx
+#BH1750 - Ambient Light
+#Adafruit PMSA003I - Particlate Matter / Air Quality / Dust
+#DFRobot Gravity SEN0466 - CO
+#SCD41 - CO2
+
+i2c:
+  sda: GPIO8
+  scl: GPIO9
+  scan: true

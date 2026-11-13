@@ -1,0 +1,7 @@
+select:
+  - platform: ld2450
+    ld2450_id: ld2450_radar
+    baud_rate:
+      name: "Baud rate"
+    zone_type:
+      name: "Zone Type"

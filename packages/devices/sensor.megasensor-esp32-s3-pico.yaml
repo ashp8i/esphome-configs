@@ -42,6 +42,7 @@ web_server:
 #BMP388 - Pressure
 #SGP41 - VOC and NOx
 #BH1750 - Ambient Light
+#AS7341 - Light and IR
 #Adafruit PMSA003I - Particlate Matter / Air Quality / Dust
 #DFRobot Gravity SEN0466 - CO
 #SCD41 - CO2

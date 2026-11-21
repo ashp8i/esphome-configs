@@ -40,3 +40,10 @@ text_sensor:
       else {
         return {"unknown"};
       }
+  - platform: ld2410
+    version:
+      name: Firmware version
+    mac_address:
+      name: MAC address
+    calibration_result:
+      name: Calibration result

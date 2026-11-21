@@ -1,0 +1,10 @@
+select:
+  - platform: ld2410
+    distance_resolution:
+      name: Distance resolution
+    baud_rate:
+      name: Baud rate
+    light_function:
+      name: Light function
+    out_pin_level:
+      name: Out pin level

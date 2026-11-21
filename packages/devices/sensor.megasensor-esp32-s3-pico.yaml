@@ -26,16 +26,16 @@ web_server:
   include_internal: true
   local: true
 
-#uart:
-#  - id: mcu
-#    rx_pin: GPIO17
-#    tx_pin: GPIO18
-#    # baud_rate: 9600
-#    baud_rate: 256000
+uart:
+  - id: mcu
+    rx_pin: GPIO17
+    tx_pin: GPIO18
+    baud_rate: 256000
+    parity: NONE
+    stop_bits: 1
 
-# ld2450 configuration
-#ld2450:
-#  id: ld2450_radar
+# ld2410 configuration
+ld2410:
 
 #I2C
 #SHT40 - Humidity and Temperature

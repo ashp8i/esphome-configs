@@ -3,7 +3,7 @@ substitutions:
   name: bathentrancesensor
   device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
   friendly_name: "Bathroon Entrance Motion" # Put the name that you want to see in Home Assistant.
-  presence_binary_sensor_id: stairsmotion
+  presence_binary_sensor_id: bathentrancemotion
   # switch1b1_topic: ashishswitch1/button/1/command
   # switch1b2_topic: ashishswitch1/button/2/command presence_binary_sensor_id: storeroompresence
   light_command_topic_1: store/light/store/command

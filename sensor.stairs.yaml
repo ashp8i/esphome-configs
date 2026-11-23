@@ -1,5 +1,5 @@
 substitutions:
-  device_ssid: "Stairs Motion"
+  device_ssid: "BE Motion"
   name: stairssensor
   device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
   friendly_name: "Stairs Sensor" # Put the name that you want to see in Home Assistant.

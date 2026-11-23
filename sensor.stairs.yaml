@@ -11,7 +11,7 @@ substitutions:
   udp_consumer_key_1: !secret udp_key_1
   udp_provider_key_1: !secret udp_key_2
   sensor_icon: "hue:ceiling-aurelle"
-  api_key: !secret stairsmotion_new_noise_key
+  api_key: !secret bathentrancemotion_new_noise_key
   project_name: "tuya.zy-m100-wifi"
   project_version: "1.0"
 

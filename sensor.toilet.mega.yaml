@@ -22,7 +22,7 @@ packages:
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
   - !include packages/binary-sensor/hlk-ld2450.yaml
-#  - !include packages/sensor/hlk-ld2410.yaml
+#  - !include packages/sensor/hlk-ld2450.yaml
   - !include packages/sensor/megasensor.yaml
   - !include packages/switch/hlk-ld2410.yaml
   - !include packages/number/hlk-ld2410.yaml

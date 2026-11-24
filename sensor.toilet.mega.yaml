@@ -21,13 +21,13 @@ packages:
   - !include packages/devices/sensor.megasensor-ld2450-esp32-s3-pico.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
-  - !include packages/binary-sensor/hlk-ld2450.yaml
+#  - !include packages/binary-sensor/hlk-ld2450.yaml
 #  - !include packages/sensor/hlk-ld2450.yaml
-  - !include packages/sensor/megasensor-ld2450.yaml
-  - !include packages/switch/hlk-ld2450.yaml
-  - !include packages/number/hlk-ld2450.yaml
-  - !include packages/button/hlk-ld2450.yaml
-  - !include packages/text-sensor/hlk-ld2450.yaml
+#  - !include packages/sensor/megasensor-ld2450.yaml
+#  - !include packages/switch/hlk-ld2450.yaml
+#  - !include packages/number/hlk-ld2450.yaml
+#  - !include packages/button/hlk-ld2450.yaml
+#  - !include packages/text-sensor/hlk-ld2450.yaml
 #  - !include packages/text-sensor/megasensor.yaml
 #  - !include packages/select/hlk-ld2450.yaml
 #  - !include packages/automation/mmwave.hlk-ld2450.yaml

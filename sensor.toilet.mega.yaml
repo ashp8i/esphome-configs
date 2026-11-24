@@ -21,7 +21,7 @@ packages:
   - !include packages/devices/sensor.megasensor-ld2450-esp32-s3-pico.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
-  - !include packages/binary-sensor/hlk-ld2410.yaml
+  - !include packages/binary-sensor/hlk-ld240.yaml
 #  - !include packages/sensor/hlk-ld2410.yaml
   - !include packages/sensor/megasensor.yaml
   - !include packages/switch/hlk-ld2410.yaml

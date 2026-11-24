@@ -31,6 +31,9 @@ output:
     id: output_warm_white
     pin: GPIO5
 
+preferences:
+  flash_write_interval: 30min
+
 light:
   - platform: cwww
     name: ${friendly_name}
@@ -41,5 +44,6 @@ light:
     warm_white_color_temperature: 2000 K
     constant_brightness: false
     gamma_correct: 0
+    restore_mode: RESTORE_AND_OFF
     default_transition_length: 1s
     icon: "hue:ceiling-aurelle-circle"

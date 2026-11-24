@@ -9,6 +9,7 @@ esphome:
 
 esp8266:
   board: modwifi
+  restore_from_flash: true
 
 captive_portal:
 
@@ -51,6 +52,13 @@ wled:
 e131:
   method: multicast # default: register E1.31 to Multicast group
 
+preferences:
+  flash_write_interval: 30min       # good practical value
+  # alternatives:
+  # flash_write_interval: 1h
+  # flash_write_interval: 6h
+  # flash_write_interval: never     # only writes on clean shutdown / OTA
+
 light:
   - platform: cwww
     name: ${device_name_white}
@@ -58,7 +66,7 @@ light:
     cold_white: cold_white_output
     warm_white: warm_white_output
     default_transition_length: 0.5s
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: RESTORE_AND_OFF
     cold_white_color_temperature: 6500 K
     warm_white_color_temperature: 2700 K
     constant_brightness: true # Brightness & Temp NOT Cool White Bright & Warm White Brights

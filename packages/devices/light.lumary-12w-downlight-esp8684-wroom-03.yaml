@@ -42,6 +42,9 @@ output:
     pin: GPIO5
     max_power: 100%
 
+preferences:
+  flash_write_interval: 30min
+
 light:
   - platform: cwww
     name: ${friendly_name}

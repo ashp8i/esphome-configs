@@ -1,0 +1,9 @@
+sensor:
+  - platform: bmp3xx_i2c
+    temperature:
+      name: "Outside Temperature"
+      oversampling: 16x
+    pressure:
+      name: "Outside Pressure"
+    address: 0x77
+    update_interval: 60s

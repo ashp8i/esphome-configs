@@ -12,34 +12,6 @@ text_sensor:
     name: ${friendly_name} Uptime Human Readable
     id: uptime_human
     icon: mdi:clock-start
-  - platform: template
-    name: "BME680 IAQ Classification"
-    icon: "mdi:checkbox-marked-circle-outline"
-    lambda: |-
-      if (int(id(iaq).get_state()) <= 50) {
-        return {"Excellent"};
-      }
-      else if (int(id(iaq).get_state()) <= 100) {
-        return {"Good"};
-      }
-      else if (int(id(iaq).get_state()) <= 150) {
-        return {"Lightly polluted"};
-      }
-      else if (int(id(iaq).get_state()) <= 200) {
-        return {"Moderately polluted"};
-      }
-      else if (int(id(iaq).get_state()) <= 250) {
-        return {"Heavily polluted"};
-      }
-      else if (int(id(iaq).get_state()) <= 350) {
-        return {"Severely polluted"};
-      }
-      else if (int(id(iaq).get_state()) <= 500) {
-        return {"Extremely polluted"};
-      }
-      else {
-        return {"unknown"};
-      }
   - platform: ld2410
     version:
       name: Firmware version

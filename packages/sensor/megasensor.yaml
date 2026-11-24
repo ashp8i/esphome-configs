@@ -27,28 +27,6 @@ sensor:
                 (minutes ? to_string(minutes) + "m " : "") +
                 (to_string(seconds) + "s")
               ).c_str();
-  - platform: bme680
-    temperature:
-      name: "Temperature"
-      oversampling: 16x
-    pressure:
-      name: "BPressure"
-    humidity:
-      id: "humidity"
-      name: "Humidity"
-    gas_resistance:
-      id: "gas_resistance"
-      name: "Gas Resistance"
-    address: 0x76
-    update_interval: 60s
-  - platform: template
-    name: "Indoor Air Quality"
-    id: iaq
-    icon: "mdi:gauge"
-    # calculation: comp_gas = log(R_gas[ohm]) + 0.04 log(Ohm)/%rh * hum[%rh]
-    lambda: |-
-      return log(id(gas_resistance).get_state()) + 0.04 *  id(humidity).get_state();
-    state_class: "measurement"
   - platform: ld2410
     light:
       name: Light
@@ -107,3 +85,16 @@ sensor:
         name: G8 move energy
       still_energy:
         name: G8 still energy
+  - platform: bmp3xx_i2c
+#    temperature:
+#      name: "Outside Temperature"
+#      oversampling: 16x
+    pressure:
+      name: "Outside Pressure"
+    address: 0x77
+    update_interval: 60s
+  - platform: sht4x
+    temperature:
+      name: "Temperature"
+    humidity:
+      name: "Relative Humidity"

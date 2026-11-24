@@ -40,6 +40,9 @@ uart:
 tuya:
   uart_id: mcu
 
+preferences:
+  flash_write_interval: 30min
+
 light:
   - platform: "tuya"
     name: "${friendly_name}"

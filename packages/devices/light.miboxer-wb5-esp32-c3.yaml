@@ -36,6 +36,9 @@ uart:
 tuya:
   uart_id: mcu
 
+preferences:
+  flash_write_interval: 30min
+
 light:
   - platform: "tuya"
     name: "${friendly_name}"
@@ -50,6 +53,7 @@ light:
     max_value: 1000
     gamma_correct: 1.0 
     default_transition_length: 0s
+    restore_mode: RESTORE_AND_OFF
     cold_white_color_temperature: 153 mireds
     warm_white_color_temperature: 500 mireds
     icon: "${light_icon}"

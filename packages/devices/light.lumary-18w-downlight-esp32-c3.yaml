@@ -58,6 +58,9 @@ output:
     max_power: 100%
     # frequency: ${frequency_ww}
 
+preferences:
+  flash_write_interval: 30min
+
 light:
   - platform: cwww
     name: ${friendly_name}

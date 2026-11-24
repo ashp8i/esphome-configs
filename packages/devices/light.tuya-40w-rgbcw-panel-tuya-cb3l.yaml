@@ -55,6 +55,9 @@ output:
   frequency: 16000Hz
   max_power: 80%
 
+preferences:
+  flash_write_interval: 30min
+
 light:
   - platform: cwww
     name: ${friendly_name}
@@ -66,7 +69,7 @@ light:
     constant_brightness: false
     gamma_correct: 0
     default_transition_length: 1s
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: RESTORE_AND_OFF
     on_turn_on:
     - globals.set:
         id: last_light_on

@@ -63,6 +63,9 @@ ddp:
 # e131:
 #   method: multicast # default: register E1.31 to Multicast group
 
+preferences:
+  flash_write_interval: 30min
+
 light:
   - platform: cwww
     name: ${device_name_white}

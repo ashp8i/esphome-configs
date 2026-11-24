@@ -18,7 +18,7 @@ substitutions:
 packages:
   - !include packages/base/production.yaml
 # - !include packages/base/debug-ota-enc-enabled.yaml
-  - !include packages/devices/sensor.megasensor-ld2450-esp32-s3-pico.yaml
+  - !include packages/devices/sensor.megasensor-ld2450-bme680-esp32-s3-pico.yaml
   - !include packages/common/api.yaml
   - !include packages/common/mqtt.yaml
   - !include packages/binary-sensor/hlk-ld2450.yaml

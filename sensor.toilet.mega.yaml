@@ -27,7 +27,7 @@ packages:
 #  - !include packages/switch/hlk-ld2450.yaml
 #  - !include packages/number/hlk-ld2450.yaml
 #  - !include packages/button/hlk-ld2450.yaml
-#  - !include packages/text-sensor/hlk-ld2450.yaml
+  - !include packages/text-sensor/hlk-ld2450.yaml
 #  - !include packages/text-sensor/megasensor.yaml
 #  - !include packages/select/hlk-ld2450.yaml
 #  - !include packages/automation/mmwave.hlk-ld2450.yaml

@@ -86,11 +86,12 @@ sensor:
       still_energy:
         name: G8 still energy
   - platform: bmp3xx_i2c
-#    temperature:
-#      name: "Outside Temperature"
-#      oversampling: 16x
+    temperature:
+      name: "Temperature"
+      oversampling: 16x
+      internal: true
     pressure:
-      name: "Outside Pressure"
+      name: "Pressure"
     address: 0x77
     update_interval: 60s
   - platform: sht4x

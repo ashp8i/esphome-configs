@@ -1,0 +1,34 @@
+text_sensor:
+  # Expose ESPHome information as sensors.
+  - platform: version
+    name: ESPHome Version
+    entity_category: DIAGNOSTIC
+  # Expose WiFi information as sensors.
+  - platform: wifi_info
+    ip_address:
+      name: ${friendly_name} IP
+    ssid:
+      name: ${friendly_name} SSID
+    bssid:
+      name: ${friendly_name} BSSID
+#    update_interval: 6h
+  # Expose Uptime
+  - platform: template
+    name: ${friendly_name} Uptime Human Readable
+    id: uptime_human
+    icon: mdi:clock-start
+  - platform: ld2450
+    ld2450_id: ld2450_radar
+    version:
+      name: "LD2450 Firmware"
+    mac_address:
+      name: "LD2450 BT MAC"
+    target_1:
+      direction:
+        name: "Target-1 Direction"
+    target_2:
+      direction:
+        name: "Target-2 Direction"
+    target_3:
+      direction:
+        name: "Target-3 Direction"

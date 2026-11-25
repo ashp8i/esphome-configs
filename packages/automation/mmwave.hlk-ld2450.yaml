@@ -1,0 +1,9 @@
+#api:
+#  actions:
+#    - action: set_ld2410_bluetooth_password
+#      variables:
+#        password: string
+#      then:
+#        - ld2410.bluetooth_password.set:
+#            id: my_ld2410
+#            password: !lambda 'return password;'

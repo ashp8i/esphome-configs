@@ -73,6 +73,7 @@ light:
     max_value: 1000
     cold_white_color_temperature: 153 mireds
     warm_white_color_temperature: 500 mireds
+    restore_mode: RESTORE_AND_OFF
     icon: "${light_icon}"
 # Datapoint 20: switch (value: ON)
 # Datapoint 21: enum (value: 0)

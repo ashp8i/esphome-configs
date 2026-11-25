@@ -77,7 +77,7 @@ light:
     constant_brightness: false
     gamma_correct: 0
     default_transition_length: 1s
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: RESTORE_AND_OFF
     on_turn_on:
     - globals.set:
         id: last_light_on
@@ -90,6 +90,7 @@ light:
     green: output_green
     blue: output_blue
     default_transition_length: 0.25s
+    restore_mode: RESTORE_DEFAULT_OFF
     on_turn_on:
     - light.turn_off: ${device_id_white}
     - globals.set:

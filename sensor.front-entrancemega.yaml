@@ -16,6 +16,7 @@ substitutions:
   project_version: "1.0"
 
 packages:
+packages:
 #  - !include packages/base/production.yaml
   - !include packages/base/debug-ota-enc-enabled.yaml
   - !include packages/devices/sensor.megasensor-esp32-s3-pico.yaml
@@ -26,8 +27,8 @@ packages:
   - !include packages/binary-sensor/hlk-ld2410.yaml
 #  - !include packages/sensor/hlk-ld2410.yaml
   - !include packages/sensor/megasensor.yaml
-  - !include packages/switch/hlk-ld2410.yaml
-  - !include packages/number/hlk-ld2410.yaml
+  - !include packages/switch/hlk-ld2410-globals.yaml
+  - !include packages/number/hlk-ld2410-globals.yaml
   - !include packages/button/hlk-ld2410.yaml
 #  - !include packages/text-sensor/hlk-ld2410.yaml
   - !include packages/text-sensor/megasensor.yaml

@@ -16,7 +16,6 @@ substitutions:
   project_version: "1.0"
 
 packages:
-packages:
 #  - !include packages/base/production.yaml
   - !include packages/base/debug-ota-enc-enabled.yaml
   - !include packages/devices/sensor.megasensor-esp32-s3-pico.yaml

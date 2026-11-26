@@ -1,0 +1,26 @@
+substitutions:
+  name: upperloftstairssensor
+  device_ssid: "ULS Motion"
+  device_description: "Tuya ZY-M100 Motion Sensor ESP32-C3 Arduino"
+  friendly_name: "Upper Loft Stairs Sensor" # Put the name that you want to see in Home Assistant.
+  # switch1b1_topic: ashishswitch1/button/1/command
+  # switch1b2_topic: ashishswitch1/button/2/command
+  presence_binary_sensor_id: ulspresence
+  light_command_topic_1: upperloftstairs/light/upperloftstairs/command
+  udp_consumer_device_name_1: upperloftstairssensor
+  udp_consumer_key_1: !secret udp_key_1
+  udp_provider_key_1: !secret udp_key_2
+  sensor_icon: "hue:ceiling-aurelle"
+  api_key: !secret ulsmotion_noise_key
+  project_name: "tuya.zy-m100-wifi"
+  project_version: "1.0"
+
+packages:
+  - !include packages/base/production.yaml
+  - !include packages/devices/sensor.zy-m100-esp32-c3.yaml
+  - !include packages/common/api.yaml
+  - !include packages/common/mqtt.yaml
+  - !include packages/common/button.yaml
+  - !include packages/common/text-sensor.yaml
+  - !include packages/sensor/zy-m100.yaml
+  - !include packages/binary-sensor/zy-m100.yaml

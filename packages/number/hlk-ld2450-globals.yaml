@@ -1,0 +1,56 @@
+number:
+  - platform: ld2450
+    ld2450_id: ld2450_radar
+    presence_timeout:
+      id: ld2450_presence_timeout
+      name: "Presence Timeout"
+    zone_1:
+      x1:
+        id: zone_1_x1
+        name: "Zone 1 X1"
+        on_value:
+          then:
+            - if:
+                condition:
+                  lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_x1);'
+                then:
+                  - globals.set:
+                      id: nvram_x1
+                      value: !lambda 'return (int)x;'
+      y1:
+        id: zone_1_y1
+        name: "Zone 1 Y1"
+        on_value:
+          then:
+            - if:
+                condition:
+                  lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_y1);'
+                then:
+                  - globals.set:
+                      id: nvram_y1
+                      value: !lambda 'return (int)x;'
+      x2:
+        id: zone_1_x2
+        name: "Zone 1 X2"
+        on_value:
+          then:
+            - if:
+                condition:
+                  lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_x2);'
+                then:
+                  - globals.set:
+                      id: nvram_x2
+                      value: !lambda 'return (int)x;'
+      y2:
+        id: zone_1_y2
+        name: "Zone 1 Y2"
+        on_value:
+          then:
+            - if:
+                condition:
+                  lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_y2);'
+                then:
+                  - globals.set:
+                      id: nvram_y2
+                      value: !lambda 'return (int)x;'
+

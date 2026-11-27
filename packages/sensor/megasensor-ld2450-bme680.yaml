@@ -123,7 +123,7 @@ sensor:
     gas_resistance:
       id: "gas_resistance"
       name: "Gas Resistance"
-    address: 0x77
+    address: 0x76
     update_interval: 60s
   - platform: template
     name: "Indoor Air Quality"

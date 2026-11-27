@@ -1,0 +1,200 @@
+number:
+  - platform: ld2410
+    timeout:
+      id: ld2410_timeout
+      name: "Timeout"
+      on_value:
+        then:
+          - if:
+              condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_timeout);' }
+              then:
+                - globals.set: { id: nvram_timeout, value: !lambda 'return (int)x;' }
+    max_move_distance_gate:
+      id: ld2410_max_move_gate
+      name: "Max Move Distance Gate"
+      on_value:
+        then:
+          - if:
+              condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_max_move_gate);' }
+              then:
+                - globals.set: { id: nvram_max_move_gate, value: !lambda 'return (int)x;' }
+    max_still_distance_gate:
+      id: ld2410_max_still_gate
+      name: "Max Still Distance Gate"
+      on_value:
+        then:
+          - if:
+              condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_max_still_gate);' }
+              then:
+                - globals.set: { id: nvram_max_still_gate, value: !lambda 'return (int)x;' }
+    g0:
+      move_threshold:
+        id: ld2410_g0_move
+        name: "G0 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g0_move);' }
+                then:
+                  - globals.set: { id: nvram_g0_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g0_still
+        name: "G0 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g0_still);' }
+                then:
+                  - globals.set: { id: nvram_g0_still, value: !lambda 'return (int)x;' }
+    g1:
+      move_threshold:
+        id: ld2410_g1_move
+        name: "G1 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g1_move);' }
+                then:
+                  - globals.set: { id: nvram_g1_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g1_still
+        name: "G1 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g1_still);' }
+                then:
+                  - globals.set: { id: nvram_g1_still, value: !lambda 'return (int)x;' }
+    g2:
+      move_threshold:
+        id: ld2410_g2_move
+        name: "G2 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g2_move);' }
+                then:
+                  - globals.set: { id: nvram_g2_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g2_still
+        name: "G2 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g2_still);' }
+                then:
+                  - globals.set: { id: nvram_g2_still, value: !lambda 'return (int)x;' }
+    g3:
+      move_threshold:
+        id: ld2410_g3_move
+        name: "G3 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g3_move);' }
+                then:
+                  - globals.set: { id: nvram_g3_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g3_still
+        name: "G3 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g3_still);' }
+                then:
+                  - globals.set: { id: nvram_g3_still, value: !lambda 'return (int)x;' }
+    g4:
+      move_threshold:
+        id: ld2410_g4_move
+        name: "G4 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g4_move);' }
+                then:
+                  - globals.set: { id: nvram_g4_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g4_still
+        name: "G4 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g4_still);' }
+                then:
+                  - globals.set: { id: nvram_g4_still, value: !lambda 'return (int)x;' }
+    g5:
+      move_threshold:
+        id: ld2410_g5_move
+        name: "G5 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g5_move);' }
+                then:
+                  - globals.set: { id: nvram_g5_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g5_still
+        name: "G5 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g5_still);' }
+                then:
+                  - globals.set: { id: nvram_g5_still, value: !lambda 'return (int)x;' }
+    g6:
+      move_threshold:
+        id: ld2410_g6_move
+        name: "G6 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g6_move);' }
+                then:
+                  - globals.set: { id: nvram_g6_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g6_still
+        name: "G6 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g6_still);' }
+                then:
+                  - globals.set: { id: nvram_g6_still, value: !lambda 'return (int)x;' }
+    g7:
+      move_threshold:
+        id: ld2410_g7_move
+        name: "G7 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g7_move);' }
+                then:
+                  - globals.set: { id: nvram_g7_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g7_still
+        name: "G7 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g7_still);' }
+                then:
+                  - globals.set: { id: nvram_g7_still, value: !lambda 'return (int)x;' }
+    g8:
+      move_threshold:
+        id: ld2410_g8_move
+        name: "G8 Move Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g8_move);' }
+                then:
+                  - globals.set: { id: nvram_g8_move, value: !lambda 'return (int)x;' }
+      still_threshold:
+        id: ld2410_g8_still
+        name: "G8 Still Threshold"
+        on_value:
+          then:
+            - if:
+                condition: { lambda: 'return !id(is_syncing_to_radar) && (int)x != id(nvram_g8_still);' }
+                then:
+                  - globals.set: { id: nvram_g8_still, value: !lambda 'return (int)x;' }

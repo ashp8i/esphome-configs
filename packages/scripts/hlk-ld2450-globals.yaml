@@ -1,0 +1,29 @@
+script:
+  - id: push_nvram_to_radar
+    then:
+      - globals.set:
+          id: is_syncing_to_radar
+          value: 'true'
+      - if:
+          condition:
+            lambda: 'return id(ld2450_bluetooth).state;'
+          then:
+            - switch.turn_off: ld2450_bluetooth
+            - delay: 1500ms # Allow the LD2450 to complete its post-BLE-change restart
+      - switch.turn_off: ld2450_multi_target
+      - number.set:
+          id: zone_1_x1
+          value: !lambda 'return id(nvram_x1);'
+      - number.set:
+          id: zone_1_y1
+          value: !lambda 'return id(nvram_y1);'
+      - number.set:
+          id: zone_1_x2
+          value: !lambda 'return id(nvram_x2);'
+      - number.set:
+          id: zone_1_y2
+          value: !lambda 'return id(nvram_y2);'
+      - delay: 1s
+      - globals.set:
+          id: is_syncing_to_radar
+          value: 'false'

@@ -1,0 +1,43 @@
+script:
+  - id: push_nvram_to_ld2410
+    then:
+      - globals.set: { id: is_syncing_to_radar, value: 'true' }
+
+      # Sync Bluetooth state only if mismatched (avoids redundant radar reboot)
+      - if:
+          condition:
+            lambda: 'return id(ld2410_bluetooth).state != id(nvram_bluetooth);'
+          then:
+            - if:
+                condition: { lambda: 'return id(nvram_bluetooth);' }
+                then:
+                  - switch.turn_on: ld2410_bluetooth
+                else:
+                  - switch.turn_off: ld2410_bluetooth
+            - delay: 1500ms # Allow LD2410C to finish rebooting after BLE toggle
+
+      - number.set: { id: ld2410_max_move_gate, value: !lambda 'return id(nvram_max_move_gate);' }
+      - number.set: { id: ld2410_max_still_gate, value: !lambda 'return id(nvram_max_still_gate);' }
+      - number.set: { id: ld2410_timeout, value: !lambda 'return id(nvram_timeout);' }
+
+      - number.set: { id: ld2410_g0_move, value: !lambda 'return id(nvram_g0_move);' }
+      - number.set: { id: ld2410_g0_still, value: !lambda 'return id(nvram_g0_still);' }
+      - number.set: { id: ld2410_g1_move, value: !lambda 'return id(nvram_g1_move);' }
+      - number.set: { id: ld2410_g1_still, value: !lambda 'return id(nvram_g1_still);' }
+      - number.set: { id: ld2410_g2_move, value: !lambda 'return id(nvram_g2_move);' }
+      - number.set: { id: ld2410_g2_still, value: !lambda 'return id(nvram_g2_still);' }
+      - number.set: { id: ld2410_g3_move, value: !lambda 'return id(nvram_g3_move);' }
+      - number.set: { id: ld2410_g3_still, value: !lambda 'return id(nvram_g3_still);' }
+      - number.set: { id: ld2410_g4_move, value: !lambda 'return id(nvram_g4_move);' }
+      - number.set: { id: ld2410_g4_still, value: !lambda 'return id(nvram_g4_still);' }
+      - number.set: { id: ld2410_g5_move, value: !lambda 'return id(nvram_g5_move);' }
+      - number.set: { id: ld2410_g5_still, value: !lambda 'return id(nvram_g5_still);' }
+      - number.set: { id: ld2410_g6_move, value: !lambda 'return id(nvram_g6_move);' }
+      - number.set: { id: ld2410_g6_still, value: !lambda 'return id(nvram_g6_still);' }
+      - number.set: { id: ld2410_g7_move, value: !lambda 'return id(nvram_g7_move);' }
+      - number.set: { id: ld2410_g7_still, value: !lambda 'return id(nvram_g7_still);' }
+      - number.set: { id: ld2410_g8_move, value: !lambda 'return id(nvram_g8_move);' }
+      - number.set: { id: ld2410_g8_still, value: !lambda 'return id(nvram_g8_still);' }
+
+      - delay: 2s
+      - globals.set: { id: is_syncing_to_radar, value: 'false' }

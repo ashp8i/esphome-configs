@@ -1,0 +1,18 @@
+switch:
+  - platform: ld2410
+    bluetooth:
+      id: ld2410_bluetooth
+      name: "Bluetooth"
+      on_turn_on:
+        then:
+          - if:
+              condition: { lambda: 'return !id(is_syncing_to_radar) && !id(nvram_bluetooth);' }
+              then:
+                - globals.set: { id: nvram_bluetooth, value: 'true' }
+      on_turn_off:
+        then:
+          - if:
+              condition: { lambda: 'return !id(is_syncing_to_radar) && id(nvram_bluetooth);' }
+              then:
+                - globals.set: { id: nvram_bluetooth, value: 'false' }
+

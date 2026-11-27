@@ -7,6 +7,11 @@ esphome:
     version: "${project_version}"
   platformio_options:
     board_build.flash_mode: dio
+  on_boot:
+    priority: -100
+    then:
+      - delay: 3s
+      - script.execute: push_nvram_to_ld2410
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -25,6 +30,9 @@ web_server:
   #   type: digest
   include_internal: true
   local: true
+
+preferences:
+  flash_write_interval: 10min
 
 uart:
   - id: mcu

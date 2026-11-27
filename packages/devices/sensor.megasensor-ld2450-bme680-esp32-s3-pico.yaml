@@ -7,6 +7,11 @@ esphome:
     version: "${project_version}"
   platformio_options:
     board_build.flash_mode: dio
+  on_boot:
+    priority: -100
+    then:
+      - delay: 3s
+      - script.execute: push_nvram_to_radar
 
 esp32:
   board: esp32-s3-devkitc-1
@@ -33,6 +38,9 @@ uart:
     baud_rate: 256000
     parity: NONE
     stop_bits: 1
+
+preferences:
+  flash_write_interval: 15min # Coalesces rapid app/HA changes into a single NVS write
 
 # ld2450 configuration
 ld2450:

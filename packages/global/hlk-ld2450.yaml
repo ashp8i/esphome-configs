@@ -1,0 +1,21 @@
+globals:
+  - id: is_syncing_to_radar
+    type: bool
+    restore_value: no
+    initial_value: 'true' # Lock NVS writes during initial boot push
+  - id: nvram_x1
+    type: int
+    restore_value: yes
+    initial_value: '-500'
+  - id: nvram_y1
+    type: int
+    restore_value: yes
+    initial_value: '800'
+  - id: nvram_x2
+    type: int
+    restore_value: yes
+    initial_value: '500'
+  - id: nvram_y2
+    type: int
+    restore_value: yes
+    initial_value: '2200'

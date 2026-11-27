@@ -1,7 +1,8 @@
 switch:
   - platform: ld2450
-    ld2450_id: ld2450_radar
     bluetooth:
+      id: ld2450_bluetooth
       name: "Bluetooth"
     multi_target:
-      name: "Multi Target Tracking"
+      id: ld2450_multi_target
+      name: "Multi Target"

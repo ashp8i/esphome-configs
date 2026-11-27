@@ -1,0 +1,45 @@
+globals:
+  - id: is_syncing_to_radar
+    type: bool
+    restore_value: no
+    initial_value: 'true'
+
+  # Bluetooth & Global Range/Timeout
+  - id: nvram_bluetooth
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+  - id: nvram_max_move_gate
+    type: int
+    restore_value: yes
+    initial_value: '3'
+  - id: nvram_max_still_gate
+    type: int
+    restore_value: yes
+    initial_value: '3'
+  - id: nvram_timeout
+    type: int
+    restore_value: yes
+    initial_value: '15'
+
+  # Move Thresholds (g0 - g8)
+  - { id: nvram_g0_move, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g1_move, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g2_move, type: int, restore_value: yes, initial_value: '60' }
+  - { id: nvram_g3_move, type: int, restore_value: yes, initial_value: '65' }
+  - { id: nvram_g4_move, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g5_move, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g6_move, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g7_move, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g8_move, type: int, restore_value: yes, initial_value: '100' }
+
+  # Still Thresholds (g0 - g8)
+  - { id: nvram_g0_still, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g1_still, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g2_still, type: int, restore_value: yes, initial_value: '65' }
+  - { id: nvram_g3_still, type: int, restore_value: yes, initial_value: '70' }
+  - { id: nvram_g4_still, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g5_still, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g6_still, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g7_still, type: int, restore_value: yes, initial_value: '100' }
+  - { id: nvram_g8_still, type: int, restore_value: yes, initial_value: '100' }
